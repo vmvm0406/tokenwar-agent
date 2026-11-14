@@ -32,6 +32,16 @@
 | `steps` | 따라 하기, 체크리스트 | `heading`, `items`: [{`title`, `text`}] 2~4개 |
 | `compare` | 비교, 전후 | `heading`, `left`/`right`: {`label`, `items`, `on`} |
 
+## 인용 영상 장 (릴스 전용)
+
+| kind | 필드 |
+|---|---|
+| `clip` | `src`(게시물 폴더 기준 영상 경로), `start`, `end`(초), `source`(예: "OpenAI 공식 YouTube"), `source_url`, `heading`, `highlight`, `caption`(우리 말 요약, 60자 이하) |
+
+영상은 화면 가운데 가로로 꽉 차게 들어가고, 아래에 "영상 출처 · ○○"와 자막이 붙는다. 원본 소리는 그대로 나온다.
+
+**인용 규칙 (checks.py가 검사):** 클립 하나 10초 이하, 클립 합계가 릴스의 40% 이하, 클립 말고 해설 장면이 표지 포함 3개 이상. 사람이 고른 영상만 쓴다(`inbox/clips/`).
+
 ## 시각 요소 (visual)
 
 | type | 필드 | 예 |

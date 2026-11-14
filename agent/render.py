@@ -17,7 +17,6 @@
 import asyncio
 import html
 import json
-import random
 import re
 import shutil
 import subprocess
@@ -171,6 +170,12 @@ html,body{margin:0;background:#000}
 .bot{position:absolute;left:PADXpx;right:PADXpx;bottom:BOTYpx;display:flex;align-items:center;gap:30px;font-family:'JBM',monospace;font-size:22px;color:#7E8A83}
 .bot .pb{flex:1;height:5px;border-radius:3px;background:#1D2621;overflow:hidden}.bot .pb i{display:block;height:100%;background:ACCENT}
 
+/* 인용 영상 장면 */
+.clipbox{flex:none;margin:0 -PADXpx;height:CLIPHpx;background:#141c17;display:flex;align-items:center;justify-content:center;position:relative}
+.clipbox .ph{font-family:'JBM','Pretendard',monospace;font-weight:800;font-size:34px;color:#4a5a50;letter-spacing:.08em}
+.clipsrc{font-family:'JBM','Pretendard',monospace;font-size:24px;font-weight:700;color:#7E8A83;letter-spacing:.04em;margin-top:-8px}
+.clipsrc b{color:ACCENT}
+
 /* 마지막 장 */
 .outro .inner{justify-content:center}
 .slogan{margin:0;font-size:SLOGANpx;font-weight:900;line-height:1.2;letter-spacing:-.035em;white-space:pre-line}
@@ -181,10 +186,10 @@ html,body{margin:0;background:#000}
 DIMS = {
     "carousel": dict(PADX=72, VISH=860, FADET=470, CTEXTB=170, MARKB=56, CTITLE=74, CSUB=30, TOPY=60,
                      INTOP=140, INBOT=150, BOTY=70, HEAD=66, BODY=40, POINT=36, BVIS=440, STEPT=38, STEPX=31,
-                     CMP=32, SLOGAN=88),
+                     CMP=32, SLOGAN=88, CLIPH=608),
     "reel": dict(PADX=80, VISH=1200, FADET=760, CTEXTB=430, MARKB=300, CTITLE=86, CSUB=34, TOPY=210,
                  INTOP=300, INBOT=420, BOTY=330, HEAD=78, BODY=46, POINT=42, BVIS=560, STEPT=44, STEPX=36,
-                 CMP=36, SLOGAN=98),
+                 CMP=36, SLOGAN=98, CLIPH=608),
 }
 
 
@@ -362,6 +367,17 @@ def body_html(post, s, n, total, folder):
         '<div class="inner">', f'<div class="inner" style="justify-content:{justify}">', 1)
 
 
+def clip_html(post, s, n, total):
+    parts = [f'<div class="num">{n:02d}</div>']
+    if s.get("heading"):
+        parts.append(f'<h2 class="heading">{br(hl(s["heading"], s.get("highlight")))}</h2>')
+    parts.append('<div class="clipbox"><span class="ph">▶ 인용 영상</span></div>')
+    parts.append(f'<div class="clipsrc"><b>영상 출처</b> · {esc(s["source"])}</div>')
+    if s.get("caption"):
+        parts.append(f'<p class="body">{br(esc(s["caption"]))}</p>')
+    return frame(n, total, "".join(parts))
+
+
 def outro_html(post, n, total):
     srcs = " · ".join(esc(x["name"]) for x in post["sources"])
     date = post["date"].replace("-", ".")
@@ -378,7 +394,12 @@ def build_page(post, folder):
     total = len(slides) + 1
     parts = []
     for i, s in enumerate(slides, 1):
-        parts.append(cover_html(post, s, folder) if s["kind"] == "cover" else body_html(post, s, i, total, folder))
+        if s["kind"] == "cover":
+            parts.append(cover_html(post, s, folder))
+        elif s["kind"] == "clip":
+            parts.append(clip_html(post, s, i, total))
+        else:
+            parts.append(body_html(post, s, i, total, folder))
     parts.append(outro_html(post, total, total))
     return (f'<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>{build_css(kind)}</style>'
             f'</head><body>{"".join(parts)}</body></html>')
@@ -433,40 +454,6 @@ async def shoot(page_html, out_dir, kind):
     return []
 
 
-def make_reel(out_dir):
-    rc = CONFIG["reel"]
-    frames = sorted((out_dir / "frames").glob("*.jpg"))
-    fade = rc["fade_seconds"]
-    durs = [rc["cover_seconds"]] + [rc["seconds_per_frame"]] * (len(frames) - 1)
-    durs[-1] += 1.0
-    cmd = ["ffmpeg", "-y", "-loglevel", "error"]
-    for f, d in zip(frames, durs):
-        cmd += ["-loop", "1", "-t", f"{d + fade:.2f}", "-framerate", "30", "-i", str(f)]
-    music = sorted((ROOT / "assets" / "music").glob("*.mp3")) + sorted((ROOT / "assets" / "music").glob("*.m4a"))
-    total = sum(durs) + fade
-    if music:
-        cmd += ["-stream_loop", "-1", "-i", str(random.choice(music))]
-    else:
-        cmd += ["-f", "lavfi", "-t", f"{total:.2f}", "-i", "anullsrc=r=44100:cl=stereo"]
-    a_idx = len(frames)
-    fc, prev, offset = [], "[0:v]", 0.0
-    for i in range(1, len(frames)):
-        offset += durs[i - 1]
-        fc.append(f"{prev}[{i}:v]xfade=transition=fade:duration={fade}:offset={offset:.2f}[v{i}]")
-        prev = f"[v{i}]"
-    fc.append(f"{prev}format=yuv420p,trim=duration={total:.2f}[vout]")
-    if music:
-        fc.append(f"[{a_idx}:a]volume={rc['music_volume']},atrim=duration={total:.2f},"
-                  f"afade=t=out:st={total - 1.5:.2f}:d=1.5[aout]")
-    else:
-        fc.append(f"[{a_idx}:a]atrim=duration={total:.2f}[aout]")
-    cmd += ["-filter_complex", ";".join(fc), "-map", "[vout]", "-map", "[aout]",
-            "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-r", "30", "-pix_fmt", "yuv420p",
-            "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart", str(out_dir / "reel.mp4")]
-    subprocess.run(cmd, check=True)
-    shutil.copy(frames[0], out_dir / "cover.jpg")
-
-
 def main(folder):
     out_dir = Path(folder).resolve()
     post = json.loads((out_dir / "post.json").read_text(encoding="utf-8"))
@@ -478,14 +465,22 @@ def main(folder):
         for e in errors:
             print(" -", e)
         sys.exit(1)
-    problems = asyncio.run(shoot(build_page(post, out_dir), out_dir, post["type"]))
+    for s in post["slides"]:
+        if s.get("kind") == "clip" and not (out_dir / s["src"]).exists():
+            print(f"인용 영상 파일 없음: {s['src']}")
+            sys.exit(1)
+    page = build_page(post, out_dir)
+    problems = asyncio.run(shoot(page, out_dir, post["type"]))
     if problems:
         print("레이아웃 문제 → 문장을 줄이거나 장을 나눌 것:")
         for p in problems:
             print(" -", p)
         sys.exit(1)
     if post["type"] == "reel":
-        make_reel(out_dir)
+        from motion import make_motion_reel
+        total = asyncio.run(make_motion_reel(page, post, out_dir, CONFIG))
+        shutil.copy(sorted((out_dir / "frames").glob("*.jpg"))[0], out_dir / "cover.jpg")
+        print(f"릴스 길이: {total:.1f}초")
     print("완료:", out_dir)
 
 

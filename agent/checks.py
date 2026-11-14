@@ -13,6 +13,7 @@ CONFIG = json.loads((ROOT / "config.json").read_text(encoding="utf-8"))
 SERIES = {"전황", "긴급", "생존 가이드", "오픈소스", "AI 용어"}
 COVER_LAYOUTS = {"visual", "icon", "word", "number", "list"}
 BODY_KINDS = {"body", "steps", "compare", "stat"}
+CLIP_FIELDS = ("src", "start", "end", "source", "source_url")
 VISUALS = {"image", "monogram", "tiles", "settings", "chat", "terminal", "bars", "timeline", "number"}
 TYPES = {"carousel", "reel"}
 
@@ -62,6 +63,7 @@ def check_post(post):
         errors.append(f"릴스 장면은 마무리 포함 3~{lim['reel_max_frames']}개: 지금 {total}개")
 
     all_text = []
+    clip_secs = []
     for i, s in enumerate(slides, 1):
         kind = s.get("kind")
         tag = f"{i}번째 장"
@@ -88,6 +90,27 @@ def check_post(post):
                 errors.append(f"{tag} 부제는 {lim['subtitle_chars']}자 이하")
             all_text += [t, s.get("sub", ""), s.get("word", ""), s.get("word_desc", "")]
             hl_src = t
+        elif kind == "clip":
+            if post["type"] != "reel":
+                errors.append(f"{tag} 인용 영상(clip)은 릴스에서만")
+            miss = [f for f in CLIP_FIELDS if s.get(f) in (None, "")]
+            if miss:
+                errors.append(f"{tag} clip 필수 항목 없음: {miss}")
+                continue
+            d = float(s["end"]) - float(s["start"])
+            clip_secs.append(d)
+            if not 0 < d <= lim["clip_max_seconds"]:
+                errors.append(f"{tag} 인용 영상은 한 번에 {lim['clip_max_seconds']}초 이하: {d:.1f}초")
+            if not str(s["source_url"]).startswith("http"):
+                errors.append(f"{tag} 인용 영상 출처 URL 필요")
+            h = s.get("heading", "")
+            for l in _lines(h):
+                if _len(l) > lim["heading_line_chars"]:
+                    errors.append(f"{tag} 소제목 한 줄은 {lim['heading_line_chars']}자 이하: '{l}'")
+            if _len(s.get("caption", "")) > lim["body_chars_short"]:
+                errors.append(f"{tag} 인용 장면 자막은 {lim['body_chars_short']}자 이하")
+            all_text += [h, s.get("caption", "")]
+            hl_src = h
         elif kind in BODY_KINDS:
             h = s.get("heading", "")
             if kind != "stat" and not h:
@@ -134,6 +157,15 @@ def check_post(post):
         hl = s.get("highlight")
         if hl and hl not in hl_src:
             errors.append(f"{tag} highlight '{hl}'가 제목/소제목 안에 없음")
+
+    if clip_secs:
+        rc = CONFIG["reel"]
+        others = rc["cover_seconds"] + rc["seconds_per_frame"] * (len(slides) - len(clip_secs)) + rc["seconds_per_frame"]
+        ratio = sum(clip_secs) / (sum(clip_secs) + others)
+        if ratio > lim["clip_max_ratio"]:
+            errors.append(f"인용 영상이 릴스의 {ratio:.0%}: {lim['clip_max_ratio']:.0%} 이하로 줄이고 해설 장면을 늘릴 것")
+        if len(slides) - len(clip_secs) < 3:
+            errors.append("인용 영상 외에 표지 포함 해설 장면이 3개 이상 있어야 함")
 
     joined = "\n".join(all_text)
     for w in BANNED:
