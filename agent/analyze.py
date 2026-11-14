@@ -54,9 +54,16 @@ def speech_regions(path, dur):
 
 def transcribe(path):
     try:
+        import numpy as np
         from faster_whisper import WhisperModel
+        # 오디오는 ffmpeg로 직접 16kHz 모노로 풀어서 넘긴다 (PyAV 버전 차이 회피)
+        raw = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", str(path), "-vn", "-ac", "1", "-ar", "16000",
+                              "-f", "f32le", "-"], capture_output=True, check=True).stdout
+        audio = np.frombuffer(raw, dtype=np.float32)
+        if audio.size == 0:
+            return {"error": "소리 없음"}
         model = WhisperModel("small", device="cpu", compute_type="int8")
-        segs, info = model.transcribe(str(path), vad_filter=True)
+        segs, info = model.transcribe(audio, vad_filter=True)
         return {"language": info.language,
                 "segments": [{"start": round(s.start, 2), "end": round(s.end, 2), "text": s.text.strip()} for s in segs]}
     except Exception as e:  # 패키지나 모델을 못 받는 환경
