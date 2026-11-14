@@ -57,3 +57,21 @@
 | `number` | `value`, `unit`, `caption` | 핵심 숫자 |
 
 `settings`, `chat`, `terminal`은 특정 회사 화면을 따라 그리지 않은 **일반적인 모양**이다. 실제 제품 화면처럼 보이게 꾸미지 않는다.
+
+## 영상 프레임 릴스 (type: "video")
+
+릴스의 기본 형식. 위에 브랜드·제목·영어 부제, 가운데 네온 테두리 영상 창, 아래 시간에 맞춘 자막, 영상 아래 원작자 표기.
+
+```json
+{
+  "type": "video", "rights": "permission", "credit": "@원작자", "rights_note": "11/15 DM으로 허락받음",
+  "video": {"src": "clips/원본.mp4", "start": 0, "end": 45},
+  "title": "한국어 제목\n2줄", "highlight": "강조", "title_en": "English subtitle line",
+  "subtitles": [{"start": 0.3, "end": 3.5, "text": "자막 한두 줄", "highlight": "강조"}],
+  "sources": [{"name": "원본 영상", "url": "https://..."}], "caption": "... 영상: @원작자 ...", "hashtags": []
+}
+```
+
+- 영상 비율은 자동으로 맞춘다: 가로 영상(16:9, 21:9)은 창 높이를 비율에 맞추고 자막을 영상 아래에, 정사각형·세로 영상은 창을 최대 높이로 키우고 자막을 영상 위에 얹는다. 9:16처럼 아주 긴 세로 영상은 자르지 않고 양옆을 배경색으로 채운다.
+- `rights`: `own`(직접 만든 영상), `permission`(원작자 허락), `license`(재사용 허락 라이선스). 남의 영상은 `credit`과 `rights_note`가 없으면 렌더링이 멈춘다.
+- 제목 한 줄 13자, 자막 한 줄 18자, 자막 2줄 이하.

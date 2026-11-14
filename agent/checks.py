@@ -15,7 +15,7 @@ COVER_LAYOUTS = {"visual", "icon", "word", "number", "list"}
 BODY_KINDS = {"body", "steps", "compare", "stat"}
 CLIP_FIELDS = ("src", "start", "end", "source", "source_url")
 VISUALS = {"image", "monogram", "tiles", "settings", "chat", "terminal", "bars", "timeline", "number"}
-TYPES = {"carousel", "reel"}
+TYPES = {"carousel", "reel", "video"}
 
 # 낚시성·과장 표현 (STYLE_GUIDE.md 3장)
 BANNED = ["충격", "경악", "소름", "실화냐", "미쳤다", "역대급", "무조건", "하면 끝", "필수템", "ㄷㄷ"]
@@ -37,8 +37,75 @@ def _len(s):
     return len(re.sub(r"\s", "", s))
 
 
+RIGHTS = {"own", "permission", "license"}
+
+
+def check_video(post):
+    """영상 프레임 릴스(type=video) 검사."""
+    errors, warnings = [], []
+    lim = CONFIG["limits"]
+    for key in ["id", "series", "date", "publish_at", "video", "title", "rights", "sources", "caption"]:
+        if key not in post:
+            errors.append(f"필수 항목 없음: {key}")
+    if errors:
+        return errors, warnings
+    if post["rights"] not in RIGHTS:
+        errors.append(f"rights는 {RIGHTS} 중 하나: own(직접 만듦), permission(원작자 허락), license(이용 허락 라이선스)")
+    if post["rights"] in ("permission", "license"):
+        if not post.get("credit"):
+            errors.append("남의 영상은 credit(원작자 계정이나 이름) 필수")
+        if not post.get("rights_note"):
+            errors.append("rights_note에 허락받은 날짜·경로나 라이선스 이름을 적을 것")
+    ls = _lines(post["title"])
+    if len(ls) > lim["cover_title_lines"]:
+        errors.append(f"제목은 {lim['cover_title_lines']}줄 이하")
+    for l in ls:
+        if _len(l) > lim["video_title_line_chars"]:
+            errors.append(f"제목 한 줄은 {lim['video_title_line_chars']}자 이하: '{l}'")
+    if len(post.get("title_en", "")) > 48:
+        errors.append("영어 부제는 48자 이하")
+    hl = post.get("highlight")
+    if hl and hl not in post["title"]:
+        errors.append(f"highlight '{hl}'가 제목 안에 없음")
+    v = post["video"]
+    if not v.get("src"):
+        errors.append("video.src 필요")
+    prev_end = -1
+    texts = [post["title"]]
+    for i, s in enumerate(post.get("subtitles", []), 1):
+        a, z = float(s.get("start", -1)), float(s.get("end", -1))
+        if not (0 <= a < z):
+            errors.append(f"자막 {i}: start < end 여야 함")
+        if a < prev_end - 0.01:
+            errors.append(f"자막 {i}: 앞 자막과 시간이 겹침")
+        prev_end = z
+        for l in _lines(s.get("text", "")):
+            if _len(l) > lim["subtitle_line_chars"]:
+                errors.append(f"자막 {i}: 한 줄 {lim['subtitle_line_chars']}자 이하 ('{l}')")
+        if len(_lines(s.get("text", ""))) > 2:
+            errors.append(f"자막 {i}: 2줄 이하")
+        texts.append(s.get("text", ""))
+    joined = "\n".join(texts)
+    for w in BANNED:
+        if w in joined or w in post["caption"]:
+            errors.append(f"금지 표현: '{w}'")
+    if EMOJI_RE.search(joined):
+        errors.append("영상 위 글자에는 이모지를 쓰지 않음")
+    if len(EMOJI_RE.findall(post["caption"])) > lim["caption_emoji_max"]:
+        errors.append(f"캡션 이모지는 {lim['caption_emoji_max']}개 이하")
+    if len(post.get("hashtags", [])) > lim["hashtags_max"]:
+        errors.append(f"해시태그는 {lim['hashtags_max']}개 이하")
+    if post.get("credit") and post["credit"] not in post["caption"]:
+        errors.append("캡션에도 원작자(credit)를 밝힐 것")
+    if not post["sources"]:
+        errors.append("출처 1개 이상 (원본 영상 링크)")
+    return errors, warnings
+
+
 def check_post(post):
     """(errors, warnings) 반환."""
+    if post.get("type") == "video":
+        return check_video(post)
     errors, warnings = [], []
     lim = CONFIG["limits"]
 

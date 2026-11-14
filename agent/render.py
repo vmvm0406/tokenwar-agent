@@ -465,6 +465,16 @@ def main(folder):
         for e in errors:
             print(" -", e)
         sys.exit(1)
+    if post["type"] == "video":
+        src = out_dir / post["video"]["src"]
+        if not src.exists():
+            print(f"영상 파일 없음: {post['video']['src']}")
+            sys.exit(1)
+        from video import make_video_reel
+        dur = make_video_reel(post, out_dir, CONFIG)
+        print(f"영상 릴스 길이: {dur:.1f}초")
+        print("완료:", out_dir)
+        return
     for s in post["slides"]:
         if s.get("kind") == "clip" and not (out_dir / s["src"]).exists():
             print(f"인용 영상 파일 없음: {s['src']}")

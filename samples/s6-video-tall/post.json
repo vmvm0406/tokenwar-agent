@@ -1,0 +1,15 @@
+{
+  "id": "2026-11-15-video-tall-demo", "type": "video", "series": "생존 가이드", "date": "2026-11-15",
+  "publish_at": "2026-11-15T19:10:00+09:00",
+  "rights": "own",
+  "video": {"src": "clips/share-links-motion.mp4", "start": 0, "end": 10},
+  "title": "그 AI 공유 링크,\n누가 보고 있을까", "highlight": "누가 보고",
+  "title_en": "Who can see your AI share links?",
+  "subtitles": [
+    {"start": 0.2, "end": 4.8, "text": "공유 범위 기본값이\n'링크가 있는 모든 사람'", "highlight": "기본값"},
+    {"start": 4.9, "end": 9.8, "text": "로그인 없이 열린 앱\n3만 5,578개", "highlight": "3만 5,578개"}
+  ],
+  "sources": [{"name": "AI Chat Daily (Claroc 조사)", "url": "https://www.aichatdaily.com/ai-security/claroc-finds-35-578-grok-build-apps-open"}],
+  "caption": "AI로 만든 앱과 대화, 공유 링크 한 번 점검해 보세요.",
+  "hashtags": ["#AI뉴스", "#AI보안"]
+}
