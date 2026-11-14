@@ -1,0 +1,78 @@
+# 매일 실행 절차 (에이전트용)
+
+이 문서는 매일 아침 예약 작업으로 실행되는 Claude가 따르는 절차다. 결과물은 오늘 올릴 **카드뉴스 1개와 릴스 1개**다.
+
+## 0. 준비
+
+1. 저장소 최신 상태로 맞추기: `git pull`
+2. `STYLE_GUIDE.md`와 `config.json`을 끝까지 읽는다.
+3. 렌더링 도구 확인: `python3 -c "import playwright"`가 실패하면 `pip install playwright --break-system-packages` 후 진행. `ffmpeg`가 있어야 한다.
+4. 최근 14일 동안 다룬 주제 확인: `posts/published/*/post.json`과 `posts/queue/*/post.json`의 `id`, `slides[0].title`.
+
+## 1. 리서치
+
+- 최근 24~48시간의 AI 소식을 웹 검색으로 찾는다. 검색어는 짧게, 여러 각도로 (예: "AI 뉴스 오늘", "OpenAI", "Google Gemini", "Anthropic Claude", "AI 규제", "AI 일자리", "new AI tool launch", "AI 한국 출시").
+- 후보 5~10개를 뽑고 `STYLE_GUIDE.md` 3장 기준으로 점수를 매긴다.
+- 카드뉴스: 점수가 가장 높은 뉴스. 큰 발표면 시리즈를 "긴급", 아니면 "전황".
+- 릴스: 바로 따라 해볼 수 있는 툴·기능이면 "생존 가이드". 없으면 두 번째로 높은 뉴스를 "전황"으로.
+- 고른 주제는 원문(공식 발표, 원문 기사)까지 열어 확인한다. 출처 규칙은 스타일 가이드 8장.
+
+## 2. 게시물 작성
+
+게시물마다 폴더를 만든다: `posts/queue/<날짜>-<carousel|reel>-<영문 슬러그>/post.json`
+
+- 장의 형식은 `TEMPLATES.md`, 실제 예시는 `samples/*/post.json`을 본다.
+- 표지 유형(layout)은 최근 3개 게시물과 겹치지 않게 고른다. 본문도 body, stat, steps, compare를 섞는다.
+- 오픈소스 도구를 다룰 때는 저장소의 LICENSE를 `https://raw.githubusercontent.com/<owner>/<repo>/HEAD/LICENSE`로 확인하고, 상업적 이용이 허용될 때만 로고나 화면 이미지를 `curl`로 받아 게시물 폴더의 `img/`에 넣는다. 스타일 가이드 2-1장.
+
+```json
+{
+  "id": "2026-11-15-carousel-example",
+  "type": "carousel",
+  "series": "전황",
+  "date": "2026-11-15",
+  "publish_at": "2026-11-15T08:10:00+09:00",
+  "slides": [
+    {"kind": "cover", "layout": "number", "tag": "전황", "tag_sub": "회사명",
+     "visual": {"type": "number", "value": "33", "unit": "년", "caption": "설명"},
+     "title": "첫 줄\n둘째 줄", "highlight": "둘째 줄", "sub": "이름 · 한 줄 설명"},
+    {"kind": "body", "heading": "소제목", "highlight": "소제목", "body": "본문", "point": "선택: 강조 박스"}
+  ],
+  "sources": [{"name": "기관명", "url": "https://..."}],
+  "caption": "캡션 본문 (해시태그 제외)",
+  "hashtags": ["#AI뉴스", "#..."]
+}
+```
+
+- `publish_at`: `config.json`의 `slots` 시각 (카드뉴스 08:10, 릴스 19:10, 한국 시간). 이미 지난 시각이면 다음 슬롯으로.
+- `title`, `heading`의 줄바꿈은 `\n`으로 직접 넣는다. 단어 중간에서 끊지 않는다.
+- `highlight`는 제목·소제목 안에 실제로 있는 글자여야 한다.
+- 마지막 장(슬로건, 출처)은 자동으로 붙으므로 넣지 않는다.
+
+## 3. 렌더링과 검수
+
+1. `python3 agent/render.py posts/queue/<폴더>`
+2. 규칙 위반이나 글자 넘침이 나오면 문장을 고쳐서 통과할 때까지 다시 실행한다.
+3. 만들어진 이미지(`slides/*.jpg` 또는 `frames/*.jpg`)를 **한 장씩 직접 열어 본다.** 오타, 어색한 줄바꿈, 한 줄만 남은 글자, 강조가 엉뚱한 곳에 들어간 경우를 고친다.
+4. 캡션을 소리 내어 읽듯 다시 읽고, 스타일 가이드 7장 형식인지 확인한다.
+
+## 4. 올리기
+
+`config.json`의 `mode`에 따라:
+
+- **review (검토 모드):** `post/<날짜>` 브랜치에 커밋하고 Pull Request를 연다. 제목은 `[검토] 11월 15일 게시물 2건`. 본문에 게시물마다 표지 이미지(브랜치의 raw 주소로 첨부), 캡션 전문, 출처 목록, 게시 예정 시각을 넣는다. 사용자가 PR을 병합하면 GitHub Actions가 게시 시각에 맞춰 올린다.
+- **auto (자동 모드):** `main`에 바로 커밋하고 push한다. GitHub Actions가 게시 시각에 맞춰 올린다.
+
+커밋 메시지: `게시물 추가: <날짜> <시리즈> <주제>`
+
+## 5. 마무리 보고
+
+마지막 응답에 짧게 적는다: 고른 주제 2개와 고른 이유, 게시 예정 시각, PR 링크(검토 모드), 후보였지만 뺀 주제와 이유 한 줄씩.
+
+## 하지 말 것
+
+- 확인 안 된 내용, 지어낸 수치나 인용
+- 기사 문장을 그대로 옮기기
+- 다른 회사 로고·사진·스크린숏 사용
+- `posts/published/` 안의 파일 수정
+- 렌더링 검사를 끄거나 `checks.py`의 규칙을 바꾸기 (규칙을 바꿀 일이 있으면 보고에 제안으로만 적는다)

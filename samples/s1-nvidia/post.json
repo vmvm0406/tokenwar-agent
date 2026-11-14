@@ -1,0 +1,31 @@
+{
+  "id": "2026-11-15-carousel-nvidia-ceo", "type": "carousel", "series": "전황", "date": "2026-11-15",
+  "publish_at": "2026-11-15T08:10:00+09:00",
+  "slides": [
+    {"kind": "cover", "layout": "number", "tag": "전황", "tag_sub": "엔비디아",
+     "visual": {"type": "number", "value": "33", "unit": "년", "caption": "젠슨 황이 엔비디아를 이끈 시간"},
+     "title": "젠슨 황, 엔비디아 CEO에서\n물러납니다", "highlight": "물러납니다", "sub": "임시 CEO · 콜렛 크레스 CFO"},
+    {"kind": "body", "heading": "나흘 만에 벌어진 일", "highlight": "나흘",
+     "visual": {"type": "timeline", "items": [
+        {"date": "11.08", "text": "이사회, 독립 조사 착수"},
+        {"date": "11.12", "text": "젠슨 황 즉시 사임 발표", "on": true},
+        {"date": "11.12", "text": "콜렛 크레스, 임시 CEO 겸임"}]},
+     "body": "1993년 공동 창업 후 33년간 이끈 회사. 대표와 이사회 자리 모두 내려놓음."},
+    {"kind": "body", "heading": "왜 물러났나", "highlight": "왜",
+     "body": "해외 정보기관의 표적이 됐다는 보도 이후 이사회가 조사를 시작.\n같은 날 젠슨 황은 사생활 문제를 인정하고 사과.",
+     "point": "회사는 사임 이유를 따로 밝히지 않음"},
+    {"kind": "stat", "value": "90", "unit": "%", "label": "AI 데이터센터용 고성능 칩 시장 점유율 추정",
+     "heading": "AI 칩 1위의 리더십 공백", "highlight": "리더십 공백",
+     "body": "COO 없이 직속 임원 60명이 CEO에게 보고하던 구조."},
+    {"kind": "steps", "heading": "앞으로 지켜볼 것", "highlight": "지켜볼 것",
+     "items": [{"title": "정식 후임 CEO", "text": "내부 승진일지 외부 영입일지"},
+               {"title": "AI 칩 공급 일정", "text": "신제품 출시 계획에 변화가 있는지"},
+               {"title": "업계 반응", "text": "다음 주 AI 행사에서 나올 이야기"}]}
+  ],
+  "sources": [
+    {"name": "NVIDIA 공시 (11월 12일)", "url": "https://www.sec.gov/Archives/edgar/data/0001045810/000104581026000082/nvidiaannouncesceotransiti.htm"},
+    {"name": "AP", "url": "https://www.wdbj7.com/2026/11/09/nvidia-investigates-whether-ceo-jensen-huang-was-targeted-by-chinese-spy-with-whom-he-had-an-affair/"},
+    {"name": "Fortune", "url": "https://fortune.com/2026/11/09/nvidia-power-built-around-jensen-huang-scandal-testing-formula/"}],
+  "caption": "엔비디아를 33년 동안 이끈 젠슨 황이 물러났어요.\n\n11월 12일 즉시 사임했고, 콜렛 크레스 CFO가 임시 CEO를 맡아요. 회사는 사임 이유를 따로 밝히지 않았어요.\nAI 칩 시장 1위 기업의 리더십 공백, 무엇을 지켜봐야 할지 정리했어요.\n\n출처: NVIDIA 공시(11월 12일), AP, Fortune\n\n저장해두고 후임 발표 때 다시 보기",
+  "hashtags": ["#AI뉴스", "#엔비디아", "#젠슨황", "#AI반도체", "#토큰전쟁"]
+}

@@ -1,0 +1,40 @@
+{
+  "mode": "review",
+  "timezone": "Asia/Seoul",
+  "handle": "@tokenwar_ai",
+  "slots": {
+    "carousel": "08:10",
+    "reel": "19:10"
+  },
+  "brand": {
+    "bg": "#0A0B0A",
+    "accent": "#00FF66",
+    "text": "#F2F5F3",
+    "muted": "#9AA59F",
+    "slogan": "AI 전쟁의 최전선,\n먼저 아는 자가\n살아남는다",
+    "slogan_highlight": "살아남는다",
+    "signature": "TOKEN WAR · 오늘의 AI 전황",
+    "cta": "팔로우하고 매일 전황 받기"
+  },
+  "limits": {
+    "carousel_min": 5,
+    "carousel_max": 10,
+    "reel_max_frames": 8,
+    "cover_title_lines": 2,
+    "cover_title_line_chars": 17,
+    "subtitle_chars": 30,
+    "heading_line_chars": 16,
+    "body_chars": 90,
+    "point_chars": 40,
+    "hashtags_max": 5,
+    "caption_emoji_max": 2,
+    "body_chars_short": 60
+  },
+  "reel": {
+    "seconds_per_frame": 3.2,
+    "cover_seconds": 2.6,
+    "fade_seconds": 0.35,
+    "music_volume": 0.35
+  },
+  "ai_label": false
+}

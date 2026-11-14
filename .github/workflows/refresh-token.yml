@@ -1,0 +1,32 @@
+name: 인스타 토큰 연장
+
+# 인스타 장기 토큰은 60일 뒤 만료되므로 매달 1일과 20일에 연장한다.
+# 새 토큰을 Secrets에 다시 저장하려면 GH_PAT 시크릿이 필요하다 (README 참고).
+on:
+  schedule:
+    - cron: "17 2 1,20 * *"
+  workflow_dispatch:
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 토큰 연장
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+          REPO: ${{ github.repository }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "GH_PAT 시크릿이 없어 연장한 토큰을 저장할 수 없음. README의 '토큰 자동 연장'을 따라 설정할 것."
+            exit 1
+          fi
+          RES=$(curl -sS "https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token&access_token=${IG_ACCESS_TOKEN}")
+          NEW=$(echo "$RES" | python3 -c "import sys,json; print(json.load(sys.stdin).get('access_token',''))")
+          if [ -z "$NEW" ]; then
+            echo "연장 실패:"; echo "$RES" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('error',d))"
+            exit 1
+          fi
+          echo "::add-mask::$NEW"
+          gh secret set IG_ACCESS_TOKEN --repo "$REPO" --body "$NEW"
+          echo "토큰 연장 완료"

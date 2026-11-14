@@ -1,0 +1,23 @@
+{
+  "id": "2026-11-15-reel-share-links", "type": "reel", "series": "생존 가이드", "date": "2026-11-15",
+  "publish_at": "2026-11-15T19:10:00+09:00",
+  "slides": [
+    {"kind": "cover", "layout": "visual", "tag": "생존 가이드", "tag_sub": "AI 보안",
+     "visual": {"type": "settings", "title": "공유 범위", "label": "PUBLISH", "options": ["나만 보기", "링크가 있는 모든 사람", "전체 공개"], "selected": 1, "badge": "기본값"},
+     "title": "AI로 만든 앱 3만 5천 개가\n누구에게나 열려 있었습니다", "highlight": "누구에게나", "sub": "Grok Build · 공유 링크 기본값이 화근"},
+    {"kind": "stat", "value": "35,578", "unit": "개", "label": "로그인 없이 열린 Grok Build 앱",
+     "heading": "보안업체 Claroc 조사", "body": "그중 650~800개엔 회사나 개인 정보까지 들어 있었음."},
+    {"kind": "body", "heading": "원인은 기본 설정", "highlight": "기본 설정",
+     "body": "게시할 때 공유 범위가 '링크가 있는 모든 사람'으로 미리 골라져 있었음.",
+     "point": "링크 공유 = 사실상 공개"},
+    {"kind": "steps", "heading": "지금 할 일", "highlight": "지금",
+     "items": [{"title": "공유 링크 목록 열기", "text": "쓰는 AI 서비스 설정에서 확인"},
+               {"title": "안 쓰는 링크 삭제", "text": "오래된 공유일수록 위험"},
+               {"title": "민감한 정보는 넣지 않기", "text": "비밀번호, API 키, 고객 정보"}]}
+  ],
+  "sources": [
+    {"name": "AI Chat Daily (Claroc 조사)", "url": "https://www.aichatdaily.com/ai-security/claroc-finds-35-578-grok-build-apps-open"},
+    {"name": "Crypto Briefing", "url": "https://cryptobriefing.com/claroc-grok-build-apps-exposed-online/"}],
+  "caption": "AI로 만든 앱과 대화, 링크로 공유했을 뿐인데 누구나 볼 수 있다면?\n\nGrok Build로 만든 앱 3만 5,578개가 로그인 없이 열려 있었다는 조사 결과가 나왔어요. 공유 범위의 기본값이 '링크가 있는 모든 사람'이었기 때문이에요.\n지금 쓰는 AI 서비스의 공유 링크 목록, 한 번 점검해 보세요.\n\n출처: Claroc 조사(11월 10일 공개), AI Chat Daily\n\n저장해두고 친구에게도 공유하기",
+  "hashtags": ["#AI뉴스", "#AI보안", "#개인정보", "#생존가이드", "#토큰전쟁"]
+}
