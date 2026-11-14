@@ -73,12 +73,12 @@ html,body{margin:0;background:#000}
 .dots{position:absolute;inset:0;background-image:radial-gradient(#1b2a21 1.6px,transparent 1.6px);background-size:36px 36px;opacity:.9}
 
 /* 공통: 태그 상자, 브랜드 표시 */
-.tag{display:inline-flex;align-items:center;gap:10px;padding:7px 14px 8px;border:2px solid #3a4a40;border-radius:6px;
-  font-size:24px;font-weight:700;color:#C9D1CC;line-height:1;letter-spacing:-.01em}
-.tag b{color:ACCENT;font-weight:800}
-.tag.urgent{background:ACCENT;border-color:ACCENT;color:BG}.tag.urgent b{color:BG}
+.tag{display:inline-flex;align-items:center;gap:10px;padding:9px 20px 11px;background:ACCENT;border-radius:999px;
+  font-size:26px;font-weight:800;color:BG;line-height:1;letter-spacing:-.01em}
+.tag b{color:BG;font-weight:900}
+.tag.urgent:before{content:'';width:12px;height:12px;border-radius:50%;background:BG}
 .mark{position:absolute;left:0;right:0;bottom:MARKBpx;display:flex;flex-direction:column;align-items:center;gap:6px}
-.mark .m1{font-family:'JBM',monospace;font-weight:800;font-size:28px;letter-spacing:.14em;color:ACCENT;display:flex;align-items:center;gap:10px}
+.mark .m1{font-family:'JBM',monospace;font-weight:800;font-size:32px;letter-spacing:.14em;color:ACCENT;display:flex;align-items:center;gap:10px}
 .mark .m1 i{display:inline-block;width:11px;height:26px;background:ACCENT}
 .mark .m2{font-size:18px;color:#7E8A83;letter-spacing:.2em;font-weight:600}
 
@@ -92,7 +92,7 @@ html,body{margin:0;background:#000}
 .csub b{color:TEXT;font-weight:700}
 
 /* 시각 요소 */
-.tile{width:340px;height:340px;border-radius:78px;background:#121a15;border:2px solid #22332a;display:flex;align-items:center;justify-content:center;
+.tile{width:340px;height:340px;border-radius:78px;background:#121a15;border:3px solid ACCENT;display:flex;align-items:center;justify-content:center;
   font-family:'JBM',monospace;font-weight:800;font-size:170px;color:ACCENT;box-shadow:0 30px 80px rgba(0,0,0,.6)}
 .tile img{width:72%;height:72%;object-fit:contain}
 .tiles{display:grid;grid-template-columns:repeat(3,200px);gap:34px}
@@ -144,10 +144,10 @@ html,body{margin:0;background:#000}
 .inner{position:absolute;left:PADXpx;right:PADXpx;top:INTOPpx;bottom:INBOTpx;display:flex;flex-direction:column;gap:30px;overflow:hidden}
 .top{position:absolute;left:PADXpx;right:PADXpx;top:TOPYpx;display:flex;justify-content:space-between;align-items:center;font-family:'JBM',monospace;font-weight:700;font-size:22px;letter-spacing:.1em;color:#7E8A83}
 .top .b{color:ACCENT;display:flex;align-items:center;gap:10px}.top .b i{display:inline-block;width:9px;height:22px;background:ACCENT}
-.num{font-family:'JBM',monospace;font-weight:800;font-size:34px;color:ACCENT}
+.num{font-family:'JBM',monospace;font-weight:800;font-size:40px;color:ACCENT}
 .heading{margin:0;font-size:HEADpx;font-weight:800;line-height:1.28;letter-spacing:-.03em;text-wrap:balance}
 .body{margin:0;font-size:BODYpx;font-weight:500;line-height:1.62;color:#C9D1CC;letter-spacing:-.01em;text-wrap:pretty}
-.point{border:2px solid ACCENT;border-radius:22px;padding:24px 30px;display:flex;flex-direction:column;gap:8px}
+.point{border:3px solid ACCENT;background:rgba(0,255,102,.06);border-radius:22px;padding:24px 30px;display:flex;flex-direction:column;gap:8px}
 .point .lbl{font-family:'JBM',monospace;font-weight:800;font-size:22px;letter-spacing:.16em;color:ACCENT}
 .point .txt{font-size:POINTpx;font-weight:700;line-height:1.45;text-wrap:pretty}
 .bvis{height:BVISpx;flex:none;border-radius:28px;background:#0d130f;border:2px solid #1a261f;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
@@ -155,12 +155,12 @@ html,body{margin:0;background:#000}
 .bvis .card,.bvis .term,.bvis .bars,.bvis .tl{transform:scale(.8)}
 .steps{display:flex;flex-direction:column;gap:26px}
 .step{display:grid;grid-template-columns:64px 1fr;gap:22px;align-items:start}
-.step .k{width:58px;height:58px;border-radius:50%;background:ACCENT;color:BG;font-family:'JBM',monospace;font-weight:800;font-size:28px;display:flex;align-items:center;justify-content:center}
+.step .k{width:60px;height:60px;border-radius:50%;background:ACCENT;color:BG;font-family:'JBM',monospace;font-weight:800;font-size:28px;display:flex;align-items:center;justify-content:center}
 .step .st{font-size:STEPTpx;font-weight:800;line-height:1.3;margin-top:6px}
 .step .sx{font-size:STEPXpx;font-weight:500;color:#AEB8B2;line-height:1.5;margin-top:6px}
 .cmp{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
 .cmp .col{border-radius:24px;border:2px solid #22332a;padding:28px;display:flex;flex-direction:column;gap:14px;background:#0d130f}
-.cmp .col.on{border-color:ACCENT}
+.cmp .col.on{border-color:ACCENT;border-width:3px;background:rgba(0,255,102,.06)}
 .cmp .cl{font-family:'JBM','Pretendard',monospace;font-size:24px;font-weight:800;letter-spacing:.06em;color:#7E8A83}
 .cmp .col.on .cl{color:ACCENT}
 .cmp .ci{font-size:CMPpx;font-weight:600;line-height:1.45;color:#DDE4E0}
@@ -168,7 +168,7 @@ html,body{margin:0;background:#000}
 .stat .n small{font-family:'Pretendard';font-size:76px;font-weight:900;margin-left:6px}
 .stat .u{font-size:34px;font-weight:700;color:#AEB8B2;margin-top:8px}
 .bot{position:absolute;left:PADXpx;right:PADXpx;bottom:BOTYpx;display:flex;align-items:center;gap:30px;font-family:'JBM',monospace;font-size:22px;color:#7E8A83}
-.bot .pb{flex:1;height:5px;border-radius:3px;background:#1D2621;overflow:hidden}.bot .pb i{display:block;height:100%;background:ACCENT}
+.bot .pb{flex:1;height:8px;border-radius:3px;background:#1D2621;overflow:hidden}.bot .pb i{display:block;height:100%;background:ACCENT}
 
 /* 인용 영상 장면 */
 .clipbox{flex:none;margin:0 -PADXpx;height:CLIPHpx;background:#141c17;display:flex;align-items:center;justify-content:center;position:relative}

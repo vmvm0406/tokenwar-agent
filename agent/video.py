@@ -63,15 +63,15 @@ def page_html(post, cfg, box_h, fonts_uri):
 #frame{{width:{W}px;height:{H}px;position:relative;color:{b['text']};font-family:'Pretendard',sans-serif;word-break:keep-all}}
 #frame.bg{{background:{b['bg']}}}
 .head{{position:absolute;left:60px;right:60px;top:170px;display:flex;flex-direction:column;align-items:center;gap:22px;text-align:center}}
-.brand{{font-family:'JBM',monospace;font-weight:800;font-size:34px;letter-spacing:.16em;color:{b['accent']};display:flex;align-items:center;gap:12px}}
+.brand{{font-family:'JBM',monospace;font-weight:800;font-size:40px;letter-spacing:.16em;color:{b['accent']};display:flex;align-items:center;gap:12px}}
 .brand i{{display:inline-block;width:13px;height:32px;background:{b['accent']}}}
 .title{{margin:6px 0 0;font-size:84px;font-weight:800;line-height:1.24;letter-spacing:-.035em;text-wrap:balance}}
 .hl{{color:{b['accent']}}}
 .en{{font-size:34px;font-weight:600;color:#9AA59F;letter-spacing:-.005em}}
-.box{{position:absolute;left:20px;width:1040px;height:{box_h}px;border:3px solid {b['accent']};border-radius:6px}}
+.box{{position:absolute;left:20px;width:1040px;height:{box_h}px;border:6px solid {b['accent']};border-radius:8px}}
 .credit{{position:absolute;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}}
 .credit span{{font-size:24px;font-weight:700;color:#7E8A83;letter-spacing:.2em}}
-.credit b{{font-size:34px;font-weight:800;color:#DDE4E0;letter-spacing:-.01em}}
+.credit b{{font-size:34px;font-weight:800;color:{b['accent']};letter-spacing:-.01em}}
 .sub{{position:absolute;left:70px;right:70px;text-align:center;font-size:50px;font-weight:800;line-height:1.35;letter-spacing:-.02em;
   color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.85),0 0 2px rgba(0,0,0,.9);white-space:pre-line}}
 .sub .hl{{color:{b['accent']}}}
@@ -146,7 +146,7 @@ def make_video_reel(post, folder, cfg):
     work.mkdir()
     geo, subs = asyncio.run(render_layers(post, cfg, folder, box_h, work))
     top = geo["top"]
-    inner_w, inner_h = 1034, box_h - 6  # 테두리 안쪽
+    inner_w, inner_h = 1028, box_h - 12  # 테두리 안쪽
     bg = cfg["brand"]["bg"].replace("#", "0x")
 
     inputs = ["-f", "lavfi", "-t", f"{dur:.3f}", "-i", f"color=c={bg}:s={W}x{H}:r={FPS}",
@@ -160,7 +160,7 @@ def make_video_reel(post, folder, cfg):
     else:
         fit = f"scale={inner_w}:{inner_h}:force_original_aspect_ratio=increase,crop={inner_w}:{inner_h}"
     fc = [f"[1:v]{fit},setsar=1,fps={FPS}[vid]",
-          f"[0:v][vid]overlay=23:{top + 3}[b0]", "[b0][2:v]overlay=0:0[b1]"]
+          f"[0:v][vid]overlay=26:{top + 6}[b0]", "[b0][2:v]overlay=0:0[b1]"]
     last = "[b1]"
     for i, (_, a, z) in enumerate(subs):
         a, z = a - start, z - start
