@@ -20,7 +20,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 W, H, FPS = 1080, 1920, 30
-UI_SAFE_BOTTOM = 1500  # 이보다 아래는 인스타 버튼·캡션에 가려진다
+UI_SAFE_BOTTOM = 1510  # 이보다 아래는 인스타 버튼·캡션에 가려진다
 
 
 def esc(s):
@@ -52,7 +52,8 @@ def has_audio(path):
 def page_html(post, cfg, box_h, fonts_uri):
     b = cfg["brand"]
     credit = post.get("credit")
-    credit_html = f'<div class="credit">영상 · {esc(credit)}</div>' if credit else '<div class="credit"></div>'
+    credit_html = (f'<div class="credit"><span>출처</span><b>{esc(credit)}</b></div>' if credit
+                   else '<div class="credit"></div>')
     return f"""<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>
 @font-face{{font-family:'Pretendard';src:url('{fonts_uri}/Pretendard-SemiBold.otf');font-weight:600}}
 @font-face{{font-family:'Pretendard';src:url('{fonts_uri}/Pretendard-Bold.otf');font-weight:700}}
@@ -68,7 +69,9 @@ def page_html(post, cfg, box_h, fonts_uri):
 .hl{{color:{b['accent']}}}
 .en{{font-size:34px;font-weight:600;color:#9AA59F;letter-spacing:-.005em}}
 .box{{position:absolute;left:20px;width:1040px;height:{box_h}px;border:3px solid {b['accent']};border-radius:6px}}
-.credit{{position:absolute;left:24px;font-family:'JBM','Pretendard',monospace;font-weight:800;font-size:26px;color:#7E8A83;letter-spacing:.02em}}
+.credit{{position:absolute;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}}
+.credit span{{font-size:24px;font-weight:700;color:#7E8A83;letter-spacing:.2em}}
+.credit b{{font-size:34px;font-weight:800;color:#DDE4E0;letter-spacing:-.01em}}
 .sub{{position:absolute;left:70px;right:70px;text-align:center;font-size:50px;font-weight:800;line-height:1.35;letter-spacing:-.02em;
   color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.85),0 0 2px rgba(0,0,0,.9);white-space:pre-line}}
 .sub .hl{{color:{b['accent']}}}
@@ -97,15 +100,16 @@ async def render_layers(post, cfg, folder, box_h, work):
         geo = await pg.evaluate(f"""() => {{
             const head = document.querySelector('.head').getBoundingClientRect();
             const box = document.getElementById('box');
-            let top = Math.max(head.bottom + 56, 640);
+            let top = Math.max(head.bottom + 56, 600);
             top = Math.round(top / 2) * 2;
             box.style.top = top + 'px';
             const cr = document.querySelector('.credit');
-            cr.style.top = (top + {box_h} + 16) + 'px';
+            cr.style.top = (top + {box_h} + 20) + 'px';
             const bottom = top + {box_h};
-            const inside = bottom + 90 + 140 > {UI_SAFE_BOTTOM};
+            const credH = cr.getBoundingClientRect().height ? 84 : 0;
+            const inside = bottom + credH + 40 + 136 > {UI_SAFE_BOTTOM};
             const sub = document.getElementById('sub');
-            if (inside) sub.style.top = (bottom - 230) + 'px'; else sub.style.top = (bottom + 90) + "px";
+            if (inside) sub.style.top = (bottom - 230) + 'px'; else sub.style.top = (bottom + credH + 40) + "px";
             const headOver = head.bottom > top - 20;
             return {{top, inside, headOver, titleH: document.querySelector('.title').getBoundingClientRect().height}};
         }}""")

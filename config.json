@@ -32,7 +32,8 @@
     "clip_max_seconds": 10,
     "clip_max_ratio": 0.4,
     "video_title_line_chars": 13,
-    "subtitle_line_chars": 18
+    "subtitle_line_chars": 18,
+    "quote_max_seconds": 15
   },
   "reel": {
     "seconds_per_frame": 3.4,

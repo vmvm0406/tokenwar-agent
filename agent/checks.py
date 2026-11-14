@@ -37,7 +37,7 @@ def _len(s):
     return len(re.sub(r"\s", "", s))
 
 
-RIGHTS = {"own", "permission", "license"}
+RIGHTS = {"quote", "own", "permission", "license"}
 
 
 def check_video(post):
@@ -51,6 +51,24 @@ def check_video(post):
         return errors, warnings
     if post["rights"] not in RIGHTS:
         errors.append(f"rights는 {RIGHTS} 중 하나: own(직접 만듦), permission(원작자 허락), license(이용 허락 라이선스)")
+    if post["rights"] == "quote":
+        v = post["video"]
+        if v.get("end") in (None, ""):
+            errors.append("인용은 video.start와 video.end를 직접 정해야 함")
+        else:
+            d = float(v["end"]) - float(v.get("start", 0))
+            if d > lim["quote_max_seconds"]:
+                errors.append(f"인용 영상은 {lim['quote_max_seconds']}초 이하: 지금 {d:.1f}초")
+            subs = post.get("subtitles", [])
+            covered = sum(float(s["end"]) - float(s["start"]) for s in subs if "start" in s and "end" in s)
+            if len(subs) < 2 or covered < d * 0.6:
+                errors.append("인용 영상에는 우리 설명 자막이 2개 이상, 영상 길이의 60% 이상 깔려야 함")
+        if not post.get("credit"):
+            errors.append("인용은 credit(원작자 이름이나 채널) 필수")
+        if not str(post.get("source_url", "")).startswith("http"):
+            errors.append("인용은 source_url(원본 영상 링크) 필수")
+        if len(post["caption"]) < 80:
+            errors.append("인용 게시물 캡션에는 맥락과 의미를 설명할 것 (80자 이상)")
     if post["rights"] in ("permission", "license"):
         if not post.get("credit"):
             errors.append("남의 영상은 credit(원작자 계정이나 이름) 필수")
