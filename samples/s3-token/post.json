@@ -1,24 +1,84 @@
 {
-  "id": "2026-11-16-carousel-term-token", "type": "carousel", "series": "AI 용어", "date": "2026-11-16",
+  "id": "2026-11-16-carousel-term-token",
+  "type": "carousel",
+  "series": "AI 용어",
+  "date": "2026-11-16",
   "publish_at": "2026-11-16T08:10:00+09:00",
   "slides": [
-    {"kind": "cover", "layout": "word", "label": "AI 용어", "word": "토큰", "word_desc": "AI가 글을 읽고 쓰는 단위",
-     "wall": ["프롬프트", "컨텍스트", "임베딩", "추론", "파인튜닝", "에이전트", "환각", "RAG", "LLM", "멀티모달", "벡터 DB", "GPU", "MCP", "온도"]},
-    {"kind": "body", "heading": "AI가 글을 자르는\n가장 작은 조각", "highlight": "가장 작은 조각",
-     "visual": {"type": "terminal", "title": "tokenizer", "lines": ["$ 입력: I love AI", "# 토큰으로 나누면", "✓ [I] [ love] [ AI]", "✓ 토큰 3개"]},
-     "body": "글자나 단어가 아니라 '토큰' 조각으로 읽고 씀. 영어는 보통 4글자 안팎이 1토큰."},
-    {"kind": "compare", "heading": "토큰이 중요한 이유", "highlight": "중요한 이유",
-     "left": {"label": "요금", "items": ["API 요금은 토큰 수로 계산", "길게 쓸수록 비싸짐"]},
-     "right": {"label": "기억력", "on": true, "items": ["한 번에 읽는 양도 토큰으로 제한", "넘치면 앞 내용을 놓침"]}},
-    {"kind": "steps", "heading": "토큰 아끼는 법", "highlight": "아끼는 법",
-     "items": [{"title": "필요한 부분만 붙여넣기", "text": "문서 통째보다 관련 부분만"},
-               {"title": "긴 대화는 새 창에서", "text": "앞 내용을 요약해 넘기기"},
-               {"title": "답 길이 정해주기", "text": "\"3줄로\", \"표로\"처럼"}]},
-    {"kind": "body", "heading": "그래서 '토큰 전쟁'", "highlight": "토큰 전쟁",
-     "body": "더 많은 토큰을 더 싸고 빠르게 처리하는 쪽이 유리.\n빅테크가 칩과 데이터센터에 돈을 쏟는 이유.",
-     "point": "토큰 = AI 시대의 연료"}
+    {
+      "kind": "cover",
+      "layout": "big",
+      "big": "토큰",
+      "big_note": "AI가 글을 읽고 쓰는 단위",
+      "title": "'토큰',\n정확히 뭘까",
+      "highlight": "'토큰'"
+    },
+    {
+      "kind": "body",
+      "heading": "AI가 글을 자르는\n가장 작은 조각",
+      "highlight": "가장 작은 조각",
+      "body": "AI는 글자나 단어가 아니라 '토큰'이라는 조각으로 읽고 씀.\n영어는 보통 4글자 안팎이 1토큰.",
+      "point": "\"I love AI\" → [I] [ love] [ AI]\n토큰 3개"
+    },
+    {
+      "kind": "compare",
+      "heading": "토큰이 중요한 이유",
+      "highlight": "중요한 이유",
+      "left": {
+        "label": "요금",
+        "items": [
+          "API 요금은 토큰 수로 계산",
+          "길게 쓸수록 비싸짐"
+        ]
+      },
+      "right": {
+        "label": "기억력",
+        "on": true,
+        "items": [
+          "한 번에 읽는 양도 토큰으로 제한",
+          "넘치면 앞 내용을 놓침"
+        ]
+      }
+    },
+    {
+      "kind": "steps",
+      "heading": "토큰 아끼는 법",
+      "highlight": "아끼는 법",
+      "items": [
+        {
+          "title": "필요한 부분만 붙여넣기",
+          "text": "문서 통째보다 관련 부분만"
+        },
+        {
+          "title": "긴 대화는 새 창에서",
+          "text": "앞 내용을 요약해 넘기기"
+        },
+        {
+          "title": "답 길이 정해주기",
+          "text": "\"3줄로\", \"표로\"처럼"
+        }
+      ]
+    },
+    {
+      "kind": "body",
+      "heading": "그래서 '토큰 전쟁'",
+      "highlight": "토큰 전쟁",
+      "body": "더 많은 토큰을 더 싸고 빠르게 처리하는 쪽이 유리.\n빅테크가 칩과 데이터센터에 돈을 쏟는 이유.",
+      "point": "토큰 = AI 시대의 연료"
+    }
   ],
-  "sources": [{"name": "OpenAI 도움말: 토큰이란", "url": "https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them"}],
+  "sources": [
+    {
+      "name": "OpenAI 도움말: 토큰이란",
+      "url": "https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them"
+    }
+  ],
   "caption": "AI 뉴스에 매일 나오는 '토큰', 정확히 뭘까요?\n\nAI는 글을 글자나 단어가 아니라 토큰이라는 조각으로 나눠 읽고 써요. 요금도, 한 번에 기억하는 양도 전부 토큰으로 정해져요.\n\n출처: OpenAI 도움말\n\n저장해두고 용어가 헷갈릴 때 꺼내 보기",
-  "hashtags": ["#AI뉴스", "#AI용어", "#토큰", "#ChatGPT", "#토큰전쟁"]
+  "hashtags": [
+    "#AI뉴스",
+    "#AI용어",
+    "#토큰",
+    "#ChatGPT",
+    "#토큰전쟁"
+  ]
 }

@@ -24,7 +24,7 @@
 게시물마다 폴더를 만든다: `posts/queue/<날짜>-<carousel|reel>-<영문 슬러그>/post.json`
 
 - 장의 형식은 `TEMPLATES.md`, 실제 예시는 `samples/*/post.json`을 본다.
-- 표지 유형(layout)은 최근 3개 게시물과 겹치지 않게 고른다. 본문도 body, stat, steps, compare를 섞는다.
+- 표지 유형(layout: big, list, image)은 최근 2개 게시물과 겹치지 않게 고른다. 본문도 body, stat, steps, compare를 섞는다. STYLE_GUIDE.md 1-1장의 AI 디자인 티 금지 목록을 지킨다.
 - 오픈소스 도구를 다룰 때는 저장소의 LICENSE를 `https://raw.githubusercontent.com/<owner>/<repo>/HEAD/LICENSE`로 확인하고, 상업적 이용이 허용될 때만 로고나 화면 이미지를 `curl`로 받아 게시물 폴더의 `img/`에 넣는다. 스타일 가이드 2-1장.
 
 ```json
@@ -35,9 +35,8 @@
   "date": "2026-11-15",
   "publish_at": "2026-11-15T08:10:00+09:00",
   "slides": [
-    {"kind": "cover", "layout": "number", "tag": "전황", "tag_sub": "회사명",
-     "visual": {"type": "number", "value": "33", "unit": "년", "caption": "설명"},
-     "title": "첫 줄\n둘째 줄", "highlight": "둘째 줄", "sub": "이름 · 한 줄 설명"},
+    {"kind": "cover", "layout": "big", "big": "33년", "big_note": "설명 한 줄",
+     "title": "첫 줄\n둘째 줄", "highlight": "둘째 줄", "sub": "한 줄 부제"},
     {"kind": "body", "heading": "소제목", "highlight": "소제목", "body": "본문", "point": "선택: 강조 박스"}
   ],
   "sources": [{"name": "기관명", "url": "https://..."}],

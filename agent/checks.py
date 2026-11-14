@@ -11,10 +11,10 @@ ROOT = Path(__file__).resolve().parent.parent
 CONFIG = json.loads((ROOT / "config.json").read_text(encoding="utf-8"))
 
 SERIES = {"전황", "긴급", "생존 가이드", "오픈소스", "AI 용어"}
-COVER_LAYOUTS = {"visual", "icon", "word", "number", "list"}
+COVER_LAYOUTS = {"big", "list", "image"}
 BODY_KINDS = {"body", "steps", "compare", "stat"}
 CLIP_FIELDS = ("src", "start", "end", "source", "source_url")
-VISUALS = {"image", "monogram", "tiles", "settings", "chat", "terminal", "bars", "timeline", "number"}
+VISUALS = {"image", "bars", "timeline"}
 TYPES = {"carousel", "reel", "video"}
 
 # 낚시성·과장 표현 (STYLE_GUIDE.md 3장)
@@ -155,15 +155,22 @@ def check_post(post):
         if i > 1 and kind == "cover":
             errors.append(f"{tag} 표지는 첫 장에만")
         if kind == "cover":
-            layout = s.get("layout", "visual")
+            layout = s.get("layout", "big")
             if layout not in COVER_LAYOUTS:
                 errors.append(f"{tag} layout은 {COVER_LAYOUTS} 중 하나: {layout}")
-            if layout == "word" and not s.get("word"):
-                errors.append(f"{tag} word 표지는 word 항목 필요")
-            if layout != "word" and not s.get("title"):
+            if layout == "big" and not s.get("big"):
+                errors.append(f"{tag} big 표지는 big(크게 보일 숫자나 단어) 필요")
+            if layout == "big" and len(str(s.get("big", ""))) > 7:
+                errors.append(f"{tag} big은 7자 이하")
+            if layout == "list" and not (2 <= len(s.get("items", [])) <= 5):
+                errors.append(f"{tag} list 표지는 items 2~5개")
+            for x in s.get("items", []) if layout == "list" else []:
+                if _len(x) > 14:
+                    errors.append(f"{tag} list 항목은 14자 이하: '{x}'")
+            if layout == "image" and (s.get("visual") or {}).get("type") != "image":
+                errors.append(f"{tag} image 표지는 visual.type=image 필요")
+            if not s.get("title"):
                 errors.append(f"{tag} 표지 제목(title) 필요")
-            if layout in ("visual", "icon", "number", "list") and not s.get("visual"):
-                errors.append(f"{tag} '{layout}' 표지는 visual 항목 필요")
             t = s.get("title", "")
             ls = _lines(t) if t else []
             if len(ls) > lim["cover_title_lines"]:
@@ -173,7 +180,7 @@ def check_post(post):
                     errors.append(f"{tag} 표지 제목 한 줄은 {lim['cover_title_line_chars']}자 이하: '{l}'")
             if _len(s.get("sub", "")) > lim["subtitle_chars"]:
                 errors.append(f"{tag} 부제는 {lim['subtitle_chars']}자 이하")
-            all_text += [t, s.get("sub", ""), s.get("word", ""), s.get("word_desc", "")]
+            all_text += [t, s.get("sub", ""), str(s.get("big", "")), s.get("big_note", "")] + list(s.get("items", []))
             hl_src = t
         elif kind == "clip":
             if post["type"] != "reel":

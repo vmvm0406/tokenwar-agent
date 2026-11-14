@@ -5,14 +5,16 @@
 
 결과:
     carousel: slides/01.jpg ... (1080x1350)
-    reel:     frames/01.jpg ... (1080x1920), reel.mp4, cover.jpg
+    reel:     frames/01.jpg ... (1080x1920), reel.mp4, cover.jpg  (카드형 모션 릴스, 선택)
+    video:    reel.mp4, cover.jpg  (영상 프레임 릴스, video.py)
 
-표지 유형(cover.layout): visual, icon, word, number, list
+디자인 원칙 (STYLE_GUIDE.md 1-1장): 편집 디자인. 큰 활자, 선, 녹색 면.
+알약 태그·둥근 카드·작은 대문자 라벨·가짜 UI 화면·점 무늬·진행 바 같은 'AI 디자인 티'는 쓰지 않는다.
+
+표지 유형(cover.layout): big, list, image
 본문 유형(kind): body, steps, compare, stat
-시각 요소(visual): image, monogram, chat, settings, terminal, bars, timeline, number
-자세한 형식은 TEMPLATES.md 참고.
-
-규칙 검사(checks.py)와 글자 넘침 검사를 통과하지 못하면 저장하지 않고 종료 코드 1로 끝난다.
+그림(visual): image, bars, timeline
+자세한 형식은 TEMPLATES.md.
 """
 import asyncio
 import html
@@ -56,144 +58,95 @@ def br(t):
 # ---------- 스타일 ----------
 
 CSS = """
-@font-face{font-family:'Pretendard';src:url('FONTS/Pretendard-Regular.otf');font-weight:400}
-@font-face{font-family:'Pretendard';src:url('FONTS/Pretendard-SemiBold.otf');font-weight:600}
-@font-face{font-family:'Pretendard';src:url('FONTS/Pretendard-Bold.otf');font-weight:700}
-@font-face{font-family:'Pretendard';src:url('FONTS/Pretendard-ExtraBold.otf');font-weight:800}
-@font-face{font-family:'Pretendard';src:url('FONTS/Pretendard-Black.otf');font-weight:900}
-@font-face{font-family:'JBM';src:url('FONTS/jetbrains-mono-latin-500-normal.woff2');font-weight:500}
-@font-face{font-family:'JBM';src:url('FONTS/jetbrains-mono-latin-700-normal.woff2');font-weight:700}
-@font-face{font-family:'JBM';src:url('FONTS/jetbrains-mono-latin-800-normal.woff2');font-weight:800}
+@import url('FONTS/black-han-sans/index.css');
+@font-face{font-family:'Wanted';src:url('FONTS/WantedSans-Medium.otf');font-weight:500}
+@font-face{font-family:'Wanted';src:url('FONTS/WantedSans-SemiBold.otf');font-weight:600}
+@font-face{font-family:'Wanted';src:url('FONTS/WantedSans-Bold.otf');font-weight:700}
+@font-face{font-family:'Wanted';src:url('FONTS/WantedSans-ExtraBold.otf');font-weight:800}
 *{box-sizing:border-box}
 html,body{margin:0;background:#000}
-.slide{width:Wpx;height:Hpx;background:BG;color:TEXT;font-family:'Pretendard',sans-serif;position:relative;overflow:hidden;
+.slide{width:Wpx;height:Hpx;background:BG;color:TEXT;font-family:'Wanted',sans-serif;position:relative;overflow:hidden;
   word-break:keep-all;overflow-wrap:break-word;margin-bottom:20px}
 .hl{color:ACCENT}
-.mono{font-family:'JBM','Pretendard',monospace}
-.dots{position:absolute;inset:0;background-image:radial-gradient(#1b2a21 1.6px,transparent 1.6px);background-size:36px 36px;opacity:.9}
+.disp{font-family:'Black Han Sans','Wanted',sans-serif;font-weight:400}
 
-/* 공통: 태그 상자, 브랜드 표시 */
-.tag{display:inline-flex;align-items:center;gap:10px;padding:9px 20px 11px;background:ACCENT;border-radius:999px;
-  font-size:26px;font-weight:800;color:BG;line-height:1;letter-spacing:-.01em}
-.tag b{color:BG;font-weight:900}
-.tag.urgent:before{content:'';width:12px;height:12px;border-radius:50%;background:BG}
-.mark{position:absolute;left:0;right:0;bottom:MARKBpx;display:flex;flex-direction:column;align-items:center;gap:6px}
-.mark .m1{font-family:'JBM',monospace;font-weight:800;font-size:32px;letter-spacing:.14em;color:ACCENT;display:flex;align-items:center;gap:10px}
-.mark .m1 i{display:inline-block;width:11px;height:26px;background:ACCENT}
-.mark .m2{font-size:18px;color:#7E8A83;letter-spacing:.2em;font-weight:600}
+/* 브랜드: 왼쪽 아래 작은 글자 하나 */
+.brand{position:absolute;left:PADXpx;bottom:BRANDYpx;font-family:'Black Han Sans';font-size:30px;color:ACCENT;letter-spacing:.01em}
 
 /* 표지 */
-.vis{position:absolute;left:0;right:0;top:0;height:VISHpx;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.vis img.full{width:100%;height:100%;object-fit:cover}
-.fade{position:absolute;left:0;right:0;top:FADETpx;height:420px;background:linear-gradient(to bottom,rgba(10,11,10,0),BG 78%)}
-.ctext{position:absolute;left:PADXpx;right:PADXpx;bottom:CTEXTBpx;display:flex;flex-direction:column;gap:20px}
-.ctitle{margin:0;font-size:CTITLEpx;font-weight:800;line-height:1.24;letter-spacing:-.035em;text-wrap:balance}
-.csub{margin:0;font-size:CSUBpx;font-weight:600;color:#AEB8B2;letter-spacing:-.01em}
-.csub b{color:TEXT;font-weight:700}
-
-/* 시각 요소 */
-.tile{width:340px;height:340px;border-radius:78px;background:#121a15;border:3px solid ACCENT;display:flex;align-items:center;justify-content:center;
-  font-family:'JBM',monospace;font-weight:800;font-size:170px;color:ACCENT;box-shadow:0 30px 80px rgba(0,0,0,.6)}
-.tile img{width:72%;height:72%;object-fit:contain}
-.tiles{display:grid;grid-template-columns:repeat(3,200px);gap:34px}
-.tiles .tile{width:200px;height:200px;border-radius:46px;font-size:88px}
-.card{width:840px;background:#111813;border:2px solid #22332a;border-radius:36px;padding:40px;display:flex;flex-direction:column;gap:22px;
-  box-shadow:0 30px 90px rgba(0,0,0,.55)}
-.card .ct{font-size:30px;font-weight:800;color:TEXT;display:flex;justify-content:space-between;align-items:center}
-.card .ct small{font-family:'JBM',monospace;font-size:20px;color:#7E8A83;font-weight:700;letter-spacing:.1em}
-.opt{display:flex;align-items:center;gap:20px;padding:22px 26px;border-radius:20px;background:#0c120e;border:2px solid #1d2a22;font-size:31px;font-weight:600;color:#C9D1CC}
-.opt i{width:30px;height:30px;border-radius:50%;border:3px solid #4a5a50;flex:none}
-.opt.on{border-color:ACCENT;color:TEXT}.opt.on i{border-color:ACCENT;background:radial-gradient(ACCENT 45%,transparent 50%)}
-.opt em{margin-left:auto;font-style:normal;font-size:22px;font-weight:800;color:BG;background:ACCENT;padding:6px 12px;border-radius:8px}
-.bub{max-width:640px;padding:22px 28px;border-radius:28px;font-size:31px;line-height:1.45;font-weight:500}
-.bub.user{align-self:flex-end;background:#1f2a24;color:TEXT;border-bottom-right-radius:8px}
-.bub.ai{align-self:flex-start;background:#0c120e;border:2px solid #22332a;color:#DDE4E0;border-bottom-left-radius:8px}
-.bub.ai b{color:ACCENT}
-.term{width:860px;background:#050705;border:2px solid #1d2a22;border-radius:26px;overflow:hidden;box-shadow:0 30px 90px rgba(0,0,0,.6)}
-.term .bar{height:58px;border-bottom:2px solid #1d2a22;display:flex;align-items:center;padding:0 26px;font-family:'JBM',monospace;font-size:20px;color:#7E8A83;letter-spacing:.08em}
-.term pre{margin:0;padding:30px 34px;font-family:'JBM','Pretendard',monospace;font-size:28px;line-height:1.65;color:#C9D1CC;white-space:pre-wrap}
-.term .ok{color:ACCENT}.term .dim{color:#6c7a72}
-.bars{width:840px;display:flex;flex-direction:column;gap:26px}
-.brow{display:flex;flex-direction:column;gap:10px}
-.brow .bl{display:flex;justify-content:space-between;font-size:28px;font-weight:700;color:#C9D1CC}
-.brow .bl span:last-child{font-family:'JBM',monospace}
-.brow .bt{height:34px;border-radius:10px;background:#141c17;overflow:hidden}
-.brow .bt i{display:block;height:100%;background:#3a4a40;border-radius:10px}
-.brow.on .bl{color:TEXT}.brow.on .bt i{background:ACCENT}
-.tl{width:820px;display:flex;flex-direction:column;gap:0}
-.tli{display:grid;grid-template-columns:150px 40px 1fr;align-items:start;min-height:110px}
-.tli .d{font-family:'JBM',monospace;font-weight:800;font-size:30px;color:#7E8A83;padding-top:4px}
-.tli .dot{width:22px;height:22px;border-radius:50%;background:#3a4a40;margin-top:10px;position:relative}
-.tli .dot:after{content:'';position:absolute;left:9px;top:28px;width:4px;height:84px;background:#22332a}
-.tli:last-child .dot:after{display:none}
-.tli .t{font-size:32px;font-weight:700;line-height:1.35;color:#C9D1CC}
-.tli.on .d{color:ACCENT}.tli.on .dot{background:ACCENT}.tli.on .t{color:TEXT}
-.bignum{display:flex;flex-direction:column;align-items:center;gap:10px}
-.bignum .n{font-family:'Pretendard';font-weight:900;font-size:230px;line-height:1;color:ACCENT;letter-spacing:-.05em}
-.bignum .n small{font-family:'Pretendard';font-size:90px;font-weight:900;margin-left:8px}
-.bignum .c{font-size:32px;font-weight:700;color:#AEB8B2}
-.wall{position:absolute;inset:-20px -60px;display:flex;flex-direction:column;justify-content:center;gap:26px;transform:rotate(0deg)}
-.wall div{white-space:nowrap;font-size:40px;font-weight:700;color:#1f2b24;letter-spacing:-.01em}
-.wall .on{color:ACCENT}
-.word{position:relative;display:flex;flex-direction:column;align-items:center;gap:18px;padding:40px 60px;background:radial-gradient(BG 55%,rgba(10,11,10,0) 72%)}
-.word .lab{font-family:'JBM',monospace;font-weight:800;font-size:26px;letter-spacing:.2em;color:ACCENT}
-.word .w{font-size:170px;font-weight:900;letter-spacing:-.05em;line-height:1}
-.word .wd{font-size:32px;font-weight:600;color:#AEB8B2}
+.vis{position:absolute;left:0;right:0;top:0;height:VISHpx;overflow:hidden}
+.vis img{width:100%;height:100%;object-fit:cover;display:block}
+.vis .shade{position:absolute;left:0;right:0;bottom:0;height:45%;background:linear-gradient(to bottom,rgba(10,11,10,0),BG)}
+.big{position:absolute;left:PADXpx;top:BIGTOPpx;font-family:'Black Han Sans';color:ACCENT;line-height:.86;letter-spacing:-.04em;white-space:nowrap}
+.bignote{position:absolute;left:PADXpx;font-size:36px;font-weight:700;color:TEXT}
+.covlist{position:absolute;left:PADXpx;right:PADXpx;top:LISTTOPpx;display:flex;flex-direction:column}
+.covlist div{display:flex;align-items:baseline;gap:28px;padding:20px 0;border-top:3px solid ACCENT;font-family:'Black Han Sans';font-size:58px;line-height:1.1}
+.covlist div:last-child{border-bottom:3px solid ACCENT}
+.covlist b{font-weight:400;color:ACCENT;min-width:48px}
+.ctext{position:absolute;left:PADXpx;right:PADXpx;bottom:CTEXTBpx;display:flex;flex-direction:column;gap:22px}
+.ctitle{margin:0;font-family:'Black Han Sans';font-weight:400;font-size:CTITLEpx;line-height:1.16;letter-spacing:-.02em;text-wrap:balance}
+.ctitle .pre{color:ACCENT}
+.csub{margin:0;font-size:CSUBpx;font-weight:600;color:#B9C2BD}
+.rule{height:6px;background:ACCENT;width:100%}
 
 /* 본문 장 */
-.inner{position:absolute;left:PADXpx;right:PADXpx;top:INTOPpx;bottom:INBOTpx;display:flex;flex-direction:column;gap:30px;overflow:hidden}
-.top{position:absolute;left:PADXpx;right:PADXpx;top:TOPYpx;display:flex;justify-content:space-between;align-items:center;font-family:'JBM',monospace;font-weight:700;font-size:22px;letter-spacing:.1em;color:#7E8A83}
-.top .b{color:ACCENT;display:flex;align-items:center;gap:10px}.top .b i{display:inline-block;width:9px;height:22px;background:ACCENT}
-.num{font-family:'JBM',monospace;font-weight:800;font-size:40px;color:ACCENT}
-.heading{margin:0;font-size:HEADpx;font-weight:800;line-height:1.28;letter-spacing:-.03em;text-wrap:balance}
-.body{margin:0;font-size:BODYpx;font-weight:500;line-height:1.62;color:#C9D1CC;letter-spacing:-.01em;text-wrap:pretty}
-.point{border:3px solid ACCENT;background:rgba(0,255,102,.06);border-radius:22px;padding:24px 30px;display:flex;flex-direction:column;gap:8px}
-.point .lbl{font-family:'JBM',monospace;font-weight:800;font-size:22px;letter-spacing:.16em;color:ACCENT}
-.point .txt{font-size:POINTpx;font-weight:700;line-height:1.45;text-wrap:pretty}
-.bvis{height:BVISpx;flex:none;border-radius:28px;background:#0d130f;border:2px solid #1a261f;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.inner{position:absolute;left:PADXpx;right:PADXpx;top:INTOPpx;bottom:INBOTpx;display:flex;flex-direction:column;justify-content:center;gap:34px;overflow:hidden}
+.heading{margin:0;font-family:'Black Han Sans';font-weight:400;font-size:HEADpx;line-height:1.2;letter-spacing:-.02em;text-wrap:balance}
+.body{margin:0;font-size:BODYpx;font-weight:500;line-height:1.62;color:#CFD6D2;text-wrap:pretty}
+.pull{border-top:6px solid ACCENT;padding-top:22px;font-family:'Black Han Sans';font-size:PULLpx;line-height:1.3;color:ACCENT;text-wrap:balance}
+.bvis{height:BVISpx;flex:none;position:relative;overflow:hidden}
 .bvis img{width:100%;height:100%;object-fit:cover}
-.bvis .card,.bvis .term,.bvis .bars,.bvis .tl{transform:scale(.8)}
-.steps{display:flex;flex-direction:column;gap:26px}
-.step{display:grid;grid-template-columns:64px 1fr;gap:22px;align-items:start}
-.step .k{width:60px;height:60px;border-radius:50%;background:ACCENT;color:BG;font-family:'JBM',monospace;font-weight:800;font-size:28px;display:flex;align-items:center;justify-content:center}
-.step .st{font-size:STEPTpx;font-weight:800;line-height:1.3;margin-top:6px}
+.steps{display:flex;flex-direction:column}
+.step{display:grid;grid-template-columns:76px 1fr;gap:10px;padding:24px 0;border-top:2px solid #2A3530}
+.step:last-child{border-bottom:2px solid #2A3530}
+.step .k{font-family:'Black Han Sans';font-size:60px;line-height:1;color:ACCENT}
+.step .st{font-size:STEPTpx;font-weight:800;line-height:1.3}
 .step .sx{font-size:STEPXpx;font-weight:500;color:#AEB8B2;line-height:1.5;margin-top:6px}
-.cmp{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
-.cmp .col{border-radius:24px;border:2px solid #22332a;padding:28px;display:flex;flex-direction:column;gap:14px;background:#0d130f}
-.cmp .col.on{border-color:ACCENT;border-width:3px;background:rgba(0,255,102,.06)}
-.cmp .cl{font-family:'JBM','Pretendard',monospace;font-size:24px;font-weight:800;letter-spacing:.06em;color:#7E8A83}
+.cmp{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:0}
+.cmp .col{padding:6px 34px 6px 0;display:flex;flex-direction:column;gap:16px}
+.cmp .col+.col{padding:6px 0 6px 34px;border-left:3px solid ACCENT}
+.cmp .cl{font-family:'Black Han Sans';font-size:44px;color:MUTED}
 .cmp .col.on .cl{color:ACCENT}
 .cmp .ci{font-size:CMPpx;font-weight:600;line-height:1.45;color:#DDE4E0}
-.stat .n{font-family:'Pretendard';font-weight:900;font-size:180px;line-height:1;color:ACCENT;letter-spacing:-.05em}
-.stat .n small{font-family:'Pretendard';font-size:76px;font-weight:900;margin-left:6px}
-.stat .u{font-size:34px;font-weight:700;color:#AEB8B2;margin-top:8px}
-.bot{position:absolute;left:PADXpx;right:PADXpx;bottom:BOTYpx;display:flex;align-items:center;gap:30px;font-family:'JBM',monospace;font-size:22px;color:#7E8A83}
-.bot .pb{flex:1;height:8px;border-radius:3px;background:#1D2621;overflow:hidden}.bot .pb i{display:block;height:100%;background:ACCENT}
+.stat .n{font-family:'Black Han Sans';font-size:STATpx;line-height:.9;color:ACCENT;letter-spacing:-.04em;white-space:nowrap}
+.stat .n small{font-size:.45em;margin-left:6px}
+.stat .u{font-size:36px;font-weight:700;color:TEXT;margin-top:18px}
+.bars{display:flex;flex-direction:column;gap:22px;width:100%}
+.brow .bl{display:flex;justify-content:space-between;font-size:30px;font-weight:700;color:#CFD6D2;margin-bottom:8px}
+.brow .bt{height:30px;background:#1B231F}
+.brow .bt i{display:block;height:100%;background:#4A5A50}
+.brow.on .bl{color:TEXT}.brow.on .bt i{background:ACCENT}
+.tl{display:flex;flex-direction:column;width:100%}
+.tli{display:grid;grid-template-columns:150px 1fr;gap:20px;padding:20px 0;border-top:2px solid #2A3530;align-items:baseline}
+.tli:last-child{border-bottom:2px solid #2A3530}
+.tli .d{font-family:'Black Han Sans';font-size:34px;color:MUTED}
+.tli .t{font-size:34px;font-weight:700;line-height:1.35;color:#CFD6D2}
+.tli.on .d{color:ACCENT}.tli.on .t{color:TEXT}
 
-/* 인용 영상 장면 */
+/* 인용 영상 장면 (카드형 릴스) */
 .clipbox{flex:none;margin:0 -PADXpx;height:CLIPHpx;background:#141c17;display:flex;align-items:center;justify-content:center;position:relative}
-.clipbox .ph{font-family:'JBM','Pretendard',monospace;font-weight:800;font-size:34px;color:#4a5a50;letter-spacing:.08em}
-.clipsrc{font-family:'JBM','Pretendard',monospace;font-size:24px;font-weight:700;color:#7E8A83;letter-spacing:.04em;margin-top:-8px}
+.clipbox .ph{font-family:'Black Han Sans';font-size:40px;color:#4a5a50}
+.clipsrc{font-size:28px;font-weight:700;color:MUTED;margin-top:-10px}
 .clipsrc b{color:ACCENT}
 
-/* 마지막 장 */
-.outro .inner{justify-content:center}
-.slogan{margin:0;font-size:SLOGANpx;font-weight:900;line-height:1.2;letter-spacing:-.035em;white-space:pre-line}
-.cta{align-self:flex-start;background:ACCENT;color:BG;font-weight:800;font-size:34px;padding:18px 32px;border-radius:999px}
-.src{font-size:22px;line-height:1.55;color:#7E8A83}
+/* 마지막 장: 녹색 면 */
+.outro{background:ACCENT;color:BG}
+.outro .inner{justify-content:flex-end;gap:40px}
+.slogan{margin:0;font-family:'Black Han Sans';font-weight:400;font-size:SLOGANpx;line-height:1.12;letter-spacing:-.03em;white-space:pre-line}
+.outro .who{font-family:'Black Han Sans';font-size:44px}
+.outro .cta{font-size:34px;font-weight:800}
+.outro .src{font-size:22px;line-height:1.55;font-weight:600;opacity:.8;border-top:3px solid BG;padding-top:20px}
+.outro .brand{color:BG}
 """
 
 DIMS = {
-    "carousel": dict(PADX=72, VISH=860, FADET=470, CTEXTB=170, MARKB=56, CTITLE=74, CSUB=30, TOPY=60,
-                     INTOP=140, INBOT=150, BOTY=70, HEAD=66, BODY=40, POINT=36, BVIS=440, STEPT=38, STEPX=31,
-                     CMP=32, SLOGAN=88, CLIPH=608),
-    "reel": dict(PADX=80, VISH=1200, FADET=760, CTEXTB=430, MARKB=300, CTITLE=86, CSUB=34, TOPY=210,
-                 INTOP=300, INBOT=420, BOTY=330, HEAD=78, BODY=46, POINT=42, BVIS=560, STEPT=44, STEPX=36,
-                 CMP=36, SLOGAN=98, CLIPH=608),
+    "carousel": dict(PADX=72, BRANDY=60, VISH=860, BIGTOP=96, LISTTOP=120, CTEXTB=150, CTITLE=80, CSUB=32,
+                     INTOP=110, INBOT=140, HEAD=76, BODY=40, PULL=50, BVIS=440, STEPT=38, STEPX=31,
+                     CMP=32, STAT=230, SLOGAN=104, CLIPH=608),
+    "reel": dict(PADX=80, BRANDY=330, VISH=1200, BIGTOP=260, LISTTOP=300, CTEXTB=420, CTITLE=92, CSUB=36,
+                 INTOP=260, INBOT=420, HEAD=84, BODY=46, PULL=56, BVIS=560, STEPT=44, STEPX=36,
+                 CMP=36, STAT=250, SLOGAN=112, CLIPH=608),
 }
-
-
-REEL_EXTRA = ".vis>.card,.vis>.term,.vis>.bars,.vis>.tl,.vis>.bignum,.vis>.tile,.vis>.tiles{transform:scale(1.1)}"
 
 
 def build_css(kind):
@@ -202,14 +155,12 @@ def build_css(kind):
     for k, v in sorted(DIMS[kind].items(), key=lambda kv: -len(kv[0])):
         c = c.replace(f"{k}px", f"{v}px")
     c = c.replace("width:Wpx", f"width:{w}px").replace("height:Hpx", f"height:{h}px")
-    if kind == "reel":
-        c += REEL_EXTRA
-    for k, v in [("ACCENT", B["accent"]), ("BG", B["bg"]), ("TEXT", B["text"])]:
+    for k, v in [("ACCENT", B["accent"]), ("MUTED", B["muted"]), ("TEXT", B["text"]), ("BG", B["bg"])]:
         c = c.replace(k, v)
     return c
 
 
-# ---------- 시각 요소 ----------
+# ---------- 그림 ----------
 
 def img_uri(folder, src):
     p = (folder / src).resolve()
@@ -221,113 +172,53 @@ def img_uri(folder, src):
 def visual_html(v, folder):
     t = v.get("type")
     if t == "image":
-        return f'<img class="full" src="{img_uri(folder, v["src"])}" style="object-fit:{v.get("fit", "cover")}">'
-    if t == "monogram":
-        inner = f'<img src="{img_uri(folder, v["src"])}">' if v.get("src") else esc(v.get("text", "?"))
-        return f'<div class="tile">{inner}</div>'
-    if t == "tiles":
-        cells = []
-        for it in v["items"][:6]:
-            inner = f'<img src="{img_uri(folder, it["src"])}">' if it.get("src") else esc(it.get("text", "?"))
-            cells.append(f'<div class="tile">{inner}</div>')
-        return f'<div class="tiles">{"".join(cells)}</div>'
-    if t == "settings":
-        rows = []
-        for i, o in enumerate(v["options"]):
-            on = i == v.get("selected")
-            badge = f'<em>{esc(v.get("badge", "기본값"))}</em>' if on and v.get("badge", "기본값") else ""
-            rows.append(f'<div class="opt{" on" if on else ""}"><i></i>{esc(o)}{badge}</div>')
-        return (f'<div class="card"><div class="ct">{esc(v.get("title", ""))}<small>{esc(v.get("label", "SETTINGS"))}</small></div>'
-                f'{"".join(rows)}</div>')
-    if t == "chat":
-        bubs = []
-        for m in v["items"]:
-            txt = hl(m["text"], m.get("highlight"))
-            bubs.append(f'<div class="bub {"user" if m.get("role") == "user" else "ai"}">{br(txt)}</div>')
-        return f'<div class="card" style="gap:18px">{"".join(bubs)}</div>'
-    if t == "terminal":
-        lines = []
-        for ln in v["lines"]:
-            e = esc(ln)
-            if ln.startswith("✓"):
-                e = f'<span class="ok">✓</span>{e[1:]}'
-            elif ln.startswith("#"):
-                e = f'<span class="dim">{e}</span>'
-            elif ln.startswith("$"):
-                e = f'<span class="ok">$</span>{e[1:]}'
-            lines.append(e)
-        return (f'<div class="term"><div class="bar">{esc(v.get("title", "terminal"))}</div>'
-                f'<pre>{chr(10).join(lines)}</pre></div>')
+        return f'<img src="{img_uri(folder, v["src"])}" style="object-fit:{v.get("fit", "cover")}">'
     if t == "bars":
         mx = max(it["value"] for it in v["items"]) or 1
         unit = esc(v.get("unit", ""))
-        rows = []
-        for it in v["items"]:
-            on = it.get("on")
-            rows.append(f'<div class="brow{" on" if on else ""}"><div class="bl"><span>{esc(it["label"])}</span>'
-                        f'<span>{esc(it.get("display", it["value"]))}{unit}</span></div>'
-                        f'<div class="bt"><i style="width:{it["value"] / mx * 100:.1f}%"></i></div></div>')
-        return f'<div class="bars">{"".join(rows)}</div>'
+        rows = "".join(
+            f'<div class="brow{" on" if it.get("on") else ""}"><div class="bl"><span>{esc(it["label"])}</span>'
+            f'<span>{esc(it.get("display", it["value"]))}{unit}</span></div>'
+            f'<div class="bt"><i style="width:{it["value"] / mx * 100:.1f}%"></i></div></div>'
+            for it in v["items"])
+        return f'<div class="bars">{rows}</div>'
     if t == "timeline":
-        rows = []
-        for it in v["items"]:
-            rows.append(f'<div class="tli{" on" if it.get("on") else ""}"><span class="d">{esc(it["date"])}</span>'
-                        f'<span class="dot"></span><span class="t">{esc(it["text"])}</span></div>')
-        return f'<div class="tl">{"".join(rows)}</div>'
-    if t == "number":
-        unit = f'<small>{esc(v["unit"])}</small>' if v.get("unit") else ""
-        cap = f'<div class="c">{esc(v["caption"])}</div>' if v.get("caption") else ""
-        return f'<div class="bignum"><div class="n">{esc(v["value"])}{unit}</div>{cap}</div>'
+        rows = "".join(
+            f'<div class="tli{" on" if it.get("on") else ""}"><span class="d">{esc(it["date"])}</span>'
+            f'<span class="t">{esc(it["text"])}</span></div>' for it in v["items"])
+        return f'<div class="tl">{rows}</div>'
     raise ValueError(f"알 수 없는 visual type: {t}")
 
 
 # ---------- 장 만들기 ----------
 
-def tag_html(post, s):
-    cls = "tag urgent" if post["series"] == "긴급" else "tag"
-    a = esc(s.get("tag") or post["series"])
-    b = s.get("tag_sub")
-    return f'<span class="{cls}"><b>{a}</b>{" · " + esc(b) if b else ""}</span>'
-
-
-def mark_html():
-    return '<div class="mark"><div class="m1"><i></i>TOKEN WAR</div><div class="m2">AI 전황</div></div>'
+def brand_html():
+    return '<div class="brand">TOKEN WAR</div>'
 
 
 def cover_html(post, s, folder):
-    layout = s.get("layout", "visual")
-    sub = ""
-    if s.get("sub"):
-        parts = s["sub"].split(" · ", 1)
-        sub = (f'<p class="csub"><b>{esc(parts[0])}</b> · {esc(parts[1])}</p>' if len(parts) == 2
-               else f'<p class="csub">{esc(s["sub"])}</p>')
-    text = (f'<div class="ctext"><div>{tag_html(post, s)}</div>'
-            f'<h1 class="ctitle">{br(hl(s.get("title", ""), s.get("highlight")))}</h1>{sub}</div>')
-    if layout == "word":
-        words = s.get("wall") or [s["word"]]
-        rows = []
-        for r in range(14):
-            row = [esc(words[(r * 3 + k) % len(words)]) for k in range(8)]
-            if r == 2:
-                row[3] = f'<span class="on">{esc(s["word"])}</span>'
-            rows.append(f'<div>{"  ·  ".join(row)}</div>')
-        wall = f'<div class="wall">{"".join(rows)}</div>'
-        word = (f'<div class="word"><span class="lab">{esc(s.get("label", "AI 용어"))}</span>'
-                f'<span class="w">{esc(s["word"])}</span>'
-                f'{"<span class=wd>" + esc(s["word_desc"]) + "</span>" if s.get("word_desc") else ""}</div>')
-        vis = f'<div class="vis" style="height:100%">{wall}{word}</div>'
-        return f'<div class="slide cover">{vis}{text if s.get("title") else ""}{mark_html()}</div>'
-    v = s.get("visual") or {"type": "monogram", "text": s.get("title", "?")[0]}
-    dots = '<div class="dots"></div>' if v.get("type") != "image" else ""
-    vis = f'<div class="vis">{dots}{visual_html(v, folder)}</div>'
-    return f'<div class="slide cover">{vis}<div class="fade"></div>{text}{mark_html()}</div>'
+    layout = s.get("layout", "big")
+    series = s.get("series_label", post["series"])
+    pre = f'<span class="pre">[{esc(series)}]</span> ' if series else ""
+    sub = f'<p class="csub">{esc(s["sub"])}</p>' if s.get("sub") else ""
+    text = (f'<div class="ctext"><h1 class="ctitle">{pre}{br(hl(s.get("title", ""), s.get("highlight")))}</h1>'
+            f'{sub}</div>')
+    if layout == "image":
+        vis = (f'<div class="vis">{visual_html(s["visual"], folder)}<div class="shade"></div></div>')
+        return f'<div class="slide">{vis}{text}{brand_html()}</div>'
+    if layout == "list":
+        items = "".join(f'<div><b>{i}</b><span>{esc(x)}</span></div>' for i, x in enumerate(s["items"], 1))
+        return f'<div class="slide"><div class="covlist">{items}</div>{text}{brand_html()}</div>'
+    # big: 화면을 꽉 채우는 큰 글자 (숫자나 단어). 가장자리에서 잘려도 된다.
+    big = esc(s["big"])
+    size = s.get("big_size") or (520 if len(s["big"]) <= 3 else 380 if len(s["big"]) <= 5 else 280)
+    note = f'<div class="bignote" style="top:{96 + int(size * 0.9) + 26}px">{esc(s["big_note"])}</div>' if s.get("big_note") else ""
+    return (f'<div class="slide"><div class="big" style="font-size:{size}px">{big}</div>{note}'
+            f'{text}{brand_html()}</div>')
 
 
-def frame(n, total, inner, extra_cls=""):
-    top = (f'<div class="top"><span class="b"><i></i>TOKEN WAR</span><span>{n:02d} / {total:02d}</span></div>')
-    bot = (f'<div class="bot"><span>{esc(CONFIG["handle"])}</span>'
-           f'<div class="pb"><i style="width:{round(n / total * 100)}%"></i></div></div>')
-    return f'<div class="slide {extra_cls}">{top}<div class="inner">{inner}</div>{bot}</div>'
+def frame(inner, extra_cls=""):
+    return f'<div class="slide {extra_cls}"><div class="inner">{inner}</div>{brand_html()}</div>'
 
 
 def body_html(post, s, n, total, folder):
@@ -335,10 +226,10 @@ def body_html(post, s, n, total, folder):
     parts = []
     if s.get("visual"):
         v = s["visual"]
-        dots = '<div class="dots"></div>' if v.get("type") != "image" else ""
-        parts.append(f'<div class="bvis">{dots}{visual_html(v, folder)}</div>')
-    if kind != "stat":
-        parts.append(f'<div class="num">{n:02d}</div>')
+        if v.get("type") == "image":
+            parts.append(f'<div class="bvis">{visual_html(v, folder)}</div>')
+        else:
+            parts.append(visual_html(v, folder))
     if kind == "stat":
         unit = f'<small>{esc(s["unit"])}</small>' if s.get("unit") else ""
         parts.append(f'<div class="stat"><div class="n">{esc(s["value"])}{unit}</div>'
@@ -361,31 +252,28 @@ def body_html(post, s, n, total, folder):
     if s.get("body"):
         parts.append(f'<p class="body">{br(esc(s["body"]))}</p>')
     if s.get("point"):
-        parts.append(f'<div class="point"><span class="lbl">POINT</span><span class="txt">{br(esc(s["point"]))}</span></div>')
-    justify = "flex-start" if s.get("visual") else "center"
-    return frame(n, total, f'<div style="display:contents"></div>{"".join(parts)}').replace(
-        '<div class="inner">', f'<div class="inner" style="justify-content:{justify}">', 1)
+        parts.append(f'<div class="pull">{br(esc(s["point"]))}</div>')
+    return frame("".join(parts))
 
 
 def clip_html(post, s, n, total):
-    parts = [f'<div class="num">{n:02d}</div>']
+    parts = []
     if s.get("heading"):
         parts.append(f'<h2 class="heading">{br(hl(s["heading"], s.get("highlight")))}</h2>')
-    parts.append('<div class="clipbox"><span class="ph">▶ 인용 영상</span></div>')
-    parts.append(f'<div class="clipsrc"><b>영상 출처</b> · {esc(s["source"])}</div>')
+    parts.append('<div class="clipbox"><span class="ph">인용 영상</span></div>')
+    parts.append(f'<div class="clipsrc"><b>출처</b> {esc(s["source"])}</div>')
     if s.get("caption"):
         parts.append(f'<p class="body">{br(esc(s["caption"]))}</p>')
-    return frame(n, total, "".join(parts))
+    return frame("".join(parts))
 
 
 def outro_html(post, n, total):
     srcs = " · ".join(esc(x["name"]) for x in post["sources"])
     date = post["date"].replace("-", ".")
-    inner = (f'<h2 class="slogan">{hl(B["slogan"], B["slogan_highlight"])}</h2>'
-             f'<div class="mark" style="position:static;align-items:flex-start"><div class="m1"><i></i>{esc(B["signature"])}</div></div>'
-             f'<div class="cta">{esc(B["cta"])}</div>'
-             f'<div class="src" style="margin-top:40px">출처: {srcs}<br>{date} 기준</div>')
-    return frame(n, total, inner, "outro")
+    inner = (f'<h2 class="slogan">{esc(B["slogan"])}</h2>'
+             f'<div><div class="who">{esc(CONFIG["handle"])}</div><div class="cta">{esc(B["cta"])}</div></div>'
+             f'<div class="src">출처 {srcs} · {date} 기준</div>')
+    return frame(inner, "outro")
 
 
 def build_page(post, folder):
@@ -432,9 +320,9 @@ async def shoot(page_html, out_dir, kind):
                    if (t.top < s.getBoundingClientRect().top + 60) issues.push('표지 글이 너무 김');
                    const title = s.querySelector('.ctitle');
                    const lh = parseFloat(getComputedStyle(title).lineHeight);
-                   if (title.getBoundingClientRect().height > lh * 2.5) issues.push('표지 제목이 3줄 이상');
+                   if (title.getBoundingClientRect().height > lh * 3.5) issues.push('표지 제목이 4줄 이상');
                  }
-                 const wide = [...s.querySelectorAll('h1,h2,p,.txt,.st,.ci')].some(e => e.scrollWidth > e.clientWidth + 2);
+                 const wide = [...s.querySelectorAll('h1,h2,p,.pull,.st,.ci')].some(e => e.scrollWidth > e.clientWidth + 2);
                  if (wide) issues.push('가로로 넘침');
                  return issues.length ? `${i + 1}번째 장: ${issues.join(', ')}` : null }).filter(Boolean)"""
         )

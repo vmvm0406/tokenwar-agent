@@ -21,7 +21,7 @@
     "carousel_max": 10,
     "reel_max_frames": 8,
     "cover_title_lines": 2,
-    "cover_title_line_chars": 17,
+    "cover_title_line_chars": 12,
     "subtitle_chars": 30,
     "heading_line_chars": 16,
     "body_chars": 90,

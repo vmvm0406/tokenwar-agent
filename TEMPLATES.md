@@ -1,36 +1,45 @@
 # 템플릿 사용법
 
-`post.json`의 `slides` 배열로 장을 만든다. 첫 장은 표지(`kind: "cover"`), 그 뒤는 본문 장이다. 마지막 장(슬로건·출처)은 자동으로 붙는다. 실제 예시는 `samples/` 폴더에 있다.
+`post.json`의 `slides` 배열로 장을 만든다. 첫 장은 표지(`kind: "cover"`), 그 뒤는 본문 장이다. 마지막 장(녹색 면, 슬로건, 출처)은 자동으로 붙는다. 실제 예시는 `samples/` 폴더에 있다.
+
+디자인 규칙은 STYLE_GUIDE.md 1-1장 (AI 디자인 티 금지 목록).
 
 ## 표지 (cover)
 
-모든 표지는 위쪽에 큰 시각 요소, 아래쪽에 **태그 상자 → 제목 2줄 → 부제** 순서로 글이 들어간다.
+아래쪽에 `[시리즈] 제목` 2줄과 부제 1줄, 왼쪽 아래 TOKEN WAR. 위쪽은 layout에 따라 다르다.
 
 | 필드 | 설명 |
 |---|---|
-| `layout` | `visual`, `icon`, `number`, `list`, `word` 중 하나 |
-| `tag` / `tag_sub` | 태그 상자. 예: `전황` · `엔비디아`, `오픈소스` · `2.2천★` |
-| `title` | 2줄 이하, 줄당 17자 이하. 줄바꿈은 `\n` |
+| `layout` | `big`, `list`, `image` |
+| `title` | 2줄 이하, 줄당 12자 이하 (첫 줄 앞에 `[시리즈]`가 붙으니 첫 줄은 짧게). 줄바꿈은 `\n` |
 | `highlight` | 제목 안에서 녹색으로 칠할 부분 |
-| `sub` | `"이름 · 한 줄 설명"` 형식. 앞부분은 굵게 표시된다 |
-| `visual` | 위쪽에 들어갈 시각 요소 (아래 표) |
+| `sub` | 한 줄 부제 (30자 이하) |
+| `series_label` | 머리말을 시리즈 이름 대신 다른 말로 쓸 때 (예: "속보") |
 
-| layout | 언제 쓰나 | visual 예 |
+| layout | 위쪽 | 필드 |
 |---|---|---|
-| `visual` | 기능·설정·대화를 보여줄 때 | `settings`, `chat`, `terminal`, `image` |
-| `icon` | 앱·도구 하나를 소개할 때 | `monogram` (로고 이미지 또는 글자) |
-| `number` | 숫자 하나가 핵심일 때 | `number` |
-| `list` | TOP 5, 도구 모음 | `tiles` |
-| `word` | AI 용어 시리즈 | 없음. 대신 `word`, `word_desc`, `wall`(배경 단어 목록), `label` |
+| `big` | 화면을 꽉 채우는 녹색 큰 글자 (숫자나 단어, 가장자리에서 잘려도 됨) | `big`(7자 이하), `big_note`(그 아래 한 줄) |
+| `list` | 녹색 가로선으로 나눈 번호 목록 (TOP 3~5, 체크리스트) | `items` 2~5개, 각 14자 이하 |
+| `image` | 실제 이미지 (위쪽 꽉 채움, 아래로 어두워짐) | `visual: {"type": "image", "src": "img/파일.jpg"}` |
 
 ## 본문 장
 
 | kind | 용도 | 필드 |
 |---|---|---|
-| `body` | 일반 설명 | `heading`, `highlight`, `body`, `point`(선택), `visual`(선택, 넣으면 위쪽에 그림) |
-| `stat` | 숫자 강조 | `value`, `unit`, `label`, `heading`, `body` |
+| `body` | 일반 설명 | `heading`, `highlight`, `body`, `point`(굵은 녹색 선 아래 큰 녹색 문장), `visual`(선택) |
+| `stat` | 숫자 하나가 핵심 | `value`, `unit`, `label`(문장으로), `heading`, `body` |
 | `steps` | 따라 하기, 체크리스트 | `heading`, `items`: [{`title`, `text`}] 2~4개 |
 | `compare` | 비교, 전후 | `heading`, `left`/`right`: {`label`, `items`, `on`} |
+
+## 그림 (visual)
+
+| type | 필드 | 쓰는 곳 |
+|---|---|---|
+| `image` | `src` (게시물 폴더 기준), `fit` | 실제 이미지. 오픈소스 저장소 화면(라이선스 확인), 직접 넣은 사진 |
+| `bars` | `items`: [{`label`, `value`, `display`, `on`}], `unit` | 실제 숫자 비교 (가격, 점수) |
+| `timeline` | `items`: [{`date`, `text`, `on`}] | 사건 순서 |
+
+가짜 UI 화면(설정창, 대화창, 터미널), 아이콘 타일, 점 무늬 배경은 쓰지 않는다.
 
 ## 인용 영상 장 (릴스 전용)
 
@@ -41,22 +50,6 @@
 영상은 화면 가운데 가로로 꽉 차게 들어가고, 아래에 "영상 출처 · ○○"와 자막이 붙는다. 원본 소리는 그대로 나온다.
 
 **인용 규칙 (checks.py가 검사):** 클립 하나 10초 이하, 클립 합계가 릴스의 40% 이하, 클립 말고 해설 장면이 표지 포함 3개 이상. 사람이 고른 영상만 쓴다(`inbox/clips/`).
-
-## 시각 요소 (visual)
-
-| type | 필드 | 예 |
-|---|---|---|
-| `image` | `src` (게시물 폴더 기준 경로), `fit` | 오픈소스 저장소 화면, 직접 넣은 사진 |
-| `monogram` | `text` 또는 `src` | 앱 아이콘 타일 |
-| `tiles` | `items`: [{`text` 또는 `src`}] 최대 6개 | TOP 5 아이콘 묶음 |
-| `settings` | `title`, `label`, `options`, `selected`, `badge` | 공유 범위 설정 화면 |
-| `chat` | `items`: [{`role`: user/ai, `text`, `highlight`}] | 질문과 AI 답 |
-| `terminal` | `title`, `lines` (`$` 명령, `#` 주석, `✓` 완료) | 코드·명령 실행 |
-| `bars` | `items`: [{`label`, `value`, `display`, `on`}], `unit` | 가격·성능 비교 |
-| `timeline` | `items`: [{`date`, `text`, `on`}] | 사건 순서 |
-| `number` | `value`, `unit`, `caption` | 핵심 숫자 |
-
-`settings`, `chat`, `terminal`은 특정 회사 화면을 따라 그리지 않은 **일반적인 모양**이다. 실제 제품 화면처럼 보이게 꾸미지 않는다.
 
 ## 영상 프레임 릴스 (type: "video")
 

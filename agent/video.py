@@ -55,28 +55,30 @@ def page_html(post, cfg, box_h, fonts_uri):
     credit_html = (f'<div class="credit"><span>출처</span><b>{esc(credit)}</b></div>' if credit
                    else '<div class="credit"></div>')
     return f"""<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>
+@import url('{fonts_uri}/black-han-sans/index.css');
 @font-face{{font-family:'Pretendard';src:url('{fonts_uri}/Pretendard-SemiBold.otf');font-weight:600}}
 @font-face{{font-family:'Pretendard';src:url('{fonts_uri}/Pretendard-Bold.otf');font-weight:700}}
 @font-face{{font-family:'Pretendard';src:url('{fonts_uri}/Pretendard-ExtraBold.otf');font-weight:800}}
-@font-face{{font-family:'JBM';src:url('{fonts_uri}/jetbrains-mono-latin-800-normal.woff2');font-weight:800}}
+@font-face{{font-family:'Wanted';src:url('{fonts_uri}/WantedSans-SemiBold.otf');font-weight:600}}
+@font-face{{font-family:'Wanted';src:url('{fonts_uri}/WantedSans-Bold.otf');font-weight:700}}
+@font-face{{font-family:'Wanted';src:url('{fonts_uri}/WantedSans-ExtraBold.otf');font-weight:800}}
 *{{box-sizing:border-box}}html,body{{margin:0;background:transparent}}
-#frame{{width:{W}px;height:{H}px;position:relative;color:{b['text']};font-family:'Pretendard',sans-serif;word-break:keep-all}}
+#frame{{width:{W}px;height:{H}px;position:relative;color:{b['text']};font-family:'Wanted',sans-serif;word-break:keep-all}}
 #frame.bg{{background:{b['bg']}}}
 .head{{position:absolute;left:60px;right:60px;top:170px;display:flex;flex-direction:column;align-items:center;gap:22px;text-align:center}}
-.brand{{font-family:'JBM',monospace;font-weight:800;font-size:40px;letter-spacing:.16em;color:{b['accent']};display:flex;align-items:center;gap:12px}}
-.brand i{{display:inline-block;width:13px;height:32px;background:{b['accent']}}}
-.title{{margin:6px 0 0;font-size:84px;font-weight:800;line-height:1.24;letter-spacing:-.035em;text-wrap:balance}}
+.brand{{font-family:'Black Han Sans';font-size:40px;color:{b['accent']}}}
+.title{{margin:6px 0 0;font-family:'Black Han Sans';font-weight:400;font-size:88px;line-height:1.18;letter-spacing:-.02em;text-wrap:balance}}
 .hl{{color:{b['accent']}}}
 .en{{font-size:34px;font-weight:600;color:#9AA59F;letter-spacing:-.005em}}
-.box{{position:absolute;left:20px;width:1040px;height:{box_h}px;border:6px solid {b['accent']};border-radius:8px}}
+.box{{position:absolute;left:20px;width:1040px;height:{box_h}px;border:6px solid {b['accent']}}}
 .credit{{position:absolute;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}}
-.credit span{{font-size:24px;font-weight:700;color:#7E8A83;letter-spacing:.2em}}
+.credit span{{font-size:26px;font-weight:700;color:#9AA59F}}
 .credit b{{font-size:34px;font-weight:800;color:{b['accent']};letter-spacing:-.01em}}
 .sub{{position:absolute;left:70px;right:70px;text-align:center;font-size:50px;font-weight:800;line-height:1.35;letter-spacing:-.02em;
   color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.85),0 0 2px rgba(0,0,0,.9);white-space:pre-line}}
 .sub .hl{{color:{b['accent']}}}
 </style></head><body><div id="frame">
-<div class="head"><div class="brand"><i></i>TOKEN WAR</div>
+<div class="head"><div class="brand">TOKEN WAR</div>
 <h1 class="title">{hl(post['title'], post.get('highlight'))}</h1>
 <div class="en">{esc(post.get('title_en', ''))}</div></div>
 <div class="box" id="box"></div>{credit_html}
@@ -113,7 +115,7 @@ async def render_layers(post, cfg, folder, box_h, work):
             const headOver = head.bottom > top - 20;
             return {{top, inside, headOver, titleH: document.querySelector('.title').getBoundingClientRect().height}};
         }}""")
-        if geo["headOver"] or geo["titleH"] > 84 * 1.24 * 2.4:
+        if geo["headOver"] or geo["titleH"] > 88 * 1.18 * 2.4:
             await browser.close()
             raise SystemExit("제목이 너무 길어 영상과 겹침 → 2줄 안으로 줄일 것")
         frame = await pg.query_selector("#frame")
