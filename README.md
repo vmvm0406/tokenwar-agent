@@ -47,6 +47,8 @@
 
 처음 한 번: 관리자 권한 PowerShell에서 `scripts/setup-local.ps1`을 실행하고, 안내대로 `claude`와 `gh auth login`으로 로그인한다.
 
+매일 작업은 전용 저장소 `%USERPROFILE%\tokenwar-daily`에서만 돈다 (없으면 처음 실행할 때 받는다). 시작할 때마다 최신 main을 받고, 지난 실행이 남긴 변경은 `git stash`에 치워 둔다. Code 탭에서 쓰는 `tokenwar-agent` 폴더와는 겹치지 않는다. 그래서 `inbox/clips/`에 넣은 영상이나 고친 규칙은 **main에 push해야** 매일 작업이 본다.
+
 ## 매일 쓰는 법
 
 - **검토 모드 (`config.json`의 `"mode": "review"`)**: 매일 아침 Pull Request가 열린다. 휴대폰 GitHub 앱에서 이미지와 캡션을 보고 **Merge**를 누르면 게시 시각에 올라간다. 마음에 안 들면 PR에 댓글로 고칠 점을 남기거나 닫는다.

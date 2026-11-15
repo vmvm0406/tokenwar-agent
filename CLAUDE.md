@@ -8,7 +8,8 @@
 
 ```
 [윈도우 작업 스케줄러] 로그인 3분 뒤 · 9:30 · 12:30 · 15:30
-   └ scripts/run-local.ps1 → (오늘 할 일이 있을 때만) claude -p "LOCAL.md대로"
+   └ scripts/run-local.ps1 → %USERPROFILE%\tokenwar-daily(매일 작업 전용 저장소)에서 git pull로 최신 main
+        → (오늘 할 일이 있을 때만) claude -p "LOCAL.md대로"   ※ Code 탭의 tokenwar-agent 폴더와 따로 돈다
         ├ agent/hot.py            지금 관심 주제 → data/hot.md
         ├ 리서치 → post.json 작성 → agent/render.py(검사·렌더링) → 직접 검수
         └ 검토 모드: post/<날짜>, post/<날짜>-reel 브랜치 + PR   (자동 모드: main)
@@ -86,7 +87,7 @@ cd $env:USERPROFILE\tokenwar-agent
 git pull
 py -3.12 agent/render.py samples/s1-nvidia           # 카드뉴스 렌더링 확인
 py -3.12 agent/hot.py                                 # 지금 관심 주제 다시 모으기
-powershell -ExecutionPolicy Bypass -File scripts\run-local.ps1   # 하루 작업 수동 실행
+powershell -ExecutionPolicy Bypass -File $env:USERPROFILE\tokenwar-daily\scripts\run-local.ps1   # 하루 작업 수동 실행 (전용 저장소 tokenwar-daily에서 돈다)
 Get-ScheduledTask TokenwarAgent                       # 작업 스케줄러 상태
-Get-Content (Get-ChildItem logs | Sort LastWriteTime | Select -Last 1).FullName   # 최근 기록
+Get-Content (Get-ChildItem $env:USERPROFILE\tokenwar-daily\logs | Sort LastWriteTime | Select -Last 1).FullName   # 최근 기록
 ```
