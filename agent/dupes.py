@@ -9,6 +9,9 @@
 - 주제(topic)가 절반 이상 같은 게시물이 14일 안에 있음 (카드뉴스와 릴스 사이도 포함)
 - 같은 인물 영상을 7일 안에 세 번째로 쓰기
 
+알리는 것 (경고):
+- 가벼운 화제(format buzz)가 같은 주(월~일, 게시 시각 기준)에 3개째 (주 1~2개, 카드·릴스 합쳐서. STYLE_GUIDE 3-2)
+
 post.json에 "topic": ["젠슨 황", "AI 안전", "엔비디아"] 처럼 핵심 대상 2~4개를 적는다. 사람·회사·제품·사건 이름 위주.
 사용법: python agent/dupes.py <게시물 폴더>   (render.py가 렌더링 전에 자동으로 부른다)
 """
@@ -105,12 +108,16 @@ def check(post, self_name=None, today=None):
     vid = video_id(post.get("source_url"))
     mine_links, mine_topics, mine_person = links(post), topics(post), person(post)
     person_uses = 0
+    buzz_week = []
+    wk0 = d0.isocalendar()[:2]
     for name, other in all_posts():
         if name == self_name or other.get("id") == post.get("id"):
             continue
         d1 = post_date(other)
         if not d1:
             continue
+        if post.get("format") == "buzz" and other.get("format") == "buzz" and d1.isocalendar()[:2] == wk0:
+            buzz_week.append(name)
         gap = abs((d0 - d1).days)
         if vid and gap <= 90 and video_id(other.get("source_url")) == vid:
             errors.append(f"같은 원본 영상을 {gap}일 전에 이미 씀: {name}")
@@ -126,6 +133,8 @@ def check(post, self_name=None, today=None):
                 warnings.append(f"주제 일부 겹침 ({name}): {sorted(mine_topics & ot)}")
         if mine_person and gap <= 7 and person(other) == mine_person:
             person_uses += 1
+    if len(buzz_week) >= 2:
+        warnings.append(f"가벼운 화제(buzz)가 이번 주(월~일)에 이미 {len(buzz_week)}개: {sorted(buzz_week)} → 주 1~2개까지, 다른 형식으로 (STYLE_GUIDE 3-2)")
     if person_uses >= 2:
         errors.append(f"같은 인물({mine_person}) 영상을 7일 안에 이미 {person_uses}번 씀 (주 2회까지)")
     return errors, warnings

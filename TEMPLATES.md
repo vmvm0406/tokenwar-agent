@@ -43,7 +43,11 @@
 
 ## 게시물 형식 (`format`, 선택)
 
-`"format": "howto" | "ask" | "weekly" | "news"`. 없으면 예전처럼 동작한다. `howto`·`ask`는 `kind: prompt` 장이 1개 이상 있어야 렌더링된다 (checks.py). 근거는 STYLE_GUIDE 3-1 (ai.trend.kr 상위 게시물 분석).
+`"format": "howto" | "ask" | "weekly" | "news" | "buzz"`. 없으면 예전처럼 동작한다. `howto`·`ask`는 `kind: prompt` 장이 1개 이상 있어야 렌더링된다 (checks.py). 근거는 STYLE_GUIDE 3-1 (ai.trend.kr 상위 게시물 분석).
+
+### 가벼운 화제 (`format: "buzz"`)
+
+카드뉴스(`carousel`)·릴스(`video`) 어디에나 붙인다. 틀은 평소와 같고 다른 점만: `sources` 2개 이상(없으면 오류), 패러디·밈이면 캡션 앞 3줄에 실제 사정("사실은 ~였다", 없으면 경고), 같은 주(월~일) 3개째면 dupes.py 경고. 사진·영상은 공식 채널 영상·공식 보도자료 사진만(보도사진 금지). 규칙은 STYLE_GUIDE 3-2.
 
 ### 따라 하기 (`format: "howto"`)
 

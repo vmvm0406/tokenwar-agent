@@ -12,6 +12,7 @@ description: 인용 영상 릴스 1개를 처음부터 끝까지 만든다 (영�
 2. 자막(vtt)은 직접 다 읽지 말고, 길면 하위 에이전트(pick-video-segment)에 구간 후보 찾기를 맡긴다.
 3. 구간 1분 언저리(원본 1/3 이하), 중간에 자르지 않기. 원본은 %TEMP%\tokenwar\dl에 받고 저장소에는 구간만(clips/source.mp4).
 4. 자막은 문장 단위 번역, 말하듯 자연스럽게, 한 줄 18자·2줄. 제목·썸네일 제목은 누가 무엇을 했는지 서술어까지(checks.py가 막음). 썸네일은 인물 쪽을 9:16으로 잘라 빈칸 없이.
+- 지휘 세션이 "가벼운 화제"를 맡기면 `format: "buzz"` (STYLE_GUIDE 3-2): AI 화제에 빗댄 재밌는 방송 장면·유명인 이야기, 공식 채널 영상만, 패러디면 캡션 앞 3줄에 "사실은 ~", 조롱·의혹·사생활 금지, sources 2개 이상.
 5. 사실은 출처 2곳으로 확인하고 캡션에 밝힌다. 해시태그 3~5개.
 6. `py -3.12 agent/render.py <폴더>`로 렌더링. 출력의 "자막 N: …"을 보고, 장면 시트(ffmpeg tile)와 cover.jpg를 직접 열어 자막이 얼굴·원본 글자와 겹치지 않는지 확인한다. 문제가 있으면 고치거나 다른 영상으로.
 7. `.render_hash`를 쓴다: `py -3.12 -c "import sys;sys.path.insert(0,'agent');from build import input_hash;from pathlib import Path;f=Path('<폴더>');(f/'.render_hash').write_text(input_hash(f)+'\n')"`. `_video/`는 지운다. 커밋·push는 하지 않는다 (지휘 세션이 묶어서 한다).
