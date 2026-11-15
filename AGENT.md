@@ -9,7 +9,8 @@
 1. 저장소 최신 상태로 맞추기: `git pull`
 2. `STYLE_GUIDE.md`와 `config.json`을 끝까지 읽는다.
 3. 렌더링 도구 확인: `python3 -c "import playwright, faster_whisper"`가 실패하면 `pip install playwright faster-whisper --break-system-packages` 후 진행. `ffmpeg`가 있어야 한다. 받아쓰기 모델은 처음 실행할 때 huggingface.co에서 자동으로 받는다.
-4. 최근 14일 동안 다룬 주제 확인: `posts/published/*/post.json`과 `posts/queue/*/post.json`의 `id`, `slides[0].title`.
+4. `data/trends.md`(인스타 반응 분석)를 읽고 최근 잘 된 주제의 공통점을 메모한다 (STYLE_GUIDE 6-1장).
+5. 최근 14일 동안 다룬 주제 확인: `posts/published/*/post.json`과 `posts/queue/*/post.json`의 `id`, `slides[0].title`.
 
 ## 1. 리서치
 

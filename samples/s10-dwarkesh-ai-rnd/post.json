@@ -12,7 +12,30 @@
     "src": "clips/source.mp4",
     "start": 6.6,
     "end": 37.1,
-    "source_duration": 2666
+    "source_duration": 2666,
+    "keep": [
+      [
+        6.6,
+        8.94
+      ],
+      [
+        9.12,
+        22.88
+      ],
+      [
+        23.16,
+        24.24
+      ],
+      [
+        24.5,
+        27.88
+      ],
+      [
+        28.26,
+        37.1
+      ]
+    ],
+    "punch": true
   },
   "title": "AI가 AI 연구를\n이미 하고 있습니다",
   "highlight": "이미 하고 있습니다",

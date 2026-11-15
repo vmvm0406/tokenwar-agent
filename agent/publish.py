@@ -24,7 +24,9 @@ QUEUE = ROOT / "posts" / "queue"
 DONE = ROOT / "posts" / "published"
 CONFIG = json.loads((ROOT / "config.json").read_text(encoding="utf-8"))
 
-API = "https://graph.instagram.com/" + os.environ.get("IG_API_VERSION", "v26.0")
+# 기본은 Facebook 로그인 방식(graph.facebook.com, 페이지 토큰). 경쟁 계정 조회수 분석(Business Discovery)이 이쪽에서만 된다.
+API = f"https://{os.environ.get('IG_API_HOST') or 'graph.facebook.com'}/" + os.environ.get("IG_API_VERSION", "v26.0")
+IG_USER_ID = os.environ.get("IG_USER_ID", "")
 TOKEN = os.environ.get("IG_ACCESS_TOKEN", "")
 DRY = os.environ.get("DRY_RUN") == "1"
 REPO = os.environ.get("GITHUB_REPOSITORY", "")
@@ -150,9 +152,13 @@ def main():
     if not todo:
         print("올릴 시각이 된 게시물 없음.")
         return
-    me = call("GET", "me", fields="user_id,username")
-    ig_id = me.get("user_id") or me.get("id")
-    print(f"계정: {me.get('username')} ({ig_id})")
+    if IG_USER_ID:
+        ig_id = IG_USER_ID
+        print(f"계정 ID: {ig_id}")
+    else:
+        me = call("GET", "me", fields="user_id,username")
+        ig_id = me.get("user_id") or me.get("id")
+        print(f"계정: {me.get('username')} ({ig_id})")
 
     failed = False
     for folder, post in todo:

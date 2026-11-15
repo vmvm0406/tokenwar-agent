@@ -10,6 +10,8 @@ on:
 jobs:
   refresh:
     runs-on: ubuntu-latest
+    # 인스타 로그인 방식(graph.instagram.com) 토큰일 때만 필요. 기본(페이지 토큰)은 만료되지 않는다.
+    if: ${{ vars.IG_API_HOST == 'graph.instagram.com' }}
     steps:
       - name: 토큰 연장
         env:

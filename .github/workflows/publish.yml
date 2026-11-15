@@ -31,6 +31,8 @@ jobs:
       - name: 게시
         env:
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_API_HOST: ${{ vars.IG_API_HOST }}
         run: python agent/publish.py
 
       - name: 결과 저장 (게시된 폴더 이동, 오류 기록)

@@ -30,10 +30,14 @@
 ## 처음 설정
 
 1. **저장소를 공개(Public)로 만든다.** 인스타 서버가 이미지와 영상을 공개 주소(jsDelivr CDN)로 가져가기 때문이다. 토큰은 Secrets에 있으니 공개돼도 안전하다.
-2. **인스타 토큰 넣기:** 저장소 Settings › Secrets and variables › Actions › New repository secret
-   - 이름 `IG_ACCESS_TOKEN`, 값은 Meta 개발자 앱에서 받은 토큰
-   - AI 표지 그림용: `CF_ACCOUNT_ID`(Cloudflare 계정 ID), `CF_API_TOKEN`(Workers AI 권한만 준 토큰). 하루 무료 한도 안에서 약 170장.
-3. **토큰 자동 연장 (선택, 권장):** 토큰은 60일 뒤 만료된다. GitHub Settings › Developer settings › Fine-grained tokens에서 이 저장소만, 권한 "Secrets: Read and write"로 토큰을 만들고 `GH_PAT`라는 이름으로 Secrets에 넣는다. 매달 1일과 20일에 자동으로 연장된다.
+2. **인스타 연결 (Facebook 로그인 방식):** 경쟁 계정 조회수 분석(Business Discovery)이 이 방식에서만 되므로 이쪽으로 한다.
+   - 인스타 @tokenwar_ai를 Facebook 페이지에 연결한다 (인스타 설정 › 계정 센터, 또는 페이지 설정 › 연결된 계정).
+   - Meta 개발자 앱(비즈니스 유형)에서 Facebook 로그인을 추가하고 권한 `instagram_basic`, `instagram_content_publish`, `instagram_manage_insights`, `pages_show_list`, `pages_read_engagement`, `business_management`을 받는다.
+   - 그래프 API 탐색기에서 사용자 토큰 → 장기 토큰으로 바꾼 뒤 `me/accounts`로 **페이지 토큰**을 받는다 (장기 사용자 토큰에서 받은 페이지 토큰은 만료되지 않는다).
+   - `me/accounts?fields=instagram_business_account`로 인스타 비즈니스 계정 ID를 확인한다.
+   - Secrets에 `IG_ACCESS_TOKEN`(페이지 토큰), `IG_USER_ID`(인스타 비즈니스 계정 ID)를 넣는다.
+   - AI 표지 그림용: `CF_ACCOUNT_ID`, `CF_API_TOKEN` (넣어 둠).
+3. **(인스타 로그인 방식을 쓸 때만)** 저장소 Variables에 `IG_API_HOST=graph.instagram.com`을 넣고, 60일 만료 토큰 연장을 위해 `GH_PAT`(이 저장소 Secrets 읽기·쓰기 권한 토큰)를 Secrets에 넣는다. 이 방식에서는 경쟁 계정 분석이 안 된다.
 4. **Actions 켜기:** 저장소 Actions 탭에서 워크플로 실행을 허용한다.
 5. **시험 게시:** Actions › 인스타 게시 › Run workflow. 올릴 게 없으면 "올릴 시각이 된 게시물 없음"이 나오면 정상.
 

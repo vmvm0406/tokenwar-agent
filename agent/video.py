@@ -138,9 +138,50 @@ async def render_layers(post, cfg, folder, box_h, work):
     return geo, subs
 
 
+def remap(t, keep):
+    """원본 시각 t → 빠른 전환으로 이어 붙인 영상의 시각."""
+    acc = 0.0
+    for a, z in keep:
+        if t < a:
+            return acc
+        if t <= z:
+            return acc + (t - a)
+        acc += z - a
+    return acc
+
+
+def make_cut(src, keep, punch, work):
+    """keep 구간들만 이어 붙인다 (말 사이 쉬는 틈 없애기). punch면 컷마다 살짝 확대/원래 크기를 번갈아."""
+    parts, n = [], len(keep)
+    vw, vh, _ = probe(src)
+    zw, zh = int(vw * 1.08) // 2 * 2, int(vh * 1.08) // 2 * 2
+    for i, (a, z) in enumerate(keep):
+        zoom = f",scale={zw}:{zh},crop={vw}:{vh}" if punch and i % 2 == 1 else ""
+        parts.append(f"[0:v]trim={a:.3f}:{z:.3f},setpts=PTS-STARTPTS{zoom},setsar=1[v{i}]")
+        parts.append(f"[0:a]atrim={a:.3f}:{z:.3f},asetpts=PTS-STARTPTS[a{i}]")
+    parts.append("".join(f"[v{i}][a{i}]" for i in range(n)) + f"concat=n={n}:v=1:a=1[v][a]")
+    out = work / "_cut.mp4"
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(src), "-filter_complex", ";".join(parts),
+                    "-map", "[v]", "-map", "[a]", "-c:v", "libx264", "-preset", "veryfast", "-crf", "16",
+                    "-c:a", "aac", "-b:a", "192k", str(out)], check=True)
+    return out
+
+
 def make_video_reel(post, folder, cfg):
     v = post["video"]
     src = folder / v["src"]
+    work = folder / "_video"
+    if work.exists():
+        shutil.rmtree(work)
+    work.mkdir()
+    if v.get("keep"):
+        # 빠른 전환: 말 사이 틈을 잘라 이어 붙이고, 자막 시각도 거기에 맞춘다
+        keep = [(float(a), float(z)) for a, z in v["keep"]]
+        src = make_cut(src, keep, v.get("punch", False), work)
+        post = dict(post)
+        post["subtitles"] = [dict(s, start=remap(float(s["start"]), keep), end=remap(float(s["end"]), keep))
+                             for s in post.get("subtitles", [])]
+        v = dict(v, start=0, end=sum(z - a for a, z in keep))
     vw, vh, vdur = probe(src)
     start = float(v.get("start", 0))
     end = float(v.get("end") or vdur)
@@ -154,10 +195,6 @@ def make_video_reel(post, folder, cfg):
         vh = ch
     aspect = vw / vh
     box_h = int(round(min(max(1040 / aspect, 400), 1170) / 2) * 2)
-    work = folder / "_video"
-    if work.exists():
-        shutil.rmtree(work)
-    work.mkdir()
     geo, subs = asyncio.run(render_layers(post, cfg, folder, box_h, work))
     top = geo["top"]
     inner_w, inner_h = 1028, box_h - 12  # 테두리 안쪽
