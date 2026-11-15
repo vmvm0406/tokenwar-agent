@@ -42,26 +42,14 @@ def input_hash(folder):
     return h.hexdigest()
 
 
-def needs_images(folder):
-    post = json.loads((folder / "post.json").read_text(encoding="utf-8"))
-    for s in post.get("slides", []):
-        v = s.get("visual") or {}
-        if v.get("type") == "image" and v.get("prompt") and not (folder / v["src"]).exists():
-            return True
-    return False
-
-
 def build(folder):
     folder = Path(folder).resolve()
-    if needs_images(folder):
+    sys.path.insert(0, str(AGENT))
+    from gen_images import missing
+    if missing(folder):
         r = subprocess.run([sys.executable, str(AGENT / "gen_images.py"), str(folder)])
         if r.returncode:
             return False
-    else:
-        # 그림이 이미 있어도 ai_image 표시는 맞춰 둔다
-        sys.path.insert(0, str(AGENT))
-        from gen_images import process
-        process(folder)
     mark = folder / ".render_hash"
     now = input_hash(folder)
     if mark.exists() and mark.read_text().strip() == now:

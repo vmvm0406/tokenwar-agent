@@ -1,0 +1,50 @@
+{
+  "id": "zz-thumb-test2",
+  "type": "video",
+  "series": "전황",
+  "date": "2026-11-15",
+  "publish_at": "2099-01-01T19:10:00+09:00",
+  "rights": "quote",
+  "credit": "테스트 채널 (예시)",
+  "source_url": "https://example.com/original",
+  "video": {
+    "src": "clips/source.mp4",
+    "start": 0,
+    "end": 12
+  },
+  "title": "인용형 영상 릴스\n미리보기",
+  "highlight": "인용형",
+  "title_en": "Quote-style reel preview",
+  "subtitles": [
+    {
+      "start": 0.2,
+      "end": 5.8,
+      "text": "원본 장면은 짧게,\n설명은 우리 말로",
+      "highlight": "우리 말로"
+    },
+    {
+      "start": 5.9,
+      "end": 11.8,
+      "text": "출처는 영상 아래에\n항상 크게 표시"
+    }
+  ],
+  "sources": [
+    {
+      "name": "테스트 채널",
+      "url": "https://example.com/original"
+    }
+  ],
+  "caption": "인용형 영상 릴스 테스트입니다. 원본 영상의 짧은 장면에 우리 설명 자막을 얹고, 출처를 화면과 캡션에 함께 밝히는 형식이에요. 출처: 테스트 채널 (예시)",
+  "hashtags": [
+    "#AI뉴스"
+  ],
+  "thumb": {
+    "title": "패치가 AI를\n못 따라가는 순간",
+    "highlight": "못 따라가는",
+    "image": {
+      "type": "image",
+      "src": "img/thumb.jpg",
+      "prompt": "close-up of a black mechanical keyboard at an angle, the word UPDATE in huge bold orange 3D letters bursting out of the keys, small orange traffic cones on the keys, dramatic lighting, photorealistic"
+    }
+  }
+}

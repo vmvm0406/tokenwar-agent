@@ -1,16 +1,18 @@
-"""AI 이미지 만들기 (Cloudflare Workers AI, FLUX.1 schnell).
+"""게시물에 쓸 그림 준비: 실물 이미지 내려받기 → 없으면 AI로 만들기.
 
-게시물 post.json 안에서 이렇게 적힌 그림을 찾아, 파일이 아직 없으면 만든다.
+post.json 어디에든(본문 visual, 릴스 thumb.image) 이렇게 적힌 그림을 찾아 파일이 없으면 채운다.
 
-    "visual": {"type": "image", "src": "img/cover.jpg",
-               "prompt": "a vast server hall at night, rows of racks ..."}
+    {"type": "image", "src": "img/thumb.jpg",
+     "url": "https://... 실물 이미지 주소",   # 1순위. 있으면 이걸 내려받는다
+     "prompt": "영어 장면 묘사",              # 2순위. url이 없거나 내려받기에 실패하면 AI로 만든다
+     "size": [1088, 1920]}                    # 선택. AI 그림 크기 (기본: 썸네일 1088x1920, 그 외 1088x1360)
 
-- prompt는 영어로, 장면만 묘사한다. 브랜드 분위기(어두운 배경, 녹색 조명, 글자·로고·실존 인물 없음)는
-  아래 STYLE이 자동으로 붙는다.
-- 만든 그림이 하나라도 있으면 post.json에 "ai_image": true를 적는다. 게시할 때 AI 생성 표시가 붙는다.
+AI 그림을 하나라도 실제로 쓰면 post.json에 "ai_image": true를 적는다 → 게시할 때 인스타 'AI 정보' 표시.
+실물 이미지를 내려받으면 원본 주소를 그림 정보의 "downloaded_from"에 남긴다.
 
+AI 모델: Cloudflare Workers AI, FLUX.2 [klein] 4B (가로·세로 크기 지정 가능, 하루 무료 한도 안에서 수십 장)
 환경 변수: CF_ACCOUNT_ID, CF_API_TOKEN (GitHub Secrets)
-사용법: python agent/gen_images.py <게시물 폴더> [<게시물 폴더> ...]
+사용법: python agent/gen_images.py <게시물 폴더> [...]
 """
 import base64
 import io
@@ -23,42 +25,32 @@ from pathlib import Path
 import requests
 from PIL import Image
 
-MODEL = "@cf/black-forest-labs/flux-1-schnell"
-STYLE = (
-    "cinematic editorial photograph, dark scene lit by vivid neon green (#00FF66) light, "
-    "strong green glow and green color cast, everything else near black, high contrast, sharp focus, "
-    "minimal composition with one clear subject, "
-    "no text, no letters, no numbers, no signs, no billboards, no screens with writing, "
-    "no logos, no watermark, no recognizable real people"
-)
-BANNED = ["logo", "text saying", "written", "elon", "altman", "huang", "zuckerberg", "musk",
-          "openai logo", "nvidia logo", "photo of ", "portrait of "]
+MODEL = "@cf/black-forest-labs/flux-2-klein-4b"
+UA = "Mozilla/5.0 (compatible; tokenwar-bot/1.0; +https://github.com/vmvm0406/tokenwar-agent)"
 
 
-def image_visuals(post):
-    for s in post.get("slides", []):
-        v = s.get("visual")
-        if isinstance(v, dict) and v.get("type") == "image" and v.get("prompt"):
-            yield v
+def find_images(node, in_thumb=False):
+    """(그림 정보 dict, 썸네일인지) 목록."""
+    if isinstance(node, dict):
+        if node.get("type") == "image" and node.get("src"):
+            yield node, in_thumb
+        for k, v in node.items():
+            yield from find_images(v, in_thumb or k == "thumb")
+    elif isinstance(node, list):
+        for v in node:
+            yield from find_images(v, in_thumb)
 
 
-def check_prompt(p):
-    low = p.lower()
-    bad = [w for w in BANNED if w in low]
-    if bad:
-        raise ValueError(f"프롬프트에 쓰면 안 되는 말: {bad} → 장면만 묘사할 것 (실존 인물·로고·글자 금지)")
-
-
-def generate(prompt, seed=None):
+def generate(prompt, w, h, seed=None):
     acc, tok = os.environ.get("CF_ACCOUNT_ID"), os.environ.get("CF_API_TOKEN")
     if not acc or not tok:
         raise RuntimeError("CF_ACCOUNT_ID / CF_API_TOKEN 없음 (GitHub Secrets 확인)")
     url = f"https://api.cloudflare.com/client/v4/accounts/{acc}/ai/run/{MODEL}"
-    body = {"prompt": f"{prompt}. {STYLE}", "steps": 8}
+    form = {"prompt": (None, prompt), "width": (None, str(w)), "height": (None, str(h))}
     if seed is not None:
-        body["seed"] = seed
+        form["seed"] = (None, str(seed))
     for attempt in range(3):
-        r = requests.post(url, headers={"Authorization": f"Bearer {tok}"}, json=body, timeout=120)
+        r = requests.post(url, headers={"Authorization": f"Bearer {tok}"}, files=form, timeout=180)
         if r.status_code == 200:
             data = r.json()
             b64 = (data.get("result") or {}).get("image")
@@ -71,29 +63,69 @@ def generate(prompt, seed=None):
         raise RuntimeError(f"Cloudflare 오류 {r.status_code}: {r.text[:300]}")
 
 
+def download(url):
+    r = requests.get(url, headers={"User-Agent": UA, "Accept": "image/*"}, timeout=60)
+    r.raise_for_status()
+    if not r.headers.get("content-type", "").startswith("image/"):
+        raise RuntimeError(f"이미지가 아님 ({r.headers.get('content-type')})")
+    img = Image.open(io.BytesIO(r.content))
+    if min(img.size) < 400:
+        raise RuntimeError(f"너무 작음 {img.size}")
+    return r.content
+
+
 def save_jpeg(raw, path):
-    img = Image.open(io.BytesIO(raw)).convert("RGB")
+    img = Image.open(io.BytesIO(raw))
+    if img.mode in ("RGBA", "LA", "P"):
+        img = img.convert("RGBA")
+        bg = Image.new("RGB", img.size, (0, 0, 0))
+        bg.paste(img, mask=img.split()[-1])
+        img = bg
     path.parent.mkdir(parents=True, exist_ok=True)
-    img.save(path, "JPEG", quality=92)
+    img.convert("RGB").save(path, "JPEG", quality=92)
 
 
 def process(folder):
     folder = Path(folder)
     pj = folder / "post.json"
     post = json.loads(pj.read_text(encoding="utf-8"))
-    made = 0
-    for v in image_visuals(post):
+    changed = made = 0
+    for v, is_thumb in find_images(post):
         out = folder / v["src"]
         if out.exists():
             continue
-        check_prompt(v["prompt"])
-        print(f"  그림 만들기: {v['src']}")
-        save_jpeg(generate(v["prompt"], v.get("seed")), out)
-        made += 1
-    if any(True for _ in image_visuals(post)) and not post.get("ai_image"):
+        if v.get("url"):
+            try:
+                save_jpeg(download(v["url"]), out)
+                v["downloaded_from"] = v["url"]
+                changed += 1
+                print(f"  실물 이미지: {v['src']} ← {v['url']}")
+                continue
+            except Exception as e:
+                print(f"  내려받기 실패 ({e}): {v['url']}")
+                if not v.get("prompt"):
+                    raise
+        if v.get("prompt"):
+            w, h = v.get("size") or ((1088, 1920) if is_thumb else (1088, 1360))
+            print(f"  AI 그림 만들기: {v['src']} ({w}x{h})")
+            save_jpeg(generate(v["prompt"], w, h, v.get("seed")), out)
+            v["ai_generated"] = True
+            changed += 1
+            made += 1
+    uses_ai = any(v.get("ai_generated") for v, _ in find_images(post))
+    if uses_ai and not post.get("ai_image"):
         post["ai_image"] = True
+        changed += 1
+    if changed:
         pj.write_text(json.dumps(post, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return made
+
+
+def missing(folder):
+    folder = Path(folder)
+    post = json.loads((folder / "post.json").read_text(encoding="utf-8"))
+    return any((v.get("url") or v.get("prompt")) and not (folder / v["src"]).exists()
+               for v, _ in find_images(post))
 
 
 if __name__ == "__main__":
@@ -101,4 +133,4 @@ if __name__ == "__main__":
     for f in sys.argv[1:]:
         print(f"[{f}]")
         total += process(f)
-    print(f"새로 만든 그림: {total}장")
+    print(f"새로 만든 AI 그림: {total}장")

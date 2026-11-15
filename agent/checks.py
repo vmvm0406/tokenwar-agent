@@ -40,6 +40,28 @@ def _len(s):
 RIGHTS = {"quote", "own", "permission", "license"}
 
 
+def check_thumb(post):
+    """릴스 썸네일 검사 (thumb.py). 릴스(video, reel)에는 썸네일이 있어야 한다."""
+    t = post.get("thumb")
+    if not t:
+        return ["릴스에는 thumb(썸네일)이 필요: title, image {src, url 또는 prompt}"]
+    errs = []
+    ls = _lines(t.get("title", ""))
+    if not ls or len(ls) > 2:
+        errs.append("썸네일 제목은 1~2줄")
+    for l in ls:
+        if _len(l) > 13:
+            errs.append(f"썸네일 제목 한 줄은 13자 이하: '{l}'")
+    if t.get("highlight") and t["highlight"] not in t.get("title", ""):
+        errs.append("썸네일 highlight가 제목 안에 없음")
+    im = t.get("image") or {}
+    if not im.get("src"):
+        errs.append("썸네일 image.src 필요")
+    if not (im.get("url") or im.get("prompt")):
+        errs.append("썸네일 image에 url(실물 이미지) 또는 prompt(AI 생성) 중 하나는 있어야 함 (직접 넣은 파일이면 url에 원본 주소)")
+    return errs
+
+
 def check_video(post):
     """영상 프레임 릴스(type=video) 검사."""
     errors, warnings = [], []
@@ -85,6 +107,7 @@ def check_video(post):
     hl = post.get("highlight")
     if hl and hl not in post["title"]:
         errors.append(f"highlight '{hl}'가 제목 안에 없음")
+    errors += check_thumb(post)
     v = post["video"]
     if not v.get("src"):
         errors.append("video.src 필요")

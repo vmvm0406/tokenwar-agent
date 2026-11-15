@@ -198,8 +198,8 @@ def brand_html():
 
 def cover_html(post, s, folder):
     layout = s.get("layout", "big")
-    series = s.get("series_label", post["series"])
-    pre = f'<span class="pre">[{esc(series)}]</span> ' if series else ""
+    # 제목 앞 머리말([전황] 등)은 쓰지 않는다. 제목만.
+    pre = ""
     sub = f'<p class="csub">{esc(s["sub"])}</p>' if s.get("sub") else ""
     text = (f'<div class="ctext"><h1 class="ctitle">{pre}{br(hl(s.get("title", ""), s.get("highlight")))}</h1>'
             f'{sub}</div>')
@@ -342,6 +342,19 @@ async def shoot(page_html, out_dir, kind):
     return []
 
 
+def thumb_or_exit(post, out_dir):
+    if not post.get("thumb"):
+        return
+    from thumb import make_thumb
+    problems = make_thumb(post, out_dir)
+    if problems:
+        print("썸네일 문제 → 제목을 줄일 것:")
+        for p in problems:
+            print(" -", p)
+        sys.exit(1)
+    print("썸네일: cover.jpg")
+
+
 def main(folder):
     out_dir = Path(folder).resolve()
     post = json.loads((out_dir / "post.json").read_text(encoding="utf-8"))
@@ -361,6 +374,7 @@ def main(folder):
         from video import make_video_reel
         dur = make_video_reel(post, out_dir, CONFIG)
         print(f"영상 릴스 길이: {dur:.1f}초")
+        thumb_or_exit(post, out_dir)
         print("완료:", out_dir)
         return
     for s in post["slides"]:
@@ -378,6 +392,7 @@ def main(folder):
         from motion import make_motion_reel
         total = asyncio.run(make_motion_reel(page, post, out_dir, CONFIG))
         shutil.copy(sorted((out_dir / "frames").glob("*.jpg"))[0], out_dir / "cover.jpg")
+        thumb_or_exit(post, out_dir)
         print(f"릴스 길이: {total:.1f}초")
     print("완료:", out_dir)
 
