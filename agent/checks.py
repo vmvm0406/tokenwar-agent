@@ -249,8 +249,15 @@ def check_images(slides):
     if len(imgs) < need:
         errors.append(f"{IMAGE_RULE}: 사진(실제 화면 캡처·공식 이미지) 장이 {need}장 이상 필요: 지금 {len(imgs)}장. "
                       "서비스 화면, 공식 발표 페이지, 논문 그림, X 게시물 등을 agent/shot.py로 찍어 본문 장 visual에 넣는다")
-    if slides and slides[0].get("layout") != "image":
-        warnings.append("표지가 사진 표지가 아님. 상징이 되는 실제 사진·화면이 있으면 layout image를 먼저 쓴다")
+    # 첫 장은 무조건 눈길을 끄는 사진 (운영자 결정, STYLE_GUIDE 2-1 "표지는 후킹 사진")
+    if slides and slides[0].get("kind") == "cover":
+        cv = slides[0].get("visual") or {}
+        if slides[0].get("layout") != "image":
+            errors.append("표지는 사진 표지(layout: image)만: 큰 숫자·목록 표지는 쓰지 않는다. 눈길을 끄는 사진을 넣을 것")
+        elif cv.get("shot") or cv.get("screen"):
+            errors.append("표지에 화면 캡처·표·문서를 쓰지 않는다: 사람 얼굴·표정, 강한 장면, 결과물처럼 눈길을 끄는 사진으로")
+        if slides[0].get("layout") == "image" and not cv.get("hook"):
+            errors.append("표지 사진 visual.hook에 이 사진이 왜 눈길을 끄는지 한 줄 적을 것 (예: '아이와 여행 가는 가족 사진: 바로 내 얘기')")
     for i, v in imgs:
         if i > 1 and not v.get("credit") and not v.get("prompt"):
             warnings.append(f"{i}번째 장 사진에 credit(예: '화면: Lovable 공식 문서') 없음")
@@ -323,6 +330,23 @@ def check_dm(post):
             e_t, _ = ai_tone(t, "DM 자료")
             errors += e_t
     return errors, warnings
+
+
+# 음슴체 끝맺음 ("CCTV는 없었음", "자술서를 냄", "표가 나옴")은 어색하다. 카드 글은 "~습니다" 또는 짧은 명사로.
+EUMSEUM_RE = re.compile(r"(았음|었음|였음|했음|됐음|없음|있음|했음|함|냄|됨|나옴|봄|씀|줌|짐|옴)$")
+EUMSEUM_OK = {"처음", "마음", "다음", "이름", "포함", "지금", "함께", "소음", "느낌", "가짐", "모임", "질문함"}
+
+
+def eumseum(text, where):
+    errs = []
+    for sent in re.split(r"[.!?\n]", str(text)):
+        w = sent.strip().strip("\"'“”‘’)( ")
+        if not w:
+            continue
+        last = w.split()[-1]
+        if EUMSEUM_RE.search(last) and last not in EUMSEUM_OK and (len(last) >= 2 or last in "냄함됨봄씀줌짐옴"):
+            errs.append(f"{where}: 음슴체 끝맺음 '{last}' → '~습니다'로 끝까지 쓰거나 짧은 명사로 (예: '없었음' → '없었습니다')")
+    return errs
 
 
 def check_caption_hooks(caption, dm_keyword=None):
@@ -544,6 +568,7 @@ def check_post(post):
     joined = "\n".join(all_text)
     for t in all_text:
         errors += ai_tone(t, "카드")[0]
+        errors += eumseum(t, "카드")
     errors += ai_tone(post["caption"].split("출처:")[0], "캡션")[0]
     for w in BANNED:
         if w in joined or w in post["caption"]:
