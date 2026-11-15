@@ -91,6 +91,12 @@
 
 ## 3. 렌더링과 검수
 
+AI 이미지(`prompt`)는 이 작업 환경에서 만들 수 없다 (Cloudflare 접속 불가). GitHub Actions의 `render.yml`이 push 뒤에 그림을 만들고 렌더링까지 해서 같은 브랜치에 커밋한다. 그래서:
+
+- **AI 이미지가 없는 게시물:** 아래 1~4를 하고 `python3 agent/build.py posts/queue/<폴더>`로 마무리한다 (`.render_hash`가 생긴다).
+- **AI 이미지가 있는 게시물:** 레이아웃만 확인하려면 `src` 위치에 임시 그림을 넣고 1~3을 한 뒤, **임시 그림과 `slides/`, `.render_hash`를 지우고** `post.json`만 커밋한다. 실제 결과는 Actions가 만든다. 검토 모드면 PR 본문에 "표지 그림은 Actions가 만든 뒤 PR에 커밋됨"이라고 적는다.
+- `publish.py`는 `.render_hash`가 지금 `post.json`과 맞는 게시물만 올린다. 고친 뒤 렌더링을 안 하면 안 올라간다.
+
 1. `python3 agent/render.py posts/queue/<폴더>` (릴스는 모션 그래픽 렌더링에 1~2분 걸린다)
 2. 규칙 위반이나 글자 넘침이 나오면 문장을 고쳐서 통과할 때까지 다시 실행한다.
 3. 만들어진 이미지(`slides/*.jpg` 또는 `frames/*.jpg`)를 **한 장씩 직접 열어 본다.** 오타, 어색한 줄바꿈, 한 줄만 남은 글자, 강조가 엉뚱한 곳에 들어간 경우를 고친다.

@@ -86,8 +86,16 @@ def full_caption(post):
     return post["caption"].strip() + ("\n\n" + tags if tags else "")
 
 
-def extra():
-    return {"is_ai_generated": "true"} if CONFIG.get("ai_label") else {}
+def extra(post):
+    # AI 생성 표시. 캐러셀은 묶음(부모)에만 붙인다 (Meta 문서). 생성 이미지를 쓴 게시물은 반드시 붙인다.
+    return {"is_ai_generated": "true"} if (CONFIG.get("ai_label") or post.get("ai_image")) else {}
+
+
+def ready(folder, post):
+    """렌더링이 끝났는지. build.py가 남긴 .render_hash가 지금 입력과 같아야 한다."""
+    from build import input_hash
+    h = folder / ".render_hash"
+    return h.exists() and h.read_text().strip() == input_hash(folder)
 
 
 def publish_carousel(ig_id, folder, post):
@@ -102,7 +110,7 @@ def publish_carousel(ig_id, folder, post):
     for cid in children:
         wait_ready(cid, 3)
     parent = call("POST", f"{ig_id}/media", media_type="CAROUSEL", children=",".join(children),
-                  caption=full_caption(post), **extra())
+                  caption=full_caption(post), **extra(post))
     wait_ready(parent["id"], 5)
     return call("POST", f"{ig_id}/media_publish", creation_id=parent["id"])["id"]
 
@@ -110,7 +118,7 @@ def publish_carousel(ig_id, folder, post):
 def publish_reel(ig_id, folder, post):
     c = call("POST", f"{ig_id}/media", media_type="REELS", video_url=media_url(folder, "reel.mp4"),
              cover_url=media_url(folder, "cover.jpg"), caption=full_caption(post),
-             share_to_feed="true", **extra())
+             share_to_feed="true", **extra(post))
     wait_ready(c["id"], 10)
     return call("POST", f"{ig_id}/media_publish", creation_id=c["id"])["id"]
 
@@ -135,6 +143,9 @@ def main():
             print(f"건너뜀 (실패 {tries}회, error.log 확인 후 삭제하면 다시 시도): {f.name}")
             continue
         if due(post, now):
+            if not ready(f, post):
+                print(f"건너뜀 (아직 렌더링 전, 렌더링 작업이 끝나면 다음 확인 때 올라감): {f.name}")
+                continue
             todo.append((f, post))
     if not todo:
         print("올릴 시각이 된 게시물 없음.")
