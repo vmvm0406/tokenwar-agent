@@ -36,7 +36,7 @@
   "type": "carousel",
   "series": "전황",
   "date": "2026-11-15",
-  "publish_at": "2026-11-15T08:10:00+09:00",
+  "publish_at": "2026-11-15T10:13:00+09:00",
   "slides": [
     {"kind": "cover", "layout": "big", "big": "33년", "big_note": "설명 한 줄",
      "title": "첫 줄\n둘째 줄", "highlight": "둘째 줄", "sub": "한 줄 부제"},
@@ -48,7 +48,7 @@
 }
 ```
 
-- `publish_at`: `config.json`의 `slots` 시각 (카드뉴스 08:10, 릴스 19:10, 한국 시간). 이미 지난 시각이면 다음 슬롯으로.
+- `publish_at`: `config.json`의 `slots` 시각 (카드뉴스 10:13, 릴스 19:10, 한국 시간. data/trends.md 시간대 분석으로 매달 다시 정한다). 이미 지난 시각이면 다음 슬롯으로.
 - `title`, `heading`의 줄바꿈은 `\n`으로 직접 넣는다. 단어 중간에서 끊지 않는다.
 - `highlight`는 제목·소제목 안에 실제로 있는 글자여야 한다.
 - 마지막 장(슬로건, 출처)은 자동으로 붙으므로 넣지 않는다.

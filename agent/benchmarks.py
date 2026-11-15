@@ -70,6 +70,13 @@ def fetch_own():
         except RuntimeError as e:
             row["insights_error"] = str(e)[:120]
         perf[m["id"]] = row
+    try:
+        of = get(f"{ME}/insights", metric="online_followers", period="lifetime")
+        vals = (of.get("data") or [{}])[0].get("values") or []
+        if vals:
+            perf["_online_followers"] = vals[-1].get("value")  # 시간(UTC 0~23) → 접속 팔로워 수
+    except RuntimeError as e:
+        perf["_online_followers_error"] = str(e)[:120]  # 팔로워 100명 미만이면 안 나온다
     (DATA / "performance.json").write_text(json.dumps(perf, ensure_ascii=False, indent=1), encoding="utf-8")
     return perf
 
@@ -80,6 +87,44 @@ def score(m):
 
 def first_line(cap):
     return (cap.split("\n")[0] if cap else "")[:80]
+
+
+def _block(h):
+    for a, z in [(0, 6), (6, 9), (9, 12), (12, 15), (15, 18), (18, 21), (21, 24)]:
+        if a <= h < z:
+            return f"{a:02d}-{z:02d}시"
+
+
+def time_section(accounts):
+    """게시 시각별 성과 (그 계정 평소 대비 배수의 중간값). 표본이 작으면 참고만."""
+    rows = []
+    for acc in accounts:
+        media = list(acc["media"].values())
+        for kind in ["REELS", "FEED"]:
+            ms = [m for m in media if (m.get("type") or "").upper().startswith(kind[:4]) and score(m)]
+            if not ms:
+                continue
+            med = statistics.median(score(m) for m in ms) or 1
+            for m in ms:
+                ts = datetime.fromisoformat(m["timestamp"].replace("+0000", "+00:00")).astimezone(KST)
+                rows.append((kind, ts, score(m) / med))
+    if not rows:
+        return []
+    out = ["", "## 언제 올린 게시물이 잘 됐나 (한국 시간, 평소 대비 배수 중간값 · 게시물 수)", "",
+           "| 시간대 | 릴스 | 카드뉴스(피드) |", "|---|---|---|"]
+    for blk in [_block(h) for h in (0, 6, 9, 12, 15, 18, 21)]:
+        cells = []
+        for kind in ["REELS", "FEED"]:
+            v = [r[2] for r in rows if r[0] == kind and _block(r[1].hour) == blk]
+            cells.append(f"{statistics.median(v):.2f}x · {len(v)}" if v else "-")
+        out.append(f"| {blk} | {cells[0]} | {cells[1]} |")
+    out += ["", "| 요일 | 배수 · 수 |", "|---|---|"]
+    for i, dname in enumerate("월화수목금토일"):
+        v = [r[2] for r in rows if r[1].weekday() == i]
+        if v:
+            out.append(f"| {dname} | {statistics.median(v):.2f}x · {len(v)} |")
+    out += ["", "게시물 수가 10개 미만인 칸은 우연일 수 있다. 우리 계정 팔로워가 100명을 넘으면 아래 '우리 팔로워 접속 시간'을 더 믿는다."]
+    return out
 
 
 def write_trends(accounts, own):
@@ -112,9 +157,17 @@ def write_trends(accounts, own):
     lines += ["", "## 잘 안 된 게시물 (하위 10)", "", "| 배수 | 계정 | 첫 줄 |", "|---|---|---|"]
     for r, u, k, ts, v, m in (hits[20:][-10:] if len(hits) > 20 else []):
         lines.append(f"| {r:.1f}x | @{u} | {first_line(m['caption'])} |")
+    lines += time_section(accounts)
     if own:
         lines += ["", "## 우리 계정 성과", "", "| 날짜 | 유형 | 조회 | 도달 | 저장 | 공유 | 첫 줄 |", "|---|---|---|---|---|---|---|"]
-        for m in sorted(own.values(), key=lambda m: m.get("timestamp") or "", reverse=True)[:30]:
+        of = own.get("_online_followers")
+        if isinstance(of, dict) and of:
+            kst = {(int(h) + 9) % 24: v for h, v in of.items()}
+            top = sorted(kst.items(), key=lambda x: -x[1])[:5]
+            lines += ["", "## 우리 팔로워 접속 시간 (한국 시간, 많은 순)", "",
+                      ", ".join(f"{h}시({v}명)" for h, v in top), ""]
+        for m in sorted((v for k, v in own.items() if not k.startswith("_")),
+                        key=lambda m: m.get("timestamp") or "", reverse=True)[:30]:
             ts = (m.get("timestamp") or "")[:10]
             lines.append(f"| {ts} | {m.get('type')} | {m.get('views', '')} | {m.get('reach', '')} | "
                          f"{m.get('saved', '')} | {m.get('shares', '')} | {first_line(m.get('caption'))} |")
