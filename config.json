@@ -98,6 +98,7 @@
   "model_watch": {
     "auto_publish": false,
     "max_posts_per_run": 1,
+    "max_tries": 3,
     "max_items_per_source": 40,
     "sources": [
       {

@@ -13,7 +13,10 @@
     py -3.12 agent/model_watch.py            새 후보가 있으면 한 줄씩 "회사 | 제목 | 주소"
     py -3.12 agent/model_watch.py -v         출처별 읽은 수·거른 이유를 stderr로
     py -3.12 agent/model_watch.py --dry-run  기록 파일을 바꾸지 않음
-종료 코드: 0 새 것 없음, 10 새 후보 있음, 2 모든 출처를 읽지 못함.
+    py -3.12 agent/model_watch.py --finish <claude 기록> <종료코드>   Claude 실행 뒤 pending 후보 정리
+    py -3.12 agent/model_watch.py --mark <주소> done|skipped|failed|retry
+후보 상태: pending(만들 차례, 실패하면 다음 회차에 다시) → done(PR 주소 확인) / skipped / failed(max_tries번 실패, 감시 기록에 남김).
+종료 코드: 0 새 것 없음, 10 pending 후보 있음, 2 모든 출처를 읽지 못함.
 기록 파일이 없으면 --init처럼 동작한다 (처음 돌릴 때 옛 글이 한꺼번에 '새 것'으로 나오지 않게).
 """
 import argparse
@@ -180,10 +183,74 @@ def hot_candidates(cfg, verbose):
     return out
 
 
+def load_state():
+    return json.loads(STATE.read_text(encoding="utf-8-sig")) if STATE.exists() else {"seen": {}}
+
+
+def save_state(state, now):
+    state["updated"] = now.isoformat()
+    STATE.parent.mkdir(parents=True, exist_ok=True)
+    STATE.write_text(json.dumps(state, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+
+
+def address(key, e):
+    return e.get("url") or key if key.startswith("hot:") else key
+
+
+def mark(addr, result, now):
+    """watch-models.ps1이 Claude 실행 뒤 부른다. done/skipped/failed는 그대로, retry는 시도 횟수 +1 (max_tries에 닿으면 failed)."""
+    state = load_state()
+    seen = state.setdefault("seen", {})
+    keys = [k for k, e in seen.items() if k == addr or (e.get("url") and e.get("url") == addr)]
+    if not keys:
+        log(True, f"기록에 없는 주소: {addr}")
+        return 1
+    max_tries = int(CONFIG.get("max_tries", 3))
+    for k in keys:
+        e = seen[k]
+        if result == "retry":
+            e["tries"] = int(e.get("tries", 0)) + 1
+            e["status"] = "failed" if e["tries"] >= max_tries else "pending"
+        else:
+            e["status"] = result
+        e["updated"] = now.isoformat()
+        print(f"{e['status']} (시도 {e.get('tries', 0)}/{max_tries}) | {e.get('title', '')} | {address(k, e)}")
+    save_state(state, now)
+    return 0
+
+
+PR_URL = re.compile(r"https://github\.com/[\w.-]+/[\w.-]+/pull/\d+")
+
+
+def finish(logfile, exit_code, now):
+    """Claude 실행 기록으로 지금 pending인 후보(= 이번에 Claude에게 넘긴 것)를 모두 정리한다.
+    성공 = 종료 코드 0이고 기록에 PR 주소가 있음 (auto_publish면 'MODEL_WATCH: done') → done.
+    종료 코드 0이고 'MODEL_WATCH: skipped' → skipped (만들 가치 없다고 판단). 그 밖은 retry (max_tries번째면 failed)."""
+    try:
+        body = Path(logfile).read_text(encoding="utf-8-sig", errors="replace")
+    except OSError:
+        body = ""
+    if exit_code == 0 and (PR_URL.search(body) or (CONFIG.get("auto_publish") and "MODEL_WATCH: done" in body)):
+        result = "done"
+    elif exit_code == 0 and "MODEL_WATCH: skipped" in body:
+        result = "skipped"
+    else:
+        result = "retry"
+    seen = load_state().get("seen", {})
+    rc = 0
+    for k in [k for k, e in seen.items() if e.get("status") == "pending"]:
+        rc |= mark(k, result, now)
+    return rc
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description="새 AI 모델·큰 기능 발표 감시")
     ap.add_argument("--init", action="store_true", help="지금 있는 글을 전부 본 것으로 기록만")
     ap.add_argument("--dry-run", action="store_true", help="기록 파일을 바꾸지 않음")
+    ap.add_argument("--mark", nargs=2, metavar=("주소", "결과"),
+                    help="후보 처리 결과 기록: done | skipped | failed | retry (retry는 시도 +1, max_tries면 failed)")
+    ap.add_argument("--finish", nargs=2, metavar=("기록파일", "종료코드"),
+                    help="Claude 실행 뒤: 기록에 PR 주소가 있으면 pending을 done, 아니면 retry (watch-models.ps1이 부름)")
     ap.add_argument("-v", "--verbose", action="store_true")
     args = ap.parse_args(argv)
     try:
@@ -191,15 +258,21 @@ def main(argv=None):
         sys.stderr.reconfigure(encoding="utf-8")
     except Exception:
         pass
+    now = datetime.now(KST).replace(microsecond=0)
+    if args.mark:
+        if args.mark[1] not in ("done", "skipped", "failed", "retry"):
+            ap.error("결과는 done | skipped | failed | retry")
+        return mark(args.mark[0], args.mark[1], now)
+    if args.finish:
+        return finish(args.finish[0], int(args.finish[1]), now)
 
-    state = json.loads(STATE.read_text(encoding="utf-8-sig")) if STATE.exists() else {"seen": {}}
+    state = load_state()
     seen = state.setdefault("seen", {})
     init = args.init or not STATE.exists()
     if init and not args.init:
         log(True, "기록 파일이 없어 처음 실행으로 보고 --init처럼 기록만 합니다.")
-    now = datetime.now(KST).replace(microsecond=0)
     limit = int(CONFIG.get("max_items_per_source", 40))
-    new, ok = [], 0
+    ok = 0
 
     for src in CONFIG.get("sources", []):
         try:
@@ -215,32 +288,30 @@ def main(argv=None):
             fresh += 1
             hit, why = judge(it)
             seen[it["url"]] = {"source": src.get("name", ""), "company": src["company"], "title": it["title"],
-                               "first_seen": now.isoformat(), "candidate": hit and not init, "why": why}
+                               "first_seen": now.isoformat(), "why": why, "tries": 0,
+                               "status": "pending" if hit and not init else "skipped"}
             log(args.verbose and not init, f"  {'후보' if hit else '건너뜀'} [{why}] {it['title']}")
-            if hit and not init:
-                new.append(f"{src['company']} | {it['title']} | {it['url']}")
         log(args.verbose or args.init, f"{src.get('name', src['url'])}: {len(items)}개 읽음, 처음 본 것 {fresh}개")
 
     hot_cfg = CONFIG.get("hot") or {}
     cool = timedelta(days=float(hot_cfg.get("cooldown_days", 7)))
     for c in hot_candidates(hot_cfg, args.verbose):
         prev = seen.get(c["key"])
-        if prev and now - datetime.fromisoformat(prev["first_seen"]) < cool:
+        if prev and (prev.get("status") == "pending" or now - datetime.fromisoformat(prev["first_seen"]) < cool):
             continue
         seen[c["key"]] = {"source": "data/hot.md", "company": c["company"], "title": c["title"], "url": c["url"],
-                          "first_seen": now.isoformat(), "candidate": not init, "why": "화제"}
-        if not init:
-            new.append(f"{c['company']} | {c['title']} | {c['url'] or 'data/hot.md'}")
+                          "first_seen": now.isoformat(), "why": "화제", "tries": 0,
+                          "status": "skipped" if init else "pending"}
 
+    # 이번에 새로 찾은 것 + 지난번에 Claude 실행이 실패해 남은 것 (status pending). 끝나면 watch-models.ps1이 --mark로 바꾼다
+    pending = [f"{e['company']} | {e['title']} | {address(k, e)}" for k, e in seen.items() if e.get("status") == "pending"]
     if not args.dry_run:
-        state["updated"] = now.isoformat()
-        STATE.parent.mkdir(parents=True, exist_ok=True)
-        STATE.write_text(json.dumps(state, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+        save_state(state, now)
     if ok == 0 and CONFIG.get("sources"):
         return EXIT_FAIL
-    for line in new:
+    for line in pending:
         print(line)
-    return EXIT_NEW if new else 0
+    return EXIT_NEW if pending else 0
 
 
 if __name__ == "__main__":
