@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>지하철 짐 피하기</title>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; background: #111; overflow: hidden; touch-action: none; }
+  canvas { display: block; width: 100vw; height: 100vh; }
+</style>
+</head>
+<body>
+<canvas id="game"></canvas>
+<script>
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+let W, H;
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+// 2호선 역 이름 (시청에서 출발해 순환)
+const STATIONS = ['시청', '을지로입구', '을지로3가', '을지로4가', '동대문역사문화공원', '신당', '상왕십리', '왕십리',
+  '한양대', '뚝섬', '성수', '건대입구', '구의', '강변', '잠실나루', '잠실', '잠실새내', '종합운동장', '삼성',
+  '선릉', '역삼', '강남', '교대', '서초', '방배', '사당', '낙성대', '서울대입구', '봉천', '신림', '신대방',
+  '구로디지털단지', '대림', '신도림', '문래', '영등포구청', '당산', '합정', '홍대입구', '신촌', '이대', '아현', '충정로'];
+
+const ITEM_TYPES = ['bag', 'coffee', 'umbrella'];
+
+let state = 'ready'; // ready, play, over
+let player, items, time, spawnTimer, stationIdx, stationFlash, speedMul, best = 0, lastT;
+const keys = { left: false, right: false };
+let touchDir = 0;
+
+function reset() {
+  player = { x: W / 2, w: Math.max(40, W * 0.05), h: Math.max(80, H * 0.16), speed: Math.max(300, W * 0.55) };
+  items = [];
+  time = 0;
+  spawnTimer = 0;
+  stationIdx = 0;
+  stationFlash = 2.5;
+  speedMul = 1;
+}
+reset();
+
+window.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft') keys.left = true;
+  if (e.key === 'ArrowRight') keys.right = true;
+  if ((e.key === ' ' || e.key === 'Enter') && state !== 'play') start();
+});
+window.addEventListener('keyup', e => {
+  if (e.key === 'ArrowLeft') keys.left = false;
+  if (e.key === 'ArrowRight') keys.right = false;
+});
+canvas.addEventListener('touchstart', e => {
+  e.preventDefault();
+  if (state !== 'play') { start(); return; }
+  const t = e.touches[0];
+  touchDir = t.clientX < W / 2 ? -1 : 1;
+}, { passive: false });
+canvas.addEventListener('touchmove', e => {
+  e.preventDefault();
+  const t = e.touches[0];
+  touchDir = t.clientX < W / 2 ? -1 : 1;
+}, { passive: false });
+canvas.addEventListener('touchend', e => { e.preventDefault(); if (e.touches.length === 0) touchDir = 0; }, { passive: false });
+canvas.addEventListener('mousedown', () => { if (state !== 'play') start(); });
+
+function start() {
+  reset();
+  state = 'play';
+}
+
+function spawnItem() {
+  const type = ITEM_TYPES[Math.floor(Math.random() * ITEM_TYPES.length)];
+  const size = Math.max(72, Math.min(W, H) * 0.14);  // 2배 크게
+  const shelfY = H * 0.14;
+  items.push({
+    type,
+    x: size / 2 + Math.random() * (W - size),
+    y: shelfY,
+    vy: (H * 0.35 + Math.random() * H * 0.25) * speedMul,
+    size,
+    rot: 0,
+    vr: (Math.random() - 0.5) * 4,
+  });
+}
+
+function update(dt) {
+  if (state !== 'play') return;
+  time += dt;
+
+  // 10초마다 다음 역, 속도 증가
+  const newIdx = Math.floor(time / 10);
+  if (newIdx !== stationIdx) {
+    stationIdx = newIdx;
+    stationFlash = 2.5;
+    speedMul = 1 + stationIdx * 0.25;
+  }
+  if (stationFlash > 0) stationFlash -= dt;
+
+  // 플레이어 이동
+  let dir = touchDir;
+  if (keys.left) dir -= 1;
+  if (keys.right) dir += 1;
+  player.x += dir * player.speed * dt;
+  player.x = Math.max(player.w / 2, Math.min(W - player.w / 2, player.x));
+
+  // 짐 생성
+  spawnTimer -= dt;
+  if (spawnTimer <= 0) {
+    spawnItem();
+    spawnTimer = Math.max(0.12, 0.45 / speedMul);  // 2배 자주
+  }
+
+  // 짐 이동, 충돌
+  const py = H * 0.86;
+  for (const it of items) {
+    it.y += it.vy * dt;
+    it.rot += it.vr * dt;
+    const px1 = player.x - player.w / 2, px2 = player.x + player.w / 2;
+    const py1 = py - player.h, py2 = py;
+    const r = it.size * 0.4;
+    if (it.x + r > px1 && it.x - r < px2 && it.y + r > py1 && it.y - r < py2) {
+      state = 'over';
+      best = Math.max(best, time);
+    }
+  }
+  items = items.filter(it => it.y < H + it.size);
+}
+
+// ---------- 그리기 ----------
+let scroll = 0;
+function drawBackground(dt) {
+  // 객차 벽
+  ctx.fillStyle = '#d9dde0';
+  ctx.fillRect(0, 0, W, H);
+
+  // 창문 (터널 빛이 지나감)
+  scroll += dt * (400 + 200 * speedMul);
+  const winTop = H * 0.2, winH = H * 0.3;
+  const winW = W * 0.26, gap = W * 0.07;
+  for (let i = 0; i < 4; i++) {
+    const x = gap / 2 + i * (winW + gap);
+    ctx.fillStyle = '#1b2228';
+    ctx.fillRect(x, winTop, winW, winH);
+    // 터널 조명
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(x, winTop, winW, winH);
+    ctx.clip();
+    for (let k = -1; k < 6; k++) {
+      const lx = x + ((k * 220 - scroll) % (winW + 220) + winW + 220) % (winW + 220) - 110;
+      ctx.fillStyle = 'rgba(255, 220, 140, 0.8)';
+      ctx.fillRect(lx, winTop + winH * 0.3, 60, 6);
+    }
+    ctx.restore();
+    ctx.strokeStyle = '#8a9298';
+    ctx.lineWidth = 6;
+    ctx.strokeRect(x, winTop, winW, winH);
+  }
+
+  // 선반
+  ctx.fillStyle = '#9aa3a9';
+  ctx.fillRect(0, H * 0.12, W, H * 0.025);
+  ctx.strokeStyle = '#7d868c';
+  ctx.lineWidth = 2;
+  for (let x = 0; x < W; x += 18) {
+    ctx.beginPath(); ctx.moveTo(x, H * 0.12); ctx.lineTo(x, H * 0.145); ctx.stroke();
+  }
+
+  // 2호선 초록 띠
+  ctx.fillStyle = '#00a84d';
+  ctx.fillRect(0, H * 0.53, W, H * 0.025);
+
+  // 좌석
+  ctx.fillStyle = '#2f6fb1';
+  ctx.fillRect(0, H * 0.62, W, H * 0.08);
+  ctx.fillStyle = '#28598d';
+  ctx.fillRect(0, H * 0.70, W, H * 0.03);
+
+  // 바닥
+  ctx.fillStyle = '#b8b0a2';
+  ctx.fillRect(0, H * 0.86, W, H * 0.14);
+
+  // 손잡이 봉
+  ctx.fillStyle = '#c7ccd0';
+  ctx.fillRect(0, H * 0.06, W, 6);
+  for (let x = W * 0.1; x < W; x += W * 0.16) {
+    ctx.strokeStyle = '#c7ccd0'; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(x, H * 0.06); ctx.lineTo(x, H * 0.09); ctx.stroke();
+    ctx.beginPath(); ctx.arc(x, H * 0.1, 10, 0, Math.PI * 2); ctx.stroke();
+  }
+}
+
+function drawPlayer() {
+  const py = H * 0.86;
+  const x = player.x, w = player.w, h = player.h;
+  // 다리
+  ctx.fillStyle = '#2b2f3a';
+  ctx.fillRect(x - w * 0.35, py - h * 0.4, w * 0.3, h * 0.4);
+  ctx.fillRect(x + w * 0.05, py - h * 0.4, w * 0.3, h * 0.4);
+  // 몸
+  ctx.fillStyle = '#e8573f';
+  ctx.fillRect(x - w / 2, py - h * 0.78, w, h * 0.42);
+  // 머리
+  ctx.fillStyle = '#f2c9a0';
+  ctx.beginPath(); ctx.arc(x, py - h * 0.88, w * 0.34, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#222';
+  ctx.beginPath(); ctx.arc(x, py - h * 0.93, w * 0.34, Math.PI, Math.PI * 2); ctx.fill();
+}
+
+function drawItem(it) {
+  ctx.save();
+  ctx.translate(it.x, it.y);
+  ctx.rotate(it.rot);
+  const s = it.size;
+  if (it.type === 'bag') {
+    ctx.fillStyle = '#5b3a29';
+    ctx.fillRect(-s * 0.45, -s * 0.3, s * 0.9, s * 0.65);
+    ctx.strokeStyle = '#3d261a'; ctx.lineWidth = s * 0.08;
+    ctx.beginPath(); ctx.arc(0, -s * 0.3, s * 0.22, Math.PI, Math.PI * 2); ctx.stroke();
+  } else if (it.type === 'coffee') {
+    ctx.fillStyle = '#f5f0e6';
+    ctx.beginPath();
+    ctx.moveTo(-s * 0.28, -s * 0.4); ctx.lineTo(s * 0.28, -s * 0.4);
+    ctx.lineTo(s * 0.2, s * 0.45); ctx.lineTo(-s * 0.2, s * 0.45); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#7a4a2a';
+    ctx.fillRect(-s * 0.25, -s * 0.1, s * 0.5, s * 0.22);
+    ctx.fillStyle = '#333';
+    ctx.fillRect(-s * 0.32, -s * 0.5, s * 0.64, s * 0.12);
+  } else {
+    // 우산
+    ctx.fillStyle = '#2a63c8';
+    ctx.beginPath(); ctx.arc(0, 0, s * 0.45, Math.PI, Math.PI * 2); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = '#333'; ctx.lineWidth = s * 0.06;
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, s * 0.45);
+    ctx.arc(-s * 0.1, s * 0.45, s * 0.1, 0, Math.PI); ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function drawHUD() {
+  const fs = Math.max(18, Math.min(W, H) * 0.045);
+  ctx.fillStyle = 'rgba(0,0,0,0.6)';
+  ctx.fillRect(0, 0, W, H * 0.055 + 8);
+  ctx.fillStyle = '#fff';
+  ctx.font = `bold ${fs * 0.8}px sans-serif`;
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(`버틴 시간 ${time.toFixed(1)}초`, 16, H * 0.03 + 4);
+  ctx.textAlign = 'right';
+  ctx.fillText(`최고 ${best.toFixed(1)}초`, W - 16, H * 0.03 + 4);
+
+  if (state === 'play' && stationFlash > 0) {
+    const name = STATIONS[stationIdx % STATIONS.length];
+    const next = STATIONS[(stationIdx + 1) % STATIONS.length];
+    ctx.textAlign = 'center';
+    // 긴 역 이름도 안내판 안에 들어가게: 글자 폭을 재서 안내판 크기와 글자 크기를 맞춘다
+    let tfs = fs;
+    ctx.font = `bold ${tfs}px sans-serif`;
+    const maxW = W * 0.92 - fs * 1.6;
+    const tw = ctx.measureText(`이번 역은 ${name}입니다`).width;
+    if (tw > maxW) tfs = fs * maxW / tw;
+    ctx.font = `bold ${tfs}px sans-serif`;
+    const bw = Math.min(W * 0.92, Math.max(fs * 14, ctx.measureText(`이번 역은 ${name}입니다`).width + fs * 1.6)), bh = fs * 2.4;
+    ctx.fillStyle = 'rgba(0, 120, 60, 0.9)';
+    ctx.fillRect(W / 2 - bw / 2, H * 0.33 - bh / 2, bw, bh);
+    ctx.fillStyle = '#fff';
+    ctx.font = `bold ${tfs}px sans-serif`;
+    ctx.fillText(`이번 역은 ${name}입니다`, W / 2, H * 0.33 - fs * 0.45);
+    ctx.font = `${fs * 0.6}px sans-serif`;
+    ctx.fillText(`다음 역 ${next} · 속도 ${speedMul.toFixed(2)}배`, W / 2, H * 0.33 + fs * 0.6);
+  }
+}
+
+function drawOverlay() {
+  if (state === 'play') return;
+  const fs = Math.max(20, Math.min(W, H) * 0.06);
+  ctx.fillStyle = 'rgba(0,0,0,0.65)';
+  ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = '#fff';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  if (state === 'ready') {
+    ctx.font = `bold ${fs * 1.2}px sans-serif`;
+    ctx.fillText('지하철 짐 피하기', W / 2, H * 0.4);
+    ctx.font = `${fs * 0.5}px sans-serif`;
+    ctx.fillText('← → 방향키로 움직이기 (휴대폰은 화면 왼쪽/오른쪽 터치)', W / 2, H * 0.5);
+    ctx.fillText('스페이스바나 화면을 눌러 시작', W / 2, H * 0.57);
+  } else {
+    ctx.font = `bold ${fs * 1.1}px sans-serif`;
+    ctx.fillText('짐에 맞았습니다!', W / 2, H * 0.38);
+    ctx.font = `${fs * 0.7}px sans-serif`;
+    ctx.fillText(`버틴 시간 ${time.toFixed(1)}초 · ${STATIONS[stationIdx % STATIONS.length]}역까지 갔어요`, W / 2, H * 0.48);
+    ctx.font = `${fs * 0.5}px sans-serif`;
+    ctx.fillText('스페이스바나 화면을 눌러 다시 시작', W / 2, H * 0.57);
+  }
+}
+
+function loop(t) {
+  const dt = lastT ? Math.min(0.05, (t - lastT) / 1000) : 0;
+  lastT = t;
+  update(dt);
+  drawBackground(dt);
+  for (const it of items) drawItem(it);
+  drawPlayer();
+  drawHUD();
+  drawOverlay();
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

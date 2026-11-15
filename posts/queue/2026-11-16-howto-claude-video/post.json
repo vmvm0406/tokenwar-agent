@@ -1,0 +1,171 @@
+{
+  "id": "2026-11-16-video-howto-claude-film",
+  "type": "video",
+  "format": "howto",
+  "series": "생존 가이드",
+  "date": "2026-11-16",
+  "publish_at": "2026-11-16T22:15:00+09:00",
+  "rights": "own",
+  "rights_note": "11월 16일 이 컴퓨터에서 클로드 코드 + Lemo-Opuscar 스킬(코드 MIT)로 직접 만든 영상. 화풍 설명서 원문(CC BY-NC)은 옮기지 않음",
+  "video": {
+    "src": "clips/source.mp4",
+    "start": 0,
+    "end": 29,
+    "captions_pos": "bottom",
+    "avoid_burned": false,
+    "avoid_edge_check": false
+  },
+  "title": "애프터이펙트 없이\n클로드가 영상 만들었다",
+  "highlight": "영상",
+  "title_en": "Claude painted this film in code",
+  "subtitles": [
+    {
+      "start": 0.0,
+      "end": 3.0,
+      "text": "이 수묵화 영상, 사람이 안 그렸습니다",
+      "highlight": "수묵화"
+    },
+    {
+      "start": 3.1,
+      "end": 6.2,
+      "text": "클로드에게 말 한 줄 했을 뿐입니다",
+      "highlight": "말 한 줄"
+    },
+    {
+      "start": 6.3,
+      "end": 9.6,
+      "text": "붓질 하나가 산등성이가 됩니다"
+    },
+    {
+      "start": 9.7,
+      "end": 13.2,
+      "text": "기와지붕이 한 채씩 그려집니다"
+    },
+    {
+      "start": 13.3,
+      "end": 16.4,
+      "text": "배경 음악도 코드로 만들었습니다"
+    },
+    {
+      "start": 16.5,
+      "end": 19.8,
+      "text": "첫눈이 내리면 지붕이 하얘집니다",
+      "highlight": "첫눈"
+    },
+    {
+      "start": 19.9,
+      "end": 23.0,
+      "text": "애프터이펙트도 영상 AI도 안 썼습니다"
+    },
+    {
+      "start": 23.1,
+      "end": 26.0,
+      "text": "만드는 데 걸린 시간은 40분",
+      "highlight": "40분"
+    },
+    {
+      "start": 26.1,
+      "end": 28.9,
+      "text": "PC용 클로드 코드에 스킬만 깔면 됩니다",
+      "highlight": "스킬만"
+    }
+  ],
+  "thumb": {
+    "title": "말 한 줄 했더니\n수묵화 영상 나왔다",
+    "highlight": "수묵화 영상",
+    "image": {
+      "type": "image",
+      "src": "img/thumb.jpg",
+      "prompt": "ink wash painting of a snowy Korean mountain village at dusk, tiled roofs with snow, falling snowflakes, rice paper texture",
+      "position": "center center"
+    }
+  },
+  "slides": [
+    {
+      "kind": "cover",
+      "layout": "image",
+      "visual": {
+        "type": "image",
+        "src": "img/thumb.jpg",
+        "position": "center center",
+        "hook": "클로드가 코드로 그린 수묵화 첫눈 장면: 결과물부터 보여 줌"
+      },
+      "title": "말 한 줄로\n수묵화 영상 받기",
+      "highlight": "수묵화 영상",
+      "sub": "클로드 코드 + Lemo-Opuscar 스킬로 직접 해 봄"
+    },
+    {
+      "kind": "prompt",
+      "num": 1,
+      "num_note": "설치",
+      "prompt_label": "터미널에 넣을 명령 두 줄",
+      "heading": "터미널에 두 줄 넣어\n설치합니다",
+      "highlight": "두 줄",
+      "prompts": [
+        "claude plugin marketplace add lemomo-ai/lemo-opuscar",
+        "claude plugin install lemo-opuscar@lemolab"
+      ]
+    },
+    {
+      "kind": "prompt",
+      "num": 2,
+      "num_note": "요청",
+      "heading": "클로드에게 원하는 장면을\n한 줄로 말합니다",
+      "highlight": "한 줄",
+      "prompt": "수묵화 화풍으로, 산골 마을에 첫눈이 내리는 20초 영상을 만들어 줘."
+    },
+    {
+      "kind": "body",
+      "num": 3,
+      "num_note": "결과",
+      "heading": "20초 수묵화 영상이\n나왔습니다",
+      "highlight": "20초",
+      "body": "붓질로 산이 그려지고 기와지붕에 눈이 쌓입니다. 배경 음악과 효과음도 코드로 만들었습니다."
+    },
+    {
+      "kind": "body",
+      "num": 4,
+      "num_note": "주의할 점",
+      "heading": "PC용 클로드 코드가\n있어야 합니다",
+      "highlight": "PC용",
+      "body": "휴대폰 앱에서는 안 됩니다. Node.js, ffmpeg, Python이 깔려 있어야 하고, 한 편에 40분쯤 걸리며 토큰도 꽤 씁니다."
+    }
+  ],
+  "sources": [
+    {
+      "name": "Lemo-Opuscar (코드로 영상을 만드는 클로드 스킬, 화풍 99개)",
+      "url": "https://github.com/lemomo-ai/lemo-opuscar"
+    },
+    {
+      "name": "클로드 코드 + Lemo-Opuscar 직접 사용 (11월 16일)",
+      "url": "https://lemomo-ai.github.io/lemo-opuscar/"
+    }
+  ],
+  "caption": "클로드에게 말 한 줄로 수묵화 영상 한 편을 받아 보세요.\n\n위 20초 영상은 저희가 클로드 코드에 Lemo-Opuscar 스킬을 깔고 한 줄만 넣어 만든 거예요. 붓질, 산, 기와지붕, 배경 음악까지 전부 코드로 그렸고, 영상 생성 AI는 쓰지 않았어요. 저희가 넣은 문장은 이거예요.\n\n\"수묵화 화풍으로, 산골 마을에 첫눈이 내리는 20초 영상을 만들어 줘.\"\n\n화풍은 99개 중에서 이름으로 고르면 돼요. 다만 휴대폰 앱이 아니라 PC용 클로드 코드가 필요하고(Node.js, ffmpeg, Python 설치), 한 편에 40분쯤 걸리고 토큰도 꽤 씁니다.\n\n영상 편집 배우려다 멈춘 친구에게 보내 두세요. 프로그램 없이 말로 시키는 방법이에요.\n\n출처: Lemo-Opuscar (github.com/lemomo-ai/lemo-opuscar), 11월 16일 직접 만들어 봄\n\n댓글에 '받기'를 남기면 설치 명령과 요청 문장을 DM으로 보내 드려요. (팔로우한 분께 보내집니다)",
+  "dm": {
+    "keyword": "받기",
+    "message": "말 한 줄로 수묵화 영상을 받은 방법이에요.\n아래 '자료 보기'를 누르면 설치 명령 두 줄과 요청 문장을 복사할 수 있는 페이지가 열립니다. 장면과 화풍 이름만 바꿔서 써 보세요.\nPC용 클로드 코드에서만 되고, 한 편에 40분쯤 걸립니다.",
+    "page": {
+      "intro": "클로드 코드에 Lemo-Opuscar 스킬을 깔면, 말 한 줄로 화풍 있는 짧은 영상을 코드로 만들어 줍니다. 11월 16일에 직접 깔고 만들어 본 순서입니다.",
+      "result": "수묵화 화풍으로 산골 마을에 첫눈이 내리는 20초 영상이 나왔습니다. 붓질 하나가 산등성이가 되고, 기와지붕이 하나씩 그려진 뒤 눈이 내려 지붕이 하얘집니다. 배경 음악과 효과음도 코드로 만들었고, 처음 설치부터 완성까지 40분쯤 걸렸습니다.",
+      "caution": [
+        "휴대폰 앱이 아니라 PC용 클로드 코드에서만 됩니다. Node.js 20 이상, ffmpeg 7 이상, Python 3.11 이상이 필요합니다.",
+        "처음 쓸 때 화풍 자료와 도구를 내려받느라 몇 분 더 걸립니다.",
+        "시작할 때 클로드가 목소리·음악 자료가 있는지 한 번 묻습니다. 없다고 하면 알아서 만듭니다.",
+        "화풍 설명서는 비상업 이용(CC BY-NC) 조건이 붙어 있습니다. 만든 영상은 내 것이지만, 설명서 자체를 팔거나 퍼뜨리면 안 됩니다."
+      ]
+    }
+  },
+  "hashtags": [
+    "#클로드",
+    "#AI영상",
+    "#수묵화",
+    "#AI활용법",
+    "#토큰전쟁"
+  ],
+  "topic": [
+    "클로드",
+    "Lemo-Opuscar",
+    "AI 영상 만들기"
+  ]
+}
