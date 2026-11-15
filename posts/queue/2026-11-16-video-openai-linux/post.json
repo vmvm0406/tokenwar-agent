@@ -1,0 +1,133 @@
+{
+  "id": "2026-11-16-video-openai-linux",
+  "type": "video",
+  "series": "전황",
+  "date": "2026-11-16",
+  "publish_at": "2026-11-16T15:43:00+09:00",
+  "topic": [
+    "OpenAI",
+    "리눅스",
+    "AI 해킹",
+    "사이버 보안"
+  ],
+  "rights": "quote",
+  "speech": true,
+  "credit": "OpenAI",
+  "source_url": "https://www.youtube.com/watch?v=YmxpxJZvm4M&t=948",
+  "video": {
+    "src": "clips/source.mp4",
+    "start": 0.7,
+    "end": 53.6,
+    "source_duration": 2076
+  },
+  "title": "AI가 리눅스 구멍\n948개를 고쳤습니다",
+  "highlight": "948개",
+  "title_en": "OpenAI's GPT-6 Cyber and 948 Linux holes",
+  "subtitles": [
+    {
+      "start": 0.7,
+      "end": 5.3,
+      "text": "마지막으로, 모델 실력에\n특히 놀랐던 작업이 있는데요"
+    },
+    {
+      "start": 5.3,
+      "end": 7.2,
+      "text": "바로 리눅스 작업이었어요"
+    },
+    {
+      "start": 7.3,
+      "end": 11.5,
+      "text": "아시다시피 리눅스는 오늘날 많은\n기기와 클라우드의 바탕이고"
+    },
+    {
+      "start": 11.5,
+      "end": 14.9,
+      "text": "코드가 4천만 줄이 넘을 만큼\n아주 복잡해요",
+      "highlight": "4천만 줄"
+    },
+    {
+      "start": 15.2,
+      "end": 19.9,
+      "text": "보안 구멍을 찾고, 뚫고, 고치는\n전 과정을 자동으로 만들어"
+    },
+    {
+      "start": 19.9,
+      "end": 23.9,
+      "text": "GPT-5.6 사이버와\nGPT-6 사이버로 돌려 봤어요"
+    },
+    {
+      "start": 24.0,
+      "end": 28.6,
+      "text": "GPT-6 사이버로\n한 번 돌렸을 때"
+    },
+    {
+      "start": 28.6,
+      "end": 32.6,
+      "text": "관리자 권한을 빼앗는 리눅스 구멍\n천 개 가까이를 찾아 고쳤어요",
+      "highlight": "천 개 가까이"
+    },
+    {
+      "start": 33.3,
+      "end": 38.7,
+      "text": "석 달 전 5.6 모델보다\n5배 넘게 많은 양이에요",
+      "highlight": "5배"
+    },
+    {
+      "start": 40.0,
+      "end": 44.2,
+      "text": "이번 연구에서 GPT-6 사이버는\n새 공격법 10개를 찾았어요",
+      "highlight": "10개"
+    },
+    {
+      "start": 44.2,
+      "end": 47.9,
+      "text": "저희도, 외부 전문가들도\n처음 보는 방법이었어요"
+    },
+    {
+      "start": 48.7,
+      "end": 51.3,
+      "text": "그래서 저희 최신 모델이\n창의력을 보여 준다고 봐요",
+      "highlight": "창의력"
+    },
+    {
+      "start": 51.3,
+      "end": 53.6,
+      "text": "아는 방법을 그대로\n따라 하는 게 아니라요"
+    }
+  ],
+  "thumb": {
+    "title": "AI가 찾아낸\n리눅스 구멍 948개",
+    "highlight": "948개",
+    "person": {
+      "name": "클린트 기블러",
+      "desc": "OpenAI 사이버보안 연구"
+    },
+    "image": {
+      "type": "image",
+      "src": "img/thumb.jpg",
+      "url": "https://www.youtube.com/watch?v=YmxpxJZvm4M",
+      "position": "center 30%"
+    }
+  },
+  "sources": [
+    {
+      "name": "OpenAI · Cyber at the Frontier 라이브 (11월 12일)",
+      "url": "https://www.youtube.com/watch?v=YmxpxJZvm4M&t=948"
+    },
+    {
+      "name": "OpenAI · A thousand fewer paths to root",
+      "url": "https://openai.com/index/a-thousand-fewer-paths-to-root/"
+    },
+    {
+      "name": "BleepingComputer · GPT-6 Cyber, Firefox 81개·Linux 948개",
+      "url": "https://www.bleepingcomputer.com/news/security/openais-new-gpt-6-cyber-ai-finds-81-firefox-flaws-948-linux-bugs/"
+    }
+  ],
+  "caption": "AI가 리눅스에서 관리자 권한을 빼앗을 수 있는 보안 구멍 948개를 찾아 고쳤어요. 석 달 전 모델보다 5배 넘게 많아요.\n\nOpenAI가 11월 12일 보안 발표 라이브에서 공개한 내용이에요. 리눅스는 안드로이드 스마트폰, 웹사이트 서버, 클라우드의 밑바탕이 되는 운영체제예요. 보안 전용 모델 GPT-6 사이버로 한 번 돌린 결과이고, 사람 연구자가 확인한 뒤 리눅스 관리자들에게 고친 코드를 넘겼다고 해요. 같은 모델은 파이어폭스에서도 몰랐던 심각한 구멍 81개를 찾았어요.\nOpenAI는 이 모델의 해킹 능력을 가장 높은 위험 등급(Critical)으로 매기고, 승인받은 보안 기관에만 먼저 열었어요.\n\n영상: OpenAI (YouTube) https://www.youtube.com/watch?v=YmxpxJZvm4M\n출처: OpenAI 발표·블로그(11월 12일), BleepingComputer\n\n해킹까지 잘하는 AI, 지키는 쪽에 유리할까요, 공격하는 쪽에 유리할까요?",
+  "hashtags": [
+    "#OpenAI",
+    "#AI뉴스",
+    "#보안",
+    "#토큰전쟁"
+  ]
+}
