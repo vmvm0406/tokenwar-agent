@@ -1,5 +1,5 @@
 ---
-name: post-reviewer
+name: review-post
 description: 만든 게시물(카드뉴스·릴스)을 규칙과 한국어 자연스러움 기준으로 검수한다. 렌더링 결과 이미지를 열어 보고 고칠 점만 돌려준다. 고치지는 않는다.
 model: sonnet
 tools: Read, Grep, Glob, Bash
