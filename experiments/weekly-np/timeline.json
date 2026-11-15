@@ -1,0 +1,33 @@
+{
+ "dur": 44.0,
+ "week": {"range": "11.9 – 11.15", "label": "11월 둘째 주", "year": "2026"},
+ "rundown_in": [1.6, 6.0],
+ "recap": [37.6, 41.4],
+ "end": [41.4, 44.0],
+ "stories": [
+  {"t0": 6.0, "t1": 14.0, "tab": "출시", "tab_en": "LAUNCH",
+   "head": "제미나이, 아이폰 카플레이에 탔다", "en": "Gemini app arrives on Apple CarPlay",
+   "row": "제미나이, 아이폰 차에 탄다",
+   "src": "SOURCE: Google · 2026.11.11",
+   "kind": "spec", "eyebrow": "GOOGLE · 11.11", "big": "제미나이 → CarPlay",
+   "lines": ["운전 중 손 안 대고 제미나이 라이브와 대화", "오늘 일정, 받은 메일을 말로 확인", "아이폰 사용자 대상"], "stamp": "출시"},
+  {"t0": 14.0, "t1": 22.0, "tab": "기능", "tab_en": "FEATURE",
+   "head": "픽셀폰 제미나이, 내 번호로 대신 전화", "en": "Gemini places calls with your number",
+   "row": "AI가 내 번호로 대신 전화",
+   "src": "SOURCE: Android Authority · 11.10",
+   "kind": "checks", "eyebrow": "PIXEL DROP · 11월", "big": "전화는 AI가",
+   "lines": ["식당 예약하기", "예약 시간 바꾸기", "물건 맡겨 두기, 재고 묻기"], "note": "미국 · 영어 · 픽셀 10·11부터"},
+  {"t0": 22.0, "t1": 30.0, "tab": "베타", "tab_en": "BETA",
+   "head": "챗GPT 안에 회사 공식 프로필이 생긴다", "en": "Businesses in ChatGPT beta",
+   "row": "챗GPT에 회사 공식 프로필",
+   "src": "SOURCE: OpenAI via TNW · 11.11",
+   "kind": "cards", "eyebrow": "OPENAI · 11.11", "big": "Businesses in ChatGPT",
+   "lines": ["인증받은 공식 프로필", "챗GPT가 우리 회사를 몇 번 말했나", "제품 정보로 답하는 상담 에이전트", "미국은 이 에이전트를 광고로도"], "stamp": "베타"},
+  {"t0": 30.0, "t1": 37.6, "tab": "투자", "tab_en": "MONEY",
+   "head": "TSMC, 오픈AI·앤트로픽에 최대 10억 달러", "en": "TSMC approves up to $1B in AI bets",
+   "row": "TSMC, AI 회사 두 곳에 투자",
+   "src": "SOURCE: Reuters via Ars Technica · 11.11",
+   "kind": "money", "eyebrow": "TSMC 이사회 · 11.11", "num": 10, "unit": "억 달러", "pre": "최대",
+   "chips": ["OpenAI 우선주", "Anthropic 보통주"], "note": "반도체 만드는 회사가 고객사 지분을 산다"}
+ ]
+}

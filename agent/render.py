@@ -12,7 +12,7 @@
 알약 태그·둥근 카드·작은 대문자 라벨·가짜 UI 화면·점 무늬·진행 바 같은 'AI 디자인 티'는 쓰지 않는다.
 
 표지 유형(cover.layout): big, list, image
-본문 유형(kind): body, steps, compare, stat
+본문 유형(kind): body, steps, compare, stat, prompt(복사해 쓰는 프롬프트 상자)
 그림(visual): image, bars, timeline
 자세한 형식은 TEMPLATES.md.
 """
@@ -63,6 +63,8 @@ CSS = """
 @font-face{font-family:'Wanted';src:url('FONTS/WantedSans-SemiBold.otf');font-weight:600}
 @font-face{font-family:'Wanted';src:url('FONTS/WantedSans-Bold.otf');font-weight:700}
 @font-face{font-family:'Wanted';src:url('FONTS/WantedSans-ExtraBold.otf');font-weight:800}
+@font-face{font-family:'Mono';src:url('FONTS/jetbrains-mono-latin-500-normal.woff2');font-weight:500}
+@font-face{font-family:'Mono';src:url('FONTS/jetbrains-mono-latin-700-normal.woff2');font-weight:700}
 *{box-sizing:border-box}
 html,body{margin:0;background:#000}
 .slide{width:Wpx;height:Hpx;background:BG;color:TEXT;font-family:'Wanted',sans-serif;position:relative;overflow:hidden;
@@ -100,6 +102,18 @@ html,body{margin:0;background:#000}
 .shot.bleed{left:0;right:0;top:0;border:0;height:SHOTBHpx}
 .shotcap{position:absolute;right:PADXpx;font-size:22px;font-weight:600;color:MUTED}
 .inner.below{justify-content:flex-start;gap:26px}
+/* 소식 번호 (주간 요약처럼 소식마다 한 장일 때): 큰 녹색 번호 + 날짜 + 가로선 */
+.num{display:flex;align-items:center;gap:22px;margin-bottom:-6px}
+.num b{font-family:'Black Han Sans';font-weight:400;font-size:NUMpx;line-height:1;color:ACCENT;letter-spacing:-.02em}
+.num span{font-size:28px;font-weight:700;color:MUTED;white-space:nowrap}
+.num i{flex:1;height:3px;background:ACCENT}
+/* 복사해 쓰는 프롬프트 상자 (kind: prompt). 둥근 모서리 없이 왼쪽 굵은 녹색 선 */
+.pbox{background:#111814;border-left:8px solid ACCENT;padding:26px 32px 30px}
+.pbox .pl{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
+.pbox .pl b{font-family:'Black Han Sans';font-weight:400;font-size:PLABELpx;color:ACCENT}
+.pbox .pl span{font-size:24px;font-weight:600;color:MUTED}
+.pbox pre{margin:0;font-family:'Mono','Wanted',monospace;font-weight:500;font-size:PROMPTpx;line-height:1.55;color:TEXT;
+  white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere;word-spacing:-.32em}
 .bvis{height:BVISpx;flex:none;position:relative;overflow:hidden}
 .bvis img{width:100%;height:100%;object-fit:cover}
 .steps{display:flex;flex-direction:column}
@@ -148,10 +162,11 @@ html,body{margin:0;background:#000}
 DIMS = {
     "carousel": dict(PADX=72, BRANDY=60, VISH=860, BIGTOP=96, LISTTOP=120, CTEXTB=150, CTITLE=80, CSUB=32,
                      INTOP=110, INBOT=140, HEAD=76, BODY=40, PULL=50, BVIS=440, STEPT=38, STEPX=31,
-                     CMP=32, STAT=230, SLOGAN=104, CLIPH=608, SHOTTOP=90, SHOTH=600, SHOTBH=690),
-    "reel": dict(PADX=80, BRANDY=330, VISH=1200, BIGTOP=260, LISTTOP=300, CTEXTB=420, CTITLE=92, CSUB=36,
-                 INTOP=260, INBOT=420, HEAD=84, BODY=46, PULL=56, BVIS=560, STEPT=44, STEPX=36,
-                 CMP=36, STAT=250, SLOGAN=112, CLIPH=608, SHOTTOP=250, SHOTH=760, SHOTBH=900),
+                     CMP=32, STAT=230, SLOGAN=104, CLIPH=608, SHOTTOP=90, SHOTH=600, SHOTBH=690, NUM=72, PROMPT=31, PLABEL=34, PSHOTH=430),
+    # 릴스: 읽을 것은 인스타 안전 영역(세로 285~1250px, 양옆 65px) 안에 (config.json reel_safe, STYLE_GUIDE 6)
+    "reel": dict(PADX=80, BRANDY=330, VISH=980, BIGTOP=285, LISTTOP=300, CTEXTB=670, CTITLE=88, CSUB=36,
+                 INTOP=285, INBOT=670, HEAD=74, BODY=42, PULL=52, BVIS=440, STEPT=42, STEPX=34,
+                 CMP=34, STAT=230, SLOGAN=104, CLIPH=608, SHOTTOP=285, SHOTH=500, SHOTBH=760, NUM=72, PROMPT=33, PLABEL=36, PSHOTH=330),
 }
 
 
@@ -229,20 +244,22 @@ def frame(inner, extra_cls="", top="", style=""):
             f'{brand_html()}</div>')
 
 
-def shot_html(post, v, folder):
-    """본문 장 위쪽 그림. (그림 html, 아래 글이 시작할 y) 반환."""
+def shot_html(post, v, folder, height=None):
+    """본문 장 위쪽 그림. (그림 html, 아래 글이 시작할 y) 반환. height: 그림 높이를 줄일 때 (프롬프트 장)."""
     kind = post.get("type", "carousel")
     d = DIMS["reel" if kind in ("reel", "video") else "carousel"]
+    height = height or v.get("height")  # 선택: 그림 높이(px)를 줄여 아래 글 자리를 넓힐 때
     pos = v.get("position", "top center")
     fit = v.get("fit", "cover")
     img = f'<img src="{img_uri(folder, v["src"])}" style="object-fit:{fit};object-position:{pos}">'
     if v.get("bleed"):
-        h = d["SHOTBH"]
-        box = f'<div class="shot bleed">{img}</div>'
+        h = height or d["SHOTBH"]
+        box = f'<div class="shot bleed" style="height:{h}px">{img}</div>'
         bottom = h
     else:
-        box = f'<div class="shot">{img}</div>'
-        bottom = d["SHOTTOP"] + d["SHOTH"]
+        h = height or d["SHOTH"]
+        box = f'<div class="shot" style="height:{h}px">{img}</div>'
+        bottom = d["SHOTTOP"] + h
     cap = ""
     if v.get("credit"):
         cap = f'<div class="shotcap" style="top:{bottom + 12}px">{esc(v["credit"])}</div>'
@@ -260,7 +277,11 @@ def body_html(post, s, n, total, folder):
             parts.append(f'<div class="bvis">{visual_html(v, folder)}</div>')
         elif v.get("type") == "image":
             # 기본: 위쪽에 실제 화면, 아래에 제목·설명
-            top, y = shot_html(post, v, folder)
+            ph = None
+            if kind == "prompt":
+                d = DIMS["reel" if post.get("type") in ("reel", "video") else "carousel"]
+                ph = d["PSHOTH"]
+            top, y = shot_html(post, v, folder, ph)
             style = f"top:{y}px"
         else:
             parts.append(visual_html(v, folder))
@@ -268,6 +289,11 @@ def body_html(post, s, n, total, folder):
         unit = f'<small>{esc(s["unit"])}</small>' if s.get("unit") else ""
         parts.append(f'<div class="stat"><div class="n">{esc(s["value"])}{unit}</div>'
                      f'<div class="u">{esc(s.get("label", ""))}</div></div>')
+    if s.get("num"):
+        # 선택: 소식 번호. "num": 1 → 01, "num_note": "11월 12일 · 삼성전자"
+        n_txt = f'{int(s["num"]):02d}' if str(s["num"]).isdigit() else esc(s["num"])
+        note = f'<span>{esc(s["num_note"])}</span>' if s.get("num_note") else ""
+        parts.append(f'<div class="num"><b>{n_txt}</b>{note}<i></i></div>')
     if s.get("heading"):
         parts.append(f'<h2 class="heading">{br(hl(s["heading"], s.get("highlight")))}</h2>')
     if kind == "steps":
@@ -283,6 +309,13 @@ def body_html(post, s, n, total, folder):
             lis = "".join(f'<div class="ci">{esc(x)}</div>' for x in c["items"])
             cols.append(f'<div class="col{" on" if c.get("on") else ""}"><div class="cl">{esc(c["label"])}</div>{lis}</div>')
         parts.append(f'<div class="cmp">{"".join(cols)}</div>')
+    if kind == "prompt":
+        # 복사해 쓰는 프롬프트. 여러 개면 prompts 배열
+        for pr in s.get("prompts") or [s.get("prompt", "")]:
+            label = esc(s.get("prompt_label", "프롬프트"))
+            hint = esc(s.get("prompt_hint", "그대로 복사해서 붙여 넣기"))
+            parts.append(f'<div class="pbox"><div class="pl"><b>{label}</b><span>{hint}</span></div>'
+                         f'<pre>{esc(pr)}</pre></div>')
     if s.get("body"):
         parts.append(f'<p class="body">{br(esc(s["body"]))}</p>')
     if s.get("point"):
@@ -409,6 +442,11 @@ def main(folder):
         for e in errors:
             print(" -", e)
         sys.exit(1)
+    if post.get("dm"):
+        # 댓글 자동 DM: 도구에 붙여 넣을 dm.md + GitHub Pages 안내 페이지 (agent/dm.py)
+        from dm import make_dm
+        for p in make_dm(post, out_dir):
+            print("DM 자료:", p.relative_to(ROOT) if p.is_relative_to(ROOT) else p)
     if post["type"] == "video":
         src = out_dir / post["video"]["src"]
         if not src.exists():
@@ -431,7 +469,10 @@ def main(folder):
         for p in problems:
             print(" -", p)
         sys.exit(1)
-    if post["type"] == "reel":
+    if post["type"] == "reel" and not shutil.which("ffmpeg"):
+        # 장면 이미지(frames/)까지만 확인. 영상은 ffmpeg가 있는 곳(GitHub Actions render.yml)에서 만든다
+        print("ffmpeg 없음: 장면 이미지(frames/)만 만들고 reel.mp4는 건너뜀 (render.yml이 만든다)")
+    elif post["type"] == "reel":
         from motion import make_motion_reel
         total = asyncio.run(make_motion_reel(page, post, out_dir, CONFIG))
         shutil.copy(sorted((out_dir / "frames").glob("*.jpg"))[0], out_dir / "cover.jpg")
