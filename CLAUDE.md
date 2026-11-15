@@ -35,7 +35,7 @@
 | `agent/checks.py` | post.json 규칙 검사 (글자 수, 금지어, AI 글투, 카드뉴스 사진 2장 이상, 인용 길이·비율, 썸네일) |
 | `agent/dupes.py` | 같은 내용 반복 막기 (같은 영상 90일, 같은 출처 30일, 주제 겹침 14일, 같은 인물 주 2회) |
 | `agent/render.py` | 카드뉴스 HTML → JPEG (Playwright). video 타입이면 `video.py`, 썸네일은 `thumb.py` |
-| `agent/video.py` | 인용 영상 릴스: 제목·초록 테두리 영상 창·출처·자막. `keep`(예전 기능, 지금은 쓰지 않음), `punch`, `crop`, `captions_at` |
+| `agent/video.py` | 인용 영상 릴스: 제목·초록 테두리 영상 창·출처·자막. 구간 경계를 원본 소리에 맞춤(`fit_edges`: 말 끝 + 0.4초, 다음 말 페이드), 자막 자리 바닥/맨 위(`captions_pos`·`captions_size`), `crop`. `keep`·`captions_at`은 예전 기능 |
 | `agent/slots.py` | 게시 칸 자동 배정 (`next`, `need`, `status`). 예약된 것을 피해 가장 가까운 빈 칸 |
 | `agent/model_watch.py` | 새 모델 감시 (AI 안 씀): OpenAI·구글·앤트로픽 공식 블로그 + data/hot.md 화제 회사 → 새 발표를 "회사, 제목, 주소"로. 본 것은 `data/model_watch.json`. `scripts/watch-models.ps1`이 15분마다 (LOCAL.md 6장) |
 | `agent/dm.py` | 따라 하기 게시물의 댓글 자동 DM 준비물: `dm.md`(Zorcha 설정 메모), `docs/p/<id>/` 안내 페이지(GitHub Pages) |
