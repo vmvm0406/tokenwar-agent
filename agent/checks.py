@@ -82,6 +82,38 @@ EMOJI_RE = re.compile(
 )
 
 
+CAPTION_EMOJI_MAX = 10  # 캡션 줄머리 표시용 (운영자 결정 2026-11-16). 줄마다 1개
+ENDING_RE = re.compile(r"([가-힣]{1,3})[.!?~…]*\s*$")
+
+
+def _ending(sentence):
+    """문장 끝 어미 대략 (마지막 두 글자). '했어요', '합니다' 같은 반복을 잡는 용도."""
+    m = ENDING_RE.search(sentence.strip())
+    return m.group(1)[-2:] if m else None
+
+
+def caption_style(caption):
+    """캡션 문체 검사 (운영자 지적 2026-11-16).
+    - 이모지는 줄머리 표시로만: 한 줄에 1개, 전체 CAPTION_EMOJI_MAX개 이하 (카드·썸네일 안 이모지 금지는 그대로)
+    - 같은 문장 끝(예: '~했어요')이 3번 연속이면 경고"""
+    errs, warns = [], []
+    if len(EMOJI_RE.findall(caption)) > CAPTION_EMOJI_MAX:
+        errs.append(f"캡션 이모지는 {CAPTION_EMOJI_MAX}개 이하 (줄머리 표시로 줄마다 1개)")
+    for l in caption.splitlines():
+        if len(EMOJI_RE.findall(l)) > 1:
+            warns.append(f"캡션 이모지는 줄마다 1개, 줄머리에만: '{l[:30]}'")
+    body = "\n".join(l for l in caption.splitlines() if not l.lstrip().startswith("#"))
+    sents = [s for s in re.split(r"(?<=[.!?])\s+|\n+", body) if re.search(r"[가-힣]", s)]
+    run, prev = 1, None
+    for s in sents:
+        e = _ending(s)
+        run = run + 1 if e and e == prev else 1
+        prev = e
+        if run == 3:
+            warns.append(f"캡션 문장 끝 '~{e}'가 3번 연속 → 끝맺음을 섞는다 (~합니다/~했습니다/명사형 요점/질문) (STYLE_GUIDE 7)")
+    return errs, warns
+
+
 def _lines(text):
     return [l for l in str(text).split("\n")]
 
@@ -272,8 +304,9 @@ def check_video(post):
     errors += ai_tone(post["caption"].split("영상:")[0], "캡션")[0]
     if EMOJI_RE.search(joined):
         errors.append("영상 위 글자에는 이모지를 쓰지 않음")
-    if len(EMOJI_RE.findall(post["caption"])) > lim["caption_emoji_max"]:
-        errors.append(f"캡션 이모지는 {lim['caption_emoji_max']}개 이하")
+    e_ce, w_ce = caption_style(post["caption"])
+    errors += e_ce
+    warnings += w_ce
     e_h, w_h = check_hashtags(post.get("hashtags", []))
     errors += e_h
     warnings += w_h
@@ -796,8 +829,9 @@ def _check_post(post):
             warnings.append(f"번역투 의심: '{w}'")
     if EMOJI_RE.search(joined):
         errors.append("카드 안에는 이모지를 쓰지 않음")
-    if len(EMOJI_RE.findall(post["caption"])) > lim["caption_emoji_max"]:
-        errors.append(f"캡션 이모지는 {lim['caption_emoji_max']}개 이하")
+    e_ce, w_ce = caption_style(post["caption"])
+    errors += e_ce
+    warnings += w_ce
 
     tags = post.get("hashtags", [])
     e_h, w_h = check_hashtags(tags)
