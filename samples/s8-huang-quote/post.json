@@ -89,5 +89,10 @@
     "#AI안전",
     "#토큰전쟁"
   ],
-  "speech": true
+  "speech": true,
+  "topic": [
+    "젠슨 황",
+    "AI 안전",
+    "AI 통제"
+  ]
 }
