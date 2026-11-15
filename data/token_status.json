@@ -1,0 +1,22 @@
+{
+  "checked_at": "2026-11-15T06:26:02.046154+00:00",
+  "problems": [],
+  "type": "PAGE",
+  "valid": true,
+  "expires_at": "never",
+  "data_access_expires_at": "2027-02-13T06:19:18+00:00",
+  "scopes": [
+    "pages_show_list",
+    "business_management",
+    "instagram_basic",
+    "instagram_manage_insights",
+    "instagram_content_publish",
+    "pages_read_engagement",
+    "public_profile"
+  ],
+  "instagram": {
+    "username": "tokenwar_ai",
+    "followers_count": 0,
+    "media_count": 0
+  }
+}
