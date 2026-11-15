@@ -3,8 +3,24 @@
   "timezone": "Asia/Seoul",
   "handle": "@tokenwar_ai",
   "slots": {
-    "carousel": "10:13",
-    "reel": "19:10"
+    "carousel": [
+      "10:13",
+      "13:13",
+      "17:13"
+    ],
+    "reel": [
+      "12:43",
+      "15:43",
+      "19:10",
+      "20:43"
+    ],
+    "daily_target": {
+      "carousel": 1,
+      "reel": 2
+    },
+    "min_gap_minutes": 90,
+    "lead_minutes": 40,
+    "note": "칸 = 하루 기본 최대 개수(시각). 새 게시물은 agent/slots.py가 가장 가까운 빈 칸에 넣는다. daily_target = 매일 작업(run-local)이 하루에 채우는 수. 상한을 넘기려면 slots.py next --date --max (칸 사이 최소 min_gap_minutes). 시각은 data/trends.md 시간대 분석으로 매달 다시 본다."
   },
   "brand": {
     "bg": "#0A0B0A",

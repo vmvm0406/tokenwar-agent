@@ -9,7 +9,7 @@
 
 1. `git pull`
 2. `requests/clips/*.json`이 없으면 **아무것도 하지 않고 끝낸다** (보고도 한 줄만).
-3. 이미 `posts/queue/`에 오늘 19:10(지났으면 내일 19:10) 릴스가 있으면 그다음 날짜로 잡는다. 릴스는 하루 1개.
+3. 게시 시각은 `python3 agent/slots.py next reel`이 주는 가장 가까운 빈 칸 (config.json `slots`, LOCAL.md 5장).
 4. 요청을 `score` 높은 순으로 정렬한다. 3일 지난 요청은 `done/`으로 옮기고 건너뛴다.
 
 ## 1. 컴퓨터 준비 (device_bash)
@@ -68,7 +68,7 @@ cp clip.mp4 $HOME/mnt/Videos/tokenwar/cur.mp4
    - `video.source_duration`: 원본 전체 길이(초). 인용 비율 확인용
    - `thumb`: 발언자 얼굴이 잘 보이는 순간을 `ffmpeg -ss <초> -i clips/source.mp4 -frames:v 1 -q:v 2 img/thumb.jpg`로 뽑아 쓰고 `person`에 이름·설명, `image.url`에는 원본 영상 주소. 얼굴 장면이 별로면 AI 상징 이미지(`prompt`)
    - 캡션: 맥락, 왜 중요한지, "영상: 채널 이름", 원본 링크
-   - `publish_at`: 0-3에서 정한 날짜 19:10
+   - `publish_at`: 0-3에서 받은 칸 시각
 3. `python3 agent/build.py <폴더>`로 렌더링하고 `cover.jpg`, `frames/01.jpg`를 직접 열어 확인한다. (썸네일이 AI 그림이면 임시 그림으로 확인 후 지우고 Actions에 맡긴다. AGENT.md 3장)
 4. 요청 파일에 `result`(게시물 폴더, 고른 구간, 이유)를 적고 `requests/clips/done/`으로 옮긴다.
 

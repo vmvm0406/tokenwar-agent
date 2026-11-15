@@ -32,6 +32,7 @@
 | `agent/dupes.py` | 같은 내용 반복 막기 (같은 영상 90일, 같은 출처 30일, 주제 겹침 14일, 같은 인물 주 2회) |
 | `agent/render.py` | 카드뉴스 HTML → JPEG (Playwright). video 타입이면 `video.py`, 썸네일은 `thumb.py` |
 | `agent/video.py` | 인용 영상 릴스: 제목·초록 테두리 영상 창·출처·자막. `keep`(예전 기능, 지금은 쓰지 않음), `punch`, `crop`, `captions_at` |
+| `agent/slots.py` | 게시 칸 자동 배정 (`next`, `need`, `status`). 예약된 것을 피해 가장 가까운 빈 칸 |
 | `agent/dm.py` | 따라 하기 게시물의 댓글 자동 DM 준비물: `dm.md`(Zorcha 설정 메모), `docs/p/<id>/` 안내 페이지(GitHub Pages) |
 | `agent/shot.py` | 웹페이지 화면 캡처 → 카드뉴스 사진 (`shot` 필드로 자동, 또는 명령줄) |
 | `agent/thumb.py` | 릴스 썸네일 cover.jpg (그림 꽉 차게 + 가운데 제목 2줄) |
@@ -83,7 +84,7 @@
 - 반응 좋은 형식 따라가기 (ai.trend.kr 분석, STYLE_GUIDE 3-1): 소식만 전하지 말고 "바로 따라 해 볼 것"(챗GPT·제미나이 활용법, 복사해 쓰는 프롬프트)을 붙인다. 첫 줄은 얻는 것을 약속.
 - 카드뉴스는 이틀에 한 번 이상 따라 하기·질문 형식(`format: howto/ask`, 프롬프트 상자 `kind: prompt`). 프롬프트는 직접 돌려 본 결과만 보여 주고, 틀린 점도 "주의할 점"에 적는다 (TEMPLATES.md "게시물 형식", LOCAL.md 1장).
 - 주제는 일반인이 아는 것으로: 챗GPT·제미나이·삼성·네이버처럼 누구나 아는 이름, 생활에 닿는 이야기. 개발자만 아는 도구(Lovable, Cursor 등)는 고르지 않는다 (STYLE_GUIDE 3).
-- 게시 시각: 카드뉴스 10:13, 릴스 19:10 (data/trends.md 시간대 분석으로 매달 다시 본다).
+- 게시 칸(config.json `slots`): 릴스 12:43·15:43·19:10·20:43(하루 최대 4), 카드뉴스 10:13·13:13·17:13(최대 3). 새 게시물은 agent/slots.py가 가장 가까운 빈 칸에 넣고, 매일 작업은 하루 몫(daily_target: 릴스 2, 카드뉴스 1)이 차 있으면 쉰다. 원할 때 더 만들기·바로 올리기는 LOCAL.md 5장 (Code 탭 "릴스 3개 만들어 줘" 또는 make-posts.ps1). 시간대는 data/trends.md로 매달 다시 본다.
 
 ## 자주 쓰는 명령 (이 컴퓨터, PowerShell)
 
@@ -93,6 +94,8 @@ git pull
 py -3.12 agent/render.py samples/s1-nvidia           # 카드뉴스 렌더링 확인
 py -3.12 agent/hot.py                                 # 지금 관심 주제 다시 모으기
 powershell -ExecutionPolicy Bypass -File $env:USERPROFILE\tokenwar-daily\scripts\run-local.ps1   # 하루 작업 수동 실행 (전용 저장소 tokenwar-daily에서 돈다)
+powershell -ExecutionPolicy Bypass -File $env:USERPROFILE\tokenwar-daily\scripts\make-posts.ps1 -Reels 3 -Cards 2   # 원할 때 더 만들기 (-Now: 바로 올리기, -Date 2026-11-17: 그날에 몰아 넣기)
+py -3.12 agent/slots.py status                        # 며칠 치 게시 칸 상황
 Get-ScheduledTask TokenwarAgent                       # 작업 스케줄러 상태
 Get-Content (Get-ChildItem $env:USERPROFILE\tokenwar-daily\logs | Sort LastWriteTime | Select -Last 1).FullName   # 최근 기록
 ```
