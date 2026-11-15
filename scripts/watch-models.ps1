@@ -1,9 +1,10 @@
 ﻿# 새 AI 모델 감시 → 새 발표가 있으면 게시물 1개를 바로 올리기로 만든다 (LOCAL.md 6장).
-# 윈도우 작업 스케줄러(TokenwarModelWatch)가 30분마다 부른다. 등록: setup-local.ps1 -OnlyWatch
+# 윈도우 작업 스케줄러(TokenwarModelWatch)가 15분마다 부른다. 등록: setup-local.ps1 -OnlyWatch
+# 매번 먼저 게시 시각이 지난 게시물이 있으면 publish.yml을 직접 실행한다 (GitHub cron 지연 대비)
 #   powershell -ExecutionPolicy Bypass -File scripts\watch-models.ps1            보통 실행
 #   ... -CheckOnly                                                               감시만 (Claude를 부르지 않음, 기록도 안 바꿈)
 # 매일 작업과 같은 전용 저장소 %USERPROFILE%\tokenwar-daily 에서 돈다. 같은 잠금 파일(%TEMP%\tokenwar.lock)을 쓰므로
-# 매일 작업·make-posts가 도는 중이면 이번 차례는 건너뛴다 (30분 뒤 다시 본다).
+# 매일 작업·make-posts가 도는 중이면 이번 차례 감시는 건너뛴다 (15분 뒤 다시 본다).
 param([switch]$CheckOnly)
 $ErrorActionPreference = "Continue"
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
@@ -19,6 +20,31 @@ $Repo = Join-Path $env:USERPROFILE "tokenwar-daily"   # 매일 작업 전용 (to
 $RepoUrl = "https://github.com/vmvm0406/tokenwar-agent"
 $LogDir = Join-Path $Repo "logs"
 $Lock = Join-Path $env:TEMP "tokenwar.lock"
+
+# 게시 확인 대신 눌러 주기: GitHub의 15분 cron(publish.yml)이 몇 시간씩 늦을 때가 있어서,
+# origin/main의 posts/queue에 게시 시각이 지난 게시물이 하나라도 있으면 publish.yml을 직접 실행한다.
+# 잠금 파일과 상관없이 매번 (작업 폴더는 건드리지 않고 fetch만 한다). gh 로그인이 필요하다.
+if ((-not $CheckOnly) -and (Test-Path (Join-Path $Repo ".git"))) {
+    New-Item -ItemType Directory -Force -Path $LogDir | Out-Null
+    $plog = Join-Path $LogDir ("{0}-watch.log" -f (Get-Date -Format "yyyy-MM"))
+    try {
+        git -C $Repo fetch --quiet origin main 2>$null
+        $now = [DateTimeOffset]::Now
+        $due = @()
+        foreach ($f in @(git -C $Repo ls-tree -r --name-only origin/main -- posts/queue | Where-Object { $_ -like "*/post.json" })) {
+            $j = (git -C $Repo show "origin/main:$f") -join "`n" | ConvertFrom-Json
+            if ($j.publish_at -and [DateTimeOffset]::Parse($j.publish_at) -le $now) { $due += $f }
+        }
+        if ($due.Count -gt 0) {
+            gh workflow run publish.yml -R vmvm0406/tokenwar-agent 2>&1 | Out-Null
+            ("{0} 게시 시각 지난 것 {1}개 → publish.yml 실행 (종료 코드 {2}): {3}" -f (Get-Date -Format "yyyy-MM-dd HH:mm"), $due.Count, $LASTEXITCODE, ($due -join ", ")) |
+                Out-File -Append -FilePath $plog -Encoding utf8
+        }
+    } catch {
+        ("{0} 게시 확인 실패: {1}" -f (Get-Date -Format "yyyy-MM-dd HH:mm"), $_) | Out-File -Append -FilePath $plog -Encoding utf8
+    }
+}
+
 if ((Test-Path $Lock) -and ((Get-Item $Lock).LastWriteTime -gt (Get-Date).AddHours(-3))) { exit 0 }  # 다른 작업이 실행 중
 Set-Content -Path $Lock -Value (Get-Date)
 try {

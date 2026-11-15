@@ -3,7 +3,7 @@
 claude.ai 대화에서 하던 작업을 이 컴퓨터의 Claude Code로 옮겼다. 정해진 규칙은 이미 STYLE_GUIDE/CLAUDE.md에 들어가 있다. 아래는 **아직 안 끝난 것**이다. 하나 끝날 때마다 이 파일에서 지운다.
 
 ## 운영자가 할 일
-- **새 모델 감시 작업 스케줄러 등록 (2026-11-15 만듦, LOCAL.md 6장).** PowerShell(필요하면 관리자)에서 한 번:
+- **새 모델 감시·게시 확인 작업 스케줄러 등록 (15분마다, 2026-11-15 만듦, LOCAL.md 6장).** 이미 등록했어도 주기가 15분으로 바뀌었으니 다시 실행. PowerShell(필요하면 관리자)에서 한 번:
   `git -C $env:USERPROFILE\tokenwar-daily pull; powershell -ExecutionPolicy Bypass -File $env:USERPROFILE\tokenwar-daily\scripts\setup-local.ps1 -OnlyWatch`
   확인: `Get-ScheduledTask TokenwarModelWatch`. 감시 기록은 `tokenwar-daily\logs\<연-월>-watch.log`, Claude가 게시물을 만들면 `logs\<시각>-model.log`. 지금은 `config.json` `model_watch.auto_publish: false`(PR + Merge). 바로 main에 올리고 싶으면 true로.
 - 첫 몇 주는 감시가 너무 자주(구글 제미나이 블로그의 작은 기능 글) 또는 너무 드물게 잡는지 watch.log로 보고 `agent/model_watch.py`의 낱말 목록을 고친다.

@@ -8,7 +8,7 @@
               ▼  (검토 모드: Pull Request / 자동 모드: main에 바로)
            GitHub 저장소 posts/queue/
               │
-              ▼  15분마다 확인, 게시 시각이 되면
+              ▼  15분마다 확인, 게시 시각이 되면 (cron이 늦으면 이 컴퓨터의 watch-models.ps1이 15분마다 직접 실행)
            GitHub Actions ── 인스타 공식 API로 게시 → posts/published/로 이동
 ```
 

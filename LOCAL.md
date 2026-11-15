@@ -77,7 +77,7 @@ Code 탭에서 할 때: 운영자의 `tokenwar-agent` 폴더 브랜치를 바꾸
 
 ## 6. 새 모델 바로 올리기 (자동 감시)
 
-작업 스케줄러 `TokenwarModelWatch`가 30분마다 `scripts/watch-models.ps1`을 돌린다. 그 안에서 `agent/model_watch.py`(AI 안 씀)가 공식 블로그를 읽어 새 발표를 찾고, 있으면 Claude를 이 절차로 부른다 (실행 지시에 "회사 | 제목 | 주소" 목록이 붙어 온다). 설정은 `config.json` `model_watch`.
+작업 스케줄러 `TokenwarModelWatch`가 15분마다 `scripts/watch-models.ps1`을 돌린다. 먼저 origin/main의 `posts/queue`에 게시 시각이 지난 게시물이 있으면 `gh workflow run publish.yml`로 게시를 직접 실행한다 (GitHub 15분 cron이 몇 시간씩 늦을 때가 있어서. 잠금 파일과 상관없이 매번). 그 안에서 `agent/model_watch.py`(AI 안 씀)가 공식 블로그를 읽어 새 발표를 찾고, 있으면 Claude를 이 절차로 부른다 (실행 지시에 "회사 | 제목 | 주소" 목록이 붙어 온다). 설정은 `config.json` `model_watch`.
 
 - **감시하는 곳:** 항상 OpenAI 뉴스(RSS), 구글 블로그 제미나이·AI(RSS), 앤트로픽 뉴스(목록 페이지). 그록·메타·딥시크·네이버·삼성 등은 `data/hot.md` 여러 섹션에 동시에 뜰 때만 (`[화제: ...]`로 시작하는 줄).
 - 본 글은 `data/model_watch.json`에 남는다 (후보 상태: pending → done / skipped / failed, 시도 횟수). `watch-models.ps1`이 Claude를 부르기 **전과 후에** 이 파일만 main에 커밋·push 한다. 게시물 브랜치에는 넣지 않는다.
