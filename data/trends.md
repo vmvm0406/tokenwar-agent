@@ -1,4 +1,4 @@
-# 인스타 반응 분석 (2026-11-15 20:47 기준)
+# 인스타 반응 분석 (2026-11-15 21:24 기준)
 
 에이전트는 주제를 고를 때 이 파일을 먼저 읽는다 (STYLE_GUIDE 3장, 6-1장 '인스타 반응').
 배수 = 그 계정의 최근 60일 같은 유형(릴스/피드) 중간값 대비. 2배 이상이면 '먹힌 주제'.
@@ -7,13 +7,13 @@
 - REELS 중간값 449조회, 게시물 28개
 - FEED 중간값 6반응, 게시물 1개
 
-## @ai.trend.kr (팔로워 272596)
-- REELS 중간값 97,820조회, 게시물 36개
+## @ai.trend.kr (팔로워 272616)
+- REELS 중간값 97,825조회, 게시물 36개
 - FEED 중간값 1,496반응, 게시물 115개
 
-## @ai.asap.kr (팔로워 9644)
-- REELS 중간값 8,236조회, 게시물 4개
-- FEED 중간값 81반응, 게시물 131개
+## @ai.asap.kr (팔로워 9645)
+- REELS 중간값 8,240조회, 게시물 4개
+- FEED 중간값 81반응, 게시물 132개
 
 ## @choi.openai (팔로워 6237)
 - FEED 중간값 97반응, 게시물 2개
@@ -24,12 +24,12 @@
 
 | 배수 | 계정 | 유형 | 날짜 | 수치 | 첫 줄 |
 |---|---|---|---|---|---|
-| 29.3x | @ai.trend.kr | REELS | 10-20 | 2,864,553 | [눈 뭉치 던진 범인이 나라고요? ❄️](https://www.instagram.com/reel/DetX442xkFz/) |
+| 29.3x | @ai.trend.kr | REELS | 10-20 | 2,864,637 | [눈 뭉치 던진 범인이 나라고요? ❄️](https://www.instagram.com/reel/DetX442xkFz/) |
 | 17.2x | @ai.asap.kr | FEED | 10-18 | 1,394 | [Filee는 Ctrl을 누른 채 파일을 끌면 커서 옆에 변환할 형식이 동그랗게 뜨고, 원하는 형식에 놓으면 바로 바꿔 주는 변환기입니다. 이미지](https://www.instagram.com/p/DeoW-TQj9F5/) |
-| 10.9x | @ai.trend.kr | REELS | 10-23 | 1,063,634 | [식이 시작도 안 했는데 하객석이 뒤집어졌어요 🎉](https://www.instagram.com/reel/De0VCSbPO_M/) |
+| 10.9x | @ai.trend.kr | REELS | 10-23 | 1,063,842 | [식이 시작도 안 했는데 하객석이 뒤집어졌어요 🎉](https://www.instagram.com/reel/De0VCSbPO_M/) |
 | 10.8x | @ai.trend.kr | FEED | 10-27 | 16,182 | [올해가 가기 전에, GPT랑 새해 계획을 세워봤어요. 🗓️](https://www.instagram.com/p/De_YpGSkS7D/) |
 | 7.3x | @ai.trend.kr | FEED | 10-28 | 10,889 | [사진 한 장으로 다섯 시대를 살아 봤어요 📷](https://www.instagram.com/p/DfB9iInE-54/) |
-| 6.9x | @ai.trend.kr | REELS | 11-04 | 672,210 | [AI로 오늘도 감동을 받네요 🥹](https://www.instagram.com/reel/DfUlNHxPiTT/) |
+| 6.9x | @ai.trend.kr | REELS | 11-04 | 672,440 | [AI로 오늘도 감동을 받네요 🥹](https://www.instagram.com/reel/DfUlNHxPiTT/) |
 | 6.8x | @ai.asap.kr | FEED | 10-28 | 554 | [Oh-My-Hermes는 Nous Research의 오픈소스 에이전트 Hermes Agent에 쓸 세팅을 묶은 올인원 패키지입니다. 설치하고 o](https://www.instagram.com/p/DfA7xqjE1nL/) |
 | 6.7x | @ai.asap.kr | FEED | 10-17 | 546 | [Happy는 Claude·Codex·Grok을 한 앱에서 골라 쓰게 해 주는 MIT 오픈소스입니다. 새 구독이 아니라 이미 내고 있는 각 회사 ](https://www.instagram.com/p/Del2nkwj2Xu/) |
 | 6.7x | @ai.talk.kr | REELS | 10-23 | 3,008 | [AI가 발전하면 내 노트북은 더 좋아질까, 더 비싸질까?](https://www.instagram.com/reel/De0PR-Qj5n2/) |
@@ -38,26 +38,26 @@
 | 5.2x | @ai.asap.kr | FEED | 11-05 | 423 | [Lemo-Opuscar는 Claude Code에 설치해 쓰는 영상 스타일 모음입니다. 대표작 OPUSCAR 98은 아카데미 작품상 98편을 영화](https://www.instagram.com/p/DfVni0MD5Ql/) |
 | 5.1x | @ai.asap.kr | FEED | 10-27 | 412 | [오픈AI가 GPT-6.1 Terra를 공개했습니다. 화면을 읽고 앱을 다루는 컴퓨터 사용을 더 싸고 빠르게 만든 모델입니다.](https://www.instagram.com/p/De-Uua7k_rj/) |
 | 4.8x | @ai.asap.kr | FEED | 10-22 | 389 | [피클은 할 일을 대신 끝내 주는 국내 개인 AI 에이전트 앱입니다. 웹사이트에서는 사람처럼 일을 처리하고, 웹으로 안 되는 일은 직접 전화를 겁](https://www.instagram.com/p/DeyeaxzD52g/) |
-| 4.6x | @ai.trend.kr | FEED | 11-08 | 6,905 | [AI로 쓴 글을 내가 쓴 것처럼 만드는 방법 ](https://www.instagram.com/p/DfeWpJxj3Xu/) |
+| 4.6x | @ai.trend.kr | FEED | 11-08 | 6,921 | [AI로 쓴 글을 내가 쓴 것처럼 만드는 방법 ](https://www.instagram.com/p/DfeWpJxj3Xu/) |
 | 4.5x | @ai.asap.kr | FEED | 11-10 | 368 | [앤트로픽이 Haiku·Sonnet·Opus 5.5와 Fable 5.2 중 무엇을 언제 쓸지 정리한 가이드를 냈습니다.](https://www.instagram.com/p/Dfi7XDrDwhh/) |
 | 4.4x | @ai.asap.kr | FEED | 10-25 | 356 | [앤트로픽이 Claude로 오픈소스 라이브러리 123개에 버그가 없다는 걸 수학으로 증명했습니다. 이걸 형식 검증이라고 하는데, 지금까지는 전문가](https://www.instagram.com/p/De5VM-zE0Xz/) |
 | 4.4x | @ai.asap.kr | FEED | 11-08 | 355 | [아이폰처럼 맥북도 얼굴만 보면 잠금이 풀리게 해 주는 무료 오픈소스 Glance입니다.](https://www.instagram.com/p/Dfd5xYnDxc7/) |
-| 4.1x | @ai.trend.kr | FEED | 11-05 | 6,176 | [말할 때마다 맞다고, 잘했다고만 해주는 GPT, 좀 수상하지 않나요? 🤔](https://www.instagram.com/p/DfWl1LCj8FS/) |
+| 4.1x | @ai.trend.kr | FEED | 11-05 | 6,177 | [말할 때마다 맞다고, 잘했다고만 해주는 GPT, 좀 수상하지 않나요? 🤔](https://www.instagram.com/p/DfWl1LCj8FS/) |
 | 4.1x | @ai.asap.kr | FEED | 10-22 | 334 | [앤트로픽이 메타 Muse, OpenAI Dots에 이어 먼저 할 일을 챙겨 주는 에이전트 앱 Claude Duet을 리서치 프리뷰로 공개했습니다](https://www.instagram.com/p/DexcORbE1w_/) |
 
 ## 잘 안 된 게시물 (하위 10)
 
 | 배수 | 계정 | 첫 줄 |
 |---|---|---|
-| 0.1x | @ai.trend.kr | 유튜브에서 뭘 볼지 고르는 데 지치셨나요? 📺 |
 | 0.0x | @ai.asap.kr | 세무사 시험 수석 합격자가 AI 부정행위를 털어놓고 경찰에 자수했습니다. |
 | 0.0x | @ai.asap.kr | OpenAI가 사업체가 ChatGPT 속 자기 가게 정보를 직접 관리하는 Businesses in ChatGPT를 베타로 공개했습니다. 주간 사 |
 | 0.0x | @ai.asap.kr | 앤트로픽이 AI 답변이 정말 약속한 모델에서 나왔는지 수학으로 증명하는 FlashProve를 공개했습니다. |
 | 0.0x | @ai.asap.kr | OpenAI가 사내 모노레포를 받치는 새 Git 백엔드 Pando를 공개했습니다. Codex로 엔지니어 한 명이 여러 변경을 동시에 올리면서 p |
 | 0.0x | @ai.asap.kr | 앤트로픽이 AI 에이전트가 전문가의 판단에 미치는 영향을 연구했습니다. 분석가 50명이 Claude Opus 4.8 기반 Claude Code로 |
 | 0.0x | @ai.asap.kr | 앤트로픽이 10월 26일 미국 증권거래위원회에 상장 신청서(S-1)를 공개하고, 나스닥에 티커 ANT로 상장을 신청했습니다. |
-| 0.0x | @ai.trend.kr | ‘전과자’에서 꺼낸 아이디어가 진짜 캠퍼스가 됐어요. 🎓 |
+| 0.0x | @ai.asap.kr | kensaku는 파일 이름과 PDF·워드 본문, 스크린샷 속 글자까지 한 번에 찾아 주는 무료 오픈소스 검색 앱입니다. |
 | 0.0x | @ai.trend.kr | 새해 계획 세우기 전에, AI에게 내 10년부터 물어보세요 🗓️ |
+| 0.0x | @ai.trend.kr | ‘전과자’에서 꺼낸 아이디어가 진짜 캠퍼스가 됐어요. 🎓 |
 | 0.0x | @ai.trend.kr | 이 밴드 뭐야? AI로 탄생한 신인 밴드 🎸 |
 
 ## 언제 올린 게시물이 잘 됐나 (한국 시간, 평소 대비 배수 중간값 · 게시물 수)
@@ -65,22 +65,22 @@
 | 시간대 | 릴스 | 카드뉴스(피드) |
 |---|---|---|
 | 00-06시 | 0.73x · 1 | 0.29x · 5 |
-| 06-09시 | 0.93x · 8 | 1.03x · 45 |
+| 06-09시 | 0.93x · 8 | 1.04x · 45 |
 | 09-12시 | 0.99x · 47 | 1.24x · 80 |
-| 12-15시 | 1.09x · 32 | 0.91x · 45 |
+| 12-15시 | 1.09x · 32 | 0.92x · 45 |
 | 15-18시 | 0.94x · 42 | 0.91x · 108 |
-| 18-21시 | 2.21x · 13 | 0.95x · 75 |
+| 18-21시 | 2.21x · 13 | 0.94x · 76 |
 | 21-24시 | 0.60x · 8 | 0.81x · 12 |
 
 | 요일 | 배수 · 수 |
 |---|---|
 | 월 | 0.95x · 72 |
-| 화 | 1.04x · 77 |
+| 화 | 1.05x · 77 |
 | 수 | 1.06x · 80 |
 | 목 | 0.87x · 83 |
 | 금 | 0.92x · 76 |
-| 토 | 1.01x · 71 |
-| 일 | 0.99x · 62 |
+| 토 | 1.02x · 71 |
+| 일 | 0.99x · 63 |
 
 게시물 수가 10개 미만인 칸은 우연일 수 있다. 우리 계정 팔로워가 100명을 넘으면 아래 '우리 팔로워 접속 시간'을 더 믿는다.
 
