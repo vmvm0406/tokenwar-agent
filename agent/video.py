@@ -20,7 +20,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 W, H, FPS = 1080, 1920, 30
-UI_SAFE_BOTTOM = 1510  # 이보다 아래는 인스타 버튼·캡션에 가려진다
+_SAFE = json.loads((ROOT / "config.json").read_text(encoding="utf-8")).get("reel_safe", {})
+UI_SAFE_TOP = _SAFE.get("top", 285)        # 이보다 위는 인스타 머리말(릴스·카메라)에 가려진다
+UI_SAFE_BOTTOM = _SAFE.get("bottom", 1250)  # 이보다 아래는 인스타 캡션·음악·버튼에 가려진다
 
 
 def esc(s):
@@ -65,7 +67,7 @@ def page_html(post, cfg, box_h, fonts_uri):
 *{{box-sizing:border-box}}html,body{{margin:0;background:transparent}}
 #frame{{width:{W}px;height:{H}px;position:relative;color:{b['text']};font-family:'Wanted',sans-serif;word-break:keep-all}}
 #frame.bg{{background:{b['bg']}}}
-.head{{position:absolute;left:60px;right:60px;top:170px;display:flex;flex-direction:column;align-items:center;gap:22px;text-align:center}}
+.head{{position:absolute;left:65px;right:65px;top:{UI_SAFE_TOP}px;display:flex;flex-direction:column;align-items:center;gap:22px;text-align:center}}
 .brand{{font-family:'Black Han Sans';font-size:40px;color:{b['accent']}}}
 .title{{margin:6px 0 0;font-family:'Black Han Sans';font-weight:400;font-size:88px;line-height:1.18;letter-spacing:-.02em;text-wrap:balance}}
 .hl{{color:{b['accent']}}}
