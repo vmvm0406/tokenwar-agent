@@ -66,11 +66,6 @@ claude.ai 대화에서 하던 작업을 이 컴퓨터의 Claude Code로 옮겼�
 6. Cloudflare에서 Workers 편집 권한만 있는 API 토큰 만들어 GitHub Secrets `CLOUDFLARE_API_TOKEN`에 넣기.
 7. 시험용 인스타 계정을 앱 역할(테스터)로 추가 → Standard Access로 끝까지 시험 → 사용 장면 녹화 → 앱 심사 제출.
 
-### 덧붙임 (2026-11-15 두 번째 조사)
-- **웹훅 서버 없이 시작하는 방법:** 비공개 답장은 댓글 뒤 7일 안이면 되므로, Cloudflare Worker 대신 GitHub Actions가 15분마다 최근 게시물 댓글(`GET /<미디어 id>/comments`)을 읽고 아직 안 보낸 댓글에 비공개 답장을 보내는 방식도 된다 (보낸 기록은 저장소 파일). 단점: 최대 15분 늦음, 상대가 답장한 뒤의 24시간 대화(팔로우 확인·버튼)는 웹훅이 있어야 바로 응답할 수 있다. 자료를 첫 답장 한 번에 다 주는 단순한 흐름(팔로우 확인 없음)이면 이 방식으로 충분하다.
-- **로그인 방식별 권한 (Meta 비공개 답장 문서):** Facebook 로그인(지금 우리 방식) = `instagram_basic`, `instagram_manage_comments`, `pages_read_engagement`(+ 비즈니스 관리자 역할이면 `ads_management`, `ads_read`). Instagram 로그인 = `instagram_business_basic`, `instagram_business_manage_comments` (호스트 graph.instagram.com). 메시지를 더 주고받으려면(팔로우 확인 등) 메시지 권한(`instagram_manage_messages` / `instagram_business_manage_messages`)이 추가로 필요하다.
-- **데이터:** ai.trend.kr 릴스 중 첫 줄부터 "댓글에 'OO' 남겨 주세요"로 시작한 6개는 조회수 중앙 33,773으로 전체 중앙 90,508의 37%. 카드뉴스에서는 DM 미끼가 댓글을 2배(중앙 397 vs 200) 올렸지만 좋아요는 그대로였다 (STYLE_GUIDE 3-1). → 하게 되면 카드뉴스 캡션 끝에만 쓰고, 릴스 첫 줄에는 쓰지 않는다.
-
 ### 승인하면 만들 것 (순서)
 1. post.json `dm` 필드 + checks.py 검사 + TEMPLATES/LOCAL.md 절차
 2. GitHub Pages 안내 페이지·개인정보처리방침 생성 (Actions)
