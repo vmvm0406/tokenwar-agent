@@ -140,6 +140,113 @@ async def render_layers(post, cfg, folder, box_h, work):
     return geo, subs
 
 
+# ---------- 원본에 박힌 글자(이름 자막·하단 자막) 피하기 ----------
+# 원본 화면의 가로줄마다 '세게 바뀌는 점'의 밀도를 잰다. 글자 줄은 밀도가 0.1 이상이고 짧은 획이 많다
+# (머스크 대담 영상: 이름 자막 0.12~0.28, 옷·배경 잡음 0.07 이하).
+BURN_DENSITY, BURN_RUNS, BURN_W = 0.10, 50, 480
+MAX_SHIFT = 60          # 우리 자막을 이만큼(px)까지만 위로 옮겨 피한다. 더 옮기면 얼굴을 덮을 수 있다
+# 원본 글자를 띠로 가리지 않는다 (운영자 결정: 자막만 보이게). 피할 수 없으면 자막 전체를 영상 창 위쪽으로 옮긴다.
+
+
+def sample_gray(src, start, dur, crop=None, fps=2):
+    """[start, start+dur] 구간을 초당 fps장 회색 프레임으로. (시각 목록, 프레임 배열[N,h,w]) 원본 비율 유지, 폭 480."""
+    import numpy as np
+    vw, vh, _ = probe(src)
+    if crop:
+        t0, t1 = crop
+        ch = int(vh * (t1 - t0)) // 2 * 2
+        vf = f"crop={vw}:{ch}:0:{int(vh * t0)},"
+        vh = ch
+    else:
+        vf = ""
+    h = max(2, int(round(BURN_W * vh / vw / 2)) * 2)
+    raw = subprocess.run(["ffmpeg", "-nostdin", "-loglevel", "error", "-ss", f"{start}", "-t", f"{dur:.3f}", "-i", str(src),
+                          "-vf", f"{vf}fps={fps},scale={BURN_W}:{h},format=gray", "-f", "rawvideo", "-"],
+                         capture_output=True, check=True).stdout
+    n = len(raw) // (BURN_W * h)
+    frames = np.frombuffer(raw[: n * BURN_W * h], np.uint8).reshape(n, h, BURN_W).astype(np.int16)
+    times = [start + (i + 0.5) / fps for i in range(n)]
+    return times, frames
+
+
+def text_bands(frame):
+    """한 프레임에서 글자 줄 띠 [(위, 아래)] (프레임 높이 비율)."""
+    import numpy as np
+    gx = np.abs(np.diff(frame, axis=1)) > 40
+    dens = gx.mean(axis=1)
+    runs = np.count_nonzero(np.diff(gx.astype(np.int8), axis=1), axis=1)
+    rows = np.where((dens > BURN_DENSITY) & (runs > BURN_RUNS))[0]
+    bands, h = [], frame.shape[0]
+    for y in rows:
+        if bands and y - bands[-1][1] <= 3:
+            bands[-1][1] = y
+        else:
+            bands.append([y, y])
+    return [(a / h, (b + 1) / h) for a, b in bands if b - a + 1 >= max(3, h // 90)]
+
+
+def alpha_rows(path):
+    """자막 PNG에서 글자(그림자 포함)가 있는 세로 범위."""
+    from PIL import Image
+    box = Image.open(path).getchannel("A").point(lambda v: 255 if v > 24 else 0).getbbox()
+    return (box[1], box[3]) if box else None
+
+
+def avoid_burned(post, src, start, dur, subs, geo, box_h, scale_info):
+    """우리 자막이 원본에 박힌 글자(이름 자막·하단 자막)와 겹치지 않게 자막 자리만 옮긴다.
+    1) 겹치는 자막을 MAX_SHIFT px 안에서 위로 옮겨 피할 수 있으면 그것만 옮긴다.
+    2) 안 되면 이 릴스의 자막 전체를 영상 창 위쪽(보통 원본 위쪽 빈 배경)으로 옮긴다.
+    3) 그래도 겹치면 경고만 한다 (video.crop / captions_at으로 손으로 정한다).
+    subs: [(png, a, z)] → [(png, a, z, dy)]."""
+    v = post.get("video") or {}
+    if v.get("captions_at") or v.get("avoid_burned") is False or not geo.get("inside"):
+        return [(p, a, z, 0) for p, a, z in subs]
+    crop = (float(v["crop"].get("top", 0)), float(v["crop"].get("bottom", 1))) if v.get("crop") else None
+    times, frames = sample_gray(src, start, dur, crop)
+    box_top = geo["top"] + 6
+    scaled_h, off_y = scale_info
+
+    def to_px(fr):
+        return box_top + fr * scaled_h - off_y
+
+    info = []  # (자막 위, 아래, 그 시간대 글자 띠들)
+    for path, a, z in subs:
+        rows = alpha_rows(path) or (0, 0)
+        bands = [(to_px(b0), to_px(b1)) for tt, fr in zip(times, frames) if a - 0.25 <= tt <= z + 0.25
+                 for b0, b1 in text_bands(fr)]
+        info.append((rows[0], rows[1], bands))
+
+    def clash(y0, y1, bands):
+        return any(b[1] > y0 - 10 and b[0] < y1 + 10 for b in bands)
+
+    if not any(y1 > y0 and clash(y0, y1, bands) for y0, y1, bands in info):
+        return [(p, a, z, 0) for p, a, z in subs]
+    # 1) 조금만 올려서 피하기
+    dys, ok = [], True
+    for y0, y1, bands in info:
+        if y1 <= y0 or not clash(y0, y1, bands):
+            dys.append(0)
+            continue
+        dy = int(min(b[0] for b in bands if b[1] > y0 - 10 and b[0] < y1 + 10) - 12 - y1)
+        if -MAX_SHIFT <= dy < 0 and y0 + dy >= box_top and not clash(y0 + dy, y1 + dy, bands):
+            dys.append(dy)
+        else:
+            ok = False
+            break
+    if ok:
+        for i, dy in enumerate(dys):
+            if dy:
+                print(f"  자막 {i + 1}: 원본 글자를 피해 {-dy}px 위로")
+        return [(p, a, z, dy) for (p, a, z), dy in zip(subs, dys)]
+    # 2) 자막 전체를 영상 창 위쪽으로
+    dys = [int(box_top + 16 - y0) if y1 > y0 else 0 for y0, y1, _ in info]
+    if all(not clash(y0 + dy, y1 + dy, bands) for (y0, y1, bands), dy in zip(info, dys) if y1 > y0):
+        print("  원본 아래쪽 글자(이름 자막 등)와 겹쳐 자막 전체를 영상 창 위쪽으로 옮김. 얼굴을 덮지 않는지 미리보기로 확인")
+        return [(p, a, z, dy) for (p, a, z), dy in zip(subs, dys)]
+    print("  경고: 원본에 박힌 글자를 자동으로 피하지 못함 → video.crop 또는 captions_at을 손으로 정할 것")
+    return [(p, a, z, 0) for p, a, z in subs]
+
+
 def remap(t, keep):
     """원본 시각 t → 빠른 전환으로 이어 붙인 영상의 시각."""
     acc = 0.0
@@ -200,14 +307,20 @@ def make_video_reel(post, folder, cfg):
     geo, subs = asyncio.run(render_layers(post, cfg, folder, box_h, work))
     top = geo["top"]
     inner_w, inner_h = 1028, box_h - 12  # 테두리 안쪽
+    tall = 1040 / aspect > 1170
+    s = min(inner_w / vw, inner_h / vh) if tall else max(inner_w / vw, inner_h / vh)
+    scaled_h = vh * s
+    subs = avoid_burned(post, src, start, dur, subs, geo, box_h, (scaled_h, (scaled_h - inner_h) / 2))
     bg = cfg["brand"]["bg"].replace("#", "0x")
 
     inputs = ["-f", "lavfi", "-t", f"{dur:.3f}", "-i", f"color=c={bg}:s={W}x{H}:r={FPS}",
               "-ss", f"{start}", "-t", f"{dur:.3f}", "-i", str(src),
-              "-loop", "1", "-t", f"{dur:.3f}", "-i", str(work / "frame.png")]
-    for path, _, _ in subs:
-        inputs += ["-loop", "1", "-t", f"{dur:.3f}", "-i", str(path)]
-    if 1040 / aspect > 1170:  # 세로가 긴 영상은 자르지 않고 양옆을 채운다
+              "-i", str(work / "frame.png")]
+    # 틀·자막 그림은 한 번만 읽는다 (overlay가 마지막 장면을 유지). -loop 1로 넣으면 1080x1920 PNG를
+    # 매 프레임 다시 읽어(자막 13장 x 1,700프레임) 윈도우에서 인코딩이 멈추곤 했다.
+    for path, _, _, _ in subs:
+        inputs += ["-i", str(path)]
+    if tall:  # 세로가 긴 영상은 자르지 않고 양옆을 채운다
         fit = (f"scale={inner_w}:{inner_h}:force_original_aspect_ratio=decrease,"
                f"pad={inner_w}:{inner_h}:(ow-iw)/2:(oh-ih)/2:color={bg}")
     else:
@@ -215,9 +328,9 @@ def make_video_reel(post, folder, cfg):
     fc = [f"[1:v]{crop}{fit},setsar=1,fps={FPS}[vid]",
           f"[0:v][vid]overlay=26:{top + 6}[b0]", "[b0][2:v]overlay=0:0[b1]"]
     last = "[b1]"
-    for i, (_, a, z) in enumerate(subs):
+    for i, (_, a, z, dy) in enumerate(subs):
         a, z = a - start, z - start
-        fc.append(f"{last}[{3 + i}:v]overlay=0:0:enable='between(t,{a:.3f},{z:.3f})'[s{i}]")
+        fc.append(f"{last}[{3 + i}:v]overlay=0:{dy}:enable='between(t,{a:.3f},{z:.3f})'[s{i}]")
         last = f"[s{i}]"
     fc.append(f"{last}format=yuv420p[vout]")
     if has_audio(src):

@@ -428,8 +428,10 @@ def main(folder):
     errors, warnings = check_post(post)
     if "/samples/" in str(out_dir).replace("\\", "/"):
         # 예시 폴더는 사진 파일이 없을 수 있어 사진 규칙은 경고로만
-        warnings += [e for e in errors if e.startswith("사진 규칙")]
-        errors = [e for e in errors if not e.startswith("사진 규칙")]
+        # 예시 폴더는 사진 파일이 없을 수 있고, 새 규칙 전에 만든 예시(s1~s3, s8, s10)도 있어 이 규칙들은 경고로만
+        soft = ("사진 규칙", "표지", "썸네일 제목이", "릴스 제목이", "카드: 음슴체")
+        warnings += [e for e in errors if e.startswith(soft)]
+        errors = [e for e in errors if not e.startswith(soft)]
     if "/samples/" not in str(out_dir).replace("\\", "/"):
         from dupes import check as dupe_check  # 같은 내용 반복 막기 (예시 폴더는 제외)
         e2, w2 = dupe_check(post, out_dir.name)
