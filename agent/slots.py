@@ -12,6 +12,13 @@
     py -3.12 agent/slots.py next reel --asap                   바로 올리기: 지금 시각 (렌더링이 끝나면 다음 15분 확인 때 게시)
     py -3.12 agent/slots.py need [--date 2026-11-16]           매일 작업이 그날 더 만들 개수 (daily_target - 이미 예약된 수)
                                                                출력 예: carousel=0 reel=1
+    py -3.12 agent/slots.py bump [--near 2026-11-16T13:20+09:00] [--window 90] [--dry-run]
+                                                               속보 정리: posts/queue에서 속보(breaking) 앞뒤 window분 안의
+                                                               따라 하기·질문(format howto/ask)만 다음 빈 칸으로 옮긴다
+
+속보(post.json `"breaking": true`, LOCAL.md 6장)는 --asap으로 지금 시각을 받을 뿐 기존 예약을 밀지 않는다.
+속보는 하루 칸 수(상한·daily_target)에 세지 않는다. 시의성 있는 게시물(소식·인용 등)은 원래 시각 그대로 두고,
+속보와 가까워도 같은 종류 90분 간격 규칙의 예외로 둔다. 옮기는 것은 bump가 고르는 howto/ask뿐.
 
 검사 대상 브랜치를 최신으로: git fetch origin "+refs/heads/post/*:refs/remotes/origin/post/*" (need/next가 자동으로 함)
 """
@@ -54,21 +61,23 @@ def fetch():
 
 
 def taken():
-    """예약·게시된 것 [(종류, 게시 시각, 이름)]. 폴더 이름이 같으면 작업 폴더 것을 쓴다."""
+    """예약·게시된 것 [(종류, 게시 시각, 이름, 정보)]. 정보 = {format, breaking, path(작업 폴더 posts/queue 것만)}.
+    폴더 이름이 같으면 작업 폴더 것을 쓴다."""
     seen, out = set(), []
 
-    def add(name, post):
+    def add(name, post, path=None):
         try:
             at = datetime.fromisoformat(post["publish_at"]).astimezone(KST)
         except (KeyError, ValueError):
             return
         seen.add(name)
-        out.append((kind_of(post), at, name))
+        out.append((kind_of(post), at, name, {"format": post.get("format"), "breaking": bool(post.get("breaking")),
+                                              "path": path}))
 
     for d in ("posts/queue", "posts/published"):
         for pj in (ROOT / d).glob("*/post.json"):
             try:
-                add(pj.parent.name, json.loads(pj.read_text(encoding="utf-8")))
+                add(pj.parent.name, json.loads(pj.read_text(encoding="utf-8")), pj if d == "posts/queue" else None)
             except (OSError, json.JSONDecodeError):
                 pass
     cur = _git("branch", "--show-current").strip()
@@ -84,8 +93,9 @@ def taken():
     return out
 
 
-def on_day(items, kind, d):
-    return sorted(at for k, at, _ in items if k == kind and at.date() == d)
+def on_day(items, kind, d, breaking=True):
+    """그날 그 종류 예약 시각. breaking=False면 속보는 빼고 센다 (속보는 하루 칸 수에 들어가지 않는다)."""
+    return sorted(at for k, at, _, info in items if k == kind and at.date() == d and (breaking or not info.get("breaking")))
 
 
 def _free_base(kind, d, used, after):
@@ -122,14 +132,14 @@ def next_slots(kind, count=1, now=None, day=None, day_max=None, items=None):
         while len(out) < count:
             used = on_day(items, kind, d)
             limit = day_max if (day_max and d == day) else len(_times(kind))
-            if len(used) >= limit:
+            if len(on_day(items, kind, d, breaking=False)) >= limit:
                 break
             base = _free_base(kind, d, used, after)
             at = base[0] if base else (_free_extra(d, used, after) if limit > len(_times(kind)) else None)
             if not at:
                 break
             out.append(at)
-            items.append((kind, at, "(새 게시물)"))
+            items.append((kind, at, "(새 게시물)", {}))
         if len(out) >= count:
             break
         d += timedelta(days=1)
@@ -149,7 +159,7 @@ def need(d=None, items=None, now=None):
             day = now.date()
             if not any(datetime.combine(day, t, KST) >= now + LEAD for t in _times(k)):
                 day += timedelta(days=1)
-        out[k] = max(0, int(target.get(k, 0)) - len(on_day(items, k, day)))
+        out[k] = max(0, int(target.get(k, 0)) - len(on_day(items, k, day, breaking=False)))
     return out
 
 
@@ -161,7 +171,8 @@ def status(days=3, items=None):
         d = today + timedelta(days=i)
         lines.append(f"{d} ({'월화수목금토일'[d.weekday()]})")
         for k in KINDS:
-            used = {at.strftime("%H:%M"): n for kk, at, n in items if kk == k and at.date() == d}
+            used = {at.strftime("%H:%M"): n + (" (속보)" if info.get("breaking") else "")
+                    for kk, at, n, info in items if kk == k and at.date() == d}
             cells = []
             for t in _times(k):
                 hm = t.strftime("%H:%M")
@@ -169,6 +180,53 @@ def status(days=3, items=None):
             cells += [f"{hm} ■ {n} (추가 칸)" for hm, n in sorted(used.items())]
             lines.append(f"  {k}: " + " | ".join(cells))
     return "\n".join(lines)
+
+
+TIMELESS = ("howto", "ask")   # 시의성 없는 형식: 속보 때문에 칸을 정리할 때 이것만 뒤로 민다
+
+
+def bump(near=None, window=90, dry_run=False, now=None, items=None):
+    """속보 앞뒤 window분 안에 잡힌 따라 하기·질문(format howto/ask)을 다음 빈 칸(속보와 window분 넘게 떨어진)으로 옮긴다.
+    near를 안 주면 속보(breaking) 게시물들의 시각. 작업 폴더 posts/queue의 post.json만 고친다
+    (열린 post/* 브랜치에 있는 것은 그 브랜치에서 돌린다). 소식·인용처럼 시의성 있는 것은 옮기지 않는다.
+    렌더링 표시(.render_hash)가 최신이었으면 새 post.json 기준으로 다시 쓴다 (게시 시각만 바뀌어 다시 렌더링할 필요 없음)."""
+    now = (now or datetime.now(KST)).astimezone(KST)
+    items = list(items if items is not None else taken())
+    centers = [near] if near else [at for _, at, _, info in items if info.get("breaking") and at >= now - timedelta(hours=3)]
+    win = timedelta(minutes=window)
+    moved = []
+    for kind, at, name, info in sorted(items, key=lambda x: x[1]):
+        if info.get("format") not in TIMELESS or info.get("breaking") or not info.get("path") or at < now:
+            continue
+        if not any(abs(at - c) < win for c in centers):
+            continue
+        probe = [x for x in items if x[2] != name]
+        new = None
+        for _ in range(20):
+            got = next_slots(kind, 1, now=now, items=probe)
+            if not got:
+                break
+            if all(abs(got[0] - c) >= win for c in centers):
+                new = got[0]
+                break
+            probe.append((kind, got[0], "(속보 주변)", {"breaking": True}))  # 그 칸은 건너뛰되 하루 개수에는 안 셈
+        if not new:
+            continue
+        moved.append((name, at, new))
+        items = [x for x in items if x[2] != name] + [(kind, new, name, info)]
+        if dry_run:
+            continue
+        pj = info["path"]
+        sys.path.insert(0, str(ROOT / "agent"))
+        from build import input_hash
+        mark = pj.parent / ".render_hash"
+        fresh = mark.exists() and mark.read_text().strip() == input_hash(pj.parent)
+        post = json.loads(pj.read_text(encoding="utf-8"))
+        post["publish_at"] = new.isoformat()
+        pj.write_text(json.dumps(post, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        if fresh:
+            mark.write_text(input_hash(pj.parent) + "\n")
+    return moved
 
 
 def main(argv=None):
@@ -179,13 +237,24 @@ def main(argv=None):
     b.add_argument("--count", type=int, default=1); b.add_argument("--date"); b.add_argument("--max", type=int)
     b.add_argument("--asap", action="store_true")
     c = sub.add_parser("need"); c.add_argument("--date")
-    for p in (a, b, c):
+    e = sub.add_parser("bump", help="속보 앞뒤의 따라 하기·질문(howto/ask)만 다음 빈 칸으로")
+    e.add_argument("--near", help="속보 게시 시각 (ISO). 없으면 breaking 게시물들의 시각")
+    e.add_argument("--window", type=int, default=90, help="속보 앞뒤 몇 분 (기본 90)")
+    e.add_argument("--dry-run", action="store_true")
+    for p in (a, b, c, e):
         p.add_argument("--no-fetch", action="store_true")
     args = ap.parse_args(argv)
     if not args.no_fetch:
         fetch()
     if args.cmd == "status":
         print(status(args.days))
+    elif args.cmd == "bump":
+        near = datetime.fromisoformat(args.near).astimezone(KST) if args.near else None
+        moved = bump(near, args.window, args.dry_run)
+        for name, old, new in moved:
+            print(f"{'(시험) ' if args.dry_run else ''}옮김: {name} {old:%m/%d %H:%M} → {new:%m/%d %H:%M}")
+        if not moved:
+            print("옮길 따라 하기·질문 없음")
     elif args.cmd == "need":
         n = need(date.fromisoformat(args.date) if args.date else None)
         print(" ".join(f"{k}={v}" for k, v in n.items()))

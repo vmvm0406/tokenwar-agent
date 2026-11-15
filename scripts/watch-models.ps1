@@ -5,6 +5,8 @@
 #   ... -CheckOnly                                                               감시만 (Claude를 부르지 않음, 기록도 안 바꿈)
 # 매일 작업과 같은 전용 저장소 %USERPROFILE%\tokenwar-daily 에서 돈다. 같은 잠금 파일(%TEMP%\tokenwar.lock)을 쓰므로
 # 매일 작업·make-posts가 도는 중이면 이번 차례 감시는 건너뛴다 (15분 뒤 다시 본다).
+# 단, 매일 작업(run-local) 중에 처음 보는 속보(업계 속보·공식 블로그 새 모델)가 잡히면 매일 작업의 Claude를 멈추고
+# 속보를 먼저 만든 뒤, 끝나면 매일 작업을 다시 띄운다 (LOCAL.md 6장 '속보가 먼저'). 남은 변경은 stash에 남는다.
 param([switch]$CheckOnly)
 $ErrorActionPreference = "Continue"
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
@@ -45,7 +47,28 @@ if ((-not $CheckOnly) -and (Test-Path (Join-Path $Repo ".git"))) {
     }
 }
 
-if ((Test-Path $Lock) -and ((Get-Item $Lock).LastWriteTime -gt (Get-Date).AddHours(-3))) { exit 0 }  # 다른 작업이 실행 중
+$Interrupted = $false
+if ((Test-Path $Lock) -and ((Get-Item $Lock).LastWriteTime -gt (Get-Date).AddHours(-3))) {
+    # 다른 작업이 실행 중. 매일 작업(run-local의 claude)일 때만, 처음 보는 속보가 있으면 그 작업을 멈추고 속보를 먼저 한다
+    if ($CheckOnly -or -not (Test-Path (Join-Path $Repo ".git"))) { exit 0 }
+    $daily = @(Get-CimInstance Win32_Process -ErrorAction SilentlyContinue |
+               Where-Object { $_.CommandLine -like "*Follow LOCAL.md for today*" -and $_.Name -notlike "powershell*" })
+    if ($daily.Count -eq 0) { exit 0 }   # make-posts 등 운영자가 시킨 작업은 끊지 않는다
+    Push-Location $Repo
+    $hits = @(py -3.12 agent/model_watch.py --dry-run --breaking-only 2>$null)   # 기록은 바꾸지 않음
+    $hc = $LASTEXITCODE
+    Pop-Location
+    if ($hc -ne 10) { exit 0 }
+    New-Item -ItemType Directory -Force -Path $LogDir | Out-Null
+    $ilog = Join-Path $LogDir ("{0}-watch.log" -f (Get-Date -Format "yyyy-MM"))
+    ("{0} 속보 → 매일 작업을 멈추고 먼저 만든다: {1}" -f (Get-Date -Format "yyyy-MM-dd HH:mm"), ($hits -join " / ")) |
+        Out-File -Append -FilePath $ilog -Encoding utf8
+    foreach ($p in $daily) { taskkill /PID $p.ProcessId /T /F 2>&1 | Out-Null }
+    # run-local은 claude가 끝나면 finally에서 정리하고 잠금을 지운다. 3분까지 기다리고, 그래도 있으면 지운다
+    for ($i = 0; ($i -lt 36) -and (Test-Path $Lock); $i++) { Start-Sleep -Seconds 5 }
+    Remove-Item $Lock -ErrorAction SilentlyContinue
+    $Interrupted = $true
+}
 Set-Content -Path $Lock -Value (Get-Date)
 try {
     if (-not (Test-Path (Join-Path $Repo ".git"))) { git clone --quiet $RepoUrl $Repo }
@@ -89,9 +112,12 @@ try {
     $ship = if ($auto) { "model_watch.auto_publish is on: push straight to main (no PR)." } else { "One PR (review mode, operator merges)." }
     $list = ($found -join "`n")
     $log = Join-Path $LogDir ("{0}-model.log" -f (Get-Date -Format "yyyy-MM-dd-HHmm"))
-    $prompt = "Follow LOCAL.md section 6 (새 모델 바로 올리기). Work and write in Korean. New announcements found by agent/model_watch.py (company | title | url):`n$list`n" +
-              "Make at most $max post(s) (card news or reel; howto angle first: '바로 이렇게 써 보기'), only for consumer-facing new models or big features. " +
-              "publish_at from 'py -3.12 agent/slots.py next <kind> --asap'. $ship " +
+    $prompt = "Follow LOCAL.md section 6 (새 모델·업계 속보 바로 올리기). Work and write in Korean. New items found by agent/model_watch.py (company | title | url):`n$list`n" +
+              "Lines starting with '[업계 속보' are major industry news (CEO resign/return, big acquisition, regulation/lawsuit, major model) seen in several major outlets: " +
+              "make a news card (or a reel if there is an official video) after confirming with 2 sources, even though it is company news; put `"breaking`": true in post.json. " +
+              "Other lines: only consumer-facing new models or big features (howto angle first: '바로 이렇게 써 보기'). " +
+              "Take the first line first; make at most $max post(s). publish_at from 'py -3.12 agent/slots.py next <kind> --asap'. " +
+              "Do not move existing timely posts; only howto/ask posts may be moved with 'py -3.12 agent/slots.py bump' (LOCAL.md 6장). $ship " +
               "End your output with exactly one line: 'MODEL_WATCH: done <PR url>' if you made a post, or 'MODEL_WATCH: skipped <reason>' if nothing qualifies."
     Note "Claude 실행 (기록: $log)"
     claude -p $prompt --permission-mode auto --max-turns 400 2>&1 | Out-File -FilePath $log -Encoding utf8
@@ -115,4 +141,9 @@ try {
 }
 finally {
     Remove-Item $Lock -ErrorAction SilentlyContinue
+    # 속보 때문에 멈춘 매일 작업을 다시 띄운다 (오늘 몫 중 남은 것만 만든다: slots.py need)
+    if ($Interrupted) {
+        $rl = Join-Path $Repo "scripts\run-local.ps1"
+        if (Test-Path $rl) { Start-Process powershell -WindowStyle Hidden -ArgumentList "-ExecutionPolicy Bypass -File `"$rl`"" }
+    }
 }

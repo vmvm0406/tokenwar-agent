@@ -6,6 +6,8 @@
 3) 해커뉴스 첫 화면의 AI 글 (점수·댓글 수)
 4) 레딧 AI 커뮤니티의 오늘 인기 글 (r/OpenAI, r/ClaudeAI, r/singularity, r/LocalLLaMA, r/artificial)
 5) 인스타 벤치마크 계정의 최근 72시간 게시물 중 평소보다 잘 된 것 (data/benchmarks)
+6) 업계 큰 소식: 주요 언론(FT·블룸버그·로이터·WSJ·더 버지·테크크런치·CNBC·국내 주요 매체)이 동시에 다루는
+   빅테크 소식 (agent/news.py, Google News RSS). 맨 위에 둔다
 
 사용법: python agent/hot.py   (LOCAL.md 0단계와 GitHub Actions benchmarks.yml에서 매일 실행)
 """
@@ -126,9 +128,20 @@ def instagram_recent():
     return sorted(out, key=lambda x: -x["ratio"])
 
 
+def industry_news():
+    """업계 큰 소식 상위 12묶음 (주요 매체 수 순). 속보 기준(model_watch 15분 감시가 바로 올리기로 넘기는 것)은 표시."""
+    import sys
+    sys.path.insert(0, str(ROOT / "agent"))
+    import news
+    cl = news.collect(fresh=True)
+    br = {id(c) for c in news.breaking(cl)}
+    return [{"industry": ("[속보 기준] " if id(c) in br else "") + news.line(c)} for c in cl[:12]]
+
+
 def main():
     sections, now = [], datetime.now(KST)
-    for name, fn in [("구글 트렌드 한국 급상승 (AI·테크만)", google_trends), ("유튜브 이번 주 AI 영상 (시간당 조회수 순)", youtube),
+    for name, fn in [("업계 큰 소식 (주요 매체가 동시에 다룬 빅테크 소식, 주요 매체 수 순)", industry_news),
+                     ("구글 트렌드 한국 급상승 (AI·테크만)", google_trends), ("유튜브 이번 주 AI 영상 (시간당 조회수 순)", youtube),
                      ("인스타 최근 72시간 평소보다 잘 된 게시물", instagram_recent), ("해커뉴스 첫 화면 AI 글", hackernews),
                      ("레딧 AI 커뮤니티 오늘 인기", reddit)]:
         try:
@@ -144,7 +157,9 @@ def main():
         elif not items:
             lines.append("(해당 없음)")
         for it in items:
-            if "traffic" in it:
+            if "industry" in it:
+                lines.append(f"- {it['industry']}")
+            elif "traffic" in it:
                 lines.append(f"- {it['title']} ({it['traffic']}) — {' / '.join(it['news'])}")
             elif "per_hour" in it or "views" in it:
                 lines.append(f"- 시간당 {it.get('per_hour', '?'):,} · 총 {it['views']:,} · {it['channel']} — {it['title']} "
