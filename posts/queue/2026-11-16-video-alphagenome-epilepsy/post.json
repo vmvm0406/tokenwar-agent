@@ -1,0 +1,126 @@
+{
+  "id": "2026-11-16-video-alphagenome-epilepsy",
+  "type": "video",
+  "series": "전황",
+  "date": "2026-11-16",
+  "publish_at": "2026-11-16T20:43:00+09:00",
+  "topic": [
+    "구글 딥마인드",
+    "알파지놈",
+    "희귀질환"
+  ],
+  "rights": "quote",
+  "speech": true,
+  "credit": "Google DeepMind",
+  "source_url": "https://www.youtube.com/watch?v=uND6iY2qp_c&t=1086",
+  "video": {
+    "src": "clips/source.mp4",
+    "start": 1.05,
+    "end": 63.7,
+    "source_duration": 2387,
+    "avoid_edge_check": false,
+    "fade_out": 63.29
+  },
+  "title": "5년 걸린 아기의 진단,\nAI가 풀었습니다",
+  "highlight": "AI가 풀었습니다",
+  "title_en": "DeepMind AlphaGenome and a rare epilepsy case",
+  "subtitles": [
+    {
+      "start": 1.1,
+      "end": 7.3,
+      "text": "한 사례에서는 희귀한 뇌전증을\n앓는 아기 환자가 있었어요"
+    },
+    {
+      "start": 7.5,
+      "end": 11.1,
+      "text": "생후 6주에\n진단을 받았는데요",
+      "highlight": "생후 6주"
+    },
+    {
+      "start": 11.2,
+      "end": 15.9,
+      "text": "그 뒤 4년, 아니 5년쯤 동안",
+      "highlight": "5년쯤"
+    },
+    {
+      "start": 16.3,
+      "end": 20.1,
+      "text": "어떤 돌연변이인지 찾으려고\n여러 검사를 했어요"
+    },
+    {
+      "start": 20.2,
+      "end": 21.3,
+      "text": "진행자: 유전병인 건\n알고 있었고요?"
+    },
+    {
+      "start": 21.4,
+      "end": 27.2,
+      "text": "네, 유전병인 건 알았지만\n어떤 변이 탓인지는 몰랐어요"
+    },
+    {
+      "start": 27.7,
+      "end": 33.6,
+      "text": "그러다 로라라는 연구자가\n알파지놈으로 변이 점수를 매겼어요",
+      "highlight": "알파지놈"
+    },
+    {
+      "start": 33.8,
+      "end": 38.2,
+      "text": "변이들 순위를 매겨 보니\n1위 변이가 딱 들어맞았어요",
+      "highlight": "1위 변이"
+    },
+    {
+      "start": 38.4,
+      "end": 47.2,
+      "text": "뇌전증과 관련된 일을 하는\n단백질에 영향을 주는 변이였어요"
+    },
+    {
+      "start": 48.5,
+      "end": 54.6,
+      "text": "예전 논문에 나온 이 변이의\n기능과도 들어맞았고요"
+    },
+    {
+      "start": 55.2,
+      "end": 57.9,
+      "text": "연구팀이 실험으로\n직접 확인했더니"
+    },
+    {
+      "start": 57.9,
+      "end": 63.25,
+      "text": "퍼즐 조각이 다 맞춰지면서\n진단을 내릴 수 있었어요",
+      "highlight": "진단"
+    }
+  ],
+  "thumb": {
+    "title": "5년을 매달렸는데\n답은 AI가 찾았다",
+    "highlight": "AI가 찾았다",
+    "person": {
+      "name": "지가 압섹",
+      "desc": "구글 딥마인드 연구원"
+    },
+    "image": {
+      "type": "image",
+      "src": "img/thumb.jpg",
+      "url": "https://www.youtube.com/watch?v=uND6iY2qp_c",
+      "position": "center 30%"
+    }
+  },
+  "sources": [
+    {
+      "name": "Google DeepMind 팟캐스트 · AlphaGenome 2 (11월 11일)",
+      "url": "https://www.youtube.com/watch?v=uND6iY2qp_c&t=1086"
+    },
+    {
+      "name": "Google DeepMind 블로그 · AlphaGenome 2",
+      "url": "https://deepmind.google/blog/alphagenome-2-deciphering-how-cells-read-dna-to-better-understand-disease/"
+    }
+  ],
+  "caption": "생후 6주에 희귀 뇌전증 진단을 받고 4~5년 동안 원인을 못 찾던 아기, 구글 딥마인드의 AI '알파지놈'으로 원인 변이를 찾아냈어요.\n\n구글 딥마인드가 11월 11일 공식 팟캐스트에서 소개한 사례예요. 알파지놈은 DNA 글자 하나가 바뀌면 세포에서 무슨 일이 생기는지 예측하는 AI예요. 연구자가 아이의 변이들을 알파지놈 점수로 줄 세우자 1위 변이가 뇌전증과 관련된 단백질에 영향을 주는 것이었고, 실험으로 확인해 진단을 내렸다고 해요.\n새로 나온 알파지놈 2는 세포 종류별로 이런 예측을 해요. 환자를 직접 진단하는 도구는 아니고 연구자용이에요.\n\n영상: Google DeepMind (YouTube) https://www.youtube.com/watch?v=uND6iY2qp_c\n출처: Google DeepMind 팟캐스트·블로그(11월 11일)\n\n희귀질환으로 몇 년째 원인을 찾는 가족이 있다면 이 소식을 보내 주세요",
+  "hashtags": [
+    "#구글",
+    "#알파지놈",
+    "#희귀질환",
+    "#AI뉴스",
+    "#토큰전쟁"
+  ]
+}

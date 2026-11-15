@@ -88,9 +88,9 @@ def page_html(post, cfg, box_h, fonts_uri, size=50):
 </div></body></html>"""
 
 
-async def render_layers(post, cfg, folder, box_h, work, size=50, pos="bottom"):
+async def render_layers(post, cfg, folder, box_h, work, size=50, lift=0):
     """틀(PNG), 자막(PNG 여러 장), 미리보기용 배경을 만든다. 영상 창 위치를 돌려준다.
-    size: 자막 글씨(px), pos: 영상 창 안에 들어갈 때 "bottom"(맨 아래) 또는 "top"(맨 위)."""
+    size: 자막 글씨(px). 자막은 항상 영상 창 바닥. lift: 원본 글자 띠를 피해 바닥에서 올린 만큼(px)."""
     from playwright.async_api import async_playwright
 
     fonts_uri = (ROOT / "assets" / "fonts").as_uri()
@@ -121,12 +121,9 @@ async def render_layers(post, cfg, folder, box_h, work, size=50, pos="bottom"):
             if (inside && capAt > 0) {{
               // 예전 방식: 원본에 박힌 자막 바로 위 (자막 아래쪽 끝 기준)
               sub.style.bottom = ({H} - (top + 6 + capAt * ({box_h} - 12) - 14)) + 'px';
-            }} else if (inside && '{pos}' === 'top') {{
-              // 영상 창 맨 위: 2줄 자막의 위 끝이 안쪽 테두리 아래 16px
-              sub.style.bottom = ({H} - (top + 6 + 16 + twoLine)) + 'px';
             }} else if (inside) {{
-              // 영상 창 맨 아래: 자막 아래 끝이 안쪽 테두리 위 24px
-              sub.style.bottom = ({H} - (bottom - 6 - 24)) + 'px';
+              // 영상 창 맨 아래: 자막 아래 끝이 안쪽 테두리 위 24px (lift만큼 올림)
+              sub.style.bottom = ({H} - (bottom - 6 - 24 - {int(lift)})) + 'px';
             }} else {{
               // 영상 아래 빈칸이 안전 영역 안이면 영상 아래 (2줄 기준 위 끝)
               sub.style.bottom = ({H} - (bottom + credH + 40 + twoLine)) + 'px';
@@ -156,9 +153,11 @@ async def render_layers(post, cfg, folder, box_h, work, size=50, pos="bottom"):
 # 원본 화면의 가로줄마다 '세게 바뀌는 점'의 밀도를 잰다. 글자 줄은 밀도가 0.1 이상이고 짧은 획이 많다
 # (머스크 대담 영상: 이름 자막 0.12~0.28, 옷·배경 잡음 0.07 이하).
 BURN_DENSITY, BURN_RUNS, BURN_W = 0.10, 50, 480
-# 원본 글자를 띠로 가리지 않는다 (운영자 결정: 자막만 보이게). 자막 자리는 영상 창 맨 아래(기본) 또는 맨 위 둘 중 하나.
-# 맨 아래에서 겹치면 글씨를 줄여 보고(SUB_SIZES), 그래도 겹치면 맨 위로. 한 릴스 안에서는 크기·위치 하나로 통일.
+# 원본 글자를 띠로 가리지 않는다 (운영자 결정: 자막만 보이게). 자막은 항상 영상 창 바닥 (2026-11-16 운영자 결정: 위에 다는 것 없앰).
+# 바닥에서 겹치면 글씨를 줄여 보고(SUB_SIZES), 그래도 겹치면 원본 글자 띠 바로 위로 조금 올린다(영상 창 아래쪽 1/3 안에서만,
+# 얼굴 검출이 없어 턱·입을 가리지 않게 보수적으로). 그래도 안 되면 바닥에 두고 겹침 감수. 한 릴스 안에서는 크기·위치 하나로 통일.
 SUB_SIZES = (50, 44, 40)   # 40px 아래로는 줄이지 않는다
+LIFT_ZONE = 1 / 3          # 올린 자막의 위 끝이 영상 창 안쪽 높이의 아래 1/3 안에 있어야 한다
 
 
 def sample_gray(src, start, dur, crop=None, fps=2):
@@ -218,49 +217,95 @@ def burned_bands(post, src, start, dur, geo, scale_info):
             for tt, fr in zip(times, frames)]
 
 
-def clashing(subs, burned):
+def _overlaps(subs, burned, i, shift=0, rows=None):
+    """자막 i와 겹치는 (시각, 띠위px) 목록. shift: 자막을 위로 올린 만큼(px), rows: 미리 잰 글자 세로 범위."""
+    path, a, z = subs[i]
+    rows = rows or alpha_rows(path)
+    if not rows:
+        return []
+    y0, y1 = rows[0] - shift, rows[1] - shift
+    return [(tt, b0) for tt, bands in burned if a - 0.25 <= tt <= z + 0.25
+            for b0, b1 in bands if b1 > y0 - 10 and b0 < y1 + 10]
+
+
+def clashing(subs, burned, shift=0, rows=None):
     """원본 글자와 겹치는 자막 번호 목록. subs: [(png, a, z)]."""
-    bad = []
-    for i, (path, a, z) in enumerate(subs):
-        rows = alpha_rows(path)
-        if not rows:
-            continue
-        y0, y1 = rows
-        if any(b1 > y0 - 10 and b0 < y1 + 10 for tt, bands in burned if a - 0.25 <= tt <= z + 0.25
-               for b0, b1 in bands):
-            bad.append(i + 1)
-    return bad
+    return [i + 1 for i in range(len(subs)) if _overlaps(subs, burned, i, shift, rows and rows[i])]
+
+
+def clash_spans(subs, burned, start, shift=0, rows=None):
+    """겹치는 구간을 릴스 시각(초)으로 [(a, z)] 묶어서."""
+    spans = []
+    for i in range(len(subs)):
+        ts = [tt for tt, _ in _overlaps(subs, burned, i, shift, rows and rows[i])]
+        if ts:
+            _, a, z = subs[i]
+            spans.append((max(a, min(ts) - 0.25) - start, min(z, max(ts) + 0.25) - start))
+    spans.sort()
+    merged = []
+    for a, z in spans:
+        if merged and a <= merged[-1][1] + 0.1:
+            merged[-1] = (merged[-1][0], max(merged[-1][1], z))
+        else:
+            merged.append((a, z))
+    return merged
+
+
+def _clash_secs(spans):
+    return sum(z - a for a, z in spans)
 
 
 def place_subs(post, cfg, folder, box_h, work, src, start, dur, scale_info):
-    """자막 크기·자리를 정하고 그린다. 순서: 영상 창 맨 아래 50px → 겹치면 44px → 40px → 그래도 겹치면 맨 위.
-    video.captions_pos("bottom"/"top")·captions_size(px)를 적으면 그대로 쓴다 (얼굴에 걸릴 때 손으로)."""
+    """자막 크기·자리를 정하고 그린다. 자막은 항상 영상 창 바닥. 순서: 바닥 50px → 겹치면 44px → 40px
+    → 그래도 겹치면 원본 글자 띠 바로 위로 조금 올림(올린 자막 위 끝이 영상 창 아래쪽 1/3 안일 때만)
+    → 남는 겹침은 감수(띠로 가리지 않음)하고 "겹침 감수: a~b초"로 알린다. 겹치는 시간이 가장 짧은 자리를 고른다.
+    video.captions_size(px)를 적으면 그 크기만 쓴다. captions_pos: "top"은 더 쓰지 않는다(경고 후 바닥)."""
     v = post.get("video") or {}
     pos_fix, size_fix = v.get("captions_pos"), v.get("captions_size")
+    if pos_fix and pos_fix != "bottom":
+        print(f"  경고: video.captions_pos '{pos_fix}'는 더 쓰지 않는다 → 자막은 영상 창 바닥 (post.json에서 지울 것)")
     sizes = [int(size_fix)] if size_fix else list(SUB_SIZES)
-    pos = pos_fix if pos_fix in ("bottom", "top") else "bottom"
-    geo, subs = asyncio.run(render_layers(post, cfg, folder, box_h, work, sizes[0], pos))
-    if pos_fix or not geo.get("inside"):
-        if geo.get("inside"):
-            print(f"  자막: 영상 창 {'맨 위' if pos == 'top' else '맨 아래'}, {sizes[0]}px (손으로 정함)")
+    geo, subs = asyncio.run(render_layers(post, cfg, folder, box_h, work, sizes[0]))
+    if not geo.get("inside"):
         return geo, subs
     burned = burned_bands(post, src, start, dur, geo, scale_info)
     if burned is None:
-        return geo, subs
-    bad = clashing(subs, burned)
-    if not bad:
         print(f"  자막: 영상 창 맨 아래, {sizes[0]}px")
         return geo, subs
-    for size in sizes[1:]:
-        geo, subs = asyncio.run(render_layers(post, cfg, folder, box_h, work, size, "bottom"))
-        if not clashing(subs, burned):
-            print(f"  자막 크기 {size}px로 줄여 바닥 유지 (원본 글자와 겹쳤던 자막: {bad})")
+    inner_top = geo["top"] + 6
+    zone_top = inner_top + (box_h - 12) * (1 - LIFT_ZONE)
+    cands = []  # (겹친 시간, 올림, 크기 순번, 크기, 겹친 자막)
+    first_bad = None
+    for k, size in enumerate(sizes):
+        if k:
+            geo, subs = asyncio.run(render_layers(post, cfg, folder, box_h, work, size))
+        rows = [alpha_rows(p_) for p_, _, _ in subs]
+        bad = clashing(subs, burned, 0, rows)
+        if not bad:
+            if k:
+                print(f"  자막 크기 {size}px로 줄여 바닥 유지 ({sizes[0]}px에서 원본 글자와 겹쳤던 자막: {first_bad})")
+            else:
+                print(f"  자막: 영상 창 맨 아래, {size}px")
             return geo, subs
-    geo, subs = asyncio.run(render_layers(post, cfg, folder, box_h, work, sizes[0], "top"))
-    bad_top = clashing(subs, burned)
-    print(f"  자막을 영상 창 맨 위로 ({sizes[0]}px, 바닥에서 원본 글자와 겹쳤던 자막: {bad}). 얼굴을 덮지 않는지 미리보기로 확인")
-    if bad_top:
-        print(f"  경고: 맨 위에서도 원본 글자와 겹침 (자막 {bad_top}) → video.crop 또는 captions_pos·captions_size를 손으로 정할 것")
+        first_bad = first_bad or bad
+        cands.append((_clash_secs(clash_spans(subs, burned, start, 0, rows)), 0, k, size, bad))
+        # 올림 후보: 겹치는 원본 글자 띠마다 '그 띠 위 끝 - 10px'에 자막 아래 끝이 오게
+        y1 = max(r[1] for r in rows if r)
+        top0 = min(r[0] for r in rows if r)
+        lifts = sorted({int(round((y1 - (b0 - 10)) / 2) * 2) for i in range(len(subs))
+                        for _, b0 in _overlaps(subs, burned, i, 0, rows[i])})
+        for lift in lifts:
+            if lift <= 0 or top0 - lift < zone_top:
+                continue
+            spans = clash_spans(subs, burned, start, lift, rows)
+            cands.append((_clash_secs(spans), lift, k, size, clashing(subs, burned, lift, rows)))
+    secs, lift, k, size, bad = min(cands)
+    geo, subs = asyncio.run(render_layers(post, cfg, folder, box_h, work, size, lift))
+    where = f"영상 창 바닥에서 {lift}px 올림 (원본 글자 띠 바로 위, 영상 창 아래쪽 1/3 안)" if lift else "영상 창 맨 아래"
+    print(f"  자막: {where}, {size}px" + (". 얼굴(턱·입)을 덮지 않는지 장면 시트로 확인" if lift else ""))
+    if bad:
+        spans = ", ".join(f"{a:.1f}~{z:.1f}초" for a, z in clash_spans(subs, burned, start))
+        print(f"  겹침 감수: {spans} 원본 글자와 겹침 (릴스 시각, 자막 {bad})")
     return geo, subs
 
 
@@ -443,6 +488,14 @@ def make_video_reel(post, folder, cfg, soft_edges=False):
             print(" ", line)
         v = dict(v, start=plan["start"], end=plan["end"])
         fade_in, fade_out = plan["fade_in"], plan["fade_out"]
+    # 손으로 정한 경계(avoid_edge_check: false)에서도 쓰는 소리 페이드 (원본 시각, 선택):
+    # video.fade_out = 마지막 소리 끝 + 0.05초 → 그때부터 FADE_LEN초 줄이고 그 뒤 무음 (다음 말 첫소리 막기)
+    # video.fade_in  = 첫 소리 - 0.17초 → 그 앞(앞 문장 꼬리)은 무음, 첫 소리 직전 페이드인
+    if v.get("fade_out") is not None:
+        fade_out = float(v["fade_out"])
+        print(f"  끝: 손으로 정한 소리 페이드 {fade_out:g}부터 {FADE_LEN}초, end {float(v['end']):g}")
+    if v.get("fade_in") is not None:
+        fade_in = float(v["fade_in"])
     work = folder / "_video"
     if work.exists():
         shutil.rmtree(work)
