@@ -590,10 +590,31 @@ def check_license(post):
     return errs
 
 
+def _ends_l_geot(line):
+    """'넘어야 할 것', '알아둘 것'처럼 ㄹ 받침 + '것'으로 끝나는지."""
+    t = re.sub(r"[\s.!?…'\"’”]+$", "", line)
+    m = re.search(r"([가-힣])\s*것$", t)
+    return bool(m) and (ord(m.group(1)) - 0xAC00) % 28 == 8
+
+
+def awkward_titles(post):
+    """제목·소제목이 '~할 것'으로 끝나면 경고 (운영자 지적 2026-11-16: '돌아가려면 넘어야 할 것')."""
+    out = []
+    cands = [("제목", post.get("title", "")), ("썸네일 제목", (post.get("thumb") or {}).get("title", ""))]
+    for i, s in enumerate(post.get("slides", []) or [], 1):
+        for k in ("title", "heading"):
+            cands.append((f"{i}번째 장 {k}", s.get(k, "")))
+    for where, t in cands:
+        ls = _lines(t or "")
+        if ls and _ends_l_geot(ls[-1]):
+            out.append(f"{where}이 '~할 것'으로 끝남: '{ls[-1]}' → 서술로 풀기 (예: '복귀하려면 이사회·주주·정부를 설득해야 합니다', '복귀를 막는 세 가지') (STYLE_GUIDE 4)")
+    return out
+
+
 def check_post(post):
     """(errors, warnings) 반환."""
     e, w = _check_post(post)
-    return e + check_license(post), w
+    return e + check_license(post), w + awkward_titles(post)
 
 
 def _check_post(post):
