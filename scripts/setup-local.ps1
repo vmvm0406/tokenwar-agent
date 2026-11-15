@@ -1,4 +1,4 @@
-# 토큰전쟁 로컬 설정 (한 번만 실행)
+﻿# 토큰전쟁 로컬 설정 (한 번만 실행)
 # 관리자 권한 PowerShell에서:  powershell -ExecutionPolicy Bypass -File setup-local.ps1
 # 하는 일: 필요한 프로그램 설치 → 저장소 받기 → 파이썬 패키지 → Claude Code 설치 → 작업 스케줄러 등록
 $ErrorActionPreference = "Stop"

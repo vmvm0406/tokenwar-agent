@@ -1,4 +1,4 @@
-# 토큰전쟁 하루 작업 실행. 윈도우 작업 스케줄러가 로그인할 때와 9:30, 12:30, 15:30에 부른다.
+﻿# 토큰전쟁 하루 작업 실행. 윈도우 작업 스케줄러가 로그인할 때와 9:30, 12:30, 15:30에 부른다.
 # 오늘 카드뉴스와 릴스가 이미 있으면 Claude를 부르지 않고 바로 끝낸다 (사용량 절약).
 $ErrorActionPreference = "Continue"
 $Repo = Join-Path $env:USERPROFILE "tokenwar-agent"
@@ -18,7 +18,7 @@ try {
     $reel = ($have -match "video|reel").Count -gt 0 -or $prs -match "post/$today-reel"
     if ($carousel -and $reel) { exit 0 }
     $log = Join-Path $LogDir ("{0}-{1}.log" -f $today, (Get-Date -Format "HHmm"))
-    $prompt = "LOCAL.md 절차대로 오늘 할 일을 한다. 한국어로 일한다. 오늘 카드뉴스 있음: $carousel, 오늘 릴스 있음: $reel."
+    $prompt = "Follow LOCAL.md for today. Work and write in Korean. Today carousel exists: $carousel, today reel exists: $reel."
     claude -p $prompt --permission-mode auto --max-turns 300 *> $log
 }
 finally {
