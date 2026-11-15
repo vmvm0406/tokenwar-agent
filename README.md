@@ -53,3 +53,12 @@
 pip install playwright requests
 python agent/render.py samples/s1-nvidia
 ```
+
+## 토큰 갱신 (점검 이슈가 열렸을 때, 3분)
+
+1. https://developers.facebook.com/tools/explorer/ 에서 앱 `tokenwar-publisher` 선택, 권한 6개(instagram_basic, instagram_content_publish, instagram_manage_insights, pages_show_list, pages_read_engagement, business_management) 확인 → **Generate Access Token** → 토큰전쟁 AI뉴스 페이지와 tokenwar_ai만 선택.
+2. 토큰 칸 왼쪽 (i) → **액세스 토큰 도구에서 열기** → **액세스 토큰 확장** → 나온 장기 토큰 복사.
+3. 탐색기로 돌아와 토큰 칸에 장기 토큰을 붙여넣고 `me/accounts?fields=name,access_token` 제출 → 토큰전쟁 AI뉴스의 `access_token`(페이지 토큰, 만료 없음) 복사.
+4. 저장소 Secrets의 `IG_ACCESS_TOKEN`을 새 값으로 바꾸고, Actions › 인스타 토큰 점검 › Run workflow로 확인.
+
+Facebook 비밀번호를 바꾸면 페이지 토큰도 무효가 되니 그날 같이 갱신한다.

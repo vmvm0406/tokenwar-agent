@@ -1,0 +1,49 @@
+name: 인스타 토큰 점검
+
+# 매주 월요일 아침(한국 시간 9시 7분) 토큰 상태를 확인한다. 문제가 있으면 이슈를 열어 메일로 알린다.
+on:
+  schedule:
+    - cron: "7 0 * * 1"
+  push:
+    paths: [".github/workflows/token-check.yml", "agent/token_check.py"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q requests
+      - name: 점검
+        id: check
+        continue-on-error: true
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+        run: python agent/token_check.py
+      - name: 결과 저장
+        run: |
+          git config user.name "tokenwar-bot"
+          git config user.email "tokenwar-bot@users.noreply.github.com"
+          git add data/token_status.json
+          git diff --cached --quiet || (git commit -m "토큰 점검 결과" && git pull --rebase && git push)
+      - name: 문제가 있으면 이슈 열기
+        if: steps.check.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -z "$(gh issue list --label token --state open --json number -q '.[].number')" ]; then
+            gh label create token --color D93F0B --force
+            gh issue create --label token --title "인스타 토큰 갱신 필요" \
+              --body "$(python3 -c "import json;d=json.load(open('data/token_status.json'));print('\n'.join('- '+p for p in d['problems']))")
+
+          README의 '토큰 갱신' 순서대로 새 페이지 토큰을 받아 IG_ACCESS_TOKEN 시크릿을 바꿔 주세요."
+          fi
+          exit 1

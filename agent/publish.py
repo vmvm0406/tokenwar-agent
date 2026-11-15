@@ -25,7 +25,7 @@ DONE = ROOT / "posts" / "published"
 CONFIG = json.loads((ROOT / "config.json").read_text(encoding="utf-8"))
 
 # 기본은 Facebook 로그인 방식(graph.facebook.com, 페이지 토큰). 경쟁 계정 조회수 분석(Business Discovery)이 이쪽에서만 된다.
-API = f"https://{os.environ.get('IG_API_HOST') or 'graph.facebook.com'}/" + os.environ.get("IG_API_VERSION", "v26.0")
+API = f"https://{os.environ.get('IG_API_HOST') or 'graph.facebook.com'}/" + os.environ.get("IG_API_VERSION", "v27.0")
 IG_USER_ID = os.environ.get("IG_USER_ID", "")
 TOKEN = os.environ.get("IG_ACCESS_TOKEN", "")
 DRY = os.environ.get("DRY_RUN") == "1"

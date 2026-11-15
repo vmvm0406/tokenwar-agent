@@ -19,7 +19,7 @@ import requests
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 CONFIG = json.loads((ROOT / "config.json").read_text(encoding="utf-8"))
-API = "https://graph.facebook.com/" + os.environ.get("IG_API_VERSION", "v26.0")
+API = "https://graph.facebook.com/" + os.environ.get("IG_API_VERSION", "v27.0")
 TOKEN = os.environ.get("IG_ACCESS_TOKEN", "")
 ME = os.environ.get("IG_USER_ID", "")
 KST = timezone(timedelta(hours=9))
