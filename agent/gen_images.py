@@ -4,7 +4,8 @@ post.json 어디에든(본문 visual, 릴스 thumb.image) 이렇게 적힌 그�
 
     {"type": "image", "src": "img/thumb.jpg",
      "url": "https://... 실물 이미지 주소",   # 1순위. 있으면 이걸 내려받는다
-     "prompt": "영어 장면 묘사",              # 2순위. url이 없거나 내려받기에 실패하면 AI로 만든다
+     "shot": {"url": "https://...", "selector": "..."},  # 2순위. 웹페이지 화면 캡처 (agent/shot.py)
+     "prompt": "영어 장면 묘사",              # 3순위. url이 없거나 내려받기에 실패하면 AI로 만든다
      "size": [1088, 1920]}                    # 선택. AI 그림 크기 (기본: 썸네일 1088x1920, 그 외 1088x1360)
 
 AI 그림을 하나라도 실제로 쓰면 post.json에 "ai_image": true를 적는다 → 게시할 때 인스타 'AI 정보' 표시.
@@ -23,6 +24,8 @@ import time
 from pathlib import Path
 
 import requests
+
+sys.path.insert(0, str(Path(__file__).parent))
 from PIL import Image
 
 MODEL = "@cf/black-forest-labs/flux-2-klein-4b"
@@ -105,6 +108,20 @@ def process(folder):
                 print(f"  내려받기 실패 ({e}): {v['url']}")
                 if not v.get("prompt"):
                     raise
+        if v.get("shot"):
+            try:
+                from shot import capture
+                sh = dict(v["shot"])
+                capture(sh.pop("url"), out, **{k: sh[k] for k in sh if k in
+                        ("selector", "width", "height", "scroll", "wait", "dark")})
+                v["captured_from"] = v["shot"]["url"]
+                changed += 1
+                print(f"  화면 캡처: {v['src']} ← {v['shot']['url']}")
+                continue
+            except Exception as e:
+                print(f"  화면 캡처 실패 ({e}): {v['shot'].get('url')}")
+                if not v.get("prompt"):
+                    raise
         if v.get("prompt"):
             w, h = v.get("size") or ((1088, 1920) if is_thumb else (1088, 1360))
             print(f"  AI 그림 만들기: {v['src']} ({w}x{h})")
@@ -124,7 +141,7 @@ def process(folder):
 def missing(folder):
     folder = Path(folder)
     post = json.loads((folder / "post.json").read_text(encoding="utf-8"))
-    return any((v.get("url") or v.get("prompt")) and not (folder / v["src"]).exists()
+    return any((v.get("url") or v.get("prompt") or v.get("shot")) and not (folder / v["src"]).exists()
                for v, _ in find_images(post))
 
 

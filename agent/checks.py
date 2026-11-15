@@ -110,11 +110,14 @@ def check_video(post):
         if v.get("end") in (None, ""):
             errors.append("인용은 video.start와 video.end를 직접 정해야 함")
         else:
-            d = float(v["end"]) - float(v.get("start", 0))
-            if d > lim["quote_max_seconds"]:
-                errors.append(f"인용 영상은 {lim['quote_max_seconds']}초 이하: 지금 {d:.1f}초")
-            if d < lim.get("quote_min_seconds", 0):
-                warnings.append(f"인용 구간이 짧음 ({d:.1f}초). 발언이나 장면이 이어지면 {lim['quote_min_seconds']}초 이상으로")
+            d = float(v["end"]) - float(v.get("start", 0))   # 원본에서 쓰는 범위 (비율 계산용)
+            keep = v.get("keep") or []
+            out_d = sum(float(b) - float(a) for a, b in keep) if keep else d   # 완성 영상 길이
+            target = lim.get("quote_target_seconds", 60)
+            if out_d < lim.get("quote_min_seconds", 0):
+                warnings.append(f"영상이 짧음 ({out_d:.1f}초). 1분({target}초) 언저리에서 끝나게, 이야기가 끝나는 곳까지 늘린다")
+            if out_d > lim.get("quote_soft_max_seconds", 10**6):
+                warnings.append(f"영상이 김 ({out_d:.1f}초). 1분({target}초) 언저리에서 이야기가 끝나는 곳을 찾는다")
             src_d = v.get("source_duration")
             if not src_d:
                 errors.append("video.source_duration(원본 전체 길이, 초) 필요: 인용 비율 확인용")
@@ -188,6 +191,31 @@ def check_video(post):
         errors.append("캡션에도 원작자(credit)를 밝힐 것")
     if not post["sources"]:
         errors.append("출처 1개 이상 (원본 영상 링크)")
+    return errors, warnings
+
+
+IMAGE_RULE = "사진 규칙"
+
+
+def check_images(slides):
+    """카드뉴스 사진: 다른 AI 정보 계정처럼 실제 화면·사진을 넣는다 (STYLE_GUIDE 2-1).
+    표지 포함 사진 장이 2장 이상 (6장 넘는 카드뉴스는 3장 이상). 표지는 사진 표지를 기본으로."""
+    errors, warnings = [], []
+    lim = CONFIG["limits"]
+    imgs = []
+    for i, s in enumerate(slides, 1):
+        v = s.get("visual") or {}
+        if v.get("type") == "image":
+            imgs.append((i, v))
+    need = lim.get("carousel_min_images", 2) + (1 if len(slides) > 6 else 0)
+    if len(imgs) < need:
+        errors.append(f"{IMAGE_RULE}: 사진(실제 화면 캡처·공식 이미지) 장이 {need}장 이상 필요: 지금 {len(imgs)}장. "
+                      "서비스 화면, 공식 발표 페이지, 논문 그림, X 게시물 등을 agent/shot.py로 찍어 본문 장 visual에 넣는다")
+    if slides and slides[0].get("layout") != "image":
+        warnings.append("표지가 사진 표지가 아님. 상징이 되는 실제 사진·화면이 있으면 layout image를 먼저 쓴다")
+    for i, v in imgs:
+        if i > 1 and not v.get("credit") and not v.get("prompt"):
+            warnings.append(f"{i}번째 장 사진에 credit(예: '화면: Lovable 공식 문서') 없음")
     return errors, warnings
 
 
@@ -320,6 +348,11 @@ def check_post(post):
         hl = s.get("highlight")
         if hl and hl not in hl_src:
             errors.append(f"{tag} highlight '{hl}'가 제목/소제목 안에 없음")
+
+    if post["type"] == "carousel":
+        errors_img, warnings_img = check_images(slides)
+        errors += errors_img
+        warnings += warnings_img
 
     if clip_secs:
         rc = CONFIG["reel"]
