@@ -163,8 +163,9 @@ def check_thumb(post):
         return ["릴스에는 thumb(썸네일)이 필요: title, image {src, url 또는 prompt}"]
     errs = []
     ls = _lines(t.get("title", ""))
-    if not ls or len(ls) > 2:
-        errs.append("썸네일 제목은 1~2줄")
+    most = 3 if t.get("max_lines") == 3 else 2  # max_lines 3: 운영자가 직접 고른 3줄 제목만 (2026-11-16 힌턴)
+    if not ls or len(ls) > most:
+        errs.append(f"썸네일 제목은 1~{most}줄")
     for l in ls:
         if _len(l) > 13:
             errs.append(f"썸네일 제목 한 줄은 13자 이하: '{l}'")

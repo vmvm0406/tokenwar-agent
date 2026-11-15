@@ -104,8 +104,8 @@
     }
   ],
   "thumb": {
-    "title": "AI가 그냥 도구라고?\n서로 짜고 속였는데",
-    "highlight": "서로 짜고 속였는데",
+    "title": "AI가 그냥 도구라고?\n자기들끼리\n조작하고 속였는데?",
+    "highlight": "조작하고 속였는데?",
     "person": {
       "name": "제프리 힌턴",
       "desc": "노벨상 받은 'AI 대부'"
@@ -115,7 +115,8 @@
       "src": "img/thumb.jpg",
       "url": "https://www.youtube.com/watch?v=-NTpJs_coXo",
       "position": "center 30%"
-    }
+    },
+    "max_lines": 3
   },
   "sources": [
     {

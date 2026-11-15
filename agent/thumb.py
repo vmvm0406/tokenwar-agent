@@ -4,6 +4,7 @@ post.json의 "thumb":
     {
       "title": "AI 피싱 시대,\n2중 보안은 필수다",   # 2줄, 줄당 12자 안팎
       "highlight": "2중 보안",                      # 녹색 강조 (선택)
+      "max_lines": 3,                               # 선택. 운영자가 직접 고른 3줄 제목일 때만 (기본 2줄)
       "person": {"name": "Jensen Huang", "desc": "엔비디아 전 CEO"},  # 사진 속 인물 표기 (선택)
       "image": {"type": "image", "src": "img/thumb.jpg",
                 "url": "https://... 실물 이미지 주소",       # 1순위: 실물 이미지 (Actions가 내려받음)
@@ -38,6 +39,8 @@ def page(post, folder):
         p = t["person"]
         person = (f'<div class="person"><b>{esc(p["name"])}</b>'
                   f'{"<span>" + esc(p["desc"]) + "</span>" if p.get("desc") else ""}</div>')
+    most = 3 if t.get("max_lines") == 3 else 2
+    lift = 113 * (most - 2)  # 3줄이면 인물 표기를 한 줄만큼 올린다
     sub = f'<p class="sub">{esc(t["sub"])}</p>' if t.get("sub") else ""
     return f"""<!doctype html><html><head><meta charset="utf-8"><style>
 @import url('{FONTS}/black-han-sans/index.css');
@@ -50,7 +53,7 @@ def page(post, folder):
 .shade{{position:absolute;left:0;right:0;bottom:0;height:60%;
   background:linear-gradient(to bottom,rgba(0,0,0,0) 0%,rgba(0,0,0,.5) 35%,rgba(0,0,0,.78) 70%,rgba(0,0,0,.85) 100%)}}
 .txt{{position:absolute;left:60px;right:60px;bottom:{BOT + 60}px;text-align:center}}
-.person{{position:absolute;left:60px;bottom:{BOT + 330}px;text-align:left;font-size:30px;line-height:1.3;
+.person{{position:absolute;left:60px;bottom:{BOT + 330 + lift}px;text-align:left;font-size:30px;line-height:1.3;
   text-shadow:0 2px 10px rgba(0,0,0,.8)}}
 .person b{{display:block;font-weight:700}} .person span{{opacity:.75;font-weight:600}}
 h1{{margin:0;font-family:'Black Han Sans';font-weight:400;font-size:96px;line-height:1.18;letter-spacing:-.01em;
@@ -64,7 +67,7 @@ h1{{margin:0;font-family:'Black Han Sans';font-weight:400;font-size:96px;line-he
 <div class="brand">TOKEN WAR</div></div></body></html>"""
 
 
-async def _shoot(html_text, folder, out):
+async def _shoot(html_text, folder, out, most=2):
     from playwright.async_api import async_playwright
     tmp = folder / "_thumb.html"
     tmp.write_text(html_text, encoding="utf-8")
@@ -82,8 +85,8 @@ async def _shoot(html_text, folder, out):
             return {lines: Math.round(r.height / lh), top: r.top, wide: h.scrollWidth > h.clientWidth + 2,
                     bottom: b.bottom}; }""")
         problems = []
-        if info["lines"] > 2:
-            problems.append(f"썸네일 제목이 {info['lines']}줄 (2줄까지)")
+        if info["lines"] > most:
+            problems.append(f"썸네일 제목이 {info['lines']}줄 ({most}줄까지)")
         if info["top"] < SAFE["top"] or info["bottom"] > SAFE["bottom"] + 2:
             problems.append(f"썸네일 글자가 안전 영역({SAFE['top']}~{SAFE['bottom']}px) 밖")
         if info["wide"]:
@@ -118,4 +121,4 @@ def make_thumb(post, folder):
         if bands:
             return [f"썸네일 그림 {'·'.join(bands)}쪽에 검은 빈칸이 있음 → 인물·상징이 화면을 꽉 채우게 9:16으로 잘라 다시 만들 것 "
                     "(영상 장면이면 ffmpeg crop으로 인물 쪽을 세로로 잘라 1080x1920)"]
-    return asyncio.run(_shoot(page(post, folder), folder, folder / "cover.jpg"))
+    return asyncio.run(_shoot(page(post, folder), folder, folder / "cover.jpg", 3 if post["thumb"].get("max_lines") == 3 else 2))
