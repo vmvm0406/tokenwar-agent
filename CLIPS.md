@@ -62,7 +62,7 @@ cp clip.mp4 $HOME/mnt/Videos/tokenwar/cur.mp4
 2. `post.json` (형식은 `samples/s8-huang-quote/post.json`, `TEMPLATES.md`):
    - `type: "video"`, `rights: "quote"`, `credit`(채널·발언자), `source_url`(원본 링크, 가능하면 `&t=초` 포함)
    - `video.start`/`end`: 1분 언저리(원본 길이의 1/3 이하)
-   - 빠른 전환: `python3 agent/tighten.py clips/source.mp4 <start> <end>` 결과의 `keep`을 `video.keep`에, 가로 영상이면 `video.punch: true`. 단어 목록으로 번역 자막 시각을 맞춘다
+   - 중간에 자르지 않는다 (`video.keep` 쓰지 않음, STYLE_GUIDE 6-1). `python3 agent/tighten.py clips/source.mp4 <start> <end>`는 단어 시각을 얻는 데만 쓰고, 그 단어 목록으로 번역 자막 시각을 맞춘다
    - 원본에 영어 자막이 박혀 있거나 이름표가 있으면 `video.crop: {"top": 0, "bottom": 0.7}`처럼 그 아래를 잘라낸다. 우리 자막과 겹치지 않게 (예시: `samples/s8-huang-quote`)
    - 제목 2줄, 영어 부제, 자막. **말이 있는 영상은 발언을 문장 단위로 빠짐없이 번역**한다 (요약 금지, 질문하는 사람은 `기자:`처럼 표시). 말이 없는 영상(AI 생성 영상, 시연)은 장면마다 우리 설명 자막. 어느 쪽이든 영상 길이의 60% 이상을 덮는다
    - `video.source_duration`: 원본 전체 길이(초). 인용 비율 확인용

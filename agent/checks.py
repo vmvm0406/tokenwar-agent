@@ -112,6 +112,8 @@ def check_video(post):
         else:
             d = float(v["end"]) - float(v.get("start", 0))   # 원본에서 쓰는 범위 (비율 계산용)
             keep = v.get("keep") or []
+            if len(keep) > 1:
+                warnings.append("video.keep으로 중간을 잘라 붙임: 급해 보여서 지금은 쓰지 않는다. start~end 한 구간 그대로 (STYLE_GUIDE 6-1)")
             out_d = sum(float(b) - float(a) for a, b in keep) if keep else d   # 완성 영상 길이
             target = lim.get("quote_target_seconds", 60)
             if out_d < lim.get("quote_min_seconds", 0):
