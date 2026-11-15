@@ -44,7 +44,9 @@
     "image": {
       "type": "image",
       "src": "img/thumb.jpg",
-      "prompt": "a single giant glossy blue padlock floating in dark outer space, streams of glowing white data particles flowing past it, centered composition, dramatic rim light, photorealistic 3D render"
+      "prompt": "a single giant glossy blue padlock floating in dark outer space, streams of glowing white data particles flowing past it, centered composition, dramatic rim light, photorealistic 3D render",
+      "ai_generated": true
     }
-  }
+  },
+  "ai_image": true
 }

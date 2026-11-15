@@ -44,7 +44,9 @@
     "image": {
       "type": "image",
       "src": "img/thumb.jpg",
-      "prompt": "close-up of a black mechanical keyboard at an angle, the word UPDATE in huge bold orange 3D letters bursting out of the keys, small orange traffic cones on the keys, dramatic lighting, photorealistic"
+      "prompt": "close-up of a black mechanical keyboard at an angle, the word UPDATE in huge bold orange 3D letters bursting out of the keys, small orange traffic cones on the keys, dramatic lighting, photorealistic",
+      "ai_generated": true
     }
-  }
+  },
+  "ai_image": true
 }
