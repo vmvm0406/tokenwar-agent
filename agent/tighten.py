@@ -18,7 +18,7 @@ import numpy as np
 
 def words_in(video, a, z):
     from faster_whisper import WhisperModel
-    raw = subprocess.run(["ffmpeg", "-loglevel", "error", "-ss", f"{a}", "-to", f"{z}", "-i", video,
+    raw = subprocess.run(["ffmpeg", "-nostdin", "-loglevel", "error", "-ss", f"{a}", "-to", f"{z}", "-i", video,
                           "-ac", "1", "-ar", "16000", "-f", "f32le", "-"], capture_output=True, check=True).stdout
     audio = np.frombuffer(raw, dtype=np.float32)
     model = WhisperModel("small", device="cpu", compute_type="int8")

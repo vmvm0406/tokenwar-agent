@@ -139,7 +139,7 @@ def render_clip_scene(folder, s, overlay_png, out_mp4, box):
         af = "[1:a]aresample=44100,aformat=channel_layouts=stereo,apad[a]"
     else:
         af = "anullsrc=r=44100:cl=stereo[a]"
-    run(["ffmpeg", "-y", "-loglevel", "error",
+    run(["ffmpeg", "-nostdin", "-y", "-loglevel", "error",
          "-f", "lavfi", "-t", f"{dur}", "-i", f"color=c=0x0A0B0A:s={W}x{H}:r={FPS}",
          *audio_in, "-loop", "1", "-t", f"{dur}", "-i", str(overlay_png),
          "-filter_complex", vf + ";" + af, "-map", "[v]", "-map", "[a]", "-t", f"{dur}",
@@ -149,7 +149,7 @@ def render_clip_scene(folder, s, overlay_png, out_mp4, box):
 
 def join_scenes(parts, durs, fade, out_mp4, music=None, music_volume=0.3):
     """장면들을 페이드로 잇고 음악을 깐다."""
-    cmd = ["ffmpeg", "-y", "-loglevel", "error"]
+    cmd = ["ffmpeg", "-nostdin", "-y", "-loglevel", "error"]
     for p in parts:
         cmd += ["-i", str(p)]
     fc, v_prev, a_prev, offset = [], "[0:v]", "[0:a]", 0.0

@@ -16,7 +16,7 @@ if (-not (Get-Command claude -ErrorAction SilentlyContinue)) {
     $env:Path = [Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [Environment]::GetEnvironmentVariable("Path", "User")
 }
 
-Step "3/6 매일 작업 전용 저장소 받기 (%USERPROFILE%	okenwar-daily)"
+Step "3/6 매일 작업 전용 저장소 받기 (%USERPROFILE%\tokenwar-daily)"
 # 운영자가 Code 탭에서 쓰는 tokenwar-agent 폴더와 따로 둔다. 매일 작업은 이 폴더에서만 돈다.
 $Repo = Join-Path $env:USERPROFILE "tokenwar-daily"
 if (-not (Test-Path (Join-Path $Repo ".git"))) { git clone https://github.com/vmvm0406/tokenwar-agent $Repo }
