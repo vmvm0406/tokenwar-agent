@@ -30,13 +30,13 @@ def probe(path):
 
 
 def scene_changes(path, thresh=0.3):
-    r = subprocess.run(["ffmpeg", "-hide_banner", "-i", str(path), "-vf", f"select='gt(scene,{thresh})',showinfo",
+    r = subprocess.run(["ffmpeg", "-nostdin", "-hide_banner", "-i", str(path), "-vf", f"select='gt(scene,{thresh})',showinfo",
                         "-an", "-f", "null", "-"], capture_output=True, text=True)
     return [round(float(t), 2) for t in re.findall(r"pts_time:([\d.]+)", r.stderr)]
 
 
 def speech_regions(path, dur):
-    r = subprocess.run(["ffmpeg", "-hide_banner", "-i", str(path), "-af", "silencedetect=noise=-35dB:d=0.4",
+    r = subprocess.run(["ffmpeg", "-nostdin", "-hide_banner", "-i", str(path), "-af", "silencedetect=noise=-35dB:d=0.4",
                         "-vn", "-f", "null", "-"], capture_output=True, text=True)
     if "Audio" not in r.stderr:
         return []
@@ -57,7 +57,7 @@ def transcribe(path):
         import numpy as np
         from faster_whisper import WhisperModel
         # 오디오는 ffmpeg로 직접 16kHz 모노로 풀어서 넘긴다 (PyAV 버전 차이 회피)
-        raw = subprocess.run(["ffmpeg", "-loglevel", "error", "-i", str(path), "-vn", "-ac", "1", "-ar", "16000",
+        raw = subprocess.run(["ffmpeg", "-nostdin", "-loglevel", "error", "-i", str(path), "-vn", "-ac", "1", "-ar", "16000",
                               "-f", "f32le", "-"], capture_output=True, check=True).stdout
         audio = np.frombuffer(raw, dtype=np.float32)
         if audio.size == 0:
@@ -85,7 +85,7 @@ def contact_sheets(path, dur, w, h, out_dir):
         sheet = Image.new("RGB", (COLS * (THUMB_W + 6) + 6, ((len(chunk) - 1) // COLS + 1) * (th + 36) + 6), (20, 20, 20))
         for i, t in enumerate(chunk):
             fp = out_dir / f"_f{t:.2f}.jpg"
-            subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", f"{t}", "-i", str(path), "-frames:v", "1",
+            subprocess.run(["ffmpeg", "-nostdin", "-y", "-loglevel", "error", "-ss", f"{t}", "-i", str(path), "-frames:v", "1",
                             "-vf", f"scale={THUMB_W}:{th}", str(fp)], check=True)
             x, y = 6 + (i % COLS) * (THUMB_W + 6), 6 + (i // COLS) * (th + 36)
             if not fp.exists():  # 영상 맨 끝 근처는 프레임이 없을 수 있다
