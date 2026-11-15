@@ -1,0 +1,128 @@
+{
+  "id": "2026-11-16-video-nadella-jobs",
+  "type": "video",
+  "series": "전황",
+  "date": "2026-11-16",
+  "publish_at": "2026-11-16T12:43:00+09:00",
+  "topic": [
+    "사티아 나델라",
+    "마이크로소프트",
+    "AI 일자리"
+  ],
+  "rights": "quote",
+  "speech": true,
+  "credit": "Le Point",
+  "source_url": "https://www.youtube.com/watch?v=wGDFHa3TkjE&t=172",
+  "video": {
+    "src": "clips/source.mp4",
+    "start": 9.5,
+    "end": 77.1,
+    "source_duration": 814
+  },
+  "title": "MS CEO \"개발자는\n더 중요해졌다\"",
+  "highlight": "더 중요해졌다",
+  "title_en": "Satya Nadella on AI, jobs and human control",
+  "subtitles": [
+    {
+      "start": 9.6,
+      "end": 12.5,
+      "text": "그런데 갑자기 아주 강력한\n새 도구가 생겼어요"
+    },
+    {
+      "start": 12.6,
+      "end": 17.5,
+      "text": "일에서 느끼던 정체성을\n조금 흔들어 놓는 도구죠"
+    },
+    {
+      "start": 17.8,
+      "end": 20.5,
+      "text": "고급 수학이든\n소프트웨어 코딩이든요"
+    },
+    {
+      "start": 20.7,
+      "end": 24.8,
+      "text": "둘을 엮으려는 건 아니지만\n1년 전을 돌아보면"
+    },
+    {
+      "start": 25.0,
+      "end": 30.3,
+      "text": "소프트웨어에서도 '개발자로서\n난 뭘 하지?' 하는 고민이 컸죠"
+    },
+    {
+      "start": 30.4,
+      "end": 35.4,
+      "text": "그런데 지금 보니 개발이라는\n일하는 방식이 바뀐 거예요"
+    },
+    {
+      "start": 36.0,
+      "end": 38.8,
+      "text": "그런데도 개발은 예전보다\n더 중요해졌어요",
+      "highlight": "더 중요해졌어요"
+    },
+    {
+      "start": 39.7,
+      "end": 46.0,
+      "text": "이제 검증이나 신뢰 같은\n새로운 문제를 풀어야 하니까요"
+    },
+    {
+      "start": 46.5,
+      "end": 51.9,
+      "text": "고급 수학이 어디로 갈지는\n저도 잘 모르겠어요"
+    },
+    {
+      "start": 52.1,
+      "end": 60.6,
+      "text": "다만 사람이 하는 일에서 정체성과\n존엄을 되찾았으면 해요",
+      "highlight": "존엄"
+    },
+    {
+      "start": 61.5,
+      "end": 67.3,
+      "text": "저는 초지능을 생각할 때\n'인간 중심의 초지능'을 떠올려요"
+    },
+    {
+      "start": 67.8,
+      "end": 73.4,
+      "text": "사람에게 힘을 실어 주고\n사람이 통제할 수 있어야 해요",
+      "highlight": "통제"
+    },
+    {
+      "start": 73.8,
+      "end": 77.0,
+      "text": "그렇지 않다면\n당연히 거부해야 하고요",
+      "highlight": "거부"
+    }
+  ],
+  "thumb": {
+    "title": "아니 컴공\n안 죽었다니까?",
+    "highlight": "안 죽었다니까?",
+    "person": {
+      "name": "사티아 나델라",
+      "desc": "마이크로소프트 CEO"
+    },
+    "image": {
+      "type": "image",
+      "src": "img/thumb.jpg",
+      "url": "https://www.youtube.com/watch?v=wGDFHa3TkjE",
+      "position": "center 30%"
+    }
+  },
+  "sources": [
+    {
+      "name": "Le Point · 사티아 나델라 단독 인터뷰 (11월 10일)",
+      "url": "https://www.youtube.com/watch?v=wGDFHa3TkjE&t=172"
+    },
+    {
+      "name": "Fox Business · 나델라 '초지능은 사람 통제 아래' (9월)",
+      "url": "https://www.foxbusiness.com/technology/microsoft-ceo-says-superintelligence-must-remain-under-human-control"
+    }
+  ],
+  "caption": "마이크로소프트 CEO 사티아 나델라가 \"AI 때문에 개발은 오히려 더 중요해졌다\"고 말했어요.\n\n프랑스 주간지 르푸앵과 한 인터뷰(11월 10일)에서 나온 말이에요. 1년 전엔 개발자들조차 '나는 이제 뭘 하지?' 고민했지만, 지금은 일하는 방식이 바뀌었을 뿐 AI가 만든 결과를 검증하고 믿을 수 있게 만드는 새 일이 생겼다고 봤어요.\n초지능에 대해서는 \"사람에게 힘을 실어 주고 사람이 통제할 수 있어야 하며, 그렇지 않으면 거부해야 한다\"고 했어요. 9월에 X에 올린 글과 같은 이야기예요.\n\n영상: Le Point (YouTube) https://www.youtube.com/watch?v=wGDFHa3TkjE\n출처: Le Point(11월 10일), Fox Business(9월)\n\n개발 공부를 계속할지 고민하는 친구에게 보내 주세요.\nAI 시대 개발자, 더 중요해질까요 줄어들까요?",
+  "hashtags": [
+    "#마이크로소프트",
+    "#사티아나델라",
+    "#개발자",
+    "#AI뉴스",
+    "#토큰전쟁"
+  ]
+}

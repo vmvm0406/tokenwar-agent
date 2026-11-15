@@ -1,9 +1,9 @@
-# 지금 관심 주제 (2026-11-16 00:26 기준)
+# 지금 관심 주제 (2026-11-16 00:45 기준)
 
 주제를 고를 때 가장 먼저 본다 (STYLE_GUIDE 3장, 6-1장 '지금 관심도'). 여러 곳에 동시에 뜬 주제가 가장 뜨겁다.
 
 ## 구글 트렌드 한국 급상승 (AI·테크만)
-(해당 없음)
+- 박현주 (200+) — "겸손은 연기, 반대하면 폭언"… 젠슨 황 전기 작가의 폭로 / [씨줄날줄] 차등의결권
 
 ## 유튜브 이번 주 AI 영상 (시간당 조회수 순)
 (수집 못 함: yt-dlp 없음 (회원님 컴퓨터에서만 수집))
@@ -21,9 +21,11 @@
 - 1.8x · @bizucafe REELS — 앤트로픽 상장에 대한 생각 (리 루) (https://www.instagram.com/reel/DfrfiJ9G2Wc/)
 
 ## 해커뉴스 첫 화면 AI 글
-- 920점 · 댓글 353 — Lovable apps expose passport details and more than 200K private messages (https://www.crissyfield.de/research/lovable-en/)
-- 69점 · 댓글 0 — Understanding Positional Embeddings in Modern LLMs (https://magazine.sebastianraschka.com/p/understanding-positional-embeddings)
-- 35점 · 댓글 9 — All AI-generated code should be Open Source (https://jakub.jankiewicz.org/blog/ai-code-open-source/)
+- 927점 · 댓글 355 — Lovable apps expose passport details and more than 200K private messages (https://www.crissyfield.de/research/lovable-en/)
+- 90점 · 댓글 60 — All AI-generated code should be Open Source (https://jakub.jankiewicz.org/blog/ai-code-open-source/)
+- 77점 · 댓글 0 — Understanding Positional Embeddings in Modern LLMs (https://magazine.sebastianraschka.com/p/understanding-positional-embeddings)
+- 7점 · 댓글 1 — A Human Reads the Anthropic IPO Filing (https://www.nytimes.com/2026/11/15/business/anthropic-ipo-filing-prospectus.html)
+- 5점 · 댓글 0 — Claude Code and Codex reverse engineered my 1994 Jeep's ECU over a $3 Arduino [video] (https://www.youtube.com/watch?v=WPj3aQ-xxpI)
 
 ## 레딧 AI 커뮤니티 오늘 인기
 (수집 못 함: 레딧 응답 없음)

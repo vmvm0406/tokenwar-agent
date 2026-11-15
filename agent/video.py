@@ -488,6 +488,14 @@ def make_video_reel(post, folder, cfg, soft_edges=False):
             print(" ", line)
         v = dict(v, start=plan["start"], end=plan["end"])
         fade_in, fade_out = plan["fade_in"], plan["fade_out"]
+    # 손으로 정한 경계(avoid_edge_check: false)에서도 쓰는 소리 페이드 (원본 시각, 선택):
+    # video.fade_out = 마지막 소리 끝 + 0.05초 → 그때부터 FADE_LEN초 줄이고 그 뒤 무음 (다음 말 첫소리 막기)
+    # video.fade_in  = 첫 소리 - 0.17초 → 그 앞(앞 문장 꼬리)은 무음, 첫 소리 직전 페이드인
+    if v.get("fade_out") is not None:
+        fade_out = float(v["fade_out"])
+        print(f"  끝: 손으로 정한 소리 페이드 {fade_out:g}부터 {FADE_LEN}초, end {float(v['end']):g}")
+    if v.get("fade_in") is not None:
+        fade_in = float(v["fade_in"])
     work = folder / "_video"
     if work.exists():
         shutil.rmtree(work)
