@@ -88,6 +88,20 @@ def _len(s):
 RIGHTS = {"quote", "own", "permission", "license"}
 
 
+# 릴스 제목·썸네일 제목은 "누가/무엇이 + 무엇을 했다"가 끝까지 들어간 문장으로 (STYLE_GUIDE 4장 "제목은 알아듣기 쉽게").
+# "3년 만에 밀레니엄 난제"처럼 서술어 없이 명사로 압축하면 무슨 일인지 알 수 없다.
+PREDICATE_RE = re.compile(r"(다|요|죠|까|나|네)[\s\"'”’.!?…]*$")
+
+
+def title_sentence(title, where):
+    """제목이 서술어로 끝나는지. 따옴표 인용("~했다")도 서술어로 본다."""
+    one = " ".join(_lines(title)).strip()
+    if one and not PREDICATE_RE.search(one):
+        return [f"{where}이 서술어 없이 끝남: '{one}' → 누가·무엇이 어떻게 했는지 끝까지 쓴다 "
+                "(예: '3년 만에 밀레니엄 난제' 대신 'AI가 3년 만에 수학 최대 난제를 풀었다')"]
+    return []
+
+
 def check_thumb(post):
     """릴스 썸네일 검사 (thumb.py). 릴스(video, reel)에는 썸네일이 있어야 한다."""
     t = post.get("thumb")
@@ -102,6 +116,7 @@ def check_thumb(post):
             errs.append(f"썸네일 제목 한 줄은 13자 이하: '{l}'")
     if t.get("highlight") and t["highlight"] not in t.get("title", ""):
         errs.append("썸네일 highlight가 제목 안에 없음")
+    errs += title_sentence(t.get("title", ""), "썸네일 제목")
     im = t.get("image") or {}
     if not im.get("src"):
         errs.append("썸네일 image.src 필요")
@@ -162,6 +177,7 @@ def check_video(post):
     for l in ls:
         if _len(l) > lim["video_title_line_chars"]:
             errors.append(f"제목 한 줄은 {lim['video_title_line_chars']}자 이하: '{l}'")
+    errors += title_sentence(post["title"], "릴스 제목")
     if len(post.get("title_en", "")) > 48:
         errors.append("영어 부제는 48자 이하")
     hl = post.get("highlight")
