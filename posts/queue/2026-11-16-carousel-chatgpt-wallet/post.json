@@ -1,0 +1,132 @@
+{
+ "id": "2026-11-16-carousel-chatgpt-wallet",
+ "type": "carousel",
+ "format": "news",
+ "series": "전황",
+ "date": "2026-11-16",
+ "publish_at": "2026-11-16T13:13:00+09:00",
+ "slides": [
+  {
+   "kind": "cover",
+   "layout": "image",
+   "visual": {
+    "type": "image",
+    "src": "img/cover.jpg",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/e/e0/Business_professional_engages_in_online_shopping_from_home_workspace_while_using_credit_card.jpg",
+    "position": "60% center",
+    "credit": "사진: Shixart1985, CC BY 2.0 (위키미디어 공용)",
+    "hook": "노트북 앞에서 신용카드를 든 채 쇼핑하는 손. 'AI에게 이 카드를 맡긴다면?'이 바로 떠오른다"
+   },
+   "title": "ChatGPT가 이제\n내 카드로 결제합니다",
+   "highlight": "내 카드로",
+   "sub": "ChatGPT Wallet · 결제마다 얼굴·지문 인증"
+  },
+  {
+   "kind": "body",
+   "visual": {
+    "type": "image",
+    "src": "img/wallet-gift.jpg",
+    "position": "center top",
+    "credit": "화면: OpenAI 공식 ChatGPT Wallet 소개 영상 (11월 13일)"
+   },
+   "heading": "AI 비서가 선물을 고르고\n결제까지 합니다",
+   "highlight": "결제까지",
+   "body": "OpenAI가 11월 13일 발표했습니다. 영상 속 AI 비서는 100달러 예산으로 선물을 찾아 줍니다."
+  },
+  {
+   "kind": "body",
+   "visual": {
+    "type": "image",
+    "src": "img/wallet-approve.jpg",
+    "position": "center 40%",
+    "credit": "화면: OpenAI 공식 ChatGPT Wallet 소개 영상 (11월 13일)"
+   },
+   "heading": "돈이 나가기 전에\n사람이 승인합니다",
+   "highlight": "사람이 승인",
+   "body": "물건, 총액, 쓸 카드를 먼저 보여 줍니다. Face ID나 지문 인증을 거쳐야 결제됩니다."
+  },
+  {
+   "kind": "body",
+   "visual": {
+    "type": "image",
+    "src": "img/wallet-done.jpg",
+    "position": "center 85%",
+    "credit": "화면: OpenAI 공식 ChatGPT Wallet 소개 영상 (11월 13일)"
+   },
+   "heading": "AI는 진짜 카드 번호를\n보지 못합니다",
+   "highlight": "진짜 카드 번호",
+   "body": "카드사가 결제마다 대신 쓸 번호를 새로 만듭니다. 카드 포인트와 분쟁 보호도 그대로 남습니다."
+  },
+  {
+   "kind": "stat",
+   "value": "12억",
+   "unit": "명",
+   "label": "OpenAI가 밝힌 주간 ChatGPT 이용자 수입니다",
+   "heading": "물건을 고르던 AI가\n계산까지 맡습니다",
+   "highlight": "계산까지",
+   "body": "상품을 찾고 비교하는 데 ChatGPT를 쓰는 사람이 많아 결제까지 붙였다고 OpenAI는 설명합니다."
+  },
+  {
+   "kind": "steps",
+   "heading": "아직은 미국에서만 됩니다",
+   "highlight": "미국에서만",
+   "items": [
+    {
+     "title": "ChatGPT Pro 구독자",
+     "text": "일부 Pro 구독자에게 먼저 열었습니다"
+    },
+    {
+     "title": "18세 이상",
+     "text": "미성년자는 쓸 수 없습니다"
+    },
+    {
+     "title": "미국에서 발급한 카드",
+     "text": "비자, 마스터카드, 아메리칸 익스프레스만 됩니다"
+    }
+   ]
+  },
+  {
+   "kind": "body",
+   "heading": "AI 손님을 막는 곳도 있습니다",
+   "highlight": "막는 곳",
+   "body": "CNBC에 따르면 아마존과 유나이티드항공은 AI 에이전트의 구매·예약을 막고 있습니다.\nOpenAI는 한도와 품목, 기간을 정해 두면 미리 승인하는 기능도 내놓겠다고 밝혔습니다.",
+   "point": "결제 버튼은 아직 사람이 누릅니다"
+  }
+ ],
+ "sources": [
+  {
+   "name": "OpenAI, Introducing ChatGPT Wallet (11월 13일)",
+   "url": "https://openai.com/index/introducing-chatgpt-wallet/"
+  },
+  {
+   "name": "OpenAI 공식 영상 Introducing ChatGPT Wallet",
+   "url": "https://vimeo.com/1246467101/c0fe6f20de"
+  },
+  {
+   "name": "CNBC (11월 13일)",
+   "url": "https://www.cnbc.com/2026/11/13/openai-chatgpt-wallet-dot-purchases.html"
+  },
+  {
+   "name": "TechCrunch (11월 13일)",
+   "url": "https://techcrunch.com/2026/11/13/chatgpts-new-wallet-lets-ai-agents-shop-and-check-out-for-you"
+  },
+  {
+   "name": "표지 사진: Shixart1985, CC BY 2.0",
+   "url": "https://commons.wikimedia.org/wiki/File:Business_professional_engages_in_online_shopping_from_home_workspace_while_using_credit_card.jpg"
+  }
+ ],
+ "caption": "ChatGPT가 이제 내 카드로 물건값을 대신 냅니다. 결제 순서와 안전장치를 한 번에 정리했어요.\n\nOpenAI가 11월 13일 'ChatGPT Wallet'을 발표했어요. AI 비서(dot)가 물건을 고르면, 사람이 물건·총액·카드를 확인하고 Face ID나 지문으로 승인해야 결제돼요.\nAI도 가게도 진짜 카드 번호는 보지 못하고, 카드사가 결제마다 대신 쓸 번호를 만들어 줘요. 비자·마스터카드·아메리칸 익스프레스와 함께 만들었어요.\n지금은 미국의 18세 이상 ChatGPT Pro 구독자만 쓸 수 있고, 다른 나라 출시 시점은 나오지 않았어요.\n\n출처: OpenAI 공식 발표(11월 13일), CNBC, TechCrunch\n표지 사진: Shixart1985(CC BY 2.0, 위키미디어 공용), 화면: OpenAI 공식 소개 영상\n\nAI에게 쇼핑을 맡겨 보고 싶다던 친구에게 보내 두세요.",
+ "hashtags": [
+  "#챗GPT",
+  "#OpenAI",
+  "#AI뉴스",
+  "#인공지능",
+  "#토큰전쟁"
+ ],
+ "topic": [
+  "ChatGPT Wallet",
+  "ChatGPT",
+  "AI 결제",
+  "OpenAI"
+ ]
+}
