@@ -208,6 +208,9 @@ def write_trends(accounts, own):
             med = statistics.median(score(m) for m in ms) or 1
             unit = "조회" if kind == "REELS" else "반응"
             lines.append(f"- {kind} 중간값 {med:,.0f}{unit}, 게시물 {len(ms)}개")
+            if kind == "REELS":  # 계정별 조회수 상위 릴스 첫 줄 (썸네일·제목 말투 참고, STYLE_GUIDE 3-3)
+                for m in sorted(ms, key=lambda m: -score(m))[:3]:
+                    lines.append(f"  - {score(m):,}조회 {score(m) / med:.1f}x: [{first_line(m['caption'])}]({m['permalink']})")
             for m in ms:
                 ts = datetime.fromisoformat(m["timestamp"].replace("+0000", "+00:00"))
                 if ts > now - timedelta(days=30):
@@ -263,11 +266,17 @@ def main():
             print(f"@{u}: 게시물 {len(accounts[-1]['media'])}개")
         except Exception as e:
             print(f"@{u}: 실패 ({e}) — 비즈니스/크리에이터 계정이 아니거나 이름이 바뀌었을 수 있음")
+            saved = DATA / "benchmarks" / f"{u}.json"
+            if saved.exists():  # 토큰이 끊겨도 trends.md가 비지 않게 지난번 데이터로
+                accounts.append(json.loads(saved.read_text(encoding="utf-8")))
+                print(f"@{u}: 저장된 데이터로 대신 ({accounts[-1].get('updated_at', '')[:10]})")
     own = {}
     try:
         own = fetch_own()
     except Exception as e:
         print("우리 계정 성과 가져오기 실패:", e)
+        pf = DATA / "performance.json"
+        own = json.loads(pf.read_text(encoding="utf-8")) if pf.exists() else {}
     write_trends(accounts, own)
     print("data/trends.md 작성")
 
