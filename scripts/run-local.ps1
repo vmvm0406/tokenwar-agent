@@ -51,5 +51,10 @@ try {
     claude -p $prompt --permission-mode auto --max-turns 300 2>&1 | Out-File -FilePath $log -Encoding utf8
 }
 finally {
+    # C 드라이브 자동 정리 (하루 한 번 조건은 cleanup.ps1이 본다). 할 일이 없어 일찍 끝난 날에도 돌도록 finally 안에서
+    $cleanup = Join-Path $Repo "scripts\cleanup.ps1"
+    if (Test-Path $cleanup) {
+        try { & $cleanup | Out-Null } catch { }
+    }
     Remove-Item $Lock -ErrorAction SilentlyContinue
 }

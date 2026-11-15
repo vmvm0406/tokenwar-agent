@@ -14,7 +14,13 @@ SERIES = {"전황", "긴급", "생존 가이드", "오픈소스", "AI 용어"}
 COVER_LAYOUTS = {"big", "list", "image"}
 BODY_KINDS = {"body", "steps", "compare", "stat", "prompt"}
 # 게시물 형식 (선택). howto: 따라 하기, ask: 나를 알려 주는 질문, weekly: 주간 요약, news: 소식 (STYLE_GUIDE 3-1)
-FORMATS = {"news", "howto", "ask", "weekly"}
+# buzz: 가벼운 화제 (연예인·예능·유명인이 나오는 AI 이야기, STYLE_GUIDE 3-2). 주당 개수는 dupes.py가 센다
+FORMATS = {"news", "howto", "ask", "weekly", "buzz"}
+BUZZ_MIN_SOURCES = 2
+# 가벼운 화제는 AI 화제에 빗댄 패러디·밈도 된다. 농담임을 캡션 앞부분에서 풀어 줘야 한다 (실제 논란으로 오해 금지)
+BUZZ_REVEAL = ["사실은", "사실 ", "실제로는", "실제론", "패러디", "농담", "밈", "알고 보니", "진짜는", "빗댄", "합성"]
+# 가벼운 화제에서 쓰면 안 되는 쪽 (확인 안 된 의혹, 사생활, 조롱). 경고로 알리고 사람이 판단
+BUZZ_RISKY = ["의혹", "카더라", "루머", "열애", "사생활", "폭로", "저격", "망신", "굴욕"]
 PROMPT_MAX = 320  # 프롬프트 상자 하나 글자 수 (넘치면 render.py가 레이아웃 오류로도 막는다)
 CLIP_FIELDS = ("src", "start", "end", "source", "source_url")
 VISUALS = {"image", "bars", "timeline"}
@@ -44,7 +50,7 @@ AI_PHRASES = [
     "는 시대", "시대가 열", "시대입니다", "새로운 지평", "게임 체인저", "판도를 바꾸", "판도가 바뀌",
     "한 단계 진화", "그야말로", "무려", "어디까지", "주목된다", "주목할 만", "귀추가", "라는 점에서",
     "가능성을 열", "혁신적", "차세대", "본격적인", "과연", "생각하시나요", "어떻게 생각", "여러분의 생각",
-    "놀라운 점은", "흥미로운 점은", "중요한 건", "핵심은 바로", "바로 이것", "이제는 ", "새로운 시대",
+    "놀라운 점은", "흥미로운 점은", "만 알면 됩니다", "만 알면 돼요", "만 기억하세요", "중요한 건", "핵심은 바로", "바로 이것", "이제는 ", "새로운 시대",
 ]
 # 서술어 없이 조사·부사로 툭 끊기는 문장 ("편집도 한 모델로", "빠른 동작까지 자연스럽게")
 DANGLING_RE = re.compile(r"(으로|[가-힣]로|까지|에게|에서|부터|처럼|보다|만큼|[가-힣]게|[가-힣]히)$")
@@ -91,6 +97,19 @@ RIGHTS = {"quote", "own", "permission", "license"}
 # 릴스 제목·썸네일 제목은 "누가/무엇이 + 무엇을 했다"가 끝까지 들어간 문장으로 (STYLE_GUIDE 4장 "제목은 알아듣기 쉽게").
 # "3년 만에 밀레니엄 난제"처럼 서술어 없이 명사로 압축하면 무슨 일인지 알 수 없다.
 PREDICATE_RE = re.compile(r"(다|요|죠|까|나|네)[\s\"'”’.!?…]*$")
+
+
+def body_sentences(text, where):
+    """카드 본문 설명은 문장을 끝까지 쓴다. "전 세계 모든 사용자 대상.", "미국부터 베타."처럼 명사로 툭 끝나면 어색하다
+    (운영자 지적 2026-11-15). 숫자만 있는 짧은 조각은 봐준다."""
+    errs = []
+    for sent in re.split(r"(?<=[.!?])\s+|\n", str(text)):
+        w = sent.strip().rstrip(".!?").strip("\"'“”‘’)( ")
+        if len(w) < 6 or re.fullmatch(r"[\d\s,.%·~-]+", w):
+            continue
+        if not PREDICATE_RE.search(w):
+            errs.append(f"{where}: 문장이 명사로 툭 끝남 '{w[-14:]}' → '~습니다'로 끝까지 (예: '사용자 대상' → '사용자에게 적용됩니다')")
+    return errs
 
 
 def title_sentence(title, where):
@@ -226,6 +245,12 @@ def check_video(post):
         errors.append("캡션에도 원작자(credit)를 밝힐 것")
     if not post["sources"]:
         errors.append("출처 1개 이상 (원본 영상 링크)")
+    f = post.get("format")
+    if f is not None and f not in FORMATS:
+        errors.append(f"format은 {FORMATS} 중 하나: {f}")
+    e_b, w_b = check_buzz(post)
+    errors += e_b
+    warnings += w_b
     e_c, w_c = check_caption_hooks(post["caption"])
     errors += e_c
     warnings += w_c
@@ -245,12 +270,22 @@ def check_images(slides):
         v = s.get("visual") or {}
         if v.get("type") == "image":
             imgs.append((i, v))
+    srcs = [v.get("src") for _, v in imgs if v.get("src")]
+    for src in sorted(set(x for x in srcs if srcs.count(x) > 1)):
+        errors.append(f"같은 사진({src})을 여러 장에 반복함 → 장마다 다른 사진이나 다른 부분을 잘라 쓸 것")
     need = lim.get("carousel_min_images", 2) + (1 if len(slides) > 6 else 0)
     if len(imgs) < need:
         errors.append(f"{IMAGE_RULE}: 사진(실제 화면 캡처·공식 이미지) 장이 {need}장 이상 필요: 지금 {len(imgs)}장. "
                       "서비스 화면, 공식 발표 페이지, 논문 그림, X 게시물 등을 agent/shot.py로 찍어 본문 장 visual에 넣는다")
-    if slides and slides[0].get("layout") != "image":
-        warnings.append("표지가 사진 표지가 아님. 상징이 되는 실제 사진·화면이 있으면 layout image를 먼저 쓴다")
+    # 첫 장은 무조건 눈길을 끄는 사진 (운영자 결정, STYLE_GUIDE 2-1 "표지는 후킹 사진")
+    if slides and slides[0].get("kind") == "cover":
+        cv = slides[0].get("visual") or {}
+        if slides[0].get("layout") != "image":
+            errors.append("표지는 사진 표지(layout: image)만: 큰 숫자·목록 표지는 쓰지 않는다. 눈길을 끄는 사진을 넣을 것")
+        elif cv.get("shot") or cv.get("screen"):
+            errors.append("표지에 화면 캡처·표·문서를 쓰지 않는다: 사람 얼굴·표정, 강한 장면, 결과물처럼 눈길을 끄는 사진으로")
+        if slides[0].get("layout") == "image" and not cv.get("hook"):
+            errors.append("표지 사진 visual.hook에 이 사진이 왜 눈길을 끄는지 한 줄 적을 것 (예: '아이와 여행 가는 가족 사진: 바로 내 얘기')")
     for i, v in imgs:
         if i > 1 and not v.get("credit") and not v.get("prompt"):
             warnings.append(f"{i}번째 장 사진에 credit(예: '화면: Lovable 공식 문서') 없음")
@@ -265,6 +300,24 @@ def _prompts(slides):
     return out
 
 
+def check_buzz(post):
+    """가벼운 화제(format buzz): 출처 2곳 이상(오류), 캡션 앞에서 실제 사정 밝히기·위험한 표현(경고) (STYLE_GUIDE 3-2)."""
+    errors, warnings = [], []
+    if post.get("format") != "buzz":
+        return errors, warnings
+    srcs = [s for s in post.get("sources", []) if str(s.get("url", "")).startswith("http")]
+    if len(srcs) < BUZZ_MIN_SOURCES:
+        errors.append(f"가벼운 화제(format buzz)는 출처 {BUZZ_MIN_SOURCES}곳 이상으로 사실 확인: 지금 {len(srcs)}곳 (STYLE_GUIDE 3-2)")
+    head = " / ".join([l for l in post.get("caption", "").splitlines() if l.strip()][:3])
+    if not any(w in head for w in BUZZ_REVEAL):
+        warnings.append("가벼운 화제: 캡션 앞 3줄에 실제 사정을 밝히는 말('사실은', '실제로는', '패러디' 등)이 없음 → 농담·패러디면 앞에서 풀어 줄 것 (STYLE_GUIDE 3-2)")
+    text = json.dumps({k: post.get(k) for k in ("title", "slides", "video", "thumb", "caption")}, ensure_ascii=False)
+    hit = [w for w in BUZZ_RISKY if w in text]
+    if hit:
+        warnings.append(f"가벼운 화제에 조심할 표현 {hit}: 확인 안 된 의혹·사생활·조롱은 다루지 않는다 (STYLE_GUIDE 3-2)")
+    return errors, warnings
+
+
 def check_format(post):
     """따라 하기·질문 형식이면 복사해 쓸 프롬프트가 장 안에 있어야 한다 (STYLE_GUIDE 3-1)."""
     errors, warnings = [], []
@@ -273,6 +326,7 @@ def check_format(post):
         return errors, warnings
     if f not in FORMATS:
         return [f"format은 {FORMATS} 중 하나: {f}"], warnings
+    errors, warnings = check_buzz(post)
     prs = _prompts(post.get("slides", []))
     if f in ("howto", "ask") and not prs:
         errors.append(f"format '{f}'에는 복사해 쓸 프롬프트 장(kind: prompt)이 1개 이상 필요")
@@ -323,6 +377,23 @@ def check_dm(post):
             e_t, _ = ai_tone(t, "DM 자료")
             errors += e_t
     return errors, warnings
+
+
+# 음슴체 끝맺음 ("CCTV는 없었음", "자술서를 냄", "표가 나옴")은 어색하다. 카드 글은 "~습니다" 또는 짧은 명사로.
+EUMSEUM_RE = re.compile(r"(았음|었음|였음|했음|됐음|없음|있음|했음|함|냄|됨|나옴|봄|씀|줌|짐|옴)$")
+EUMSEUM_OK = {"처음", "마음", "다음", "이름", "포함", "지금", "함께", "소음", "느낌", "가짐", "모임", "질문함"}
+
+
+def eumseum(text, where):
+    errs = []
+    for sent in re.split(r"[.!?\n]", str(text)):
+        w = sent.strip().strip("\"'“”‘’)( ")
+        if not w:
+            continue
+        last = w.split()[-1]
+        if EUMSEUM_RE.search(last) and last not in EUMSEUM_OK and (len(last) >= 2 or last in "냄함됨봄씀줌짐옴"):
+            errs.append(f"{where}: 음슴체 끝맺음 '{last}' → '~습니다'로 끝까지 쓰거나 짧은 명사로 (예: '없었음' → '없었습니다')")
+    return errs
 
 
 def check_caption_hooks(caption, dm_keyword=None):
@@ -429,6 +500,7 @@ def check_post(post):
             if not s.get("title"):
                 errors.append(f"{tag} 표지 제목(title) 필요")
             t = s.get("title", "")
+            errors += title_sentence(t, f"{tag} 표지 제목")
             ls = _lines(t) if t else []
             if len(ls) > lim["cover_title_lines"]:
                 errors.append(f"{tag} 표지 제목은 {lim['cover_title_lines']}줄 이하: {len(ls)}줄")
@@ -505,6 +577,8 @@ def check_post(post):
             if kind == "stat" and not s.get("value"):
                 errors.append(f"{tag} stat은 value 필요")
             all_text += [h, b, p, s.get("label", "")]
+            if b:
+                errors += body_sentences(b, f"{tag} 본문")
             hl_src = h
         else:
             errors.append(f"{tag} kind는 cover 또는 {BODY_KINDS}: {kind}")
@@ -544,6 +618,7 @@ def check_post(post):
     joined = "\n".join(all_text)
     for t in all_text:
         errors += ai_tone(t, "카드")[0]
+        errors += eumseum(t, "카드")
     errors += ai_tone(post["caption"].split("출처:")[0], "캡션")[0]
     for w in BANNED:
         if w in joined or w in post["caption"]:

@@ -1,0 +1,757 @@
+{
+ "seen": {
+  "https://openai.com/index/introducing-chatgpt-wallet": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Introducing ChatGPT Wallet",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "큰 기능"
+  },
+  "https://openai.com/business/customer-stories/shield": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Shield helps technicians hand off legacy portal work with OpenAI",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "기업·연구·정책 주소"
+  },
+  "https://openai.com/business/customer-stories/amplitude": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "How Amplitude ships product improvements in 1-2 days with OpenAI",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "기업·연구·정책 주소"
+  },
+  "https://openai.com/business/customer-stories/gondola": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Gondola doubles revenue as its team builds more with Codex",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "기업·연구·정책 주소"
+  },
+  "https://openai.com/business/customer-stories/holidays-extras-codex": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Holiday Extras is rethinking what it can build with Codex",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "기업·연구·정책 주소"
+  },
+  "https://openai.com/index/children-first-declaration": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Supporting research on AI and children’s safety",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://openai.com/index/gilbert-tobin-sam-nickless": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Gilbert + Tobin rethinks the business of law with AI",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://openai.com/index/chatgpt-plus-for-veterans": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "ChatGPT Plus for veterans and servicemembers",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://openai.com/index/jiostar-vijay-seshadri": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "JioStar’s chief architect on AI discovery at 500M-user scale",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://openai.com/index/helping-caregivers-use-ai-in-everyday-life": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Helping caregivers use AI in everyday life",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://openai.com/index/introducing-businesses-chatgpt": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Introducing Businesses in ChatGPT",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "큰 기능"
+  },
+  "https://openai.com/index/closing-ai-guidance-gap-education": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Closing the AI guidance gap in education",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://openai.com/index/singapore-airlines-travel-work": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Singapore Airlines elevates travel & work with OpenAI technology",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "고객 사례"
+  },
+  "https://openai.com/index/ai-effect-on-freelance-work": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Work at the Frontier: AI’s effect on freelance work",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://openai.com/index/cogent-security": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Cogent and OpenAI build cyber defense factories for enterprises",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://openai.com/index/chatgpt-enterprise-aws-marketplace": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "ChatGPT Enterprise now available in AWS Marketplace",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "개발자·기업 쪽 기능"
+  },
+  "https://openai.com/index/control-room": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Control Room: A central system to track and stop model workloads across our research infrastructure",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://openai.com/index/coderabbit-codex-daybreak": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "CodeRabbit scales agentic software development and ships 20x more",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "고객 사례"
+  },
+  "https://openai.com/index/kuken": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Kuken Industries searches 70 years of drawings in minutes",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "고객 사례"
+  },
+  "https://openai.com/index/partnering-with-hacktron": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Partnering with Hacktron to find vulnerabilities in OpenAI’s systems",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://openai.com/index/measuring-how-ai-agents-handle-wet-lab-science": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Measuring how AI agents handle everyday wet-lab science",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://openai.com/index/australian-universities-ai-native-graduates": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Australian universities are creating AI-native graduates",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://openai.com/index/cultfit-builds-with-codex": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Cult.fit builds operational muscle with Codex",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "고객 사례"
+  },
+  "https://openai.com/index/introducing-gpt-6-cyber": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "GPT-6 Cyber: Advancing the frontier of aligned cybersecurity agents",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "새 모델"
+  },
+  "https://openai.com/index/merge-builds-with-openai": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Merge builds product and business tools with OpenAI technology",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "고객 사례"
+  },
+  "https://openai.com/index/setting-new-standard-responsible-ai-infrastructure": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Setting a new standard for responsible AI infrastructure",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://openai.com/ads/customers/flipsnack": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Flipsnack grows product signups with conversion optimization",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "고객 사례"
+  },
+  "https://openai.com/index/franklin-templeton": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Franklin Templeton uses OpenAI to support investment research",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "고객 사례"
+  },
+  "https://openai.com/index/openai-to-acquire-pierre": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "OpenAI to acquire Pierre Computer Company, Inc.",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://openai.com/index/daybreak-red-aws-govcloud": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Daybreak Red is now available in AWS GovCloud (US-East)",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "개발자·기업 쪽 기능"
+  },
+  "https://openai.com/index/a-thousand-fewer-paths-to-root": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "A thousand fewer paths to root",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://openai.com/index/introducing-images-2-6": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Introducing Images 2.6",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "큰 기능"
+  },
+  "https://openai.com/index/devrev-enterprise-self-service": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "DevRev delivers autonomous self-service with GPT-6.1 Sol",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "고객 사례"
+  },
+  "https://openai.com/index/accelerating-engineering-for-the-physical-world": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Accelerating engineering for the physical world",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://openai.com/index/cisco-cyber": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "How Cisco defends at machine speed with OpenAI",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "고객 사례"
+  },
+  "https://openai.com/index/heimstaden": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Heimstaden is changing residential real estate management with AI",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://openai.com/index/jill-hazelbaker-chief-corporate-affairs-officer": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "OpenAI appoints Jill Hazelbaker as Chief Corporate Affairs Officer",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://openai.com/index/scaling-git-at-openai": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Scaling Git at OpenAI",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://openai.com/index/grid-protectors-program": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Introducing the Grid Protectors Program",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://openai.com/index/rewarding-defenders-with-bigger-bug-bounties": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Rewarding defenders with bigger bug bounties",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://blog.google/innovation-and-ai/products/gemini-app/google-wallet-gemini-app/": {
+   "source": "구글 블로그 제미나이",
+   "company": "구글",
+   "title": "Connect Google Wallet to Gemini for personal finance insights",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://blog.google/products-and-platforms/products/search/gemini-4-hydrogen-search-upgrade/": {
+   "source": "구글 블로그 제미나이",
+   "company": "구글",
+   "title": "Google Search gets a major upgrade with Gemini 4 Hydrogen",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "새 모델"
+  },
+  "https://blog.google/innovation-and-ai/technology/developers-tools/build-with-gemini-4-hydrogen/": {
+   "source": "구글 블로그 제미나이",
+   "company": "구글",
+   "title": "Gemini 4 Hydrogen: everyday coding and agentic workflows for developers",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "새 모델 (개발자 쪽 낱말 있음, 애매)"
+  },
+  "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/": {
+   "source": "구글 블로그 제미나이",
+   "company": "구글",
+   "title": "Introducing Gemini 4 Hydrogen",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "새 모델"
+  },
+  "https://blog.google/innovation-and-ai/products/gemini-app/research-with-gemini-in-chrome/": {
+   "source": "구글 블로그 제미나이",
+   "company": "구글",
+   "title": "Get quick answers from Gemini on any website.",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://blog.google/innovation-and-ai/products/gemini-app/gemini-on-apple-carplay/": {
+   "source": "구글 블로그 제미나이",
+   "company": "구글",
+   "title": "Talk it through with Gemini, now on Apple CarPlay",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "큰 기능"
+  },
+  "https://blog.google/products-and-platforms/platforms/android/gemini-intelligence-november-features-devices/": {
+   "source": "구글 블로그 제미나이",
+   "company": "구글",
+   "title": "Gemini Intelligence: New features, on more devices",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "큰 기능"
+  },
+  "https://blog.google/innovation-and-ai/models-and-research/gemini-models/multimodal-knowledge-agent-benchmark/": {
+   "source": "구글 블로그 제미나이",
+   "company": "구글",
+   "title": "Introducing the Multimodal Knowledge Agent benchmark",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "개발자·기업 쪽 기능"
+  },
+  "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-carbon-now-available/": {
+   "source": "구글 블로그 제미나이",
+   "company": "구글",
+   "title": "Gemini 4 Carbon is now available",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "새 모델"
+  },
+  "https://blog.google/company-news/inside-google/company-announcements/adobe-google-partnership-integration/": {
+   "source": "구글 블로그 제미나이",
+   "company": "구글",
+   "title": "We’re bringing Adobe’s creative and productivity tools closer to your everyday Google apps.",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "큰 기능"
+  },
+  "https://blog.google/innovation-and-ai/technology/developers-tools/introducing-gemini-omni-1-2-flash/": {
+   "source": "구글 블로그 제미나이",
+   "company": "구글",
+   "title": "Gemini Omni 1.2 Flash: Fast and cost-effective with longer clips",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "새 모델"
+  },
+  "https://blog.google/innovation-and-ai/products/gemini-app/turn-drawings-into-apps-gemini/": {
+   "source": "구글 블로그 제미나이",
+   "company": "구글",
+   "title": "Transform a quick drawing into a live app with Gemini.",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://blog.google/innovation-and-ai/technology/ai/google-ai-updates-october-2026/": {
+   "source": "구글 블로그 제미나이",
+   "company": "구글",
+   "title": "The latest AI news we announced in October 2026",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://blog.google/innovation-and-ai/products/gemini-app/edit-files-directly/": {
+   "source": "구글 블로그 제미나이",
+   "company": "구글",
+   "title": "You can now generate, preview, and edit documents, PDFs, presentations, spreadsheets, and more directly in Gemini.",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "큰 기능"
+  },
+  "https://blog.google/innovation-and-ai/products/gemini-app/update-resume-with-gemini/": {
+   "source": "구글 블로그 제미나이",
+   "company": "구글",
+   "title": "How to use Gemini to update your resume",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://blog.google/innovation-and-ai/products/gemini-app/immersive-explorations-student-hub/": {
+   "source": "구글 블로그 제미나이",
+   "company": "구글",
+   "title": "Dive into new topics with immersive explorations in the Gemini app.",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "큰 기능"
+  },
+  "https://blog.google/products-and-platforms/platforms/android/xreal-aura/": {
+   "source": "구글 블로그 제미나이",
+   "company": "구글",
+   "title": "XREAL AURA: Wired XR glasses to watch, work, and play",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://blog.google/innovation-and-ai/technology/developers-tools/connected-apps-one-place/": {
+   "source": "구글 블로그 제미나이",
+   "company": "구글",
+   "title": "Build and manage Connected Apps in one place",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-carbon/": {
+   "source": "구글 블로그 제미나이",
+   "company": "구글",
+   "title": "Gemini 4 Carbon: our next frontier model",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "새 모델"
+  },
+  "https://blog.google/products-and-platforms/products/gemini/gemini-4-argon-in-action/": {
+   "source": "구글 블로그 제미나이",
+   "company": "구글",
+   "title": "8 examples of Gemini 4 Argon in action",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "새 모델"
+  },
+  "https://blog.google/innovation-and-ai/technology/developers-tools/gemini-decisions-api/": {
+   "source": "구글 블로그 AI",
+   "company": "구글",
+   "title": "Gemini Decisions API: Fast, calibrated multimodal decisions",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "개발자·기업 쪽 기능"
+  },
+  "https://blog.google/innovation-and-ai/models-and-research/google-labs/tabletop/": {
+   "source": "구글 블로그 AI",
+   "company": "구글",
+   "title": "Try Tabletop: Customizable, collaborative spaces for groups to plan, play and do more together.",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://blog.google/company-news/outreach-and-initiatives/arts-culture/esther-mahlangu/": {
+   "source": "구글 블로그 AI",
+   "company": "구글",
+   "title": "Experience the art and legacy of Dr. Esther Mahlangu",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://blog.google/innovation-and-ai/infrastructure-and-cloud/google-cloud/gemini-for-healthcare/": {
+   "source": "구글 블로그 AI",
+   "company": "구글",
+   "title": "Google Cloud launches Gemini for healthcare.",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "개발자·기업 쪽 기능"
+  },
+  "https://blog.google/products-and-platforms/products/education/ai-quests-polar-peaks/": {
+   "source": "구글 블로그 AI",
+   "company": "구글",
+   "title": "Our newest AI Quest: Mapping the human brain",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://blog.google/company-news/inside-google/around-the-globe/google-asia/e-conomy-sea-report-2026/": {
+   "source": "구글 블로그 AI",
+   "company": "구글",
+   "title": "Southeast Asia’s digital economy to hit $368 billion",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon/": {
+   "source": "구글 블로그 AI",
+   "company": "구글",
+   "title": "Gemini 4 Argon: Built to solve your hardest problems",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "새 모델"
+  },
+  "https://blog.google/innovation-and-ai/technology/ai/playground-experimental-gaming-platform/": {
+   "source": "구글 블로그 AI",
+   "company": "구글",
+   "title": "Introducing Playground: Create and play custom games",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://blog.google/innovation-and-ai/technology/ai/google-ai-updates-september-2026/": {
+   "source": "구글 블로그 AI",
+   "company": "구글",
+   "title": "The latest AI news we announced in September 2026",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://blog.google/innovation-and-ai/technology/ai/winner-future-vision-xprize/": {
+   "source": "구글 블로그 AI",
+   "company": "구글",
+   "title": "Watch the winning trailer from the Future Vision XPRIZE, The Gifted.",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://blog.google/innovation-and-ai/technology/research/google-beam-expansion/": {
+   "source": "구글 블로그 AI",
+   "company": "구글",
+   "title": "Google Beam expands with new regions, partners, and customers",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "기업·연구·정책 주소"
+  },
+  "https://blog.google/innovation-and-ai/technology/ai/expanding-ai-economy-research-bench/": {
+   "source": "구글 블로그 AI",
+   "company": "구글",
+   "title": "New experts join Google’s AI & Economy team",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://blog.google/innovation-and-ai/technology/ai/google-flow-fashion-week/": {
+   "source": "구글 블로그 AI",
+   "company": "구글",
+   "title": "Co-creating the future of fashion with Google",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://blog.google/innovation-and-ai/technology/ai/google-un-data-commons-platform/": {
+   "source": "구글 블로그 AI",
+   "company": "구글",
+   "title": "Making global data easier to explore",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://blog.google/innovation-and-ai/technology/ai/ai-for-societal-impact/": {
+   "source": "구글 블로그 AI",
+   "company": "구글",
+   "title": "AI for Societal Impact",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://www.anthropic.com/news/public-benefit-fund": {
+   "source": "앤트로픽 뉴스",
+   "company": "앤트로픽",
+   "title": "Investing in the public benefit",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://www.anthropic.com/news/s1-sec": {
+   "source": "앤트로픽 뉴스",
+   "company": "앤트로픽",
+   "title": "Anthropic files S-1 with the SEC for proposed initial public offering",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://www.anthropic.com/news/roadshow-launch": {
+   "source": "앤트로픽 뉴스",
+   "company": "앤트로픽",
+   "title": "Anthropic launches roadshow for proposed initial public offering",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://www.anthropic.com/news/ai-for-science-expands-foundations-research-institutions": {
+   "source": "앤트로픽 뉴스",
+   "company": "앤트로픽",
+   "title": "AI for Science expands to foundations and research institutions",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://www.anthropic.com/news/expanding-partnership-gsa": {
+   "source": "앤트로픽 뉴스",
+   "company": "앤트로픽",
+   "title": "Expanding our partnership with GSA to bring Claude to all levels of government",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://www.anthropic.com/news/donating-agent-skills-to-the-agentic-ai-foundation": {
+   "source": "앤트로픽 뉴스",
+   "company": "앤트로픽",
+   "title": "Donating Agent Skills to the Agentic AI Foundation",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://www.anthropic.com/news/open-call-guest-investigators-life-sciences": {
+   "source": "앤트로픽 뉴스",
+   "company": "앤트로픽",
+   "title": "Open call for guest investigators in the life sciences",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://www.anthropic.com/news/christopher-stubbs-joins-long-term-benefit-trust": {
+   "source": "앤트로픽 뉴스",
+   "company": "앤트로픽",
+   "title": "Physicist Christopher Stubbs joins Anthropic's Long-Term Benefit Trust",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://www.anthropic.com/news/an-update-on-independent-evaluators": {
+   "source": "앤트로픽 뉴스",
+   "company": "앤트로픽",
+   "title": "An update on independent evaluators",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://www.anthropic.com/news/2026-us-midterms": {
+   "source": "앤트로픽 뉴스",
+   "company": "앤트로픽",
+   "title": "Preparing for the 2026 US midterms",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://www.anthropic.com/news/singapore-office-opening": {
+   "source": "앤트로픽 뉴스",
+   "company": "앤트로픽",
+   "title": "Anthropic opens Singapore office and signs MOU with the Government of Singapore",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://www.anthropic.com/news/distillation-defenses": {
+   "source": "앤트로픽 뉴스",
+   "company": "앤트로픽",
+   "title": "Strengthening our defenses against distillation attacks",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://www.anthropic.com/news/anthropic-cyber-mission": {
+   "source": "앤트로픽 뉴스",
+   "company": "앤트로픽",
+   "title": "Introducing the Anthropic Cyber Mission",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://www.anthropic.com/news/2026-usage-policy-update": {
+   "source": "앤트로픽 뉴스",
+   "company": "앤트로픽",
+   "title": "2026 Usage Policy update",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://www.anthropic.com/news/genesis-mission-commitment": {
+   "source": "앤트로픽 뉴스",
+   "company": "앤트로픽",
+   "title": "Building on our commitment to American scientific discovery",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://www.anthropic.com/news/cyber-verification-program": {
+   "source": "앤트로픽 뉴스",
+   "company": "앤트로픽",
+   "title": "Expanding the Cyber Verification Program",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://www.anthropic.com/news/claude-frontier-academy": {
+   "source": "앤트로픽 뉴스",
+   "company": "앤트로픽",
+   "title": "Anthropic invests $100 million to train 10,000 engineers and tackle the enterprise AI talent gap",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  },
+  "https://www.anthropic.com/news/barclays-scales-claude": {
+   "source": "앤트로픽 뉴스",
+   "company": "앤트로픽",
+   "title": "Barclays scales Claude to upgrade operations and improve client experience",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "고객 사례"
+  },
+  "https://www.anthropic.com/news/accenture-embedded-evaluation": {
+   "source": "앤트로픽 뉴스",
+   "company": "앤트로픽",
+   "title": "Partnering with Accenture on embedded evaluation",
+   "first_seen": "2026-11-15T23:39:05+09:00",
+   "candidate": false,
+   "why": "모델·기능 발표 아님"
+  }
+ },
+ "updated": "2026-11-16T00:19:16+09:00"
+}

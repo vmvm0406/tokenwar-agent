@@ -428,8 +428,10 @@ def main(folder):
     errors, warnings = check_post(post)
     if "/samples/" in str(out_dir).replace("\\", "/"):
         # 예시 폴더는 사진 파일이 없을 수 있어 사진 규칙은 경고로만
-        warnings += [e for e in errors if e.startswith("사진 규칙")]
-        errors = [e for e in errors if not e.startswith("사진 규칙")]
+        # 예시 폴더는 사진 파일이 없을 수 있고, 새 규칙 전에 만든 예시(s1~s3, s8, s10)도 있어 이 규칙들은 경고로만
+        soft = ("사진 규칙", "표지", "썸네일 제목이", "릴스 제목이", "음슴체", "서술어 없이", "명사로 툭", "같은 사진")
+        warnings += [e for e in errors if any(k in e for k in soft)]
+        errors = [e for e in errors if not any(k in e for k in soft)]
     if "/samples/" not in str(out_dir).replace("\\", "/"):
         from dupes import check as dupe_check  # 같은 내용 반복 막기 (예시 폴더는 제외)
         e2, w2 = dupe_check(post, out_dir.name)
@@ -452,8 +454,15 @@ def main(folder):
         if not src.exists():
             print(f"영상 파일 없음: {post['video']['src']}")
             sys.exit(1)
-        from video import make_video_reel
-        dur = make_video_reel(post, out_dir, CONFIG)
+        from video import make_video_reel, EdgeCutError
+        try:
+            dur = make_video_reel(post, out_dir, CONFIG,
+                                  soft_edges="/samples/" in str(out_dir).replace("\\", "/"))
+        except EdgeCutError as e:
+            print("구간 경계 문제로 렌더링 중단:")
+            for line in str(e).splitlines():
+                print(" -", line)
+            sys.exit(1)
         print(f"영상 릴스 길이: {dur:.1f}초")
         thumb_or_exit(post, out_dir)
         print("완료:", out_dir)

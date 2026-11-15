@@ -2,6 +2,12 @@
 
 claude.ai 대화에서 하던 작업을 이 컴퓨터의 Claude Code로 옮겼다. 정해진 규칙은 이미 STYLE_GUIDE/CLAUDE.md에 들어가 있다. 아래는 **아직 안 끝난 것**이다. 하나 끝날 때마다 이 파일에서 지운다.
 
+## 운영자가 할 일
+- **새 모델 감시·게시 확인 작업 스케줄러 등록 (15분마다, 2026-11-15 만듦, LOCAL.md 6장).** 이미 등록했어도 주기가 15분으로 바뀌었으니 다시 실행. PowerShell(필요하면 관리자)에서 한 번:
+  `git -C $env:USERPROFILE\tokenwar-daily pull; powershell -ExecutionPolicy Bypass -File $env:USERPROFILE\tokenwar-daily\scripts\setup-local.ps1 -OnlyWatch`
+  확인: `Get-ScheduledTask TokenwarModelWatch`. 감시 기록은 `tokenwar-daily\logs\<연-월>-watch.log`, Claude가 게시물을 만들면 `logs\<시각>-model.log`. 지금은 `config.json` `model_watch.auto_publish: false`(PR + Merge). 바로 main에 올리고 싶으면 true로.
+- 첫 몇 주는 감시가 너무 자주(구글 제미나이 블로그의 작은 기능 글) 또는 너무 드물게 잡는지 watch.log로 보고 `agent/model_watch.py`의 낱말 목록을 고친다.
+
 ## 운영자 답을 기다리는 것
 1. **릴스 새 화면(CRT 터미널) 채택 여부** — `experiments/reel-crt/` v7. 운영자 반응: 영상과 아래가 따로 노는 느낌 → 붙임, 상태줄 불필요 → 뺌, 영상이 너무 위 → 안전 영역으로 내림. 괜찮다고 하면 `agent/video.py`를 이 구조로 바꾸고 post.json에 아래 요약(`term` 장면들: 신문 제목체) 형식을 TEMPLATES.md에 추가, LOCAL.md/CLIPS.md 절차 수정.
 2. **주간 요약 카드뉴스** — 샘플 완성: `samples/s11-weekly-ai` (11월 둘째 주, 소식 4개: 삼성 AI 안경·제미나이 카플레이·구글 검색 새 모델·챗GPT 기업 프로필, 소식마다 위쪽 공식 사진 + 번호·제목·설명). 본문 장 `num`/`num_note` 필드 추가함. 운영자가 보고 정한다. 운영자 의견(11-15): 초기 계정은 릴스가 우선, 릴스를 더 많이 찍어내야 함. — 운영자: "이번 주 AI에서 사진·영상 자료를 안 쓴 게 문제". 제안: 매주 일요일 "N월 N주 차 AI 뉴스" 카드뉴스 (ai.trend.kr 7,476 좋아요 글 구조: 강렬한 사진 표지 + 소식마다 한 장, 위쪽에 실제 사진·화면·영상, 아래 번호·제목·설명 3~4줄). 운영자가 샘플을 보고 정한다. 할 일: 오늘 소식으로 샘플 → 승인되면 STYLE_GUIDE의 "한 게시물에 소식 하나" 규칙에 주간 요약 예외 추가, dupes.py에서 주간 요약은 주제 겹침 예외, 캐러셀에 영상 장을 섞으려면 publish.py에 VIDEO 자식 추가.
