@@ -75,6 +75,22 @@
 
 Code 탭에서 할 때: 운영자의 `tokenwar-agent` 폴더 브랜치를 바꾸지 않는다. `git worktree add <임시 폴더> -b post/<날짜>-<HHMM> origin/main`으로 따로 작업하고 끝나면 `git worktree remove`. 오래 걸리면 `scripts/make-posts.ps1`을 백그라운드로 돌려도 된다 (그쪽은 `tokenwar-daily` 폴더에서 돈다).
 
+## 6. 새 모델 바로 올리기 (자동 감시)
+
+작업 스케줄러 `TokenwarModelWatch`가 30분마다 `scripts/watch-models.ps1`을 돌린다. 그 안에서 `agent/model_watch.py`(AI 안 씀)가 공식 블로그를 읽어 새 발표를 찾고, 있으면 Claude를 이 절차로 부른다 (실행 지시에 "회사 | 제목 | 주소" 목록이 붙어 온다). 설정은 `config.json` `model_watch`.
+
+- **감시하는 곳:** 항상 OpenAI 뉴스(RSS), 구글 블로그 제미나이·AI(RSS), 앤트로픽 뉴스(목록 페이지). 그록·메타·딥시크·네이버·삼성 등은 `data/hot.md` 여러 섹션에 동시에 뜰 때만 (`[화제: ...]`로 시작하는 줄).
+- 본 글은 `data/model_watch.json`에 남는다. `watch-models.ps1`이 Claude를 부르기 **전에** 이 파일만 main에 커밋·push 한다. 게시물 브랜치에는 넣지 않는다.
+
+1. **만들 가치가 있는지 먼저 본다.** 발표 글을 직접 열어 읽는다. 대상은 **일반 사용자가 챗GPT·제미나이·클로드 앱(또는 구글 검색 등)에서 바로 쓸 수 있는 새 모델·큰 기능**. 개발자용 API만 나온 작은 버전, 기업 고객 사례, 회사 소식(투자·인사·정책)이면 만들지 않고 이유만 남긴다. 목록이 여러 개면 가장 큰 것 하나만 (`max_posts_per_run`). 같은 모델로 최근 14일 안에 만든 게시물이 있으면(`posts/queue`, `posts/published`, 열린 `post/*` 브랜치) 만들지 않는다.
+2. **사실 확인: 공식 발표 + 1곳.** 공식 글 말고 믿을 만한 곳 하나(주요 IT 매체, 회사 공식 X·유튜브, 도움말 문서) 더 확인한다. 한국에서 되는지, 무료인지 유료 요금제만인지, 앱·웹 어디서 되는지를 꼭 확인해서 적는다. 확인 못 한 것은 쓰지 않는다.
+3. **"새 모델 나왔다"로 끝내지 않는다.** 따라 하기 각도를 먼저 (STYLE_GUIDE 3-1): "바로 이렇게 써 보기" — 어디를 눌러 켜는지, 처음 넣어 볼 프롬프트, 실제 결과 화면. 직접 써 볼 수 있으면 1장 규칙대로 돌려 보고 캡처하고, 못 쓰면 공식 예시 화면만 쓰고 결과를 지어내지 않는다. 카드뉴스면 `format: "howto"`(+ `dm`), 공식 발표 영상(대표 인터뷰·시연)이 좋으면 릴스(2장)도 된다.
+4. **게시 시각은 바로 올리기:** `py -3.12 agent/slots.py next <carousel|reel> --asap`. 폴더 이름 날짜는 오늘.
+5. 렌더링·직접 검수는 1·2장 그대로. 올리기는 3장: `config.json` `model_watch.auto_publish`가 `false`(지금)면 브랜치 `post/<날짜>-<HHMM>` + PR 하나 (PR 본문 표 맨 위 줄에 "새 모델 바로 올리기: <발표 주소>"), `true`면 main에 바로 push.
+6. 마지막 출력 한 줄: 만든 것과 PR 링크, 또는 만들지 않은 이유.
+
+손으로 확인: `py -3.12 agent/model_watch.py --dry-run -v` (기록 안 바꿈, 출처별 읽은 수와 거른 이유). 기록을 처음부터 다시: `py -3.12 agent/model_watch.py --init`.
+
 ## 하지 말 것
 
 - 인스타에 직접 올리지 않는다 (GitHub Actions가 한다).

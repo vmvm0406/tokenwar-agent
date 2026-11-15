@@ -13,6 +13,8 @@
         ├ agent/hot.py            지금 관심 주제 → data/hot.md
         ├ 리서치 → post.json 작성 → agent/render.py(검사·렌더링) → 직접 검수
         └ 검토 모드: post/<날짜>, post/<날짜>-reel 브랜치 + PR   (자동 모드: main)
+[작업 스케줄러 30분마다] scripts/watch-models.ps1 → agent/model_watch.py(공식 블로그 새 모델 감시)
+        → 새 발표가 있을 때만 claude -p "LOCAL.md 6장" → 바로 올리기(--asap) PR
 [GitHub Actions]
    ├ render.yml        posts/queue 바뀌면: 실물 이미지 받기·AI 그림(Cloudflare FLUX.2) → 렌더링 → 커밋
    ├ publish.yml       15분마다: 게시 시각이 된 것(렌더링 끝난 것만) → 인스타 Graph API로 게시 → posts/published
@@ -34,6 +36,7 @@
 | `agent/render.py` | 카드뉴스 HTML → JPEG (Playwright). video 타입이면 `video.py`, 썸네일은 `thumb.py` |
 | `agent/video.py` | 인용 영상 릴스: 제목·초록 테두리 영상 창·출처·자막. `keep`(예전 기능, 지금은 쓰지 않음), `punch`, `crop`, `captions_at` |
 | `agent/slots.py` | 게시 칸 자동 배정 (`next`, `need`, `status`). 예약된 것을 피해 가장 가까운 빈 칸 |
+| `agent/model_watch.py` | 새 모델 감시 (AI 안 씀): OpenAI·구글·앤트로픽 공식 블로그 + data/hot.md 화제 회사 → 새 발표를 "회사, 제목, 주소"로. 본 것은 `data/model_watch.json`. `scripts/watch-models.ps1`이 30분마다 (LOCAL.md 6장) |
 | `agent/dm.py` | 따라 하기 게시물의 댓글 자동 DM 준비물: `dm.md`(Zorcha 설정 메모), `docs/p/<id>/` 안내 페이지(GitHub Pages) |
 | `agent/shot.py` | 웹페이지 화면 캡처 → 카드뉴스 사진 (`shot` 필드로 자동, 또는 명령줄) |
 | `agent/thumb.py` | 릴스 썸네일 cover.jpg (그림 꽉 차게 + 가운데 제목 2줄) |
@@ -121,6 +124,7 @@ py -3.12 agent/render.py samples/s1-nvidia           # 카드뉴스 렌더링 �
 py -3.12 agent/hot.py                                 # 지금 관심 주제 다시 모으기
 powershell -ExecutionPolicy Bypass -File $env:USERPROFILE\tokenwar-daily\scripts\run-local.ps1   # 하루 작업 수동 실행 (전용 저장소 tokenwar-daily에서 돈다)
 powershell -ExecutionPolicy Bypass -File $env:USERPROFILE\tokenwar-daily\scripts\make-posts.ps1 -Reels 3 -Cards 2   # 원할 때 더 만들기 (-Now: 바로 올리기, -Date 2026-11-17: 그날에 몰아 넣기)
+py -3.12 agent/model_watch.py --dry-run -v            # 새 모델 감시 확인 (기록 안 바꿈, 출처별 읽은 수)
 py -3.12 agent/slots.py status                        # 며칠 치 게시 칸 상황
 Get-ScheduledTask TokenwarAgent                       # 작업 스케줄러 상태
 Get-Content (Get-ChildItem $env:USERPROFILE\tokenwar-daily\logs | Sort LastWriteTime | Select -Last 1).FullName   # 최근 기록
