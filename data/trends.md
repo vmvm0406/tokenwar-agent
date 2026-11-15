@@ -1,4 +1,4 @@
-# 인스타 반응 분석 (2026-11-15 16:43 기준)
+# 인스타 반응 분석 (2026-11-15 16:54 기준)
 
 에이전트는 주제를 고를 때 이 파일을 먼저 읽는다 (STYLE_GUIDE 3장, 6-1장 '인스타 반응').
 배수 = 그 계정의 최근 60일 같은 유형(릴스/피드) 중간값 대비. 2배 이상이면 '먹힌 주제'.
@@ -7,11 +7,11 @@
 - REELS 중간값 448조회, 게시물 28개
 - FEED 중간값 6반응, 게시물 1개
 
-## @ai.trend.kr (팔로워 272516)
+## @ai.trend.kr (팔로워 272519)
 - REELS 중간값 90,998조회, 게시물 37개
 - FEED 중간값 1,520반응, 게시물 114개
 
-## @ai.asap.kr (팔로워 9626)
+## @ai.asap.kr (팔로워 9628)
 - REELS 중간값 5,556조회, 게시물 4개
 - FEED 중간값 81반응, 게시물 132개
 
@@ -24,11 +24,11 @@
 
 | 배수 | 계정 | 유형 | 날짜 | 수치 | 첫 줄 |
 |---|---|---|---|---|---|
-| 31.5x | @ai.trend.kr | REELS | 10-20 | 2,863,751 | [눈 뭉치 던진 범인이 나라고요? ❄️](https://www.instagram.com/reel/DetX442xkFz/) |
+| 31.5x | @ai.trend.kr | REELS | 10-20 | 2,863,770 | [눈 뭉치 던진 범인이 나라고요? ❄️](https://www.instagram.com/reel/DetX442xkFz/) |
 | 17.2x | @ai.asap.kr | FEED | 10-18 | 1,394 | [Filee는 Ctrl을 누른 채 파일을 끌면 커서 옆에 변환할 형식이 동그랗게 뜨고, 원하는 형식에 놓으면 바로 바꿔 주는 변환기입니다. 이미지](https://www.instagram.com/p/DeoW-TQj9F5/) |
-| 11.7x | @ai.trend.kr | REELS | 10-23 | 1,062,877 | [식이 시작도 안 했는데 하객석이 뒤집어졌어요 🎉](https://www.instagram.com/reel/De0VCSbPO_M/) |
+| 11.7x | @ai.trend.kr | REELS | 10-23 | 1,062,903 | [식이 시작도 안 했는데 하객석이 뒤집어졌어요 🎉](https://www.instagram.com/reel/De0VCSbPO_M/) |
 | 10.6x | @ai.trend.kr | FEED | 10-27 | 16,174 | [올해가 가기 전에, GPT랑 새해 계획을 세워봤어요. 🗓️](https://www.instagram.com/p/De_YpGSkS7D/) |
-| 7.4x | @ai.trend.kr | REELS | 11-04 | 669,977 | [AI로 오늘도 감동을 받네요 🥹](https://www.instagram.com/reel/DfUlNHxPiTT/) |
+| 7.4x | @ai.trend.kr | REELS | 11-04 | 670,096 | [AI로 오늘도 감동을 받네요 🥹](https://www.instagram.com/reel/DfUlNHxPiTT/) |
 | 7.2x | @ai.trend.kr | FEED | 10-28 | 10,887 | [사진 한 장으로 다섯 시대를 살아 봤어요 📷](https://www.instagram.com/p/DfB9iInE-54/) |
 | 6.8x | @ai.asap.kr | FEED | 10-28 | 553 | [Oh-My-Hermes는 Nous Research의 오픈소스 에이전트 Hermes Agent에 쓸 세팅을 묶은 올인원 패키지입니다. 설치하고 o](https://www.instagram.com/p/DfA7xqjE1nL/) |
 | 6.7x | @ai.asap.kr | FEED | 10-17 | 546 | [Happy는 Claude·Codex·Grok을 한 앱에서 골라 쓰게 해 주는 MIT 오픈소스입니다. 새 구독이 아니라 이미 내고 있는 각 회사 ](https://www.instagram.com/p/Del2nkwj2Xu/) |
@@ -57,8 +57,8 @@
 | 0.0x | @ai.asap.kr | 앤트로픽이 AI 에이전트가 전문가의 판단에 미치는 영향을 연구했습니다. 분석가 50명이 Claude Opus 4.8 기반 Claude Code로 |
 | 0.0x | @ai.asap.kr | 앤트로픽이 10월 26일 미국 증권거래위원회에 상장 신청서(S-1)를 공개하고, 나스닥에 티커 ANT로 상장을 신청했습니다. |
 | 0.0x | @ai.trend.kr | ‘전과자’에서 꺼낸 아이디어가 진짜 캠퍼스가 됐어요. 🎓 |
-| 0.0x | @ai.trend.kr | 이 밴드 뭐야? AI로 탄생한 신인 밴드 🎸 |
 | 0.0x | @ai.trend.kr | AI 판이 하루아침에 흔들렸어요 🚨 |
+| 0.0x | @ai.trend.kr | 이 밴드 뭐야? AI로 탄생한 신인 밴드 🎸 |
 
 ## 언제 올린 게시물이 잘 됐나 (한국 시간, 평소 대비 배수 중간값 · 게시물 수)
 
