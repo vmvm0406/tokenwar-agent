@@ -23,7 +23,7 @@ claude.ai 대화에서 하던 작업을 이 컴퓨터의 Claude Code로 옮겼�
 4. **따라 하기 형식 샘플** — `samples/s12-howto-ai-mode`(카드뉴스 7장), `samples/s13-howto-ai-mode-reel`(카드형 모션 릴스, 장면 6개). 구글 AI 모드에 실제로 넣은 질문과 답 화면(11월 15일). 형식·검사·절차는 이미 main에 들어감(TEMPLATES "게시물 형식", checks.py `format`, LOCAL.md 1장). 운영자가 모양을 보고 고칠 점을 말하면 반영. 릴스 mp4는 이 컴퓨터에 ffmpeg가 없어 아직 안 만들어 봄 → ffmpeg 설치(`winget install Gyan.FFmpeg`) 후 `py -3.12 agent/render.py samples/s13-howto-ai-mode-reel`로 확인.
 
 ## 확인할 것
-- **게시 칸 자동 배정 (2026-11-15 도입):** `config.json` `slots`, `agent/slots.py`, `scripts/make-posts.ps1`, LOCAL.md 5장. 매일 작업 하루 몫 `daily_target`은 **릴스 2, 카드뉴스 1** (2026-11-15 운영자 확정). 바꿀 때는 config만 고친다. 11월 16일 아침 첫 실행에서 `slots.py need`가 PR #2·#3을 오늘 몫으로 세어 카드뉴스는 만들지 않고 릴스 1개만 만드는지 `tokenwar-daily\logs`로 확인.
+- **게시 칸 자동 배정 (2026-11-15 도입):** `config.json` `slots`, `agent/slots.py`, `scripts/make-posts.ps1`, LOCAL.md 5장. 매일 작업 하루 몫 `daily_target`은 **릴스 4, 카드뉴스 3 (하루 칸 전부)** (2026-11-16 운영자 결정 "양으로 승부", 전에는 릴스 2·카드 1). 하루 7개를 만들어 매일 작업 시간이 길어지고(한 번에 다 못 채우면 9:30·12:30·15:30 실행이 이어서 채움) Claude 사용량·영상 받기·Cloudflare 그림 사용도 그만큼 는다. 사용량 한도에 걸리거나 품질이 떨어지면 config만 되돌린다. 바꿀 때는 config만 고친다. 11월 16일 아침 첫 실행에서 `slots.py need`가 PR #2·#3을 오늘 몫으로 세어 카드뉴스는 만들지 않고 릴스 1개만 만드는지 `tokenwar-daily\logs`로 확인.
 - PR #2(카드뉴스, 11/16 10:13)·#3(릴스, 11/16 19:10)은 새 규칙으로 보완함. 운영자 Merge 대기.
 - PR #4: 릴스 3개(11/16 12:43 나델라 · 15:43 OpenAI 리눅스 · 20:43 딥마인드 알파지놈). 합치면 11/16 칸이 다 차서 그날 매일 작업은 쉰다. 운영자 Merge 대기.
 - 릴스 자막은 원본에 박힌 글자(이름 자막 등)를 자동으로 피한다(video.py). 원본 글자를 띠로 가리는 방식은 운영자가 싫어함. 기사 화면·글자 화면이 내내 나오는 영상(드와케시 영상 에세이 등)은 자막이 겹쳐서 고르지 않는다.
