@@ -48,7 +48,19 @@
     "accounts": [
       "ai.talk.kr",
       "ai.trend.kr",
-      "ai.asap.kr"
+      "ai.asap.kr",
+      "choi.openai",
+      "ex.treme.ai",
+      "gpters.official",
+      "jocoding",
+      "builderjosh",
+      "ai.daily.kr",
+      "aitimes_kr",
+      "ai.korea.news",
+      "ai_tool_kr",
+      "daily.ai.kr",
+      "ai.insight.kr",
+      "ainews.kr"
     ],
     "note": "한국 AI 정보 계정 중 비즈니스/크리에이터 계정만 된다. 에이전트가 리서치 중 반응 좋은 계정을 찾으면 여기에 추가한다 (최대 15개)."
   },

@@ -34,22 +34,30 @@ def get(path, **params):
     return body
 
 
-def fetch_account(username):
-    q = (f"business_discovery.username({username})"
-         f"{{username,followers_count,media_count,media.limit(50){{{FIELDS}}}}}")
-    bd = get(ME, fields=q)["business_discovery"]
+def fetch_account(username, pages=4):
+    """최근 게시물을 최대 pages×50개까지 가져온다 (표본을 크게)."""
     now = datetime.now(timezone.utc).isoformat()
     path = DATA / "benchmarks" / f"{username}.json"
     old = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"media": {}}
     media = old.get("media", {})
-    for m in bd.get("media", {}).get("data", []):
-        cap = (m.get("caption") or "").strip()
-        media[m["id"]] = {
-            "timestamp": m.get("timestamp"), "type": m.get("media_product_type") or m.get("media_type"),
-            "views": m.get("view_count"), "likes": m.get("like_count"), "comments": m.get("comments_count"),
-            "caption": cap[:150], "permalink": m.get("permalink"), "fetched_at": now,
-        }
-    out = {"username": username, "followers": bd.get("followers_count"), "media_count": bd.get("media_count"),
+    after, info = None, {}
+    for _ in range(pages):
+        edge = f"media.after({after}).limit(50)" if after else "media.limit(50)"
+        q = f"business_discovery.username({username}){{username,followers_count,media_count,{edge}{{{FIELDS}}}}}"
+        bd = get(ME, fields=q)["business_discovery"]
+        info = info or bd
+        page = bd.get("media", {})
+        for m in page.get("data", []):
+            cap = (m.get("caption") or "").strip()
+            media[m["id"]] = {
+                "timestamp": m.get("timestamp"), "type": m.get("media_product_type") or m.get("media_type"),
+                "views": m.get("view_count"), "likes": m.get("like_count"), "comments": m.get("comments_count"),
+                "caption": cap[:150], "permalink": m.get("permalink"), "fetched_at": now,
+            }
+        after = page.get("paging", {}).get("cursors", {}).get("after")
+        if not after or not page.get("paging", {}).get("next"):
+            break
+    out = {"username": username, "followers": info.get("followers_count"), "media_count": info.get("media_count"),
            "updated_at": now, "media": media}
     path.write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
     return out
