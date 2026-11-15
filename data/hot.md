@@ -1,4 +1,4 @@
-# 지금 관심 주제 (2026-11-15 21:24 기준)
+# 지금 관심 주제 (2026-11-15 21:29 기준)
 
 주제를 고를 때 가장 먼저 본다 (STYLE_GUIDE 3장, 6-1장 '지금 관심도'). 여러 곳에 동시에 뜬 주제가 가장 뜨겁다.
 
@@ -13,7 +13,7 @@
 - 3.0x · @ai.trend.kr REELS — 이게 다 AI로 만든 일드라고요? 🎬 (https://www.instagram.com/reel/DfuDKfvOMRu/)
 
 ## 해커뉴스 첫 화면 AI 글
-- 858점 · 댓글 332 — Lovable apps expose passport details and more than 200K private messages (https://www.crissyfield.de/research/lovable-en/)
+- 859점 · 댓글 332 — Lovable apps expose passport details and more than 200K private messages (https://www.crissyfield.de/research/lovable-en/)
 - 241점 · 댓글 23 — Show HN: DeepSeek V3 in ~200 lines of pure Jax (https://github.com/Vaibhaav-Tiwari/deepseek-v3-jax)
 - 215점 · 댓글 113 — Generative AI uses more energy on non-English text (https://news.umich.edu/generative-ai-uses-more-energy-on-non-english-text/)
 
