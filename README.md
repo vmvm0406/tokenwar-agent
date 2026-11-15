@@ -41,6 +41,12 @@
 4. **Actions 켜기:** 저장소 Actions 탭에서 워크플로 실행을 허용한다.
 5. **시험 게시:** Actions › 인스타 게시 › Run workflow. 올릴 게 없으면 "올릴 시각이 된 게시물 없음"이 나오면 정상.
 
+## 회원님 컴퓨터에서 돌리기 (Claude Code)
+
+매일 작업은 윈도우 컴퓨터의 Claude Code가 한다 (`LOCAL.md`). 컴퓨터를 켜서 로그인하면 3분 뒤, 그리고 9:30·12:30·15:30에 자동으로 확인하고, 오늘 카드뉴스와 릴스가 없으면 만든다.
+
+처음 한 번: 관리자 권한 PowerShell에서 `scripts/setup-local.ps1`을 실행하고, 안내대로 `claude`와 `gh auth login`으로 로그인한다.
+
 ## 매일 쓰는 법
 
 - **검토 모드 (`config.json`의 `"mode": "review"`)**: 매일 아침 Pull Request가 열린다. 휴대폰 GitHub 앱에서 이미지와 캡션을 보고 **Merge**를 누르면 게시 시각에 올라간다. 마음에 안 들면 PR에 댓글로 고칠 점을 남기거나 닫는다.
