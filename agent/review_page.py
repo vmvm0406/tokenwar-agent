@@ -191,7 +191,7 @@ def render_post(pr, item):
 CSS = """
 :root{--bg:#0A0B0A;--fg:#F2F5F3;--dim:#8A928C;--line:#262A27;--g:#00FF66}
 *{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--fg)}
-body{font-family:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif;line-height:1.6;font-size:15px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif;line-height:1.6;font-size:15px;word-break:keep-all}
 main{max-width:560px;margin:0 auto;padding:28px 16px 64px}
 h1,h2,h3{font-family:'Black Han Sans',sans-serif;font-weight:400;margin:0}
 h1{color:var(--g);font-size:34px;line-height:1.1}
