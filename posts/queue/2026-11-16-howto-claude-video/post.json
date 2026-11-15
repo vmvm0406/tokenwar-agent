@@ -15,8 +15,8 @@
     "avoid_burned": false,
     "avoid_edge_check": false
   },
-  "title": "애프터이펙트 없이\n클로드가 영상 만들었다",
-  "highlight": "영상",
+  "title": "클로드가 영상\n못 만든다고?",
+  "highlight": "못 만든다고?",
   "title_en": "Claude painted this film in code",
   "subtitles": [
     {
@@ -55,8 +55,8 @@
     }
   ],
   "thumb": {
-    "title": "말 한 줄 했더니\n수묵화 영상 나왔다",
-    "highlight": "수묵화 영상",
+    "title": "클로드가 영상\n못 만든다고?",
+    "highlight": "못 만든다고?",
     "image": {
       "type": "image",
       "src": "img/thumb.jpg",

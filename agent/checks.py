@@ -482,7 +482,7 @@ def check_caption_hooks(caption, dm_keyword=None):
     lines = [l.strip() for l in caption.split("영상:")[0].splitlines() if l.strip()]
     if lines:
         first = lines[0]
-        if "?" in first:
+        if any(is_real_question(q) for q in re.findall(r"[^?.!]*\?", first)):  # 반박형("못 만든다고요?")은 질문으로 보지 않음
             warnings.append(f"캡션 첫 줄이 질문임 → 읽는 사람이 얻는 것으로 시작할 것: '{first[:40]}'")
         elif NEWSY_RE.search(first) and not GAIN_RE.search(first):
             warnings.append(f"캡션 첫 줄이 소식 전달임 → 얻는 것을 먼저 (예: '~하는 법', '~해 보세요'): '{first[:40]}'")
@@ -515,7 +515,7 @@ def check_hashtags(tags):
         warnings.append(f"해시태그에 {TAG_BRAND} 없음")
     return errors, warnings
     first = lines[0]
-    if "?" in first:
+    if any(is_real_question(q) for q in re.findall(r"[^?.!]*\?", first)):  # 반박형("못 만든다고요?")은 질문으로 보지 않음
         warnings.append(f"캡션 첫 줄이 질문임 → 읽는 사람이 얻는 것으로 시작할 것: '{first[:40]}'")
     elif NEWSY_RE.search(first) and not GAIN_RE.search(first):
         warnings.append(f"캡션 첫 줄이 소식 전달임 → 얻는 것을 먼저 (예: '~하는 법', '~해 보세요'): '{first[:40]}'")
@@ -615,7 +615,7 @@ def check_license(post):
     화풍·스킬·글꼴·음악·사진·코드 어느 것이든 license/rights_note/credit/sources에 NC가 보이면 오류. 캡션 출처 줄도 본다."""
     errs = []
     texts = list(_license_texts({k: post.get(k) for k in ("license", "rights_note", "credit", "sources", "slides", "thumb", "video", "assets")}))
-    texts += [("caption", l) for l in (post.get("caption") or "").splitlines() if re.match(r"\s*(출처|사진|화면|음악|글꼴|화풍|이미지)\s*[:：]", l)]
+    texts += [("caption", l) for l in (post.get("caption") or "").splitlines() if re.match(r"\s*(\S{1,2}\s*)?(출처|사진|화면|음악|글꼴|화풍|이미지)\s*[:：]", l)]
     for where, t in texts:
         m = NC_RE.search(t)
         if m:
