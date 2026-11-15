@@ -15,9 +15,10 @@
   "source_url": "https://www.youtube.com/watch?v=uND6iY2qp_c&t=1086",
   "video": {
     "src": "clips/source.mp4",
-    "start": 1.0,
-    "end": 63.35,
-    "source_duration": 2387
+    "start": 1.05,
+    "end": 63.41,
+    "source_duration": 2387,
+    "avoid_edge_check": false
   },
   "title": "5년 걸린 아기의 진단,\nAI가 풀었습니다",
   "highlight": "AI가 풀었습니다",
@@ -90,8 +91,8 @@
     }
   ],
   "thumb": {
-    "title": "아기 뇌전증 원인,\nAI가 찾았다",
-    "highlight": "AI가 찾았다",
+    "title": "5년 못 찾은 원인,\nAI가 찾아냈다",
+    "highlight": "AI가 찾아냈다",
     "person": {
       "name": "지가 압섹",
       "desc": "구글 딥마인드 연구원"
