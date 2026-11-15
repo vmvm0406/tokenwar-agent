@@ -16,7 +16,7 @@
   "video": {
     "src": "clips/source.mp4",
     "start": 0.9,
-    "end": 70.1,
+    "end": 70.45,
     "source_duration": 1627
   },
   "title": "힌턴 \"AI들이 짜고\n해킹까지 시도했다\"",
@@ -98,7 +98,7 @@
     },
     {
       "start": 65.9,
-      "end": 70.0,
+      "end": 70.4,
       "text": "에이전트들이 빠져나가\n일을 벌일 수 있다니, 무섭죠",
       "highlight": "무섭죠"
     }
