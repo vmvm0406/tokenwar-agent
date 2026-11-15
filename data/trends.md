@@ -1,18 +1,27 @@
-# 인스타 반응 분석 (2026-11-15 21:24 기준)
+# 인스타 반응 분석 (2026-11-15 23:43 기준)
 
 에이전트는 주제를 고를 때 이 파일을 먼저 읽는다 (STYLE_GUIDE 3장, 6-1장 '인스타 반응').
 배수 = 그 계정의 최근 60일 같은 유형(릴스/피드) 중간값 대비. 2배 이상이면 '먹힌 주제'.
 
 ## @ai.talk.kr (팔로워 1877)
 - REELS 중간값 449조회, 게시물 28개
+  - 3,352조회 7.5x: [AI가 보이는 사고과정과 실제 추론이 다를 수 있다면, 인간은 무엇으로 AI를 검증할 수 있을까요?](https://www.instagram.com/reel/Dd8BPz-BhvC/)
+  - 3,008조회 6.7x: [AI가 발전하면 내 노트북은 더 좋아질까, 더 비싸질까?](https://www.instagram.com/reel/De0PR-Qj5n2/)
+  - 2,775조회 6.2x: [2027년, AI 거품은 붕괴한다?](https://www.instagram.com/reel/Dd0-1xPBNso/)
 - FEED 중간값 6반응, 게시물 1개
 
 ## @ai.trend.kr (팔로워 272616)
 - REELS 중간값 97,825조회, 게시물 36개
+  - 2,864,637조회 29.3x: [눈 뭉치 던진 범인이 나라고요? ❄️](https://www.instagram.com/reel/DetX442xkFz/)
+  - 2,070,603조회 21.2x: [포장해 달라던 선물이 내 거였다고요? 🎁](https://www.instagram.com/reel/DeWZecova75/)
+  - 1,063,842조회 10.9x: [식이 시작도 안 했는데 하객석이 뒤집어졌어요 🎉](https://www.instagram.com/reel/De0VCSbPO_M/)
 - FEED 중간값 1,496반응, 게시물 115개
 
 ## @ai.asap.kr (팔로워 9645)
 - REELS 중간값 8,240조회, 게시물 4개
+  - 13,424조회 1.6x: [AI가 일자리를 없앨까 묻는 래리 핑크에게 팔란티어 CEO 알렉스 카프가 답했습니다. 먼저 팔기 어려워지는 건 엘리트 학교 철학 전공이고, 고등](https://www.instagram.com/reel/DfwH1hxpWaQ/)
+  - 9,541조회 1.2x: [AI가 소프트웨어를 끝낸다? '정반대' (젠슨 황, 엔비디아)](https://www.instagram.com/reel/DfCV6uPpezi/)
+  - 6,939조회 0.8x: [🦆 에이전트로 에이전트를 만든다 (젠슨 황, 엔비디아)](https://www.instagram.com/reel/De8rXgTJKcV/)
 - FEED 중간값 81반응, 게시물 132개
 
 ## @choi.openai (팔로워 6237)

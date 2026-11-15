@@ -7,7 +7,8 @@
 Business Discovery는 'Instagram API with Facebook Login'(graph.facebook.com)에서만 된다.
 환경 변수: IG_ACCESS_TOKEN(페이지 토큰), IG_USER_ID(우리 인스타 비즈니스 계정 ID), IG_API_VERSION
 GitHub Actions(benchmarks.yml)가 매일 아침 실행한다.
-저장된 데이터로 trends.md만 다시 쓰기: python agent/benchmarks.py --offline
+저장된 데이터로 trends.md·hot_topics.md 다시 쓰기: python agent/benchmarks.py --offline
+잘 터진 주제 묶음(data/hot_topics.md)만: python agent/benchmarks.py --hot-topics-only
 """
 import json
 import os
@@ -208,6 +209,9 @@ def write_trends(accounts, own):
             med = statistics.median(score(m) for m in ms) or 1
             unit = "조회" if kind == "REELS" else "반응"
             lines.append(f"- {kind} 중간값 {med:,.0f}{unit}, 게시물 {len(ms)}개")
+            if kind == "REELS":  # 계정별 조회수 상위 릴스 첫 줄 (썸네일·제목 말투 참고, STYLE_GUIDE 3-3)
+                for m in sorted(ms, key=lambda m: -score(m))[:3]:
+                    lines.append(f"  - {score(m):,}조회 {score(m) / med:.1f}x: [{first_line(m['caption'])}]({m['permalink']})")
             for m in ms:
                 ts = datetime.fromisoformat(m["timestamp"].replace("+0000", "+00:00"))
                 if ts > now - timedelta(days=30):
@@ -238,18 +242,148 @@ def write_trends(accounts, own):
     (DATA / "trends.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def offline():
-    """저장된 data/benchmarks/*.json, data/performance.json으로 trends.md만 다시 쓴다 (API 호출 없음)."""
+# 잘 터진 주제 묶음 (data/hot_topics.md). 캡션 키워드 규칙으로 나눈다 (AI 안 씀, API 호출 없음).
+# 캡션 첫 줄에 걸린 묶음(최대 2개, 목록 순서 우선). 첫 줄에 없으면 앞부분 300자에서 가장 앞 순서 묶음 1개.
+# 분류 안 된 상위 게시물이 hot_topics.md 끝에 나오면 여기 키워드를 보강한다.
+HOT_TOPICS = [
+    ("AI 영상·영화 만들기", "창작",
+     r"ai\s?(로|가)?\s?만든.{0,20}(영상|영화|단편|드라마|애니|작품)|ai (영상|영화|단편|드라마|애니)|"
+     r"영상 스타일|단편|예고편|일드|애니메이션|모션그래픽|뮤직비디오|ugc|sora|소라 ?2|veo|kling|클링 ?ai|"
+     r"영상을? (만들|뽑)|영상 (만드는|제작)|식전 영상|\d+초짜리|(?<!\d)[1-9]편"),
+    ("AI 음악·목소리", "창작", r"노래|가사|음악|작곡|판소리|ai 목소리|suno|수노|커버곡|신곡"),
+    ("AI 게임 만들기", "창작", r"게임(을|도)? ?(만들|만든|개발)|게임.{0,20}만든 사람|유니티|unity|언리얼|unreal|"
+     r"게임 엔진|(만든|만들어 준) 게임|3d 게임|로블록스|roblox"),
+    ("AI로 광고·디자인 만들기", "창작", r"광고 (이미지|시안|소재|\d+장|한 세트|컷)|광고가? .{0,6}\d+장|"
+     r"광고 올릴|카피(라이터| 공식|를)|시안|상세페이지|앱 화면을 그리"),
+    ("챗GPT·제미나이 사진·그림 변환", "창작", r"사진|그림|배경화면|이미지 ?(생성|만들)|셀카|프사|화보|레고|ootd|"
+     r"그림책|스케치|나노\s?바나나|nano\s?banana|/droneview|/goldenhour|일러스트"),
+    ("MCP·스킬·클로드 코드 자동화", "연결 도구", r"mcp|ai가 짠 코드|바이브 코딩|스킬|skill|클로드 코드|claude code|코덱스|codex|"
+     r"코딩 에이전트|ai 에이전트|자동화|오픈소스|깃허브|github|플러그인"),
+    ("유명인·CEO 발언", "인용", r"젠슨 ?황|올트먼|머스크|알렉스 카프|저커버그|순다르|피차이|아모데이|힌턴|"
+     r"드워?케시|dwarkesh|나델라|빌 게이츠|래리 핑크|에드 지트론|팟캐스트|인터뷰|청문회|기조연설|대담|ceo"),
+    ("돈·일자리·교육", "생활", r"일자리|직업|직장|연봉|월급|돈을? 버|버블|거품|적자|흑자|비용|상장|주가|해고|"
+     r"취업|가격|비싸|구독료|실업|배워야|공부|교육|학교|수능"),
+    ("AI 안전·논란", "논란", r"부정행위|편법|거짓말|안전성|위험|규제|저작권|논란|해킹|유출|딥페이크|사기|절박"),
+    ("미중 경쟁·반도체·데이터센터", "산업", r"중국|패권|반도체|엔비디아|데이터센터|gpu|하이닉스|tsmc|"
+     r"메모리 (가격|반도체|칩)|전력|물이 사용"),
+    ("챗GPT 질문·대화 활용법", "따라 하기", r"연애|이상형|어떤 사람이었|새해 계획|내 정보|개인정보|물어봤|"
+     r"대화 기록|질문 (세|네|\d)|고쳐줘|대충 답|명령어만|"
+     r"이력서|자소서|ai로 쓴 글|맞다고|잘했다고만"),
+    ("주간 요약", "묶음", r"이번 주|\d+주 ?차|주간"),
+    ("대회·무료 지원", "생활", r"대회|해커톤|상금|무료로 (줍|준|풀)|무료 제공|과학자에게|연구자"),
+    ("생활 앱·무료 도구", "생활", r"앱입니다|무료 앱|변환기|다운로드 앱|오픈소스 앱|크롬 확장|창 미리보기|유틸리티"),
+    ("새 모델·기능 출시", "소식", r"공개했|출시|내놨|선보였|새 모델|gpt-?\d|적용하면서|발표했"),
+]
+HOT_TOPIC_RES = [(n, kind, re.compile(p, re.I)) for n, kind, p in HOT_TOPICS]
+
+
+def classify_topics(cap, limit=2, body_chars=300):
+    """캡션 → 주제 묶음 이름 목록 (해시태그는 뺀다). 본문 곳곳의 낱말에 끌려가지 않게 첫 줄을 먼저 본다."""
+    text = TAG_RE.sub(" ", cap or "").strip()
+    head = text.split("\n")[0]
+    body = text[:body_chars]
+    first = [n for n, _, rx in HOT_TOPIC_RES if rx.search(head)]
+    if first:
+        return first[:limit]
+    return [n for n, _, rx in HOT_TOPIC_RES if rx.search(body)][:1]
+
+
+def hot_topic_rows(accounts, days=180, min_posts=5):
+    """계정·유형(릴스/피드)별 중간값 대비 배수. [(배수, 계정, 유형, 게시물)] (팔로워 1천 미만·표본 작은 계정 제외)."""
+    now = datetime.now(timezone.utc)
+    rows = []
+    for acc in accounts:
+        if (acc.get("followers") or 0) < 1000:
+            continue
+        recent = [m for m in acc.get("media", {}).values() if m.get("timestamp") and
+                  datetime.fromisoformat(m["timestamp"].replace("+0000", "+00:00")) > now - timedelta(days=days)]
+        for kind in ["REELS", "FEED"]:
+            ms = [m for m in recent if (m.get("type") or "").upper().startswith(kind[:4]) and score(m)]
+            if len(ms) < min_posts:
+                continue
+            med = statistics.median(score(m) for m in ms) or 1
+            rows += [(score(m) / med, acc["username"], kind, m) for m in ms]
+    return rows
+
+
+def write_hot_topics(accounts, days=180, cap=30):
+    """벤치마크 계정의 잘 터진 게시물을 주제 묶음으로 → data/hot_topics.md (저장된 데이터만, API 호출 없음).
+
+    배수 = 그 계정 같은 유형 최근 days일 중간값 대비 (릴스 조회수, 카드는 좋아요+3×댓글).
+    묶음 순위 = 묶음 안 상위 3개 배수(cap배로 자름, 없으면 1)의 기하평균. 작은 계정 한 게시물이 판을 뒤집지 않게.
+    """
+    rows = hot_topic_rows(accounts, days=days)
+    groups = {n: [] for n, _, _ in HOT_TOPICS}
+    unclassified = []
+    for r in rows:
+        names = classify_topics(r[3].get("caption"))
+        for n in names:
+            groups[n].append(r)
+        if not names:
+            unclassified.append(r)
+    kinds = {n: k for n, k, _ in HOT_TOPICS}
+    ranked = []
+    for n, rs in groups.items():
+        if not rs:
+            continue
+        rs.sort(key=lambda r: -r[0])
+        top = [min(r[0], cap) for r in rs[:3]] + [1.0] * max(0, 3 - len(rs))
+        rank = (top[0] * top[1] * top[2]) ** (1 / 3)
+        ranked.append((rank, n, rs))
+    ranked.sort(key=lambda x: -x[0])
+    label = {"REELS": "릴스", "FEED": "카드"}
+    fl = lambda m: first_line(m.get("caption")).replace("|", "/").strip() or "(캡션 없음)"
+    total = len(rows)
+    lines = [f"# 잘 터진 주제 ({datetime.now(KST):%Y-%m-%d %H:%M} 기준)", "",
+             "주제를 고를 때 이 표의 위쪽 주제와 **같거나 비슷한 것**을 먼저 고른다 (STYLE_GUIDE 3장). "
+             "PR 본문에 \"참고한 잘 터진 주제: …\" 한 줄을 적는다.", "",
+             f"- 자료: `data/benchmarks/*.json`에 저장된 벤치마크 계정 최근 {days}일 게시물 {total}개 (팔로워 1천 이상, "
+             "API 새로 부르지 않음). `agent/benchmarks.py`가 매일 갱신, 단독: `py -3.12 agent/benchmarks.py --hot-topics-only`.",
+             "- 배수 = 그 계정 같은 유형(릴스/카드) 중간값 대비. 릴스는 조회수, 카드는 좋아요+3×댓글.",
+             f"- 순위 = 묶음 안 상위 3개 배수({cap}배로 자름)의 기하평균. 묶음은 캡션 키워드 규칙(`HOT_TOPICS`)이라 대략이다. "
+             "한 게시물이 두 묶음에 들 수 있다.", "",
+             "| 순위 | 주제 | 대표 게시물 (첫 줄) | 반응 배수 | 형식 | 묶음 크기 (2배 이상) |",
+             "|---|---|---|---|---|---|"]
+    for i, (rank, n, rs) in enumerate(ranked, 1):
+        b = rs[0]
+        hits = sum(1 for r in rs if r[0] >= 2)
+        lines.append(f"| {i} | {n} ({kinds[n]}) | @{b[1]}: [{fl(b[3])}]({b[3].get('permalink')}) | {b[0]:.1f}x | "
+                     f"{label[b[2]]} | {len(rs)}개 ({hits}) |")
+    lines += ["", "## 주제별 상위 3개", ""]
+    for rank, n, rs in ranked:
+        reels = sum(1 for r in rs if r[2] == "REELS")
+        lines.append(f"### {n} — 순위 점수 {rank:.1f}, 릴스 {reels}·카드 {len(rs) - reels}, "
+                     f"배수 중간값 {statistics.median(r[0] for r in rs):.2f}x")
+        for r in rs[:3]:
+            lines.append(f"- {r[0]:.1f}x {label[r[2]]} @{r[1]}: [{fl(r[3])}]({r[3].get('permalink')})")
+        lines.append("")
+    top_un = sorted((r for r in unclassified if r[0] >= 2), key=lambda r: -r[0])[:10]
+    lines += ["## 분류 안 된 2배 이상 게시물 (키워드 보강 대상)", ""]
+    lines += [f"- {r[0]:.1f}x {label[r[2]]} @{r[1]}: {fl(r[3])}" for r in top_un] or ["- 없음"]
+    (DATA / "hot_topics.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return ranked
+
+
+def load_saved_accounts():
     order = CONFIG.get("benchmarks", {}).get("accounts", [])
     files = sorted((DATA / "benchmarks").glob("*.json"), key=lambda f: order.index(f.stem) if f.stem in order else 99)
-    accounts = [json.loads(f.read_text(encoding="utf-8")) for f in files]
+    return [json.loads(f.read_text(encoding="utf-8")) for f in files]
+
+
+def offline():
+    """저장된 data/benchmarks/*.json, data/performance.json으로 trends.md만 다시 쓴다 (API 호출 없음)."""
+    accounts = load_saved_accounts()
     pf = DATA / "performance.json"
     own = json.loads(pf.read_text(encoding="utf-8")) if pf.exists() else {}
     write_trends(accounts, own)
-    print("data/trends.md 작성 (저장된 데이터)")
+    write_hot_topics(accounts)
+    print("data/trends.md, data/hot_topics.md 작성 (저장된 데이터)")
 
 
 def main():
+    if "--hot-topics-only" in sys.argv:
+        write_hot_topics(load_saved_accounts())
+        return print("data/hot_topics.md 작성 (저장된 데이터, API 호출 없음)")
     if "--offline" in sys.argv:
         return offline()
     if not TOKEN or not ME:
@@ -263,13 +397,20 @@ def main():
             print(f"@{u}: 게시물 {len(accounts[-1]['media'])}개")
         except Exception as e:
             print(f"@{u}: 실패 ({e}) — 비즈니스/크리에이터 계정이 아니거나 이름이 바뀌었을 수 있음")
+            saved = DATA / "benchmarks" / f"{u}.json"
+            if saved.exists():  # 토큰이 끊겨도 trends.md가 비지 않게 지난번 데이터로
+                accounts.append(json.loads(saved.read_text(encoding="utf-8")))
+                print(f"@{u}: 저장된 데이터로 대신 ({accounts[-1].get('updated_at', '')[:10]})")
     own = {}
     try:
         own = fetch_own()
     except Exception as e:
         print("우리 계정 성과 가져오기 실패:", e)
+        pf = DATA / "performance.json"
+        own = json.loads(pf.read_text(encoding="utf-8")) if pf.exists() else {}
     write_trends(accounts, own)
-    print("data/trends.md 작성")
+    write_hot_topics(accounts)
+    print("data/trends.md, data/hot_topics.md 작성")
 
 
 if __name__ == "__main__":
