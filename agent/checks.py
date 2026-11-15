@@ -23,6 +23,38 @@ BANNED = ["충격", "경악", "소름", "실화냐", "미쳤다", "역대급", "
 # 번역투·과장 의심 (경고만)
 AWKWARD = ["에 대한", "하는 것이다", "되어지", "에 있어서", "을 통해서", "100%", "완벽"]
 
+# AI가 쓴 티가 나는 글투 (STYLE_GUIDE 4-1장). 오류로 막는다.
+AI_PHRASES = [
+    "는 시대", "시대가 열", "시대입니다", "새로운 지평", "게임 체인저", "판도를 바꾸", "판도가 바뀌",
+    "한 단계 진화", "그야말로", "무려", "어디까지", "주목된다", "주목할 만", "귀추가", "라는 점에서",
+    "가능성을 열", "혁신적", "차세대", "본격적인", "과연", "생각하시나요", "어떻게 생각", "여러분의 생각",
+    "놀라운 점은", "흥미로운 점은", "중요한 건", "핵심은 바로", "바로 이것", "이제는 ", "새로운 시대",
+]
+# 서술어 없이 조사·부사로 툭 끊기는 문장 ("편집도 한 모델로", "빠른 동작까지 자연스럽게")
+DANGLING_RE = re.compile(r"(으로|[가-힣]로|까지|에게|에서|부터|처럼|보다|만큼|[가-힣]게|[가-힣]히)$")
+
+
+def ai_tone(text, where, translation=False):
+    """AI 글투 검사. (errors, warnings)"""
+    errs, warns = [], []
+    t = str(text)
+    for w in AI_PHRASES:
+        if w in t:
+            errs.append(f"{where}: AI 글투 '{w.strip()}' → 구체적인 사실로 바꿀 것")
+    if "—" in t or "–" in t:
+        errs.append(f"{where}: 대시(—) 쓰지 않음")
+    if re.search(r"[가-힣]+도, [가-힣]+도, [가-힣]+도", t):
+        errs.append(f"{where}: 'A도, B도, C도' 나열은 AI 글투")
+    if not translation:
+        # 한 글 안의 줄바꿈은 문장이 이어지는 것으로 본다. 문장 끝(. ! ?)과 빈 줄에서 나눈다.
+        for line in re.split(r"\n\s*\n|[.!?]", t.replace("\r", "")):
+            line = line.replace("\n", " ")
+            w = line.strip().strip("\"'“”‘’)( ")
+            if len(w) >= 2 and DANGLING_RE.search(w):
+                errs.append(f"{where}: 문장이 '{w[-6:]}'로 끊김 → 서술어까지 쓸 것 (예: '~로 만듭니다', '~할 수 있습니다')")
+    return errs, warns
+
+
 EMOJI_RE = re.compile(
     "[\U0001F300-\U0001FAFF\U00002600-\U000027BF\U0001F000-\U0001F2FF\U0001F900-\U0001F9FF]"
 )
@@ -137,6 +169,15 @@ def check_video(post):
     for w in BANNED:
         if w in joined or w in post["caption"]:
             errors.append(f"금지 표현: '{w}'")
+    # 번역 자막(발언)은 말투가 자유롭다. 우리 설명 자막·제목·캡션만 끊김 검사
+    for i, s in enumerate(post.get("subtitles", []), 1):
+        e, _ = ai_tone(s.get("text", ""), f"자막 {i}", translation=bool(s.get("speech", post.get("speech", False))))
+        errors += e
+    for key in ["title"]:
+        errors += ai_tone(post.get(key, ""), "제목")[0]
+    if post.get("thumb"):
+        errors += ai_tone(post["thumb"].get("title", ""), "썸네일 제목")[0]
+    errors += ai_tone(post["caption"].split("영상:")[0], "캡션")[0]
     if EMOJI_RE.search(joined):
         errors.append("영상 위 글자에는 이모지를 쓰지 않음")
     if len(EMOJI_RE.findall(post["caption"])) > lim["caption_emoji_max"]:
@@ -290,6 +331,9 @@ def check_post(post):
             errors.append("인용 영상 외에 표지 포함 해설 장면이 3개 이상 있어야 함")
 
     joined = "\n".join(all_text)
+    for t in all_text:
+        errors += ai_tone(t, "카드")[0]
+    errors += ai_tone(post["caption"].split("출처:")[0], "캡션")[0]
     for w in BANNED:
         if w in joined or w in post["caption"]:
             errors.append(f"금지 표현: '{w}'")
