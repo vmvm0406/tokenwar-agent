@@ -163,7 +163,7 @@ def make_cut(src, keep, punch, work):
         parts.append(f"[0:a]atrim={a:.3f}:{z:.3f},asetpts=PTS-STARTPTS[a{i}]")
     parts.append("".join(f"[v{i}][a{i}]" for i in range(n)) + f"concat=n={n}:v=1:a=1[v][a]")
     out = work / "_cut.mp4"
-    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(src), "-filter_complex", ";".join(parts),
+    subprocess.run(["ffmpeg", "-nostdin", "-y", "-loglevel", "error", "-i", str(src), "-filter_complex", ";".join(parts),
                     "-map", "[v]", "-map", "[a]", "-c:v", "libx264", "-preset", "veryfast", "-crf", "16",
                     "-c:a", "aac", "-b:a", "192k", str(out)], check=True)
     return out
@@ -227,7 +227,7 @@ def make_video_reel(post, folder, cfg):
         inputs += ["-f", "lavfi", "-t", f"{dur:.3f}", "-i", "anullsrc=r=44100:cl=stereo"]
         amap = ["-map", f"{3 + len(subs)}:a"]
     out = folder / "reel.mp4"
-    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", *inputs, "-filter_complex", ";".join(fc),
+    subprocess.run(["ffmpeg", "-nostdin", "-y", "-loglevel", "error", *inputs, "-filter_complex", ";".join(fc),
                     "-map", "[vout]", *amap, "-t", f"{dur:.3f}", "-c:v", "libx264", "-preset", "veryfast",
                     "-crf", "20", "-r", str(FPS), "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart",
                     str(out)], check=True)
@@ -237,7 +237,7 @@ def make_video_reel(post, folder, cfg):
         shutil.rmtree(frames)
     frames.mkdir()
     t = min(1.0, dur / 2)
-    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", f"{t}", "-i", str(out), "-frames:v", "1",
+    subprocess.run(["ffmpeg", "-nostdin", "-y", "-loglevel", "error", "-ss", f"{t}", "-i", str(out), "-frames:v", "1",
                     "-q:v", "2", str(frames / "01.jpg")], check=True)
     shutil.copy(frames / "01.jpg", folder / "cover.jpg")
     shutil.rmtree(work)
