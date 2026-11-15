@@ -23,11 +23,12 @@ import requests
 ROOT = Path(__file__).resolve().parent.parent
 KST = timezone(timedelta(hours=9))
 UA = {"User-Agent": "Mozilla/5.0 (tokenwar-bot; +https://github.com/vmvm0406/tokenwar-agent)"}
-AI_WORDS = re.compile(
-    r"(AI|인공지능|챗GPT|ChatGPT|GPT|오픈AI|OpenAI|클로드|Claude|앤트로픽|Anthropic|제미나이|Gemini|구글 ?AI|"
-    r"엔비디아|NVIDIA|젠슨|올트먼|Altman|머스크|xAI|Grok|그록|딥시크|DeepSeek|LLM|에이전트|agent|로봇|robot|"
-    r"Sora|소라|Veo|미드저니|Midjourney|코파일럿|Copilot|라마|Llama|메타 ?AI|반도체|HBM|하이닉스|딥페이크|deepfake)",
-    re.I)
+LATIN = (r"AI|ChatGPT|GPT(-?\d[\w.]*)?|OpenAI|Claude|Anthropic|Gemini|NVIDIA|Nvidia|Altman|Musk|xAI|Grok|DeepSeek|LLMs?|"
+         r"agents?|agentic|robots?|humanoid|Sora|Veo|Midjourney|Copilot|Llama|HBM|deepfakes?|Codex|Mistral|Qwen|Kimi|Lovable|Cursor|Perplexity|vibe[- ]coding")
+KOREAN = (r"인공지능|챗GPT|챗지피티|오픈AI|클로드|앤트로픽|제미나이|엔비디아|젠슨|올트먼|머스크|그록|딥시크|에이전트|"
+          r"로봇|소라|미드저니|코파일럿|라마|하이닉스|딥페이크|생성형|초지능|AGI|바이브 ?코딩|퍼플렉시티")
+# 영어 단어는 앞뒤가 알파벳이 아닐 때만 (Adelaide, raises 같은 오탐 방지)
+AI_WORDS = re.compile(rf"(?<![A-Za-z])({LATIN})(?![A-Za-z])|{KOREAN}")
 
 
 def google_trends():
