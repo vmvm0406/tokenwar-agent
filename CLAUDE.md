@@ -41,7 +41,7 @@
 | `agent/analyze.py` | 영상 분석: 장면 전환, 말소리 구간, 받아쓰기, 시트 이미지 |
 | `agent/gen_images.py` | 실물 이미지 받기(`url`) → 없으면 AI 그림(`prompt`, Cloudflare) |
 | `agent/build.py` | 그림 + 렌더링 + `.render_hash`(publish가 렌더링 끝난 것만 올리게) |
-| `agent/publish.py` | 인스타 게시 (Graph API, graph.facebook.com, 페이지 토큰). `DRY_RUN=1`로 시험 |
+| `agent/publish.py` | 인스타 게시 (Graph API, graph.facebook.com, 페이지 토큰). 미디어는 `docs/media/`에 복사·push해 GitHub Pages 주소로 넘기고, 게시 뒤 비운다. 게시된 폴더의 `clips/source.mp4`는 지운다. `DRY_RUN=1`로 시험 |
 | `agent/benchmarks.py` / `agent/hot.py` | 인스타 반응 분석 / 지금 관심 주제 |
 | `agent/token_check.py` | 토큰 점검 |
 | `agent/review_page.py` | 검토 페이지: 열린 post/* PR의 릴스 영상·카드 장·캡션을 raw.githubusercontent(PR 커밋 고정)로 보여 주는 `docs/review/index.html` |
@@ -83,7 +83,7 @@
 
 ## 꼭 지킬 것
 
-- **비밀값:** `IG_ACCESS_TOKEN`, `IG_USER_ID`, `CF_ACCOUNT_ID`, `CF_API_TOKEN`은 GitHub Secrets에만 있다. 코드·로그·커밋·채팅에 값을 쓰지 않는다. 저장소는 공개다(jsDelivr로 인스타에 미디어를 넘기기 때문).
+- **비밀값:** `IG_ACCESS_TOKEN`, `IG_USER_ID`, `CF_ACCOUNT_ID`, `CF_API_TOKEN`은 GitHub Secrets에만 있다. 코드·로그·커밋·채팅에 값을 쓰지 않는다. 저장소는 공개다(GitHub Pages `docs/media/`로 인스타에 미디어를 넘기기 때문. jsDelivr는 저장소가 50MB를 넘으면 403이 날 수 있어 쓰지 않는다). `docs/media/`는 publish가 잠깐 쓰는 자리라 손으로 넣지 않는다.
 - **저작권:** 인용 릴스는 1분 언저리(상한 없음, 이야기가 끝나는 곳에서), 원본의 1/3 이하, 우리 번역·설명 자막이 60% 이상, 출처(credit, source_url) 필수. 원본 전체를 저장소에 올리지 않는다. 통신사·언론사 보도사진은 쓰지 않는다. (STYLE_GUIDE 2-1, 6-1)
 - **디자인:** 검정 배경 + 형광 초록 #00FF66, 제목 검은고딕(Black Han Sans), 본문 원티드 산스. AI 디자인 티(알약 태그, 둥근 카드, 이모지, 그라데이션 등) 금지 목록은 STYLE_GUIDE 1-1. 제목 앞 머리말([전황] 등) 쓰지 않는다. 캐릭터 쓰지 않는다.
 - **글:** 카드는 짧게 끊되 조사·부사로 툭 끊지 않는다. 표지 제목은 "~합니다"나 명사로. 인터뷰 자막은 요약하지 말고 문장 단위로 번역. AI 글투 금지 (STYLE_GUIDE 4, 4-1).

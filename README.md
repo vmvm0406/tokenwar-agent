@@ -29,7 +29,7 @@
 
 ## 처음 설정
 
-1. **저장소를 공개(Public)로 만든다.** 인스타 서버가 이미지와 영상을 공개 주소(jsDelivr CDN)로 가져가기 때문이다. 토큰은 Secrets에 있으니 공개돼도 안전하다.
+1. **저장소를 공개(Public)로 만든다.** 인스타 서버가 이미지와 영상을 공개 주소(GitHub Pages, `docs/media/`)로 가져가기 때문이다. 게시 작업이 그때그때 미디어를 `docs/media/`에 올리고, 게시가 끝나면 지운다. Settings › Pages에서 `main` 브랜치 `/docs` 폴더로 켜 둔다. 토큰은 Secrets에 있으니 공개돼도 안전하다.
 2. **인스타 연결 (Facebook 로그인 방식):** 경쟁 계정 조회수 분석(Business Discovery)이 이 방식에서만 되므로 이쪽으로 한다.
    - 인스타 @tokenwar_ai를 Facebook 페이지에 연결한다 (인스타 설정 › 계정 센터, 또는 페이지 설정 › 연결된 계정).
    - Meta 개발자 앱(비즈니스 유형)에서 Facebook 로그인을 추가하고 권한 `instagram_basic`, `instagram_content_publish`, `instagram_manage_insights`, `pages_show_list`, `pages_read_engagement`, `business_management`을 받는다.
