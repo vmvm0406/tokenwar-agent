@@ -55,7 +55,7 @@ def fetch_account(username, pages=4):
                 "caption": cap[:150], "permalink": m.get("permalink"), "fetched_at": now,
             }
         after = page.get("paging", {}).get("cursors", {}).get("after")
-        if not after or not page.get("paging", {}).get("next"):
+        if not after or len(page.get("data", [])) < 50:
             break
     out = {"username": username, "followers": info.get("followers_count"), "media_count": info.get("media_count"),
            "updated_at": now, "media": media}
@@ -106,7 +106,7 @@ def _block(h):
 def time_section(accounts):
     """게시 시각별 성과 (그 계정 평소 대비 배수의 중간값). 표본이 작으면 참고만."""
     rows = []
-    for acc in accounts:
+    for acc in [a for a in accounts if (a.get("followers") or 0) >= 1000]:
         media = list(acc["media"].values())
         for kind in ["REELS", "FEED"]:
             ms = [m for m in media if (m.get("type") or "").upper().startswith(kind[:4]) and score(m)]
@@ -141,6 +141,7 @@ def write_trends(accounts, own):
              "에이전트는 주제를 고를 때 이 파일을 먼저 읽는다 (STYLE_GUIDE 3장, 6-1장 '인스타 반응').",
              "배수 = 그 계정의 최근 60일 같은 유형(릴스/피드) 중간값 대비. 2배 이상이면 '먹힌 주제'.", ""]
     hits = []
+    accounts = [a for a in accounts if (a.get("followers") or 0) >= 1000]  # 너무 작은 계정은 기준이 흔들린다
     for acc in accounts:
         media = list(acc["media"].values())
         recent = [m for m in media if m.get("timestamp") and
