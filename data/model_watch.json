@@ -935,7 +935,62 @@
    "tries": 0,
    "breaking": true,
    "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMiVkFVX3lxTFBOUUFyV0cyNHV3THhLS3JFOWJfVU9GYkpUNXZ6YnZGaDhwOXRfMURsRnRIMXY1S3I4dU5zWUNwbWx3WUdEUTVYTUxFNFo3bVl0Z1RSeGVB?oc=5": {
+   "source": "news",
+   "company": "엔비디아",
+   "entities": [
+    "머스크(xAI·테슬라)",
+    "엔비디아"
+   ],
+   "tok": [
+    "12",
+    "2만",
+    "개리",
+    "돌파",
+    "동참",
+    "만명",
+    "복귀",
+    "일론",
+    "청원",
+    "탄도"
+   ],
+   "title": "[업계 속보: 주요 매체 3곳(지디넷코리아, 한겨레, 한국경제) · 인사] 젠슨 황 복귀 청원 12만명 돌파...일론 머스크·개리 탄도 동참",
+   "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFBOUUFyV0cyNHV3THhLS3JFOWJfVU9GYkpUNXZ6YnZGaDhwOXRfMURsRnRIMXY1S3I4dU5zWUNwbWx3WUdEUTVYTUxFNFo3bVl0Z1RSeGVB?oc=5",
+   "first_seen": "2026-11-16T08:19:19+09:00",
+   "why": "48시간 안에 같은 회사·인물 게시물 있음: 2026-11-16-video-musk-us-chips (머스크(xAI·테슬라))",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMiVkFVX3lxTE5aNnB2bDBzVnpwSm5Ua1VaRmJTeEFGX21BYi0yV01kU1ZBbUVlaFgwXzdnVFR0aVI0bzFta19UZ3BNSmN5WWZESUVPbGNsaWtTSzlkbEt3?oc=5": {
+   "source": "news",
+   "company": "엔비디아",
+   "entities": [
+    "머스크(xAI·테슬라)",
+    "엔비디아"
+   ],
+   "tok": [
+    "꾸렸",
+    "나흘",
+    "렸다",
+    "만에",
+    "복귀",
+    "사임",
+    "상황",
+    "움직",
+    "전시",
+    "직임",
+    "황실"
+   ],
+   "title": "[업계 속보: 주요 매체 2곳(JTBC, 중앙일보) · 인사] 젠슨 황 ‘전시 상황실’ 꾸렸다…사임 나흘 만에 복귀 움직임",
+   "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE5aNnB2bDBzVnpwSm5Ua1VaRmJTeEFGX21BYi0yV01kU1ZBbUVlaFgwXzdnVFR0aVI0bzFta19UZ3BNSmN5WWZESUVPbGNsaWtTSzlkbEt3?oc=5",
+   "first_seen": "2026-11-16T08:19:19+09:00",
+   "why": "48시간 안에 같은 회사·인물 게시물 있음: 2026-11-16-video-musk-us-chips (머스크(xAI·테슬라))",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
   }
  },
- "updated": "2026-11-16T08:04:19+09:00"
+ "updated": "2026-11-16T08:19:19+09:00"
 }
