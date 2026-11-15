@@ -63,7 +63,7 @@ cp clip.mp4 $HOME/mnt/Videos/tokenwar/cur.mp4
    - `type: "video"`, `rights: "quote"`, `credit`(채널·발언자), `source_url`(원본 링크, 가능하면 `&t=초` 포함)
    - `video.start`/`end`: 1분 언저리(원본 길이의 1/3 이하)
    - 중간에 자르지 않는다 (`video.keep` 쓰지 않음, STYLE_GUIDE 6-1). `python3 agent/tighten.py clips/source.mp4 <start> <end>`는 단어 시각을 얻는 데만 쓰고, 그 단어 목록으로 번역 자막 시각을 맞춘다
-   - 원본에 영어 자막이 박혀 있거나 이름표가 있으면 `video.crop: {"top": 0, "bottom": 0.7}`처럼 그 아래를 잘라낸다. 우리 자막과 겹치지 않게 (예시: `samples/s8-huang-quote`)
+   - 원본에 박힌 영어 자막·이름표는 video.py가 자동으로 피한다 (TEMPLATES "영상 자르기"). 렌더링 출력의 "자막 N: ..."과 미리보기로 확인하고, 이상하면 `video.crop`이나 `captions_at`을 손으로 적는다
    - 제목 2줄, 영어 부제, 자막. **말이 있는 영상은 발언을 문장 단위로 빠짐없이 번역**한다 (요약 금지, 질문하는 사람은 `기자:`처럼 표시). 말이 없는 영상(AI 생성 영상, 시연)은 장면마다 우리 설명 자막. 어느 쪽이든 영상 길이의 60% 이상을 덮는다
    - `video.source_duration`: 원본 전체 길이(초). 인용 비율 확인용
    - `thumb`: 발언자 얼굴이 잘 보이는 순간을 `ffmpeg -ss <초> -i clips/source.mp4 -frames:v 1 -q:v 2 img/thumb.jpg`로 뽑아 쓰고 `person`에 이름·설명, `image.url`에는 원본 영상 주소. 얼굴 장면이 별로면 AI 상징 이미지(`prompt`)
