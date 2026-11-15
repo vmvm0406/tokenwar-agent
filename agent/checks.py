@@ -23,6 +23,19 @@ TYPES = {"carousel", "reel", "video"}
 # 낚시성·과장 표현 (STYLE_GUIDE.md 3장)
 BANNED = ["충격", "경악", "소름", "실화냐", "미쳤다", "역대급", "무조건", "하면 끝", "필수템", "ㄷㄷ"]
 
+# 아무 게시물에나 붙는 뻔한 질문 (STYLE_GUIDE 7장). 캡션 어디에 있든 오류.
+# 질문은 의견이 실제로 갈리는 소식에만, 그 소식에 맞는 양자택일로 ("AI 안경 65만 원, 사시겠어요?")
+GENERIC_Q = ["여러분 생각은", "여러분의 생각", "여러분은 어떻게", "여러분은 어떠", "어떻게 생각하", "생각하시나요",
+             "어떠신가요", "어떻게 보시나요", "의견을 남겨", "의견 남겨", "의견을 들려", "어디에 써 보고 싶",
+             "어떤 걸 해 보고 싶", "가장 써 보고 싶은"]
+
+# 해시태그 (STYLE_GUIDE 7장): 3~5개 = 주제 이름 1~2 + 한국어 분야 1~2 + #토큰전쟁. 흔한 태그 금지
+TAG_BRAND = "#토큰전쟁"
+BANNED_TAGS = {"#reels", "#reel", "#reelsinstagram", "#explore", "#explorepage", "#fyp", "#foryou", "#foryoupage",
+               "#viral", "#trending", "#instagood", "#follow", "#followme", "#like", "#likeforlike", "#l4l", "#f4f",
+               "#좋아요", "#좋반", "#팔로우", "#팔로우미", "#선팔", "#맞팔", "#선팔맞팔", "#소통", "#소통해요",
+               "#일상", "#데일리", "#인친", "#좋아요반사", "#팔로우환영"}
+
 # 번역투·과장 의심 (경고만)
 AWKWARD = ["에 대한", "하는 것이다", "되어지", "에 있어서", "을 통해서", "100%", "완벽"]
 
@@ -190,13 +203,16 @@ def check_video(post):
         errors.append("영상 위 글자에는 이모지를 쓰지 않음")
     if len(EMOJI_RE.findall(post["caption"])) > lim["caption_emoji_max"]:
         errors.append(f"캡션 이모지는 {lim['caption_emoji_max']}개 이하")
-    if len(post.get("hashtags", [])) > lim["hashtags_max"]:
-        errors.append(f"해시태그는 {lim['hashtags_max']}개 이하")
+    e_h, w_h = check_hashtags(post.get("hashtags", []))
+    errors += e_h
+    warnings += w_h
     if post.get("credit") and post["credit"] not in post["caption"]:
         errors.append("캡션에도 원작자(credit)를 밝힐 것")
     if not post["sources"]:
         errors.append("출처 1개 이상 (원본 영상 링크)")
-    warnings += check_caption_hooks(post["caption"])
+    e_c, w_c = check_caption_hooks(post["caption"])
+    errors += e_c
+    warnings += w_c
     return errors, warnings
 
 
@@ -294,11 +310,44 @@ def check_dm(post):
 
 
 def check_caption_hooks(caption, dm_keyword=None):
-    """캡션 첫 줄은 '얻는 것'으로, 끝은 댓글을 부르는 질문으로 (STYLE_GUIDE 3-1). 경고만."""
-    warnings = []
+    """캡션 첫 줄은 '얻는 것'으로 (STYLE_GUIDE 3-1, 경고). 캡션 끝 질문은 필수가 아니다 (7장).
+    (errors, warnings) 반환: 뻔한 질문은 오류, dm이 없는데 '받기' 안내가 있으면 오류."""
+    errors, warnings = [], []
     lines = [l.strip() for l in caption.split("영상:")[0].splitlines() if l.strip()]
-    if not lines:
-        return warnings
+    if lines:
+        first = lines[0]
+        if "?" in first:
+            warnings.append(f"캡션 첫 줄이 질문임 → 읽는 사람이 얻는 것으로 시작할 것: '{first[:40]}'")
+        elif NEWSY_RE.search(first) and not GAIN_RE.search(first):
+            warnings.append(f"캡션 첫 줄이 소식 전달임 → 얻는 것을 먼저 (예: '~하는 법', '~해 보세요'): '{first[:40]}'")
+    for q in GENERIC_Q:
+        if q in caption:
+            errors.append(f"캡션에 아무 데나 붙는 질문 '{q}' → 빼거나, 의견이 갈리는 소식이면 그 소식에 맞는 양자택일로 "
+                          "(예: 'AI 안경 65만 원, 사시겠어요?')")
+    kw = CONFIG.get("dm", {}).get("keyword", "받기")
+    if not dm_keyword and re.search(rf"['‘\"“]{re.escape(kw)}['’\"”]", caption):
+        errors.append(f"dm이 없는 게시물 캡션에 '{kw}' 안내가 있음 → 자동 DM은 따라 하기·질문 게시물(dm 있음)에만")
+    return errors, warnings
+
+
+def check_hashtags(tags):
+    """해시태그 3~5개, 흔한 태그 금지, #토큰전쟁 1개 (STYLE_GUIDE 7장)."""
+    errors, warnings = [], []
+    mx = CONFIG["limits"].get("hashtags_max", 5)
+    if len(tags) > mx:
+        errors.append(f"해시태그는 {mx}개 이하 (인스타 제한): {len(tags)}개")
+    elif len(tags) <= 2:
+        warnings.append(f"해시태그가 {len(tags)}개: 주제 이름 1~2 + 분야 1~2 + {TAG_BRAND}, 모두 3~5개")
+    for x in tags:
+        if not str(x).startswith("#") or " " in str(x):
+            errors.append(f"해시태그 형식: '{x}' (#로 시작, 띄어쓰기 없이)")
+        if str(x).lower() in BANNED_TAGS:
+            errors.append(f"흔한 해시태그 금지: {x}")
+    if len(set(map(str.lower, map(str, tags)))) != len(tags):
+        errors.append("해시태그가 중복됨")
+    if tags and TAG_BRAND not in tags:
+        warnings.append(f"해시태그에 {TAG_BRAND} 없음")
+    return errors, warnings
     first = lines[0]
     if "?" in first:
         warnings.append(f"캡션 첫 줄이 질문임 → 읽는 사람이 얻는 것으로 시작할 것: '{first[:40]}'")
@@ -458,7 +507,9 @@ def check_post(post):
     errors += e_d
     warnings += w_d
     kw = ((post.get("dm") or {}).get("keyword") or CONFIG.get("dm", {}).get("keyword", "받기")) if post.get("dm") else None
-    warnings += check_caption_hooks(post["caption"], kw)
+    e_c, w_c = check_caption_hooks(post["caption"], kw)
+    errors += e_c
+    warnings += w_c
 
     if post["type"] == "carousel":
         errors_img, warnings_img = check_images(slides)
@@ -490,8 +541,9 @@ def check_post(post):
         errors.append(f"캡션 이모지는 {lim['caption_emoji_max']}개 이하")
 
     tags = post.get("hashtags", [])
-    if len(tags) > lim["hashtags_max"]:
-        errors.append(f"해시태그는 {lim['hashtags_max']}개 이하: {len(tags)}개")
+    e_h, w_h = check_hashtags(tags)
+    errors += e_h
+    warnings += w_h
     cap = post["caption"] + "\n\n" + " ".join(tags)
     if len(cap) > 2200:
         errors.append("캡션+해시태그는 2,200자 이하")

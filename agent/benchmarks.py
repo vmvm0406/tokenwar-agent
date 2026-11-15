@@ -7,9 +7,12 @@
 Business Discovery는 'Instagram API with Facebook Login'(graph.facebook.com)에서만 된다.
 환경 변수: IG_ACCESS_TOKEN(페이지 토큰), IG_USER_ID(우리 인스타 비즈니스 계정 ID), IG_API_VERSION
 GitHub Actions(benchmarks.yml)가 매일 아침 실행한다.
+저장된 데이터로 trends.md만 다시 쓰기: python agent/benchmarks.py --offline
 """
 import json
 import os
+import re
+import sys
 import statistics
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -135,6 +138,57 @@ def time_section(accounts):
     return out
 
 
+TAG_RE = re.compile(r"#[0-9A-Za-z_가-힣]+")
+
+
+def _mult(m, med):
+    """그 계정 같은 유형 중간값 대비 배수. 릴스는 조회수, 카드뉴스는 좋아요."""
+    v = m.get("views") if (m.get("type") or "").upper().startswith("REEL") else m.get("likes")
+    return v / med if v is not None and med else None
+
+
+def hashtag_section(accounts, top=25, min_uses=3):
+    """벤치마크 계정 캡션(1,500자까지 저장)에서 해시태그를 모아 사용 횟수와 반응 배수를 표로 (STYLE_GUIDE 7장)."""
+    stats = {}
+    for acc in accounts:
+        media = list(acc["media"].values())
+        for kind in ["REELS", "FEED"]:
+            ms = [m for m in media if (m.get("type") or "").upper().startswith(kind[:4])]
+            vals = [(m.get("views") if kind == "REELS" else m.get("likes")) for m in ms]
+            vals = [v for v in vals if v is not None]
+            med = statistics.median(vals) if vals else None
+            for m in ms:
+                tags = {x.lower() for x in TAG_RE.findall(m.get("caption") or "")}
+                r = _mult(m, med)
+                for tg in tags:
+                    s = stats.setdefault(tg, {"n": 0, "acc": set(), "r": []})
+                    s["n"] += 1
+                    s["acc"].add(acc["username"])
+                    if r is not None:
+                        s["r"].append(r)
+    rows = sorted(((k, v) for k, v in stats.items() if v["n"] >= min_uses), key=lambda kv: (-kv[1]["n"], kv[0]))[:top]
+    if not rows:
+        return []
+    banned = set()
+    try:
+        sys.path.insert(0, str(ROOT / "agent"))
+        from checks import BANNED_TAGS
+        banned = {x.lower() for x in BANNED_TAGS}
+    except Exception:
+        pass
+    out = ["", "## 많이 쓰는 해시태그 (벤치마크 계정 캡션)", "",
+           "매일 작업은 여기서 분야 태그를 고른다 (STYLE_GUIDE 7장: 주제 이름 1~2 + 한국어 분야 1~2 + #토큰전쟁, 모두 3~5개). "
+           "계정 수가 1이면 그 계정만 쓰는 태그다(계정 이름·연재 이름일 수 있으니 그대로 따라 쓰지 않는다). #광고는 광고 표시라 쓰지 않는다. 배수는 그 태그를 쓴 게시물의 반응(릴스 조회수, 카드뉴스 좋아요)을 "
+           "그 계정 평소 중간값으로 나눈 값의 중간값. 캡션이 1,500자에서 잘려 끝의 태그가 빠진 게시물이 있을 수 있다.", "",
+           "| 태그 | 쓴 게시물 | 계정 수 | 반응 배수 중간값 | 비고 |", "|---|---|---|---|---|"]
+    for k, v in rows:
+        r = f"{statistics.median(v['r']):.2f}x" if v["r"] else "-"
+        note = ("금지 태그" if k in banned else "광고 표시, 쓰지 않음" if k == "#광고"
+                else "한 계정만" if len(v["acc"]) == 1 else "")
+        out.append(f"| {k} | {v['n']} | {len(v['acc'])} | {r} | {note} |")
+    return out
+
+
 def write_trends(accounts, own):
     now = datetime.now(timezone.utc)
     lines = [f"# 인스타 반응 분석 ({datetime.now(KST):%Y-%m-%d %H:%M} 기준)", "",
@@ -167,6 +221,7 @@ def write_trends(accounts, own):
     for r, u, k, ts, v, m in (hits[20:][-10:] if len(hits) > 20 else []):
         lines.append(f"| {r:.1f}x | @{u} | {first_line(m['caption'])} |")
     lines += time_section(accounts)
+    lines += hashtag_section(accounts)
     if own:
         lines += ["", "## 우리 계정 성과", "", "| 날짜 | 유형 | 조회 | 도달 | 저장 | 공유 | 첫 줄 |", "|---|---|---|---|---|---|---|"]
         of = own.get("_online_followers")
@@ -183,7 +238,20 @@ def write_trends(accounts, own):
     (DATA / "trends.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def offline():
+    """저장된 data/benchmarks/*.json, data/performance.json으로 trends.md만 다시 쓴다 (API 호출 없음)."""
+    order = CONFIG.get("benchmarks", {}).get("accounts", [])
+    files = sorted((DATA / "benchmarks").glob("*.json"), key=lambda f: order.index(f.stem) if f.stem in order else 99)
+    accounts = [json.loads(f.read_text(encoding="utf-8")) for f in files]
+    pf = DATA / "performance.json"
+    own = json.loads(pf.read_text(encoding="utf-8")) if pf.exists() else {}
+    write_trends(accounts, own)
+    print("data/trends.md 작성 (저장된 데이터)")
+
+
 def main():
+    if "--offline" in sys.argv:
+        return offline()
     if not TOKEN or not ME:
         print("IG_ACCESS_TOKEN / IG_USER_ID가 없어 건너뜀 (README '인스타 연결' 참고)")
         return
