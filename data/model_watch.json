@@ -796,7 +796,8 @@
    "why": "업계 속보",
    "tries": 0,
    "breaking": true,
-   "status": "pending"
+   "status": "skipped",
+   "updated": "2026-11-16T07:35:31+09:00"
   },
   "news:https://news.google.com/rss/articles/CBMiakFVX3lxTE9BTm5BYWdCN2JOdEszV2NJU2R2LXNrVmYxY01JdWVTTUVkYjJDNWxJMV9sSHMxWGVtN0ZsbTZSWXBUcjcxVEhwQV9tSXBkOExfRWFqUmY0eFFPdnBCZkdQeDhEZHpidmVVNHc?oc=5": {
    "source": "news",
@@ -914,5 +915,5 @@
    "status": "skipped"
   }
  },
- "updated": "2026-11-16T07:34:21+09:00"
+ "updated": "2026-11-16T07:35:31+09:00"
 }
