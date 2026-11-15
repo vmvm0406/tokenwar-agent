@@ -1,4 +1,4 @@
-# 인스타 반응 분석 (2026-11-16 00:30 기준)
+# 인스타 반응 분석 (2026-11-16 00:26 기준)
 
 에이전트는 주제를 고를 때 이 파일을 먼저 읽는다 (STYLE_GUIDE 3장, 6-1장 '인스타 반응').
 배수 = 그 계정의 최근 60일 같은 유형(릴스/피드) 중간값 대비. 2배 이상이면 '먹힌 주제'.
@@ -10,16 +10,16 @@
   - 2,776조회 6.2x: [2027년, AI 거품은 붕괴한다?](https://www.instagram.com/reel/Dd0-1xPBNso/)
 - FEED 중간값 6반응, 게시물 1개
 
-## @ai.trend.kr (팔로워 272689)
+## @ai.trend.kr (팔로워 272688)
 - REELS 중간값 97,834조회, 게시물 36개
-  - 2,865,152조회 29.3x: [눈 뭉치 던진 범인이 나라고요? ❄️](https://www.instagram.com/reel/DetX442xkFz/)
-  - 2,071,087조회 21.2x: [포장해 달라던 선물이 내 거였다고요? 🎁](https://www.instagram.com/reel/DeWZecova75/)
-  - 1,064,620조회 10.9x: [식이 시작도 안 했는데 하객석이 뒤집어졌어요 🎉](https://www.instagram.com/reel/De0VCSbPO_M/)
+  - 2,865,141조회 29.3x: [눈 뭉치 던진 범인이 나라고요? ❄️](https://www.instagram.com/reel/DetX442xkFz/)
+  - 2,071,085조회 21.2x: [포장해 달라던 선물이 내 거였다고요? 🎁](https://www.instagram.com/reel/DeWZecova75/)
+  - 1,064,609조회 10.9x: [식이 시작도 안 했는데 하객석이 뒤집어졌어요 🎉](https://www.instagram.com/reel/De0VCSbPO_M/)
 - FEED 중간값 1,497반응, 게시물 115개
 
 ## @ai.asap.kr (팔로워 9664)
 - REELS 중간값 8,262조회, 게시물 4개
-  - 19,856조회 2.4x: [AI가 일자리를 없앨까 묻는 래리 핑크에게 팔란티어 CEO 알렉스 카프가 답했습니다. 먼저 팔기 어려워지는 건 엘리트 학교 철학 전공이고, 고등](https://www.instagram.com/reel/DfwH1hxpWaQ/)
+  - 19,718조회 2.4x: [AI가 일자리를 없앨까 묻는 래리 핑크에게 팔란티어 CEO 알렉스 카프가 답했습니다. 먼저 팔기 어려워지는 건 엘리트 학교 철학 전공이고, 고등](https://www.instagram.com/reel/DfwH1hxpWaQ/)
   - 9,569조회 1.2x: [AI가 소프트웨어를 끝낸다? '정반대' (젠슨 황, 엔비디아)](https://www.instagram.com/reel/DfCV6uPpezi/)
   - 6,955조회 0.8x: [🦆 에이전트로 에이전트를 만든다 (젠슨 황, 엔비디아)](https://www.instagram.com/reel/De8rXgTJKcV/)
 - FEED 중간값 81반응, 게시물 132개
@@ -29,11 +29,11 @@
 
 ## @ex.treme.ai (팔로워 8288)
 
-## @bizucafe (팔로워 95226)
+## @bizucafe (팔로워 95224)
 - REELS 중간값 22,648조회, 게시물 189개
-  - 550,033조회 24.3x: [화폐는 의미 없다 (일론 머스크)](https://www.instagram.com/reel/De8mVBGgBJL/)
-  - 200,628조회 8.9x: [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/)
-  - 176,761조회 7.8x: [아이들 미국학교 보내는 이유 (유튜브 창업자 Steve Chen)](https://www.instagram.com/reel/DfL0yn5DYXf/)
+  - 549,925조회 24.3x: [화폐는 의미 없다 (일론 머스크)](https://www.instagram.com/reel/De8mVBGgBJL/)
+  - 199,774조회 8.8x: [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/)
+  - 176,751조회 7.8x: [아이들 미국학교 보내는 이유 (유튜브 창업자 Steve Chen)](https://www.instagram.com/reel/DfL0yn5DYXf/)
 - FEED 중간값 21반응, 게시물 11개
 
 ## 최근 30일 잘 된 게시물 TOP 20
@@ -41,23 +41,23 @@
 | 배수 | 계정 | 유형 | 날짜 | 수치 | 첫 줄 |
 |---|---|---|---|---|---|
 | 49.0x | @bizucafe | FEED | 11-07 | 1,029 | [광고(廣告). 한문으로 널리 알린다는 뜻이다.. 많은 사람들에게 무언가 정보를 알리는 것..](https://www.instagram.com/p/DfbYTYnmiGm/) |
-| 29.3x | @ai.trend.kr | REELS | 10-20 | 2,865,152 | [눈 뭉치 던진 범인이 나라고요? ❄️](https://www.instagram.com/reel/DetX442xkFz/) |
-| 24.3x | @bizucafe | REELS | 10-26 | 550,033 | [화폐는 의미 없다 (일론 머스크)](https://www.instagram.com/reel/De8mVBGgBJL/) |
+| 29.3x | @ai.trend.kr | REELS | 10-20 | 2,865,141 | [눈 뭉치 던진 범인이 나라고요? ❄️](https://www.instagram.com/reel/DetX442xkFz/) |
+| 24.3x | @bizucafe | REELS | 10-26 | 549,925 | [화폐는 의미 없다 (일론 머스크)](https://www.instagram.com/reel/De8mVBGgBJL/) |
 | 17.2x | @ai.asap.kr | FEED | 10-18 | 1,394 | [Filee는 Ctrl을 누른 채 파일을 끌면 커서 옆에 변환할 형식이 동그랗게 뜨고, 원하는 형식에 놓으면 바로 바꿔 주는 변환기입니다. 이미지](https://www.instagram.com/p/DeoW-TQj9F5/) |
-| 10.9x | @ai.trend.kr | REELS | 10-23 | 1,064,620 | [식이 시작도 안 했는데 하객석이 뒤집어졌어요 🎉](https://www.instagram.com/reel/De0VCSbPO_M/) |
+| 10.9x | @ai.trend.kr | REELS | 10-23 | 1,064,609 | [식이 시작도 안 했는데 하객석이 뒤집어졌어요 🎉](https://www.instagram.com/reel/De0VCSbPO_M/) |
 | 10.8x | @ai.trend.kr | FEED | 10-27 | 16,187 | [올해가 가기 전에, GPT랑 새해 계획을 세워봤어요. 🗓️](https://www.instagram.com/p/De_YpGSkS7D/) |
-| 8.9x | @bizucafe | REELS | 11-15 | 200,628 | [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/) |
-| 7.8x | @bizucafe | REELS | 11-01 | 176,761 | [아이들 미국학교 보내는 이유 (유튜브 창업자 Steve Chen)](https://www.instagram.com/reel/DfL0yn5DYXf/) |
-| 7.7x | @bizucafe | REELS | 10-26 | 174,545 | [AI 미치게 하는 법 (일론 머스크)](https://www.instagram.com/reel/De71wGlinFC/) |
+| 8.8x | @bizucafe | REELS | 11-15 | 199,774 | [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/) |
+| 7.8x | @bizucafe | REELS | 11-01 | 176,751 | [아이들 미국학교 보내는 이유 (유튜브 창업자 Steve Chen)](https://www.instagram.com/reel/DfL0yn5DYXf/) |
+| 7.7x | @bizucafe | REELS | 10-26 | 174,543 | [AI 미치게 하는 법 (일론 머스크)](https://www.instagram.com/reel/De71wGlinFC/) |
 | 7.3x | @ai.trend.kr | FEED | 10-28 | 10,894 | [사진 한 장으로 다섯 시대를 살아 봤어요 📷](https://www.instagram.com/p/DfB9iInE-54/) |
-| 7.0x | @bizucafe | REELS | 11-14 | 157,814 | [대만 뺏기면 답이 없다 (일론 머스크)](https://www.instagram.com/reel/DfuE50ME_qw/) |
-| 7.0x | @bizucafe | REELS | 10-23 | 157,453 | [우린 이미 너무 늦었다 (유발 하라리)](https://www.instagram.com/reel/De1azrfipMC/) |
-| 6.9x | @ai.trend.kr | REELS | 11-04 | 674,263 | [AI로 오늘도 감동을 받네요 🥹](https://www.instagram.com/reel/DfUlNHxPiTT/) |
+| 7.0x | @bizucafe | REELS | 11-14 | 157,763 | [대만 뺏기면 답이 없다 (일론 머스크)](https://www.instagram.com/reel/DfuE50ME_qw/) |
+| 7.0x | @bizucafe | REELS | 10-23 | 157,446 | [우린 이미 너무 늦었다 (유발 하라리)](https://www.instagram.com/reel/De1azrfipMC/) |
+| 6.9x | @ai.trend.kr | REELS | 11-04 | 674,221 | [AI로 오늘도 감동을 받네요 🥹](https://www.instagram.com/reel/DfUlNHxPiTT/) |
 | 6.8x | @ai.asap.kr | FEED | 10-28 | 554 | [Oh-My-Hermes는 Nous Research의 오픈소스 에이전트 Hermes Agent에 쓸 세팅을 묶은 올인원 패키지입니다. 설치하고 o](https://www.instagram.com/p/DfA7xqjE1nL/) |
 | 6.7x | @ai.asap.kr | FEED | 10-17 | 546 | [Happy는 Claude·Codex·Grok을 한 앱에서 골라 쓰게 해 주는 MIT 오픈소스입니다. 새 구독이 아니라 이미 내고 있는 각 회사 ](https://www.instagram.com/p/Del2nkwj2Xu/) |
 | 6.7x | @ai.talk.kr | REELS | 10-23 | 3,009 | [AI가 발전하면 내 노트북은 더 좋아질까, 더 비싸질까?](https://www.instagram.com/reel/De0PR-Qj5n2/) |
-| 6.2x | @bizucafe | REELS | 11-05 | 140,202 | [갓 대학 졸업한 '경영 컨설턴트'](https://www.instagram.com/reel/DfV6WSTDWqK/) |
-| 6.2x | @bizucafe | REELS | 10-29 | 139,963 | [창업 한번 해보세요 (유튜브 창업자 Steve Chen)](https://www.instagram.com/reel/DfD4p6-DCWO/) |
+| 6.2x | @bizucafe | REELS | 11-05 | 140,198 | [갓 대학 졸업한 '경영 컨설턴트'](https://www.instagram.com/reel/DfV6WSTDWqK/) |
+| 6.2x | @bizucafe | REELS | 10-29 | 139,955 | [창업 한번 해보세요 (유튜브 창업자 Steve Chen)](https://www.instagram.com/reel/DfD4p6-DCWO/) |
 | 6.1x | @bizucafe | REELS | 10-28 | 137,060 | [성공한 사람은 똑똑한 걸 숨긴다 (팔란티어 알렉스 카프)](https://www.instagram.com/reel/DfCEAL7jE23/) |
 | 5.6x | @ai.asap.kr | FEED | 10-23 | 452 | [앤트로픽 Applied AI 팀이 기업용 에이전트를 만들 때 서브에이전트를 메인 루프로 접어야 할 시점을 정리한 글을 공개했습니다. ](https://www.instagram.com/p/De1Tvw5D-Ug/) |
 
