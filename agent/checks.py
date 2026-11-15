@@ -257,7 +257,43 @@ NEWSY_RE = re.compile(r"(공개|출시|발표|선보|내놨|소식|업데이트�
 GAIN_RE = re.compile(r"(세요|수 있|하는 법|방법|해 보|해보|됩니다|만들어|바꿔|아끼|찾아)")
 
 
-def check_caption_hooks(caption):
+def check_dm(post):
+    """댓글 자동 DM 준비물 (STYLE_GUIDE 7-1). dm이 있으면 문구 길이·키워드 안내를 본다."""
+    errors, warnings = [], []
+    d = post.get("dm")
+    f = post.get("format")
+    if not d:
+        if f in ("howto", "ask") and post.get("type") in ("carousel", "reel"):
+            warnings.append("따라 하기·질문 게시물에 dm(댓글 자동 DM 자료)이 없음 → STYLE_GUIDE 7-1")
+        return errors, warnings
+    kw = d.get("keyword") or CONFIG.get("dm", {}).get("keyword", "받기")
+    msg = (d.get("message") or "").strip()
+    if not msg:
+        errors.append("dm.message(보낼 DM 문구) 필요")
+    elif _len(msg) > 900:
+        errors.append(f"dm.message는 900자 이하 (인스타 DM 1,000자 제한, 링크 자리 남김): {_len(msg)}자")
+    for key, mx in (("follow_text", 300), ("comment_reply", 150)):
+        if d.get(key) and _len(d[key]) > mx:
+            errors.append(f"dm.{key}는 {mx}자 이하")
+    for x in [msg, d.get("follow_text", ""), d.get("comment_reply", "")]:
+        if EMOJI_RE.search(str(x)) and len(EMOJI_RE.findall(str(x))) > 1:
+            warnings.append("DM 문구 이모지는 1개 이하")
+    if "http" in msg:
+        warnings.append("dm.message 안에 주소를 쓰지 않음. 안내 페이지 링크는 도구의 링크 버튼으로 붙는다(dm.md)")
+    pg = d.get("page") or {}
+    for x in pg.get("extra") or []:
+        if not x.get("prompt") or not x.get("title"):
+            errors.append("dm.page.extra 항목은 title과 prompt 필요")
+    if f"'{kw}'" not in post.get("caption", "") and f"‘{kw}’" not in post.get("caption", ""):
+        warnings.append(f"캡션에 댓글 키워드 안내가 없음 (예: \"댓글에 '{kw}' 남기면 프롬프트 전체를 DM으로 보내 드려요\")")
+    for t in [msg, d.get("follow_text", "")] + [x.get("note", "") for x in pg.get("extra") or []] + [pg.get("result", ""), pg.get("intro", "")]:
+        if t:
+            e_t, _ = ai_tone(t, "DM 자료")
+            errors += e_t
+    return errors, warnings
+
+
+def check_caption_hooks(caption, dm_keyword=None):
     """캡션 첫 줄은 '얻는 것'으로, 끝은 댓글을 부르는 질문으로 (STYLE_GUIDE 3-1). 경고만."""
     warnings = []
     lines = [l.strip() for l in caption.split("영상:")[0].splitlines() if l.strip()]
@@ -269,6 +305,8 @@ def check_caption_hooks(caption):
     elif NEWSY_RE.search(first) and not GAIN_RE.search(first):
         warnings.append(f"캡션 첫 줄이 소식 전달임 → 얻는 것을 먼저 (예: '~하는 법', '~해 보세요'): '{first[:40]}'")
     tail = [l for l in lines if not l.startswith("#")][-2:]
+    if dm_keyword and any(dm_keyword in l and "댓글" in l for l in tail):
+        return warnings  # 댓글 키워드 안내(자동 DM)로 끝나면 충분
     if not any("?" in l and "댓글" in l for l in tail):
         warnings.append("캡션 끝에 댓글을 부르는 질문이 없음 (예: '어디에 써 보고 싶나요? 댓글로 알려 주세요')")
     return warnings
@@ -416,7 +454,11 @@ def check_post(post):
     e_f, w_f = check_format(post)
     errors += e_f
     warnings += w_f
-    warnings += check_caption_hooks(post["caption"])
+    e_d, w_d = check_dm(post)
+    errors += e_d
+    warnings += w_d
+    kw = ((post.get("dm") or {}).get("keyword") or CONFIG.get("dm", {}).get("keyword", "받기")) if post.get("dm") else None
+    warnings += check_caption_hooks(post["caption"], kw)
 
     if post["type"] == "carousel":
         errors_img, warnings_img = check_images(slides)

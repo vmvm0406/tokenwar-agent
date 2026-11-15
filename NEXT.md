@@ -5,7 +5,11 @@ claude.ai 대화에서 하던 작업을 이 컴퓨터의 Claude Code로 옮겼�
 ## 운영자 답을 기다리는 것
 1. **릴스 새 화면(CRT 터미널) 채택 여부** — `experiments/reel-crt/` v7. 운영자 반응: 영상과 아래가 따로 노는 느낌 → 붙임, 상태줄 불필요 → 뺌, 영상이 너무 위 → 안전 영역으로 내림. 괜찮다고 하면 `agent/video.py`를 이 구조로 바꾸고 post.json에 아래 요약(`term` 장면들: 신문 제목체) 형식을 TEMPLATES.md에 추가, LOCAL.md/CLIPS.md 절차 수정.
 2. **주간 요약 카드뉴스** — 샘플 완성: `samples/s11-weekly-ai` (11월 둘째 주, 소식 4개: 삼성 AI 안경·제미나이 카플레이·구글 검색 새 모델·챗GPT 기업 프로필, 소식마다 위쪽 공식 사진 + 번호·제목·설명). 본문 장 `num`/`num_note` 필드 추가함. 운영자가 보고 정한다. 운영자 의견(11-15): 초기 계정은 릴스가 우선, 릴스를 더 많이 찍어내야 함. — 운영자: "이번 주 AI에서 사진·영상 자료를 안 쓴 게 문제". 제안: 매주 일요일 "N월 N주 차 AI 뉴스" 카드뉴스 (ai.trend.kr 7,476 좋아요 글 구조: 강렬한 사진 표지 + 소식마다 한 장, 위쪽에 실제 사진·화면·영상, 아래 번호·제목·설명 3~4줄). 운영자가 샘플을 보고 정한다. 할 일: 오늘 소식으로 샘플 → 승인되면 STYLE_GUIDE의 "한 게시물에 소식 하나" 규칙에 주간 요약 예외 추가, dupes.py에서 주간 요약은 주제 겹침 예외, 캐러셀에 영상 장을 섞으려면 publish.py에 VIDEO 자식 추가.
-3. **댓글 자동 DM (팔로우 확인 방식)** — 설계·조사 끝, 운영자 승인 대기. 아래 "댓글 자동 DM 설계" 절. 승인 전에는 만들지 않는다.
+3. **댓글 자동 DM — 외부 도구 Zorcha로 시작 (2026-11-15 운영자 결정)** — 준비물 생성은 만듦: 따라 하기 게시물마다 `dm.md`(설정 메모) + GitHub Pages 안내 페이지 (`agent/dm.py`, STYLE_GUIDE 7-1). 운영자가 할 일:
+   - Zorcha 무료 가입 → 인스타 @tokenwar_ai 연결 (공식 로그인 창에서 직접. 비밀번호는 Claude에게 주지 않는다).
+   - GitHub 저장소 Settings › Pages › Build and deployment: "Deploy from a branch", 브랜치 `main`, 폴더 `/docs` → 저장. 주소 https://vmvm0406.github.io/tokenwar-agent/ 가 열리는지 확인.
+   - 첫 따라 하기 게시물에서 **두 가지를 시험**하고 결과를 여기에 적는다: (1) 팔로우 안 한 계정으로 '팔로우했어요'만 누르면 자료가 오는지(=실제로 확인하지 않고 누른 것만 믿는지). Zorcha 블로그 글끼리 말이 다르다. (2) 무료 플랜 DM에 Zorcha 홍보 문구가 붙는지. 공식 요금표에는 안 나오고 경쟁사들은 붙는다고 주장한다.
+   - 둘 중 하나라도 안 되면 대안: InstantDM Legend Pro (팔로우 확인 있음, 월 12달러 또는 연 결제 월 9.99달러, 유료라 홍보 문구 없음). 무료로 팔로우 확인을 주는 다른 도구는 공식 요금표 기준으로 찾지 못했다.
 4. **따라 하기 형식 샘플** — `samples/s12-howto-ai-mode`(카드뉴스 7장), `samples/s13-howto-ai-mode-reel`(카드형 모션 릴스, 장면 6개). 구글 AI 모드에 실제로 넣은 질문과 답 화면(11월 15일). 형식·검사·절차는 이미 main에 들어감(TEMPLATES "게시물 형식", checks.py `format`, LOCAL.md 1장). 운영자가 모양을 보고 고칠 점을 말하면 반영. 릴스 mp4는 이 컴퓨터에 ffmpeg가 없어 아직 안 만들어 봄 → ffmpeg 설치(`winget install Gyan.FFmpeg`) 후 `py -3.12 agent/render.py samples/s13-howto-ai-mode-reel`로 확인.
 
 ## 확인할 것
@@ -13,7 +17,10 @@ claude.ai 대화에서 하던 작업을 이 컴퓨터의 Claude Code로 옮겼�
 - 2026-11-15 첫 실행: 카드뉴스 PR #2(세무사 AI 부정행위) 운영자 확인 대기, 릴스 브랜치 `post/2026-11-15-reel`(머스크 칩 발언) PR 생성 여부 확인.
 - 카드뉴스 화면 캡처(`agent/shot.py`)는 PR #2에서 처음 제대로 돌았다. 표지 AI 그림이 실제 사진처럼 보이지 않는지 계속 본다.
 
-## 댓글 자동 DM 설계 (2026-11-15 조사, 아직 만들지 않음)
+## 댓글 자동 DM 직접 만들기 — 계정이 커지면 다시 검토 (2026-11-15 보류)
+
+지금은 외부 도구(Zorcha)로 한다. 직접 만들기는 팔로워가 늘어 도구 제한·비용이 문제가 되거나, 도구가 팔로우를 제대로 확인하지 못할 때 다시 본다. 아래는 그때 쓸 설계·조사 기록이다. 걸림돌은 Meta 비즈니스 인증(사업자 서류)과 앱 심사다. 다시 시작하면 지금 만든 `dm` 필드·`dm.md`·GitHub Pages 안내 페이지는 그대로 쓴다.
+
 
 운영자가 정한 흐름: 댓글 → 비공개 답장(Private Reply) 1번 → 버튼("자료 받기") → 팔로우 확인(`is_user_follow_business`) → 팔로워면 자료(프롬프트 전체 + 안내 페이지 링크), 아니면 "팔로우 후 다시 눌러 주세요". 이미 받은 사람은 기록해서 다시 보내지 않는다.
 
@@ -66,9 +73,9 @@ claude.ai 대화에서 하던 작업을 이 컴퓨터의 Claude Code로 옮겼�
 6. Cloudflare에서 Workers 편집 권한만 있는 API 토큰 만들어 GitHub Secrets `CLOUDFLARE_API_TOKEN`에 넣기.
 7. 시험용 인스타 계정을 앱 역할(테스터)로 추가 → Standard Access로 끝까지 시험 → 사용 장면 녹화 → 앱 심사 제출.
 
-### 승인하면 만들 것 (순서)
-1. post.json `dm` 필드 + checks.py 검사 + TEMPLATES/LOCAL.md 절차
-2. GitHub Pages 안내 페이지·개인정보처리방침 생성 (Actions)
+### 다시 시작하면 만들 것 (순서)
+1. ~~post.json `dm` 필드 + checks.py 검사 + TEMPLATES/LOCAL.md 절차~~ (외부 도구용으로 이미 만듦)
+2. ~~GitHub Pages 안내 페이지~~ (만듦) · 개인정보처리방침 페이지
 3. `worker/` (Cloudflare Worker + D1 스키마, wrangler 설정은 비밀값 없이) + 배포 워크플로
 4. publish.py: 게시 후 미디어 id ↔ dm 자료 연결
 5. 시험 계정으로 Standard Access 시험 → 운영자 심사 제출

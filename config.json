@@ -71,5 +71,11 @@
     "rail_left": 850,
     "rail_top": 1150,
     "note": "인스타 릴스 화면에서 안 가려지는 자리 (Meta 기준: 위 14%, 아래 35%, 양옆 6%, 오른쪽 아래 버튼 줄). 제목·자막·숫자 등 읽어야 할 것은 이 안에"
+  },
+  "dm": {
+    "tool": "Zorcha",
+    "keyword": "받기",
+    "pages_base": "https://vmvm0406.github.io/tokenwar-agent",
+    "note": "댓글 자동 DM은 외부 도구(Zorcha 무료, Ask for Follow)로. 게시물마다 dm.md 설정 메모를 운영자가 도구에 붙여 넣는다. 안내 페이지는 GitHub Pages(main /docs). 직접 만들기는 계정이 커지면 다시 검토 (NEXT.md)"
   }
 }

@@ -442,6 +442,11 @@ def main(folder):
         for e in errors:
             print(" -", e)
         sys.exit(1)
+    if post.get("dm"):
+        # 댓글 자동 DM: 도구에 붙여 넣을 dm.md + GitHub Pages 안내 페이지 (agent/dm.py)
+        from dm import make_dm
+        for p in make_dm(post, out_dir):
+            print("DM 자료:", p.relative_to(ROOT) if p.is_relative_to(ROOT) else p)
     if post["type"] == "video":
         src = out_dir / post["video"]["src"]
         if not src.exists():
