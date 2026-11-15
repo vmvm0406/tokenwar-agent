@@ -44,7 +44,7 @@
 | `agent/publish.py` | 인스타 게시 (Graph API, graph.facebook.com, 페이지 토큰). `DRY_RUN=1`로 시험 |
 | `agent/benchmarks.py` / `agent/hot.py` | 인스타 반응 분석 / 지금 관심 주제 |
 | `agent/token_check.py` | 토큰 점검 |
-| `agent/review_page.py` | 검토 페이지: 열린 post/* PR의 릴스 영상·카드 장·캡션을 jsDelivr(PR 커밋 고정)로 보여 주는 `docs/review/index.html` |
+| `agent/review_page.py` | 검토 페이지: 열린 post/* PR의 릴스 영상·카드 장·캡션을 raw.githubusercontent(PR 커밋 고정)로 보여 주는 `docs/review/index.html` |
 | `docs/review/` | 검토 페이지 (GitHub Pages https://vmvm0406.github.io/tokenwar-agent/review/, 봇이 갱신. 손으로 고치지 않는다) |
 | `posts/queue/<폴더>/post.json` | 올릴 게시물. 게시되면 `posts/published/`로 이동 |
 | `samples/` | 예시 게시물 (s1~s3 카드뉴스, s8 젠슨 황 인터뷰, s10 드와케시 팟캐스트, s11 주간 요약, s12 따라 하기 카드뉴스, s13 따라 하기 릴스). 디자인을 바꾸면 이걸로 확인 |

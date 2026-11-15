@@ -4,7 +4,9 @@ GitHub PR 화면에서는 릴스 영상과 카드 장을 바로 볼 수 없어�
 열린 PR 중 head 브랜치가 post/ 로 시작하는 것들을 읽어 docs/review/index.html을 만든다.
 GitHub Pages: https://vmvm0406.github.io/tokenwar-agent/review/
 
-- 미디어는 jsDelivr로 PR head 커밋에 고정해서 보여 준다 (저장소에 미디어를 또 올리지 않는다).
+- 미디어는 raw.githubusercontent.com으로 PR head 커밋에 고정해서 보여 준다 (저장소에 미디어를 또 올리지 않는다).
+  jsDelivr는 저장소 전체가 50MB를 넘는 커밋이면 403("Package size exceeded")을 내서 쓰지 않는다.
+  raw는 파일당 100MB까지, 영상 구간 요청(Range)도 된다.
 - 페이지에서 직접 merge하지 않는다. 토큰·비밀값은 페이지에 넣지 않는다. 버튼은 PR 주소로 보낼 뿐.
 - 인증: 환경 변수 GITHUB_TOKEN/GH_TOKEN, 없으면 로컬 `gh auth token`.
 - 내용(갱신 시각 제외)이 그대로면 파일을 다시 쓰지 않는다 (30분마다 쓸데없는 커밋 막기).
@@ -71,7 +73,7 @@ def api_pages(path):
 
 
 def cdn(sha, folder, name):
-    return f"https://cdn.jsdelivr.net/gh/{REPO}@{sha}/posts/queue/{folder}/{name}"
+    return f"https://raw.githubusercontent.com/{REPO}/{sha}/posts/queue/{folder}/{name}"
 
 
 def when(s):
@@ -145,11 +147,8 @@ def render_post(pr, item):
     if is_reel:
         if item["reel"]:
             poster = f' poster="{cdn(sha, folder, "cover.jpg")}"' if item["cover"] else ""
-            big = item["reel_size"] > 20 * 1024 * 1024
             h.append(f'<video class="reel" controls playsinline preload="metadata"{poster} '
                      f'src="{cdn(sha, folder, "reel.mp4")}"></video>')
-            if big:
-                h.append('<p class="warn">reel.mp4가 20MB를 넘어 jsDelivr에서 안 열릴 수 있습니다.</p>')
         else:
             h.append('<p class="warn">아직 렌더링 전입니다 (reel.mp4 없음). 몇 분 뒤 다시 보세요.</p>')
         if item["cover"]:
