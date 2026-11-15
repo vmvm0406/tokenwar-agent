@@ -44,7 +44,7 @@ AI_PHRASES = [
     "는 시대", "시대가 열", "시대입니다", "새로운 지평", "게임 체인저", "판도를 바꾸", "판도가 바뀌",
     "한 단계 진화", "그야말로", "무려", "어디까지", "주목된다", "주목할 만", "귀추가", "라는 점에서",
     "가능성을 열", "혁신적", "차세대", "본격적인", "과연", "생각하시나요", "어떻게 생각", "여러분의 생각",
-    "놀라운 점은", "흥미로운 점은", "중요한 건", "핵심은 바로", "바로 이것", "이제는 ", "새로운 시대",
+    "놀라운 점은", "흥미로운 점은", "만 알면 됩니다", "만 알면 돼요", "만 기억하세요", "중요한 건", "핵심은 바로", "바로 이것", "이제는 ", "새로운 시대",
 ]
 # 서술어 없이 조사·부사로 툭 끊기는 문장 ("편집도 한 모델로", "빠른 동작까지 자연스럽게")
 DANGLING_RE = re.compile(r"(으로|[가-힣]로|까지|에게|에서|부터|처럼|보다|만큼|[가-힣]게|[가-힣]히)$")
@@ -91,6 +91,19 @@ RIGHTS = {"quote", "own", "permission", "license"}
 # 릴스 제목·썸네일 제목은 "누가/무엇이 + 무엇을 했다"가 끝까지 들어간 문장으로 (STYLE_GUIDE 4장 "제목은 알아듣기 쉽게").
 # "3년 만에 밀레니엄 난제"처럼 서술어 없이 명사로 압축하면 무슨 일인지 알 수 없다.
 PREDICATE_RE = re.compile(r"(다|요|죠|까|나|네)[\s\"'”’.!?…]*$")
+
+
+def body_sentences(text, where):
+    """카드 본문 설명은 문장을 끝까지 쓴다. "전 세계 모든 사용자 대상.", "미국부터 베타."처럼 명사로 툭 끝나면 어색하다
+    (운영자 지적 2026-11-15). 숫자만 있는 짧은 조각은 봐준다."""
+    errs = []
+    for sent in re.split(r"(?<=[.!?])\s+|\n", str(text)):
+        w = sent.strip().rstrip(".!?").strip("\"'“”‘’)( ")
+        if len(w) < 6 or re.fullmatch(r"[\d\s,.%·~-]+", w):
+            continue
+        if not PREDICATE_RE.search(w):
+            errs.append(f"{where}: 문장이 명사로 툭 끝남 '{w[-14:]}' → '~습니다'로 끝까지 (예: '사용자 대상' → '사용자에게 적용됩니다')")
+    return errs
 
 
 def title_sentence(title, where):
@@ -245,6 +258,9 @@ def check_images(slides):
         v = s.get("visual") or {}
         if v.get("type") == "image":
             imgs.append((i, v))
+    srcs = [v.get("src") for _, v in imgs if v.get("src")]
+    for src in sorted(set(x for x in srcs if srcs.count(x) > 1)):
+        errors.append(f"같은 사진({src})을 여러 장에 반복함 → 장마다 다른 사진이나 다른 부분을 잘라 쓸 것")
     need = lim.get("carousel_min_images", 2) + (1 if len(slides) > 6 else 0)
     if len(imgs) < need:
         errors.append(f"{IMAGE_RULE}: 사진(실제 화면 캡처·공식 이미지) 장이 {need}장 이상 필요: 지금 {len(imgs)}장. "
@@ -453,6 +469,7 @@ def check_post(post):
             if not s.get("title"):
                 errors.append(f"{tag} 표지 제목(title) 필요")
             t = s.get("title", "")
+            errors += title_sentence(t, f"{tag} 표지 제목")
             ls = _lines(t) if t else []
             if len(ls) > lim["cover_title_lines"]:
                 errors.append(f"{tag} 표지 제목은 {lim['cover_title_lines']}줄 이하: {len(ls)}줄")
@@ -529,6 +546,8 @@ def check_post(post):
             if kind == "stat" and not s.get("value"):
                 errors.append(f"{tag} stat은 value 필요")
             all_text += [h, b, p, s.get("label", "")]
+            if b:
+                errors += body_sentences(b, f"{tag} 본문")
             hl_src = h
         else:
             errors.append(f"{tag} kind는 cover 또는 {BODY_KINDS}: {kind}")
