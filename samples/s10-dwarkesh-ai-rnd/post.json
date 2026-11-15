@@ -1,0 +1,85 @@
+{
+  "id": "2026-11-15-video-dwarkesh-ai-rnd",
+  "type": "video",
+  "series": "전황",
+  "date": "2026-11-15",
+  "publish_at": "2026-11-15T19:10:00+09:00",
+  "rights": "quote",
+  "speech": true,
+  "credit": "Dwarkesh Patel",
+  "source_url": "https://www.youtube.com/watch?v=1NHPDzpfR6Y&t=91",
+  "video": {
+    "src": "clips/source.mp4",
+    "start": 6.6,
+    "end": 37.1,
+    "source_duration": 2666
+  },
+  "title": "AI가 AI 연구를\n이미 하고 있습니다",
+  "highlight": "이미 하고 있습니다",
+  "title_en": "Recursive self-improvement has started",
+  "subtitles": [
+    {
+      "start": 6.6,
+      "end": 9.1,
+      "text": "AI가 AI 연구를 앞당기는 모습,\nOpenAI가 9월에 공개했는데요"
+    },
+    {
+      "start": 9.2,
+      "end": 14.4,
+      "text": "OpenAI 연구원 중\nAI를 가장 많이 쓰는 상위 10%가"
+    },
+    {
+      "start": 14.4,
+      "end": 19.3,
+      "text": "여름 초엔 하루 약 1,000달러어치\n코딩 에이전트를 쓰다가"
+    },
+    {
+      "start": 19.3,
+      "end": 22.9,
+      "text": "8월 말엔 하루 7,000달러\n넘게 쓰게 됐다고요",
+      "highlight": "7,000달러"
+    },
+    {
+      "start": 23.2,
+      "end": 27.9,
+      "text": "앤트로픽도 9월에\n비슷한 글을 냈는데요"
+    },
+    {
+      "start": 28.3,
+      "end": 33.7,
+      "text": "이제 앤트로픽 AI 연구개발의\n26%를 Claude가 주도한대요",
+      "highlight": "26%"
+    },
+    {
+      "start": 33.7,
+      "end": 37.1,
+      "text": "2월만 해도\n1% 미만이었는데요",
+      "highlight": "1% 미만"
+    }
+  ],
+  "thumb": {
+    "title": "AI에 하루 7,000달러\n쓰는 OpenAI 연구원들",
+    "highlight": "7,000달러",
+    "sub": "AI를 가장 많이 쓰는 상위 10% 기준",
+    "image": {
+      "type": "image",
+      "src": "img/thumb.jpg",
+      "url": "https://www.youtube.com/watch?v=1NHPDzpfR6Y",
+      "position": "88% center"
+    }
+  },
+  "sources": [
+    {
+      "name": "Dwarkesh Patel, Recursive self-improvement has started (2026-11-13)",
+      "url": "https://www.youtube.com/watch?v=1NHPDzpfR6Y"
+    }
+  ],
+  "caption": "AI가 AI 연구를 하는 일은 이미 시작됐습니다.\n\n팟캐스트 진행자 드와케시 파텔이 11월 13일 올린 영상에서 정리한 수치입니다. OpenAI가 9월에 공개한 자료를 보면, AI를 가장 많이 쓰는 연구원 상위 10%는 여름 초 하루 약 1,000달러어치 코딩 에이전트를 썼고 8월 말에는 7,000달러를 넘겼습니다. 앤트로픽은 자사 AI 연구개발 작업의 26%를 Claude가 주도한다고 밝혔습니다. 2월에는 1%도 안 됐습니다.\n\n파텔은 올해 초만 해도 초지능까지 10년은 걸린다고 봤지만, 지금은 몇 년, 빠르면 몇 달 안에 최고 수준의 AI 연구자만큼 일하는 AI가 나올 수 있다고 말합니다.\n\n영상: Dwarkesh Patel (원본 링크는 프로필)",
+  "hashtags": [
+    "#AI뉴스",
+    "#OpenAI",
+    "#앤트로픽",
+    "#AI연구",
+    "#토큰전쟁"
+  ]
+}

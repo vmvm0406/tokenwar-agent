@@ -48,7 +48,7 @@ cp clip.mp4 $HOME/mnt/Videos/tokenwar/cur.mp4
 ```
 
 - `-S res:1080`은 짧은 변 기준 1080이라 세로 영상도 1080x1920으로 받는다 (`height<=1080`을 쓰면 세로 영상이 608px로 작아진다).
-- 긴 영상(10분 넘게)은 `--download-sections "*<시작-1초>-<끝+1초>"`로 그 구간만 받는다.
+- `--download-sections`는 이 환경에서 ffmpeg가 원격 주소를 못 읽어 실패한다. 긴 영상도 통째로 받아(1시간 1080p ≈ 500MB, 1분 안쪽) `ffmpeg -ss ... -to ... -c copy`로 자른다.
 
 ## 4. 클라우드로 가져오기
 

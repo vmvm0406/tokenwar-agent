@@ -33,7 +33,7 @@
     "clip_max_ratio": 0.4,
     "video_title_line_chars": 13,
     "subtitle_line_chars": 18,
-    "quote_max_seconds": 30,
+    "quote_max_seconds": 32,
     "quote_min_seconds": 18,
     "quote_max_ratio": 0.34
   },
