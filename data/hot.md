@@ -1,4 +1,4 @@
-# 지금 관심 주제 (2026-11-15 23:38 기준)
+# 지금 관심 주제 (2026-11-15 23:39 기준)
 
 주제를 고를 때 가장 먼저 본다 (STYLE_GUIDE 3장, 6-1장 '지금 관심도'). 여러 곳에 동시에 뜬 주제가 가장 뜨겁다.
 
@@ -12,8 +12,8 @@
 - 3.0x · @ai.trend.kr REELS — 이게 다 AI로 만든 일드라고요? 🎬 (https://www.instagram.com/reel/DfuDKfvOMRu/)
 
 ## 해커뉴스 첫 화면 AI 글
-- 907점 · 댓글 344 — Lovable apps expose passport details and more than 200K private messages (https://www.crissyfield.de/research/lovable-en/)
-- 30점 · 댓글 0 — Understanding Positional Embeddings in Modern LLMs (https://magazine.sebastianraschka.com/p/understanding-positional-embeddings)
+- 908점 · 댓글 344 — Lovable apps expose passport details and more than 200K private messages (https://www.crissyfield.de/research/lovable-en/)
+- 33점 · 댓글 0 — Understanding Positional Embeddings in Modern LLMs (https://magazine.sebastianraschka.com/p/understanding-positional-embeddings)
 
 ## 레딧 AI 커뮤니티 오늘 인기
 (수집 못 함: 레딧 응답 없음)
