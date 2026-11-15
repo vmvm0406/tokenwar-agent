@@ -67,6 +67,8 @@
 | `pick-video-segment` | 긴 자막(vtt) 읽고 1분 구간 후보 2개 (읽기만, sonnet) |
 | `review-post` | 만든 게시물을 규칙·한국어 자연스러움으로 검수, 고칠 점만 보고 (sonnet) |
 
+**운영자는 최상위 세션에만 말한다.** 지휘 세션의 질문이나 운영자가 할 일, 중요한 결과(5줄 안 요약)는 지휘 세션 화면에 묻지 말고 SendMessage로 최상위 세션에 보낸다. 최상위 세션이 운영자에게 전한다.
+
 지휘 세션이 하는 일:
 1. 요청을 게시물 단위로 나눈다. `py -3.12 agent/slots.py next <종류> --count N`으로 칸을 받고, 같은 날 겹치면 안 되는 인물·주제를 정한다.
 2. 작업 폴더를 만든다: `git worktree add <scratchpad>/wt-<이름> -b post/<날짜>-<HHMM> origin/main` (운영자의 tokenwar-agent 브랜치는 바꾸지 않는다). 모든 하위 에이전트가 이 폴더 안의 서로 다른 게시물 폴더에서 일한다.
