@@ -560,8 +560,43 @@ def check_reach(post):
     return errors, warnings
 
 
+NC_RE = re.compile(r"(?i)\bBY[- ]?(SA[- ])?NC\b|\bNC[- ]?(SA|ND)\b|non[- ]?commercial|비상업|비영리\s*(전용|라이선스)|상업\s*(적\s*)?이용\s*(금지|불가)")
+
+
+def _license_texts(node, path=""):
+    """license·rights_note·credit·sources 이름처럼 소재 출처를 적는 자리의 글만 모은다."""
+    if isinstance(node, dict):
+        for k, v in node.items():
+            p = f"{path}.{k}" if path else k
+            if k in ("license", "rights_note", "credit", "name") and isinstance(v, str):
+                yield p, v
+            else:
+                yield from _license_texts(v, p)
+    elif isinstance(node, list):
+        for i, v in enumerate(node):
+            yield from _license_texts(v, f"{path}[{i}]")
+
+
+def check_license(post):
+    """비상업(NC) 라이선스 소재 금지 (운영자 결정 2026-11-16: "상업적으로 이용되는 것만").
+    화풍·스킬·글꼴·음악·사진·코드 어느 것이든 license/rights_note/credit/sources에 NC가 보이면 오류. 캡션 출처 줄도 본다."""
+    errs = []
+    texts = list(_license_texts({k: post.get(k) for k in ("license", "rights_note", "credit", "sources", "slides", "thumb", "video", "assets")}))
+    texts += [("caption", l) for l in (post.get("caption") or "").splitlines() if re.match(r"\s*(출처|사진|화면|음악|글꼴|화풍|이미지)\s*[:：]", l)]
+    for where, t in texts:
+        m = NC_RE.search(t)
+        if m:
+            errs.append(f"비상업(NC) 라이선스 소재는 쓰지 않는다 ({where}: '{m.group(0)}') → 직접 만든 것이나 상업 이용이 되는 것(CC0, CC BY, MIT 등)으로 바꿀 것 (STYLE_GUIDE 2-1)")
+    return errs
+
+
 def check_post(post):
     """(errors, warnings) 반환."""
+    e, w = _check_post(post)
+    return e + check_license(post), w
+
+
+def _check_post(post):
     if post.get("type") == "video":
         return check_video(post)
     errors, warnings = [], []
