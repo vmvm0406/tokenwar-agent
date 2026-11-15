@@ -52,7 +52,7 @@ def fetch_account(username, pages=4):
             media[m["id"]] = {
                 "timestamp": m.get("timestamp"), "type": m.get("media_product_type") or m.get("media_type"),
                 "views": m.get("view_count"), "likes": m.get("like_count"), "comments": m.get("comments_count"),
-                "caption": cap[:150], "permalink": m.get("permalink"), "fetched_at": now,
+                "caption": cap[:1500], "permalink": m.get("permalink"), "fetched_at": now,
             }
         after = page.get("paging", {}).get("cursors", {}).get("after")
         if not after or len(page.get("data", [])) < 50:
@@ -70,7 +70,7 @@ def fetch_own():
     for m in items:
         row = {"timestamp": m.get("timestamp"), "type": m.get("media_product_type"),
                "likes": m.get("like_count"), "comments": m.get("comments_count"),
-               "caption": (m.get("caption") or "")[:150], "permalink": m.get("permalink")}
+               "caption": (m.get("caption") or "")[:1500], "permalink": m.get("permalink")}
         try:
             ins = get(f"{m['id']}/insights", metric="views,reach,saved,shares,total_interactions")
             for d in ins.get("data", []):
