@@ -1,4 +1,4 @@
-# 인스타 반응 분석 (2026-11-15 15:55 기준)
+# 인스타 반응 분석 (2026-11-15 15:57 기준)
 
 에이전트는 주제를 고를 때 이 파일을 먼저 읽는다 (STYLE_GUIDE 3장, 6-1장 '인스타 반응').
 배수 = 그 계정의 최근 60일 같은 유형(릴스/피드) 중간값 대비. 2배 이상이면 '먹힌 주제'.
@@ -24,11 +24,11 @@
 
 | 배수 | 계정 | 유형 | 날짜 | 수치 | 첫 줄 |
 |---|---|---|---|---|---|
-| 31.5x | @ai.trend.kr | REELS | 10-20 | 2,863,634 | [눈 뭉치 던진 범인이 나라고요? ❄️](https://www.instagram.com/reel/DetX442xkFz/) |
+| 31.5x | @ai.trend.kr | REELS | 10-20 | 2,863,640 | [눈 뭉치 던진 범인이 나라고요? ❄️](https://www.instagram.com/reel/DetX442xkFz/) |
 | 17.2x | @ai.asap.kr | FEED | 10-18 | 1,394 | [Filee는 Ctrl을 누른 채 파일을 끌면 커서 옆에 변환할 형식이 동그랗게 뜨고, 원하는 형식에 놓으면 바로 바꿔 주는 변환기입니다. 이미지](https://www.instagram.com/p/DeoW-TQj9F5/) |
-| 11.7x | @ai.trend.kr | REELS | 10-23 | 1,062,759 | [식이 시작도 안 했는데 하객석이 뒤집어졌어요 🎉](https://www.instagram.com/reel/De0VCSbPO_M/) |
+| 11.7x | @ai.trend.kr | REELS | 10-23 | 1,062,764 | [식이 시작도 안 했는데 하객석이 뒤집어졌어요 🎉](https://www.instagram.com/reel/De0VCSbPO_M/) |
 | 10.5x | @ai.trend.kr | FEED | 10-27 | 16,174 | [올해가 가기 전에, GPT랑 새해 계획을 세워봤어요. 🗓️](https://www.instagram.com/p/De_YpGSkS7D/) |
-| 7.4x | @ai.trend.kr | REELS | 11-04 | 669,359 | [AI로 오늘도 감동을 받네요 🥹](https://www.instagram.com/reel/DfUlNHxPiTT/) |
+| 7.4x | @ai.trend.kr | REELS | 11-04 | 669,379 | [AI로 오늘도 감동을 받네요 🥹](https://www.instagram.com/reel/DfUlNHxPiTT/) |
 | 7.1x | @ai.trend.kr | FEED | 10-28 | 10,881 | [사진 한 장으로 다섯 시대를 살아 봤어요 📷](https://www.instagram.com/p/DfB9iInE-54/) |
 | 6.8x | @ai.asap.kr | FEED | 10-28 | 553 | [Oh-My-Hermes는 Nous Research의 오픈소스 에이전트 Hermes Agent에 쓸 세팅을 묶은 올인원 패키지입니다. 설치하고 o](https://www.instagram.com/p/DfA7xqjE1nL/) |
 | 6.7x | @ai.asap.kr | FEED | 10-17 | 546 | [Happy는 Claude·Codex·Grok을 한 앱에서 골라 쓰게 해 주는 MIT 오픈소스입니다. 새 구독이 아니라 이미 내고 있는 각 회사 ](https://www.instagram.com/p/Del2nkwj2Xu/) |
