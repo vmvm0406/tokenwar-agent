@@ -14,7 +14,8 @@
 1. `git pull`, 그리고 `git fetch origin "+refs/heads/post/*:refs/remotes/origin/post/*"` (검토 중인 게시물과 겹치지 않게)
 2. `py -3.12 agent/hot.py`로 지금 관심 주제를 새로 모은 뒤, `AGENT.md`, `STYLE_GUIDE.md`, `TEMPLATES.md`, `config.json`, `data/hot.md`, `data/trends.md`, `data/hot_topics.md`를 읽는다. **지금 관심도가 높은 주제부터** 고른다 (STYLE_GUIDE 6-1장 점수표). 릴스·카드뉴스 모두 `data/hot_topics.md`(잘 터진 주제 묶음) 위쪽 주제와 같거나 비슷한 것을 먼저 고르고, PR 본문에 게시물마다 "참고한 잘 터진 주제: <묶음> (대표 게시물 첫 줄, 배수)" 한 줄을 적는다 (STYLE_GUIDE 3장).
 3. 만들 개수는 실행할 때 받은 지시("Make N carousel(s) and M reel(s)")대로. `run-local.ps1`이 `py -3.12 agent/slots.py need`로 오늘 몫(`config.json` `slots.daily_target`)에서 이미 예약된 것을 뺀 수를 넘긴다. 둘 다 0이면 부르지 않는다. 손으로 돌릴 때는 직접 `need`를 본다.
-4. 게시 시각은 칸 배정으로 정한다 (5장). `py -3.12 agent/slots.py status`로 며칠 치 칸 상황을 본다.
+4. 만들기 전에 **STYLE_GUIDE 9장 '인스타 추천 체크리스트'**를 본다: 원본으로 보이게(번역 자막·해설로 실질 편집), 캡션 첫 줄에 주제 이름, 보낼 이유 한 줄(구걸 금지), 해시태그 5개 이하, 같은 주제는 이어지는 칸에 두지 않기.
+5. 게시 시각은 칸 배정으로 정한다 (5장). `py -3.12 agent/slots.py status`로 며칠 치 칸 상황을 본다.
 
 ## 1. 카드뉴스 (오늘 것이 없을 때)
 
