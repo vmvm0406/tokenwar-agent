@@ -15,8 +15,8 @@
       "20:43"
     ],
     "daily_target": {
-      "carousel": 1,
-      "reel": 2
+      "carousel": 3,
+      "reel": 4
     },
     "min_gap_minutes": 90,
     "lead_minutes": 40,
@@ -75,7 +75,8 @@
       "ai.korea.news",
       "ai_tool_kr",
       "ai.insight.kr",
-      "ainews.kr"
+      "ainews.kr",
+      "bizucafe"
     ],
     "note": "한국 AI 정보 계정 중 비즈니스/크리에이터 계정만 된다. 에이전트가 리서치 중 반응 좋은 계정을 찾으면 여기에 추가한다 (최대 15개)."
   },
@@ -93,5 +94,53 @@
     "keyword": "받기",
     "pages_base": "https://vmvm0406.github.io/tokenwar-agent",
     "note": "댓글 자동 DM은 외부 도구(Zorcha 무료, Ask for Follow)로. 게시물마다 dm.md 설정 메모를 운영자가 도구에 붙여 넣는다. 안내 페이지는 GitHub Pages(main /docs). 직접 만들기는 계정이 커지면 다시 검토 (NEXT.md)"
+  },
+  "model_watch": {
+    "auto_publish": false,
+    "max_posts_per_run": 1,
+    "max_tries": 3,
+    "max_items_per_source": 40,
+    "sources": [
+      {
+        "company": "OpenAI",
+        "name": "OpenAI 뉴스",
+        "type": "rss",
+        "url": "https://openai.com/news/rss.xml"
+      },
+      {
+        "company": "구글",
+        "name": "구글 블로그 제미나이",
+        "type": "rss",
+        "url": "https://blog.google/products/gemini/rss/"
+      },
+      {
+        "company": "구글",
+        "name": "구글 블로그 AI",
+        "type": "rss",
+        "url": "https://blog.google/technology/ai/rss/"
+      },
+      {
+        "company": "앤트로픽",
+        "name": "앤트로픽 뉴스",
+        "type": "html",
+        "url": "https://www.anthropic.com/news",
+        "link_prefix": "/news/"
+      }
+    ],
+    "hot": {
+      "min_sections": 2,
+      "cooldown_days": 7,
+      "brands": {
+        "xAI(그록)": "(?<![A-Za-z])(Grok|xAI)(?![A-Za-z])|그록",
+        "메타": "(?<![A-Za-z])(Meta AI|Llama|Meta)(?![A-Za-z])|메타 ?AI|라마",
+        "딥시크": "DeepSeek|딥시크",
+        "네이버": "Naver|HyperCLOVA|네이버|하이퍼클로바",
+        "삼성": "Samsung|Gauss|삼성|가우스",
+        "카카오": "Kakao|카카오|카나나",
+        "미스트랄": "Mistral|미스트랄",
+        "알리바바(큐웬)": "Qwen|큐웬|통의"
+      }
+    },
+    "note": "새 모델 바로 올리기 (LOCAL.md 6장). scripts/watch-models.ps1이 30분마다 agent/model_watch.py를 돌려 새 발표가 있으면 Claude가 게시물 1개를 바로 올리기(--asap)로 만든다. sources = 항상 보는 공식 블로그(RSS 또는 목록 HTML), hot = data/hot.md 여러 섹션(min_sections곳 이상)에 동시에 뜰 때만 보는 회사. auto_publish=false면 PR(운영자 Merge), true면 main에 바로."
   }
 }

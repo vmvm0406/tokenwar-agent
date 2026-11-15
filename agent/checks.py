@@ -14,7 +14,13 @@ SERIES = {"전황", "긴급", "생존 가이드", "오픈소스", "AI 용어"}
 COVER_LAYOUTS = {"big", "list", "image"}
 BODY_KINDS = {"body", "steps", "compare", "stat", "prompt"}
 # 게시물 형식 (선택). howto: 따라 하기, ask: 나를 알려 주는 질문, weekly: 주간 요약, news: 소식 (STYLE_GUIDE 3-1)
-FORMATS = {"news", "howto", "ask", "weekly"}
+# buzz: 가벼운 화제 (연예인·예능·유명인이 나오는 AI 이야기, STYLE_GUIDE 3-2). 주당 개수는 dupes.py가 센다
+FORMATS = {"news", "howto", "ask", "weekly", "buzz"}
+BUZZ_MIN_SOURCES = 2
+# 가벼운 화제는 AI 화제에 빗댄 패러디·밈도 된다. 농담임을 캡션 앞부분에서 풀어 줘야 한다 (실제 논란으로 오해 금지)
+BUZZ_REVEAL = ["사실은", "사실 ", "실제로는", "실제론", "패러디", "농담", "밈", "알고 보니", "진짜는", "빗댄", "합성"]
+# 가벼운 화제에서 쓰면 안 되는 쪽 (확인 안 된 의혹, 사생활, 조롱). 경고로 알리고 사람이 판단
+BUZZ_RISKY = ["의혹", "카더라", "루머", "열애", "사생활", "폭로", "저격", "망신", "굴욕"]
 PROMPT_MAX = 320  # 프롬프트 상자 하나 글자 수 (넘치면 render.py가 레이아웃 오류로도 막는다)
 CLIP_FIELDS = ("src", "start", "end", "source", "source_url")
 VISUALS = {"image", "bars", "timeline"}
@@ -106,10 +112,45 @@ def body_sentences(text, where):
     return errs
 
 
-def title_sentence(title, where):
-    """제목이 서술어로 끝나는지. 따옴표 인용("~했다")도 서술어로 본다."""
+# 구어체 반박·강조 끝맺음 (STYLE_GUIDE 3-3, 운영자 결정 2026-11-16): "아니 컴공 안 죽었다니까?", "끝났다고? 아니거든",
+# "안 죽었잖아", "아니야". 물음표가 붙어도 답이 정해진 반박이면 서술어로 본다.
+COLLOQUIAL_RE = re.compile(r"(거든|거든요|[다라냐]고|니까|니까요|잖아|잖아요|는데|는데요|[이거니]야|[았었였했겠]지)[\s\"'”’.!?…]*$")
+_TAIL = r"[\s\"'”’.!?…]*$"
+
+
+def _jong(ch):
+    """한글 음절의 받침 번호 (0 = 받침 없음, 8 = ㄹ, 17 = ㅂ). 한글이 아니면 -1."""
+    c = ord(ch) - 0xAC00
+    return c % 28 if 0 <= c < 11172 else -1
+
+
+def is_real_question(text):
+    """답을 독자에게 미루는 진짜 질문형인지: "~일까요?", "~할까?", "~인가요?", "~나요?", "~습니까?".
+    "안 죽었다니까?"(다니까), "끝났다고?"는 반박이라 질문으로 보지 않는다."""
+    w = re.sub(_TAIL, "", str(text).strip())
+    if not w:
+        return False
+    if re.search(r"(나요|가요|는가|ㄴ가|은가|인가|던가)$", w):
+        return True
+    m = re.search(r"(.)(까요|까)$", w)   # 받침 ㄹ + 까(요): 할까, 일까요, 될까 / 받침 ㅂ + 니까: 합니까, 입니까
+    if m and _jong(m.group(1)) == 8:
+        return True
+    m = re.search(r"(.)니까(요)?$", w)
+    if m and (_jong(m.group(1)) == 17 or m.group(1) == "습"):
+        return True
+    return False
+
+
+def title_sentence(title, where, no_question=True):
+    """제목이 서술어로 끝나는지. 따옴표 인용("~했다")도 서술어로 본다.
+    구어체 반박("안 죽었다니까?", "아니거든", "끝났다고?")은 통과, 진짜 질문("~일까요?", "~할까?")은 막는다."""
     one = " ".join(_lines(title)).strip()
-    if one and not PREDICATE_RE.search(one):
+    if not one:
+        return []
+    if no_question and is_real_question(one):   # 카드 표지("토큰, 정확히 뭘까")는 설명형 질문을 허용
+        return [f"{where}이 질문형: '{one}' → 답을 미루는 질문 대신 단정이나 구어체 반박으로 "
+                "(예: '컴공은 끝났을까요?' 대신 '아니 컴공 안 죽었다니까?', STYLE_GUIDE 3-3)"]
+    if not (PREDICATE_RE.search(one) or COLLOQUIAL_RE.search(one)):
         return [f"{where}이 서술어 없이 끝남: '{one}' → 누가·무엇이 어떻게 했는지 끝까지 쓴다 "
                 "(예: '3년 만에 밀레니엄 난제' 대신 'AI가 3년 만에 수학 최대 난제를 풀었다')"]
     return []
@@ -239,9 +280,18 @@ def check_video(post):
         errors.append("캡션에도 원작자(credit)를 밝힐 것")
     if not post["sources"]:
         errors.append("출처 1개 이상 (원본 영상 링크)")
+    f = post.get("format")
+    if f is not None and f not in FORMATS:
+        errors.append(f"format은 {FORMATS} 중 하나: {f}")
+    e_b, w_b = check_buzz(post)
+    errors += e_b
+    warnings += w_b
     e_c, w_c = check_caption_hooks(post["caption"])
     errors += e_c
     warnings += w_c
+    e_r, w_r = check_reach(post)
+    errors += e_r
+    warnings += w_r
     return errors, warnings
 
 
@@ -288,6 +338,24 @@ def _prompts(slides):
     return out
 
 
+def check_buzz(post):
+    """가벼운 화제(format buzz): 출처 2곳 이상(오류), 캡션 앞에서 실제 사정 밝히기·위험한 표현(경고) (STYLE_GUIDE 3-2)."""
+    errors, warnings = [], []
+    if post.get("format") != "buzz":
+        return errors, warnings
+    srcs = [s for s in post.get("sources", []) if str(s.get("url", "")).startswith("http")]
+    if len(srcs) < BUZZ_MIN_SOURCES:
+        errors.append(f"가벼운 화제(format buzz)는 출처 {BUZZ_MIN_SOURCES}곳 이상으로 사실 확인: 지금 {len(srcs)}곳 (STYLE_GUIDE 3-2)")
+    head = " / ".join([l for l in post.get("caption", "").splitlines() if l.strip()][:3])
+    if not any(w in head for w in BUZZ_REVEAL):
+        warnings.append("가벼운 화제: 캡션 앞 3줄에 실제 사정을 밝히는 말('사실은', '실제로는', '패러디' 등)이 없음 → 농담·패러디면 앞에서 풀어 줄 것 (STYLE_GUIDE 3-2)")
+    text = json.dumps({k: post.get(k) for k in ("title", "slides", "video", "thumb", "caption")}, ensure_ascii=False)
+    hit = [w for w in BUZZ_RISKY if w in text]
+    if hit:
+        warnings.append(f"가벼운 화제에 조심할 표현 {hit}: 확인 안 된 의혹·사생활·조롱은 다루지 않는다 (STYLE_GUIDE 3-2)")
+    return errors, warnings
+
+
 def check_format(post):
     """따라 하기·질문 형식이면 복사해 쓸 프롬프트가 장 안에 있어야 한다 (STYLE_GUIDE 3-1)."""
     errors, warnings = [], []
@@ -296,6 +364,7 @@ def check_format(post):
         return errors, warnings
     if f not in FORMATS:
         return [f"format은 {FORMATS} 중 하나: {f}"], warnings
+    errors, warnings = check_buzz(post)
     prs = _prompts(post.get("slides", []))
     if f in ("howto", "ask") and not prs:
         errors.append(f"format '{f}'에는 복사해 쓸 프롬프트 장(kind: prompt)이 1개 이상 필요")
@@ -417,6 +486,72 @@ def check_hashtags(tags):
     return warnings
 
 
+# ---- 인스타 추천 체크리스트 (STYLE_GUIDE 9장) ----
+REEL_REC_MAX_SECONDS = 180      # 3분이 넘는 릴스는 추천(둘러보기·릴스 탭)에 못 나간다 (Instagram for Creators)
+CAPTION_FOLD = 125              # 피드에서 '더 보기' 전에 보이는 첫 부분
+HASHTAG_RE = re.compile(r"(?<![\w&])#[0-9A-Za-z가-힣_]+")
+# 다른 플랫폼·다른 인스타 계정의 영상: 재업로드는 '원본 아님'으로 추천에서 빠진다
+REPOST_HOSTS = ("instagram.com", "tiktok.com", "facebook.com/reel", "fb.watch")
+# 반응 구걸(engagement bait): 좋아요·공유·태그를 조르는 말
+BAIT = ["좋아요 눌러", "좋아요 부탁", "좋아요 꾹", "공유 부탁", "공유해 주세요", "공유해주세요", "친구 태그", "친구를 태그",
+        "태그해 주세요", "태그해주세요", "팔로우 부탁", "맞팔"]
+TOPIC_ALIAS = {"챗gpt": ["chatgpt", "gpt", "오픈ai", "openai"], "chatgpt": ["챗gpt", "gpt"], "openai": ["오픈ai", "챗gpt", "chatgpt"],
+               "제미나이": ["gemini", "구글"], "gemini": ["제미나이"], "클로드": ["claude", "앤트로픽"], "claude": ["클로드"],
+               "앤트로픽": ["anthropic", "클로드"], "엔비디아": ["nvidia"], "구글": ["google", "제미나이"]}
+
+
+def _norm(x):
+    return re.sub(r"\s+", "", str(x)).lower()
+
+
+def check_reach(post):
+    """인스타 추천에 걸리는 것 (STYLE_GUIDE 9장). (errors, warnings)
+    - 캡션 본문 해시태그 + hashtags 합이 5개 넘으면 오류 (인스타 제한, 2025-12)
+    - 릴스 3분 초과 오류 (추천 대상 아님)
+    - 인용 원본이 인스타·틱톡 등 다른 계정 영상이면 오류 (재업로드 = 원본 아님)
+    - 캡션 첫 125자에 주제 이름(해시태그 주제어)이 없으면 경고 (검색은 캡션 키워드로 찾는다)
+    - 좋아요·공유·태그 구걸 문구 경고"""
+    errors, warnings = [], []
+    cap = post.get("caption", "")
+    tags = post.get("hashtags", []) or []
+    in_cap = HASHTAG_RE.findall(cap)
+    if in_cap:
+        total = len({_norm(t) for t in list(tags) + in_cap})
+        mx = CONFIG["limits"].get("hashtags_max", 5)
+        if total > mx:
+            errors.append(f"캡션 본문 해시태그 {len(in_cap)}개 + hashtags 합이 {total}개: 인스타는 게시물당 {mx}개까지 (STYLE_GUIDE 9장)")
+        else:
+            warnings.append(f"캡션 본문에 해시태그 {in_cap}: 해시태그는 hashtags 필드에만 (게시할 때 캡션 끝에 붙는다)")
+    v = post.get("video") or {}
+    if post.get("type") == "video" and v.get("end") not in (None, ""):
+        keep = v.get("keep") or []
+        d = sum(float(b) - float(a) for a, b in keep) if keep else float(v["end"]) - float(v.get("start", 0))
+        if d > REEL_REC_MAX_SECONDS:
+            errors.append(f"릴스 {d:.0f}초: 3분({REEL_REC_MAX_SECONDS}초)이 넘으면 추천에 못 나간다 (STYLE_GUIDE 9장)")
+    if post.get("rights") == "quote":
+        urls = [str(post.get("source_url", "")), str(v.get("source_url", ""))]
+        bad = [u for u in urls if any(h in u.lower() for h in REPOST_HOSTS)]
+        if bad:
+            errors.append(f"인용 원본이 다른 SNS 계정 영상({bad[0][:60]}): 재업로드는 '원본 아님'으로 추천에서 빠지고 "
+                          "워터마크가 남는다. 공식 유튜브·공식 사이트 원본에서 받을 것 (STYLE_GUIDE 9장)")
+    first = cap.strip()[:CAPTION_FOLD]
+    topics = [t.lstrip("#") for t in tags if str(t) != TAG_BRAND]
+    if first and topics:
+        f = _norm(first)
+        names = set()
+        for t in topics:
+            n = _norm(t)
+            names.add(n)
+            names.update(TOPIC_ALIAS.get(n, []))
+        if not any(n and n in f for n in names):
+            warnings.append(f"캡션 첫 {CAPTION_FOLD}자에 주제 이름이 없음 (해시태그 {topics} 중 하나라도): "
+                            "인스타 검색은 캡션 키워드로 찾는다. 첫 줄에 서비스·회사·인물 이름을 (STYLE_GUIDE 9장)")
+    hit = [w for w in BAIT if w in cap]
+    if hit:
+        warnings.append(f"반응 구걸 문구 {hit}: 좋아요·공유·태그를 조르지 말고, 보낼 이유를 구체적으로 (예: '다음 주 회의 전에 팀에 보내 두세요') (STYLE_GUIDE 9장)")
+    return errors, warnings
+
+
 def check_post(post):
     """(errors, warnings) 반환."""
     if post.get("type") == "video":
@@ -469,7 +604,7 @@ def check_post(post):
             if not s.get("title"):
                 errors.append(f"{tag} 표지 제목(title) 필요")
             t = s.get("title", "")
-            errors += title_sentence(t, f"{tag} 표지 제목")
+            errors += title_sentence(t, f"{tag} 표지 제목", no_question=False)
             ls = _lines(t) if t else []
             if len(ls) > lim["cover_title_lines"]:
                 errors.append(f"{tag} 표지 제목은 {lim['cover_title_lines']}줄 이하: {len(ls)}줄")
@@ -607,6 +742,9 @@ def check_post(post):
     cap = post["caption"] + "\n\n" + " ".join(tags)
     if len(cap) > 2200:
         errors.append("캡션+해시태그는 2,200자 이하")
+    e_r, w_r = check_reach(post)
+    errors += e_r
+    warnings += w_r
 
     srcs = post["sources"]
     need = 1 if post["series"] in ("생존 가이드", "오픈소스", "AI 용어") else 2

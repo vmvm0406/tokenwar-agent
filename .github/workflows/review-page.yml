@@ -1,0 +1,56 @@
+name: 검토 페이지
+
+# 열린 검토 PR(post/*)의 릴스 영상·카드 장을 휴대폰에서 볼 수 있는 페이지를 만든다.
+# https://vmvm0406.github.io/tokenwar-agent/review/  (docs/review/index.html, main에 커밋)
+# 렌더링(render.yml)이 PR 브랜치에 커밋해도 pull_request 이벤트가 안 생기므로 workflow_run으로도 돈다.
+on:
+  pull_request:
+    types: [opened, synchronize, closed, reopened]
+    branches: ["**"]
+  workflow_run:
+    workflows: ["그림 만들기·렌더링"]
+    types: [completed]
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: review-page
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  page:
+    # pull_request는 검토용 브랜치(post/...)에서 온 것만
+    if: github.event_name != 'pull_request' || startsWith(github.head_ref, 'post/')
+    runs-on: ubuntu-latest
+    steps:
+      # pull_request 이벤트는 기본으로 PR 브랜치를 꺼내므로 반드시 main을 꺼낸다
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 검토 페이지 만들기
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python agent/review_page.py
+
+      - name: 바뀌었으면 main에 커밋
+        run: |
+          git add docs/review
+          if git diff --cached --quiet; then echo "바뀐 것 없음"; exit 0; fi
+          git config user.name "tokenwar-bot"
+          git config user.email "tokenwar-bot@users.noreply.github.com"
+          git commit -q -m "검토 페이지 갱신"
+          for i in 1 2 3; do
+            git pull -q --rebase origin main && git push -q origin HEAD:main && exit 0
+            sleep 5
+          done
+          exit 1

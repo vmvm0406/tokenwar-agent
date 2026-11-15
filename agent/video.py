@@ -51,7 +51,7 @@ def has_audio(path):
     return bool(out)
 
 
-def page_html(post, cfg, box_h, fonts_uri):
+def page_html(post, cfg, box_h, fonts_uri, size=50):
     b = cfg["brand"]
     credit = post.get("credit")
     credit_html = (f'<div class="credit"><span>출처</span><b>{esc(credit)}</b></div>' if credit
@@ -76,7 +76,7 @@ def page_html(post, cfg, box_h, fonts_uri):
 .credit{{position:absolute;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}}
 .credit span{{font-size:26px;font-weight:700;color:#9AA59F}}
 .credit b{{font-size:34px;font-weight:800;color:{b['accent']};letter-spacing:-.01em}}
-.sub{{position:absolute;left:70px;right:70px;text-align:center;font-size:50px;font-weight:800;line-height:1.35;letter-spacing:-.02em;
+.sub{{position:absolute;left:70px;right:70px;text-align:center;font-size:{size}px;font-weight:800;line-height:1.35;letter-spacing:-.02em;
   color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.85),0 0 2px rgba(0,0,0,.9);white-space:pre-line}}
 .sub .hl{{color:{b['accent']}}}
 </style></head><body><div id="frame">
@@ -88,13 +88,14 @@ def page_html(post, cfg, box_h, fonts_uri):
 </div></body></html>"""
 
 
-async def render_layers(post, cfg, folder, box_h, work):
-    """틀(PNG), 자막(PNG 여러 장), 미리보기용 배경을 만든다. 영상 창 위치를 돌려준다."""
+async def render_layers(post, cfg, folder, box_h, work, size=50, lift=0):
+    """틀(PNG), 자막(PNG 여러 장), 미리보기용 배경을 만든다. 영상 창 위치를 돌려준다.
+    size: 자막 글씨(px). 자막은 항상 영상 창 바닥. lift: 원본 글자 띠를 피해 바닥에서 올린 만큼(px)."""
     from playwright.async_api import async_playwright
 
     fonts_uri = (ROOT / "assets" / "fonts").as_uri()
     tmp = work / "frame.html"
-    tmp.write_text(page_html(post, cfg, box_h, fonts_uri), encoding="utf-8")
+    tmp.write_text(page_html(post, cfg, box_h, fonts_uri, size), encoding="utf-8")
     async with async_playwright() as p:
         exe = shutil.which("google-chrome") or shutil.which("chromium")
         browser = await p.chromium.launch(executable_path=exe) if exe else await p.chromium.launch()
@@ -114,11 +115,19 @@ async def render_layers(post, cfg, folder, box_h, work):
             const inside = bottom + credH + 40 + 136 > {UI_SAFE_BOTTOM};
             const sub = document.getElementById('sub');
             const capAt = {float((post.get("video") or {}).get("captions_at") or 0)};
+            // 2줄 자막 높이 기준으로 위치를 고정한다 (자막 PNG는 아래 끝 기준이라 1줄이어도 아래 끝선이 같다)
+            const twoLine = 2 * {size} * 1.35;
+            sub.style.top = 'auto';
             if (inside && capAt > 0) {{
-              // 원본에 박힌 자막 바로 위에 우리 자막을 둔다 (자막 아래쪽 끝 기준)
-              sub.style.top = 'auto';
+              // 예전 방식: 원본에 박힌 자막 바로 위 (자막 아래쪽 끝 기준)
               sub.style.bottom = ({H} - (top + 6 + capAt * ({box_h} - 12) - 14)) + 'px';
-            }} else if (inside) sub.style.top = (bottom - 230) + 'px'; else sub.style.top = (bottom + credH + 40) + "px";
+            }} else if (inside) {{
+              // 영상 창 맨 아래: 자막 아래 끝이 안쪽 테두리 위 24px (lift만큼 올림)
+              sub.style.bottom = ({H} - (bottom - 6 - 24 - {int(lift)})) + 'px';
+            }} else {{
+              // 영상 아래 빈칸이 안전 영역 안이면 영상 아래 (2줄 기준 위 끝)
+              sub.style.bottom = ({H} - (bottom + credH + 40 + twoLine)) + 'px';
+            }}
             const headOver = head.bottom > top - 20;
             return {{top, inside, headOver, titleH: document.querySelector('.title').getBoundingClientRect().height}};
         }}""")
@@ -144,8 +153,11 @@ async def render_layers(post, cfg, folder, box_h, work):
 # 원본 화면의 가로줄마다 '세게 바뀌는 점'의 밀도를 잰다. 글자 줄은 밀도가 0.1 이상이고 짧은 획이 많다
 # (머스크 대담 영상: 이름 자막 0.12~0.28, 옷·배경 잡음 0.07 이하).
 BURN_DENSITY, BURN_RUNS, BURN_W = 0.10, 50, 480
-MAX_SHIFT = 60          # 우리 자막을 이만큼(px)까지만 위로 옮겨 피한다. 더 옮기면 얼굴을 덮을 수 있다
-# 원본 글자를 띠로 가리지 않는다 (운영자 결정: 자막만 보이게). 피할 수 없으면 자막 전체를 영상 창 위쪽으로 옮긴다.
+# 원본 글자를 띠로 가리지 않는다 (운영자 결정: 자막만 보이게). 자막은 항상 영상 창 바닥 (2026-11-16 운영자 결정: 위에 다는 것 없앰).
+# 바닥에서 겹치면 글씨를 줄여 보고(SUB_SIZES), 그래도 겹치면 원본 글자 띠 바로 위로 조금 올린다(영상 창 아래쪽 1/3 안에서만,
+# 얼굴 검출이 없어 턱·입을 가리지 않게 보수적으로). 그래도 안 되면 바닥에 두고 겹침 감수. 한 릴스 안에서는 크기·위치 하나로 통일.
+SUB_SIZES = (50, 44, 40)   # 40px 아래로는 줄이지 않는다
+LIFT_ZONE = 1 / 3          # 올린 자막의 위 끝이 영상 창 안쪽 높이의 아래 1/3 안에 있어야 한다
 
 
 def sample_gray(src, start, dur, crop=None, fps=2):
@@ -192,59 +204,250 @@ def alpha_rows(path):
     return (box[1], box[3]) if box else None
 
 
-def avoid_burned(post, src, start, dur, subs, geo, box_h, scale_info):
-    """우리 자막이 원본에 박힌 글자(이름 자막·하단 자막)와 겹치지 않게 자막 자리만 옮긴다.
-    1) 겹치는 자막을 MAX_SHIFT px 안에서 위로 옮겨 피할 수 있으면 그것만 옮긴다.
-    2) 안 되면 이 릴스의 자막 전체를 영상 창 위쪽(보통 원본 위쪽 빈 배경)으로 옮긴다.
-    3) 그래도 겹치면 경고만 한다 (video.crop / captions_at으로 손으로 정한다).
-    subs: [(png, a, z)] → [(png, a, z, dy)]."""
+def burned_bands(post, src, start, dur, geo, scale_info):
+    """원본에 박힌 글자 줄을 프레임마다 찾아 [(시각, [(위px, 아래px)])]로. 영상 창 밖이면 None."""
     v = post.get("video") or {}
     if v.get("captions_at") or v.get("avoid_burned") is False or not geo.get("inside"):
-        return [(p, a, z, 0) for p, a, z in subs]
+        return None
     crop = (float(v["crop"].get("top", 0)), float(v["crop"].get("bottom", 1))) if v.get("crop") else None
     times, frames = sample_gray(src, start, dur, crop)
     box_top = geo["top"] + 6
     scaled_h, off_y = scale_info
+    return [(tt, [(box_top + b0 * scaled_h - off_y, box_top + b1 * scaled_h - off_y) for b0, b1 in text_bands(fr)])
+            for tt, fr in zip(times, frames)]
 
-    def to_px(fr):
-        return box_top + fr * scaled_h - off_y
 
-    info = []  # (자막 위, 아래, 그 시간대 글자 띠들)
-    for path, a, z in subs:
-        rows = alpha_rows(path) or (0, 0)
-        bands = [(to_px(b0), to_px(b1)) for tt, fr in zip(times, frames) if a - 0.25 <= tt <= z + 0.25
-                 for b0, b1 in text_bands(fr)]
-        info.append((rows[0], rows[1], bands))
+def _overlaps(subs, burned, i):
+    """자막 i와 겹치는 (시각, 띠위px) 목록."""
+    path, a, z = subs[i]
+    rows = alpha_rows(path)
+    if not rows:
+        return []
+    y0, y1 = rows
+    return [(tt, b0) for tt, bands in burned if a - 0.25 <= tt <= z + 0.25
+            for b0, b1 in bands if b1 > y0 - 10 and b0 < y1 + 10]
 
-    def clash(y0, y1, bands):
-        return any(b[1] > y0 - 10 and b[0] < y1 + 10 for b in bands)
 
-    if not any(y1 > y0 and clash(y0, y1, bands) for y0, y1, bands in info):
-        return [(p, a, z, 0) for p, a, z in subs]
-    # 1) 조금만 올려서 피하기
-    dys, ok = [], True
-    for y0, y1, bands in info:
-        if y1 <= y0 or not clash(y0, y1, bands):
-            dys.append(0)
-            continue
-        dy = int(min(b[0] for b in bands if b[1] > y0 - 10 and b[0] < y1 + 10) - 12 - y1)
-        if -MAX_SHIFT <= dy < 0 and y0 + dy >= box_top and not clash(y0 + dy, y1 + dy, bands):
-            dys.append(dy)
+def clashing(subs, burned):
+    """원본 글자와 겹치는 자막 번호 목록. subs: [(png, a, z)]."""
+    return [i + 1 for i in range(len(subs)) if _overlaps(subs, burned, i)]
+
+
+def clash_spans(subs, burned, start):
+    """겹치는 구간을 릴스 시각(초)으로 [(a, z)] 묶어서."""
+    spans = []
+    for i in range(len(subs)):
+        ts = [tt for tt, _ in _overlaps(subs, burned, i)]
+        if ts:
+            _, a, z = subs[i]
+            spans.append((max(a, min(ts) - 0.25) - start, min(z, max(ts) + 0.25) - start))
+    spans.sort()
+    merged = []
+    for a, z in spans:
+        if merged and a <= merged[-1][1] + 0.1:
+            merged[-1] = (merged[-1][0], max(merged[-1][1], z))
         else:
-            ok = False
-            break
-    if ok:
-        for i, dy in enumerate(dys):
-            if dy:
-                print(f"  자막 {i + 1}: 원본 글자를 피해 {-dy}px 위로")
-        return [(p, a, z, dy) for (p, a, z), dy in zip(subs, dys)]
-    # 2) 자막 전체를 영상 창 위쪽으로
-    dys = [int(box_top + 16 - y0) if y1 > y0 else 0 for y0, y1, _ in info]
-    if all(not clash(y0 + dy, y1 + dy, bands) for (y0, y1, bands), dy in zip(info, dys) if y1 > y0):
-        print("  원본 아래쪽 글자(이름 자막 등)와 겹쳐 자막 전체를 영상 창 위쪽으로 옮김. 얼굴을 덮지 않는지 미리보기로 확인")
-        return [(p, a, z, dy) for (p, a, z), dy in zip(subs, dys)]
-    print("  경고: 원본에 박힌 글자를 자동으로 피하지 못함 → video.crop 또는 captions_at을 손으로 정할 것")
-    return [(p, a, z, 0) for p, a, z in subs]
+            merged.append((a, z))
+    return merged
+
+
+def need_lift(subs, burned):
+    """바닥 자리에서 겹치는 원본 글자 띠 위로 올라서기 위해 필요한 높이(px)."""
+    lift = 0
+    for i in range(len(subs)):
+        hits = _overlaps(subs, burned, i)
+        if hits:
+            y1 = alpha_rows(subs[i][0])[1]
+            lift = max(lift, y1 - (min(b0 for _, b0 in hits) - 10))
+    return int(round(lift / 2) * 2)
+
+
+def place_subs(post, cfg, folder, box_h, work, src, start, dur, scale_info):
+    """자막 크기·자리를 정하고 그린다. 자막은 항상 영상 창 바닥. 순서: 바닥 50px → 겹치면 44px → 40px
+    → 그래도 겹치면 원본 글자 띠 바로 위로 조금 올림(영상 창 아래쪽 1/3 안에서만) → 그래도 안 되면 바닥에 두고 겹침 감수.
+    video.captions_size(px)를 적으면 그 크기만 쓴다. captions_pos: "top"은 더 쓰지 않는다(경고 후 바닥)."""
+    v = post.get("video") or {}
+    pos_fix, size_fix = v.get("captions_pos"), v.get("captions_size")
+    if pos_fix and pos_fix != "bottom":
+        print(f"  경고: video.captions_pos '{pos_fix}'는 더 쓰지 않는다 → 자막은 영상 창 바닥 (post.json에서 지울 것)")
+    sizes = [int(size_fix)] if size_fix else list(SUB_SIZES)
+    geo, subs = asyncio.run(render_layers(post, cfg, folder, box_h, work, sizes[0]))
+    if not geo.get("inside"):
+        return geo, subs
+    burned = burned_bands(post, src, start, dur, geo, scale_info)
+    if burned is None:
+        print(f"  자막: 영상 창 맨 아래, {sizes[0]}px")
+        return geo, subs
+    tried = []  # (겹친 자막 수, 순번, size, bad)
+    bad = clashing(subs, burned)
+    tried.append((len(bad), 0, sizes[0], bad))
+    if not bad:
+        print(f"  자막: 영상 창 맨 아래, {sizes[0]}px")
+        return geo, subs
+    first_bad = bad
+    for k, size in enumerate(sizes[1:], 1):
+        geo, subs = asyncio.run(render_layers(post, cfg, folder, box_h, work, size))
+        bad = clashing(subs, burned)
+        tried.append((len(bad), k, size, bad))
+        if not bad:
+            print(f"  자막 크기 {size}px로 줄여 바닥 유지 (50px에서 원본 글자와 겹쳤던 자막: {first_bad})")
+            return geo, subs
+    # 원본 글자 띠 바로 위로 조금 올리기: 영상 창 안쪽의 아래 1/3 안에서만 (얼굴 검출이 없어 보수적으로)
+    inner_top = geo["top"] + 6
+    zone_top = inner_top + (box_h - 12) * (1 - LIFT_ZONE)
+    for size in sizes:
+        geo0, subs0 = asyncio.run(render_layers(post, cfg, folder, box_h, work, size))
+        lift = need_lift(subs0, burned)
+        if lift <= 0:
+            continue
+        geo, subs = asyncio.run(render_layers(post, cfg, folder, box_h, work, size, lift))
+        tops = [r[0] for r in (alpha_rows(p_) for p_, _, _ in subs) if r]
+        if tops and min(tops) < zone_top:
+            continue
+        if not clashing(subs, burned):
+            print(f"  자막: 영상 창 바닥에서 {lift}px 올림, {size}px (원본 글자 띠 바로 위, 영상 창 아래쪽 1/3 안)."
+                  " 얼굴(턱·입)을 덮지 않는지 장면 시트로 확인")
+            return geo, subs
+    # 그래도 안 되면 바닥에 두고 겹침 감수 (띠로 가리지 않는다). 겹치는 자막이 가장 적은 크기로.
+    n, _, size, bad = min(tried)
+    geo, subs = asyncio.run(render_layers(post, cfg, folder, box_h, work, size))
+    spans = ", ".join(f"{a:.1f}~{z:.1f}초" for a, z in clash_spans(subs, burned, start))
+    print(f"  자막: 영상 창 맨 아래, {size}px")
+    print(f"  겹침 감수: {spans} 원본 글자와 겹침 (릴스 시각, 자막 {bad})")
+    return geo, subs
+
+
+# ---------- 구간 경계를 말소리에 맞추기 (나델라 릴스 끝 "rejected"가 잘린 일 이후) ----------
+# 받아쓰기 단어 시각만 믿지 않고 원본 소리 크기로 '첫 소리 시작'과 '마지막 소리 끝'을 찾는다.
+# 소리 기준은 클립마다 상대적으로: 20ms 조각 dB의 아래 10%(무음·숨) ~ 위 10%(말소리) 사이 EDGE_RATIO 지점.
+# 이보다 작은 조각이 EDGE_GAP초 이상 이어지면 '소리 틈'(단어·문장 사이)으로 본다.
+# - end: 마지막 소리 끝 + EDGE_TAIL(0.3초)보다 앞이면 '마지막 소리 끝 + 0.4초'로 늘린다.
+#        그 사이 다음 말 첫소리가 들어오면 '마지막 소리 끝 + 0.05초'부터 0.12초 동안 소리를 줄여 무음으로 (화면은 end까지).
+# - start: 첫 소리 - 0.2초보다 뒤면 앞으로 당긴다. 그 앞에 앞 문장 꼬리가 있으면 소리만 무음 → 첫 소리 직전 0.12초 페이드인.
+# - 말이 EDGE_MAX초 넘게 끊김 없이 이어지면(문장 한가운데) 자동으로 못 고치므로 오류.
+EDGE_HOP, EDGE_RATIO, EDGE_GAP = 0.02, 0.3, 0.06
+EDGE_TAIL, EDGE_END_PAD, EDGE_HEAD = 0.3, 0.4, 0.2
+FADE_AFTER, FADE_LEN, EDGE_MAX = 0.05, 0.12, 1.2
+
+
+class EdgeCutError(Exception):
+    pass
+
+
+def _db_frames(src, a, z, sr=16000):
+    """[a, z] 구간 소리를 EDGE_HOP초 조각으로 나눈 dB 목록. (조각 시작 시각 배열, dB 배열)"""
+    import numpy as np
+    # -ss를 -i 앞에만 두면 일부 원본(yt-dlp로 일부만 받은 것 등)에서 소리가 0.1~0.7초 어긋난다.
+    # 5초 앞까지 빠르게 건너뛴 뒤 원래 시각(-copyts)으로 정확히 자른다.
+    pre = max(0.0, a - 5)
+    raw = subprocess.run(["ffmpeg", "-nostdin", "-loglevel", "error", "-ss", f"{pre:.3f}", "-i", str(src), "-copyts",
+                          "-ss", f"{a:.3f}", "-t", f"{z - a:.3f}", "-vn", "-ac", "1", "-ar", str(sr), "-f", "s16le", "-"],
+                         capture_output=True, check=True).stdout
+    x = np.frombuffer(raw[: len(raw) // 2 * 2], np.int16).astype(np.float32) / 32768
+    hop = int(sr * EDGE_HOP)
+    n = len(x) // hop
+    if n == 0:
+        return np.zeros(0), np.zeros(0)
+    rms = np.sqrt((x[: n * hop].reshape(n, hop) ** 2).mean(axis=1) + 1e-10)
+    return a + np.arange(n) * EDGE_HOP, 20 * np.log10(rms)
+
+
+def fit_edges(src, start, end):
+    """start/end를 말소리에 맞춘다. {"start", "end", "fade_in", "fade_out", "notes", "errors"}
+    fade_in/fade_out: 소리를 줄이기 시작하는 원본 시각 (없으면 None)."""
+    import numpy as np
+    plan = {"start": start, "end": end, "fade_in": None, "fade_out": None, "notes": [], "errors": []}
+    if not has_audio(src):
+        return plan
+    _, _, vdur = probe(src)
+    a, z = max(0.0, start - EDGE_MAX - 0.5), min(vdur, end + EDGE_MAX + 0.5)
+    t, db = _db_frames(src, a, z)
+    body = db[(t >= start) & (t < end)]
+    if len(body) < 50:
+        return plan
+    lo, hi = np.percentile(body, 10), np.percentile(body, 90)
+    if hi - lo < 10:  # 소리 크기 차이가 거의 없으면(음악·잡음) 판단하지 않는다
+        return plan
+    loud = db > lo + EDGE_RATIO * (hi - lo)
+    gap_n = int(round(EDGE_GAP / EDGE_HOP))
+    n = len(t)
+
+    def idx(x):
+        return int(min(max(np.searchsorted(t, x, side="right") - 1, 0), n - 1))
+
+    def run_end(i):
+        """i에서 시작하는 소리가 끝나는 조각 번호(소리 틈 직전 마지막 조각 + 1). 틈이 없으면 None."""
+        quiet = 0
+        for j in range(i, n):
+            quiet = quiet + 1 if not loud[j] else 0
+            if quiet >= gap_n:
+                return j - gap_n + 1
+        return None
+
+    def run_start(i):
+        """i에서 거꾸로 가서, 이 소리가 시작한 조각 번호. 틈이 없으면 None."""
+        quiet = 0
+        for j in range(i, -1, -1):
+            quiet = quiet + 1 if not loud[j] else 0
+            if quiet >= gap_n:
+                return j + gap_n
+        return None
+
+    # ----- 끝 -----
+    ie = idx(end - 1e-6)
+    if loud[ie]:            # end가 소리 한가운데: 그 소리가 끝나는 곳까지
+        k = run_end(ie)
+        last = t[k] if k is not None else None
+    else:                   # end가 조용한 곳: 바로 앞 마지막 소리 끝
+        j = ie
+        while j >= 0 and not loud[j]:
+            j -= 1
+        last = t[j] + EDGE_HOP if j >= 0 else None
+    if last is None or last - end > EDGE_MAX:
+        plan["errors"].append(f"video.end={end:g}: 말이 {EDGE_MAX}초 넘게 이어지는 문장 한가운데 → 문장이 끝나는 곳으로 옮길 것 "
+                              "(받아쓰기 단어 [w, 시작, 끝]의 '끝' + 0.4초)")
+    elif end < last + EDGE_TAIL:
+        new_end = round(min(vdur, last + EDGE_END_PAD), 2)
+        k = idx(last + FADE_AFTER)
+        nxt = bool(loud[k:idx(new_end - 1e-6) + 1].any())
+        if nxt:
+            plan["fade_out"] = last + FADE_AFTER
+        plan["end"] = new_end
+        plan["notes"].append(f"끝: 마지막 소리 {last:.2f} → end {end:g}에서 {new_end:g}로"
+                             + (f" (뒤 {FADE_LEN}초 소리 줄임, 다음 말 첫소리 막기)" if nxt else ""))
+    else:
+        k = idx(last + FADE_AFTER)
+        if loud[k:ie + 1].any():   # 늘리지 않아도 다음 말 첫소리가 끝에 걸려 있으면 줄인다
+            plan["fade_out"] = last + FADE_AFTER
+            plan["notes"].append(f"끝: 마지막 소리 {last:.2f}, end {end:g} (뒤 {FADE_LEN}초 소리 줄임, 다음 말 첫소리 막기)")
+
+    # ----- 시작 -----
+    i0 = idx(start)
+    tail_end = None
+    if loud[i0]:            # start가 소리 한가운데: 앞 문장 꼬리로 보고, 그 꼬리가 끝난 뒤 첫 소리를 찾는다
+        k = run_end(i0)
+        if k is None or t[k] - start > EDGE_MAX:
+            plan["errors"].append(f"video.start={start:g}: 말이 이어지는 문장 한가운데 → 첫 단어 '시작' - 0.2초로 옮길 것")
+            return plan
+        tail_end = t[k]
+        j = k
+    else:
+        j = i0
+    while j < n and not loud[j]:
+        j += 1
+    if j >= n:
+        return plan
+    first = t[j]
+    if start > first - EDGE_HEAD or tail_end is not None:
+        new_start = round(max(0.0, first - EDGE_HEAD), 2) if tail_end is None else start
+        # 새 시작 ~ 첫 소리 사이에 앞 문장 꼬리가 있으면 소리만 무음 → 첫 소리 직전 페이드인
+        pre = loud[idx(new_start):j - gap_n + 1]
+        if tail_end is not None or pre.any():
+            plan["fade_in"] = max(new_start, first - FADE_AFTER - FADE_LEN)
+        plan["start"] = new_start
+        plan["notes"].append(f"시작: 첫 소리 {first:.2f} → start {start:g}" + (f"에서 {new_start:g}로" if new_start != start else " 그대로")
+                             + (f" (앞 문장 꼬리 소리 줄임, {FADE_LEN}초 페이드인)" if plan["fade_in"] is not None else ""))
+    return plan
 
 
 def remap(t, keep):
@@ -276,9 +479,23 @@ def make_cut(src, keep, punch, work):
     return out
 
 
-def make_video_reel(post, folder, cfg):
+def make_video_reel(post, folder, cfg, soft_edges=False):
+    """soft_edges: 구간 끝 검사(edge_check)를 오류 대신 경고로만 (예시 폴더용)."""
     v = post["video"]
     src = folder / v["src"]
+    fade_in = fade_out = None
+    if not v.get("keep") and v.get("avoid_edge_check", True) is not False and v.get("edge_check", True) is not False:
+        # 구간 경계를 원본 말소리에 맞춘다 (fit_edges): 끝이 말 중간이면 늘리고, 다음·앞 말 소리는 줄인다
+        _, _, vd = probe(src)
+        plan = fit_edges(src, float(v.get("start", 0)), float(v.get("end") or vd))
+        if plan["errors"] and not soft_edges:
+            raise EdgeCutError("\n".join(plan["errors"]))
+        for e in plan["errors"]:
+            print("경고:", e)
+        for line in plan["notes"]:
+            print(" ", line)
+        v = dict(v, start=plan["start"], end=plan["end"])
+        fade_in, fade_out = plan["fade_in"], plan["fade_out"]
     work = folder / "_video"
     if work.exists():
         shutil.rmtree(work)
@@ -304,13 +521,13 @@ def make_video_reel(post, folder, cfg):
         vh = ch
     aspect = vw / vh
     box_h = int(round(min(max(1040 / aspect, 400), 1170) / 2) * 2)
-    geo, subs = asyncio.run(render_layers(post, cfg, folder, box_h, work))
-    top = geo["top"]
-    inner_w, inner_h = 1028, box_h - 12  # 테두리 안쪽
     tall = 1040 / aspect > 1170
+    inner_w, inner_h = 1028, box_h - 12  # 테두리 안쪽
     s = min(inner_w / vw, inner_h / vh) if tall else max(inner_w / vw, inner_h / vh)
     scaled_h = vh * s
-    subs = avoid_burned(post, src, start, dur, subs, geo, box_h, (scaled_h, (scaled_h - inner_h) / 2))
+    geo, subs = place_subs(post, cfg, folder, box_h, work, src, start, dur, (scaled_h, (scaled_h - inner_h) / 2))
+    top = geo["top"]
+    subs = [(p_, a_, z_, 0) for p_, a_, z_ in subs]
     bg = cfg["brand"]["bg"].replace("#", "0x")
 
     inputs = ["-f", "lavfi", "-t", f"{dur:.3f}", "-i", f"color=c={bg}:s={W}x{H}:r={FPS}",
@@ -334,7 +551,17 @@ def make_video_reel(post, folder, cfg):
         last = f"[s{i}]"
     fc.append(f"{last}format=yuv420p[vout]")
     if has_audio(src):
-        fc.append("[1:a]aresample=44100,aformat=channel_layouts=stereo[aout]")
+        fades = ""
+        if fade_in is not None:   # 앞 문장 꼬리: 그 앞은 무음, 첫 소리 직전 페이드인
+            fades += f",afade=t=in:st={max(0.0, fade_in - start):.3f}:d={FADE_LEN}"
+        if fade_out is not None:  # 다음 말 첫소리: 마지막 소리 끝 + 0.05초부터 줄이고 그 뒤 무음 (화면은 end까지)
+            fades += f",afade=t=out:st={max(0.0, fade_out - start):.3f}:d={FADE_LEN}"
+        # 소리는 따로 읽는다: -ss를 -i 앞에 두면 일부 원본에서 소리만 0.1~0.7초 어긋나(입 모양과 안 맞음)
+        # 처음부터 읽어 원본 시각 그대로 자른다
+        inputs += ["-i", str(src)]
+        ai = 3 + len(subs)
+        fc.append(f"[{ai}:a]atrim=start={start:.3f}:end={end:.3f},asetpts=PTS-STARTPTS,"
+                  f"aresample=44100,aformat=channel_layouts=stereo{fades}[aout]")
         amap = ["-map", "[aout]"]
     else:
         inputs += ["-f", "lavfi", "-t", f"{dur:.3f}", "-i", "anullsrc=r=44100:cl=stereo"]

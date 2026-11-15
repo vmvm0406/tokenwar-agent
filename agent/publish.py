@@ -4,14 +4,20 @@ GitHub Actions에서 실행된다 (.github/workflows/publish.yml).
 필요한 환경 변수:
     IG_ACCESS_TOKEN   인스타 장기 토큰 (GitHub Secrets)
     GITHUB_REPOSITORY 예: yourname/tokenwar-agent (Actions가 자동으로 넣음)
-    GITHUB_SHA        이미지가 들어 있는 커밋 (Actions가 자동으로 넣음)
 선택:
-    MEDIA_BASE        미디어 공개 주소 앞부분. 기본은 jsDelivr CDN
-    DRY_RUN=1         실제로 올리지 않고 할 일만 출력
+    MEDIA_BASE        미디어 공개 주소 앞부분. 기본은 GitHub Pages의 docs/media
+    DRY_RUN=1         실제로 올리지 않고 할 일만 출력 (docs/media에 복사만 하고 push하지 않음)
+
+미디어 주소: 올릴 게시물의 이미지·영상을 docs/media/<폴더>-<지문 8자>/에 복사해 main에 push하고,
+GitHub Pages(https://<owner>.github.io/<repo>/media/...)가 배포되면 그 주소를 인스타에 넘긴다.
+jsDelivr는 저장소가 50MB를 넘으면 403을 낼 수 있고, raw.githubusercontent와 Release 자산은
+영상을 application/octet-stream으로 줘서 쓰지 않는다. Pages는 video/mp4·image/jpeg로 바로 준다.
+게시가 끝나면(성공·실패 모두) docs/media를 비운다. 같은 파일이라 git 저장소 크기는 늘지 않는다.
 """
 import json
 import os
 import shutil
+import subprocess
 import sys
 import time
 from datetime import datetime, timezone
@@ -29,9 +35,11 @@ API = f"https://{os.environ.get('IG_API_HOST') or 'graph.facebook.com'}/" + os.e
 IG_USER_ID = os.environ.get("IG_USER_ID", "")
 TOKEN = os.environ.get("IG_ACCESS_TOKEN", "")
 DRY = os.environ.get("DRY_RUN") == "1"
-REPO = os.environ.get("GITHUB_REPOSITORY", "")
-SHA = os.environ.get("GITHUB_SHA", "main")
-MEDIA_BASE = os.environ.get("MEDIA_BASE") or f"https://cdn.jsdelivr.net/gh/{REPO}@{SHA}"
+REPO = os.environ.get("GITHUB_REPOSITORY", "vmvm0406/tokenwar-agent")
+STAGE = ROOT / "docs" / "media"
+_owner, _, _name = REPO.partition("/")
+MEDIA_BASE = (os.environ.get("MEDIA_BASE") or f"https://{_owner.lower()}.github.io/{_name}/media").rstrip("/")
+CONTENT_TYPES = {".jpg": "image/jpeg", ".mp4": "video/mp4"}
 MAX_TRIES = 3
 
 
@@ -54,19 +62,71 @@ def call(method, path, **params):
     return body
 
 
+def stage_name(folder):
+    """docs/media 안의 폴더 이름. 렌더링 지문을 붙여 다시 렌더링하면 주소가 바뀐다 (Pages 캐시 10분 회피)."""
+    from build import input_hash
+    return f"{folder.name}-{input_hash(folder)[:8]}"
+
+
+def media_files(folder, post):
+    if post["type"] == "carousel":
+        return [f"slides/{p.name}" for p in sorted((folder / "slides").glob("*.jpg"))]
+    return ["reel.mp4", "cover.jpg"]
+
+
+def git(*args):
+    return subprocess.run(["git", *args], cwd=ROOT, check=True, capture_output=True, text=True).stdout
+
+
+def clear_stage():
+    if STAGE.exists():
+        shutil.rmtree(STAGE)
+
+
+def stage(todo):
+    """올릴 미디어를 docs/media에 복사하고 main에 push한다 (GitHub Pages가 배포)."""
+    clear_stage()
+    for folder, post in todo:
+        dst = STAGE / stage_name(folder)
+        for rel in media_files(folder, post):
+            (dst / rel).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(folder / rel, dst / rel)
+    if DRY:
+        print(f"  [DRY] docs/media에 복사만 함 (push 안 함): {STAGE}")
+        return
+    git("add", "-A", "docs/media")
+    if subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=ROOT).returncode == 0:
+        return
+    git("commit", "-q", "-m", "게시할 미디어를 GitHub Pages에 올림")
+    for i in range(3):
+        try:
+            git("pull", "-q", "--rebase", "origin", "main")
+            git("push", "-q", "origin", "HEAD:main")
+            print("  미디어 push 완료, Pages 배포 기다리는 중")
+            return
+        except subprocess.CalledProcessError as e:
+            print(f"  push 재시도 ({i + 1}): {e.stderr.strip()[:200]}")
+            time.sleep(5)
+    raise PublishError("docs/media push 실패")
+
+
 def media_url(folder, rel):
-    url = f"{MEDIA_BASE}/posts/queue/{folder.name}/{rel}"
+    url = f"{MEDIA_BASE}/{stage_name(folder)}/{rel}"
     if DRY:
         return url
-    # 인스타 서버가 가져가기 전에 공개 주소가 실제로 열리는지 확인 (CDN이 처음엔 느릴 수 있음)
-    for _ in range(10):
+    # Pages 배포가 끝나 주소가 실제로 열리는지 확인 (크기·종류까지). 확인 요청엔 ?v=를 붙여 404가 캐시되지 않게 한다.
+    size = (folder / rel).stat().st_size
+    want = CONTENT_TYPES.get(Path(rel).suffix.lower(), "")
+    for _ in range(48):  # 최대 12분
         try:
-            if requests.head(url, timeout=30, allow_redirects=True).status_code == 200:
+            r = requests.head(f"{url}?v={int(time.time())}", timeout=30)
+            if (r.status_code == 200 and r.headers.get("content-type", "").startswith(want)
+                    and int(r.headers.get("content-length", -1)) == size):
                 return url
         except requests.RequestException:
             pass
         time.sleep(15)
-    raise PublishError(f"미디어 공개 주소가 열리지 않음: {url}")
+    raise PublishError(f"미디어 공개 주소가 열리지 않음 (Pages 배포 확인): {url}")
 
 
 def wait_ready(cid, minutes):
@@ -151,6 +211,7 @@ def main():
             todo.append((f, post))
     if not todo:
         print("올릴 시각이 된 게시물 없음.")
+        clear_stage()  # 지난 실행이 중간에 멈춰 남은 미디어가 있으면 치운다
         return
     if IG_USER_ID:
         ig_id = IG_USER_ID
@@ -160,6 +221,11 @@ def main():
         ig_id = me.get("user_id") or me.get("id")
         print(f"계정: {me.get('username')} ({ig_id})")
 
+    try:
+        stage(todo)
+    except (PublishError, subprocess.CalledProcessError) as e:
+        print(f"미디어 올리기 실패: {e}")
+        sys.exit(1)
     failed = False
     for folder, post in todo:
         print(f"게시: {folder.name} ({post['type']})")
@@ -173,6 +239,8 @@ def main():
                       "published_at": datetime.now(timezone.utc).isoformat()}
             (folder / "published.json").write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
             if not DRY:
+                # 렌더링 원본 구간(clips/source.mp4)은 게시 뒤엔 필요 없다. 저장소가 커지지 않게 지운다.
+                (folder / "clips" / "source.mp4").unlink(missing_ok=True)
                 DONE.mkdir(parents=True, exist_ok=True)
                 shutil.move(str(folder), str(DONE / folder.name))
             print(f"  완료: {link or media_id}")
@@ -181,6 +249,8 @@ def main():
             print(f"  실패: {e}")
             with open(folder / "error.log", "a", encoding="utf-8") as fh:
                 fh.write(f"{datetime.now(timezone.utc).isoformat()}\n{e}\n---\n")
+    if not DRY:
+        clear_stage()  # 다 끝난 미디어는 Pages에서 내린다 (워크플로 마지막 단계가 커밋)
     if failed:
         sys.exit(1)
 
