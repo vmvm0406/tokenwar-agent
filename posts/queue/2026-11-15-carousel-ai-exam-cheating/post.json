@@ -4,7 +4,11 @@
   "series": "긴급",
   "date": "2026-11-15",
   "publish_at": "2026-11-15T17:25:00+09:00",
-  "topic": ["세무사 시험", "AI 부정행위", "수능"],
+  "topic": [
+    "세무사 시험",
+    "AI 부정행위",
+    "수능"
+  ],
   "slides": [
     {
       "kind": "cover",
@@ -13,7 +17,8 @@
         "type": "image",
         "src": "img/cover.jpg",
         "prompt": "a tiny miniature spy camera lens lying next to a pencil on a multiple-choice exam answer sheet on a school desk, dark exam room, cold blue rim light, shallow depth of field, the camera and sheet in the upper middle of the frame, bottom third fades to black, photorealistic",
-        "position": "center 30%"
+        "position": "center 30%",
+        "ai_generated": true
       },
       "title": "세무사 수석 합격자,\nAI 부정행위 자수",
       "highlight": "AI 부정행위",
@@ -33,9 +38,18 @@
       "heading": "본인이 밝힌 방법",
       "highlight": "방법",
       "items": [
-        {"title": "문제 촬영", "text": "초소형 카메라로 시험지를 찍음"},
-        {"title": "AI로 전송", "text": "찍은 문제를 생성형 AI에 보내 풀게 함"},
-        {"title": "답 확인", "text": "스마트폰으로 AI가 낸 답을 봄"}
+        {
+          "title": "문제 촬영",
+          "text": "초소형 카메라로 시험지를 찍음"
+        },
+        {
+          "title": "AI로 전송",
+          "text": "찍은 문제를 생성형 AI에 보내 풀게 함"
+        },
+        {
+          "title": "답 확인",
+          "text": "스마트폰으로 AI가 낸 답을 봄"
+        }
       ]
     },
     {
@@ -50,33 +64,73 @@
       "heading": "합격 취소·전수조사",
       "highlight": "합격 취소",
       "body": "산업인력공단이 업무방해로 고소. 국가자격시험 전체를 조사하고 전파탐지기 도입 검토.",
-      "visual": {"type": "image", "src": "img/02.jpg", "position": "left center", "credit": "화면: Q-Net 세무사 시험 안내 (한국산업인력공단)"}
+      "visual": {
+        "type": "image",
+        "src": "img/02.jpg",
+        "position": "left center",
+        "credit": "화면: Q-Net 세무사 시험 안내 (한국산업인력공단)"
+      }
     },
     {
       "kind": "body",
       "heading": "19일 수능, 착용만 해도 무효",
       "highlight": "착용만 해도",
       "body": "스마트안경·스마트워치·블루투스 이어폰 반입 금지. 쓰기만 해도 내년 응시 자격까지 박탈.",
-      "visual": {"type": "image", "src": "img/03.jpg", "credit": "화면: 정책브리핑 (교육부, 11월 9일)"}
+      "visual": {
+        "type": "image",
+        "src": "img/03.jpg",
+        "credit": "화면: 정책브리핑 (교육부, 11월 9일)"
+      }
     },
     {
       "kind": "steps",
       "heading": "수험생이 챙길 것",
       "highlight": "챙길 것",
       "items": [
-        {"title": "시계는 아날로그만", "text": "통신·결제 기능, 전자 화면이 없는 것"},
-        {"title": "1교시 전에 제출", "text": "가져왔다면 감독관에게 내고 끝난 뒤 돌려받음"},
-        {"title": "주머니·가방 확인", "text": "갖고만 있어도 그 시험은 무효"}
+        {
+          "title": "시계는 아날로그만",
+          "text": "통신·결제 기능, 전자 화면이 없는 것"
+        },
+        {
+          "title": "1교시 전에 제출",
+          "text": "가져왔다면 감독관에게 내고 끝난 뒤 돌려받음"
+        },
+        {
+          "title": "주머니·가방 확인",
+          "text": "갖고만 있어도 그 시험은 무효"
+        }
       ]
     }
   ],
   "sources": [
-    {"name": "경향신문 (11월 15일)", "url": "https://www.khan.co.kr/article/202611151556001/"},
-    {"name": "머니투데이 (11월 15일)", "url": "https://www.mt.co.kr/society/2026/11/15/2026111510031753100"},
-    {"name": "아시아경제 · 산업인력공단 입장 (11월 15일)", "url": "https://view.asiae.co.kr/article/2026111515314207752"},
-    {"name": "정책브리핑 · 교육부 수능 유의사항 (11월 9일)", "url": "https://www.korea.kr/news/policyNewsView.do?newsId=148975290"},
-    {"name": "Q-Net 세무사 (화면)", "url": "https://www.q-net.or.kr/site/semu"}
+    {
+      "name": "경향신문 (11월 15일)",
+      "url": "https://www.khan.co.kr/article/202611151556001/"
+    },
+    {
+      "name": "머니투데이 (11월 15일)",
+      "url": "https://www.mt.co.kr/society/2026/11/15/2026111510031753100"
+    },
+    {
+      "name": "아시아경제 · 산업인력공단 입장 (11월 15일)",
+      "url": "https://view.asiae.co.kr/article/2026111515314207752"
+    },
+    {
+      "name": "정책브리핑 · 교육부 수능 유의사항 (11월 9일)",
+      "url": "https://www.korea.kr/news/policyNewsView.do?newsId=148975290"
+    },
+    {
+      "name": "Q-Net 세무사 (화면)",
+      "url": "https://www.q-net.or.kr/site/semu"
+    }
   ],
   "caption": "세무사 시험 수석 합격자가 AI로 부정행위를 했다고 털어놓고 자수했어요.\n\n초소형 카메라로 문제를 찍어 생성형 AI에 보내고, 스마트폰으로 답을 봤다고 밝혔어요. 1차는 160문항 중 1개만 틀렸고, 감독관 2명이 있었지만 아무도 몰랐어요.\n산업인력공단은 고소와 합격 취소를 추진하고 국가자격시험 전체를 조사해요.\n19일 수능에서는 스마트안경을 쓰기만 해도 시험이 무효가 되고 내년 응시 자격까지 잃어요.\n\n출처: 경향신문·머니투데이·아시아경제(11월 15일), 교육부(11월 9일)\n\n수험생 가족에게 공유해 주세요",
-  "hashtags": ["#AI뉴스", "#세무사시험", "#수능", "#AI부정행위", "#토큰전쟁"]
+  "hashtags": [
+    "#AI뉴스",
+    "#세무사시험",
+    "#수능",
+    "#AI부정행위",
+    "#토큰전쟁"
+  ],
+  "ai_image": true
 }
