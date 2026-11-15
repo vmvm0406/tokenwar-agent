@@ -140,6 +140,13 @@ def make_video_reel(post, folder, cfg):
     start = float(v.get("start", 0))
     end = float(v.get("end") or vdur)
     dur = end - start
+    # 원본에 자막이 박혀 있거나 이름표가 있으면 그 부분을 잘라낸다: "crop": {"top": 0, "bottom": 0.7} (원본 높이 비율)
+    crop = ""
+    if v.get("crop"):
+        t0, t1 = float(v["crop"].get("top", 0)), float(v["crop"].get("bottom", 1))
+        ch = int(vh * (t1 - t0)) // 2 * 2
+        crop = f"crop={vw}:{ch}:0:{int(vh * t0)},"
+        vh = ch
     aspect = vw / vh
     box_h = int(round(min(max(1040 / aspect, 400), 1170) / 2) * 2)
     work = folder / "_video"
@@ -161,7 +168,7 @@ def make_video_reel(post, folder, cfg):
                f"pad={inner_w}:{inner_h}:(ow-iw)/2:(oh-ih)/2:color={bg}")
     else:
         fit = f"scale={inner_w}:{inner_h}:force_original_aspect_ratio=increase,crop={inner_w}:{inner_h}"
-    fc = [f"[1:v]{fit},setsar=1,fps={FPS}[vid]",
+    fc = [f"[1:v]{crop}{fit},setsar=1,fps={FPS}[vid]",
           f"[0:v][vid]overlay=26:{top + 6}[b0]", "[b0][2:v]overlay=0:0[b1]"]
     last = "[b1]"
     for i, (_, a, z) in enumerate(subs):

@@ -1,0 +1,75 @@
+{
+  "id": "2026-11-15-video-huang-made-up",
+  "type": "video",
+  "series": "전황",
+  "date": "2026-11-15",
+  "publish_at": "2026-11-15T19:10:00+09:00",
+  "rights": "quote",
+  "credit": "Bloomberg Originals",
+  "source_url": "https://www.youtube.com/watch?v=zz1DPfPATAo&t=46",
+  "video": {
+    "src": "clips/source.mp4",
+    "start": 1.1,
+    "end": 12.1,
+    "crop": {
+      "top": 0,
+      "bottom": 0.7
+    }
+  },
+  "title": "젠슨 황, AI 위험론에\n\"지어낸 말\"",
+  "highlight": "지어낸 말",
+  "title_en": "Jensen Huang: \"That's just made up\"",
+  "subtitles": [
+    {
+      "start": 1.1,
+      "end": 3.3,
+      "text": "기자: AI를 통제할 수\n없다는 경고가 있는데요"
+    },
+    {
+      "start": 3.3,
+      "end": 5.7,
+      "text": "\"그건 지어낸 말이다\"",
+      "highlight": "지어낸 말"
+    },
+    {
+      "start": 5.7,
+      "end": 9.2,
+      "text": "앤트로픽·MS의 경고를\n정면으로 반박",
+      "highlight": "정면으로 반박"
+    },
+    {
+      "start": 9.2,
+      "end": 12.1,
+      "text": "\"통제도 감시도\n얼마든지 할 수 있다\"",
+      "highlight": "얼마든지"
+    }
+  ],
+  "thumb": {
+    "title": "AI 통제 불가론,\n\"그건 지어낸 말\"",
+    "highlight": "지어낸 말",
+    "person": {
+      "name": "Jensen Huang",
+      "desc": "엔비디아 전 CEO"
+    },
+    "image": {
+      "type": "image",
+      "src": "img/thumb.jpg",
+      "url": "https://www.youtube.com/watch?v=zz1DPfPATAo",
+      "position": "center top"
+    }
+  },
+  "sources": [
+    {
+      "name": "Bloomberg Originals, Jensen Huang on Safety Fears (2026-11-14)",
+      "url": "https://www.youtube.com/watch?v=zz1DPfPATAo"
+    }
+  ],
+  "caption": "\"AI는 통제할 수 없다\"는 경고에 젠슨 황이 내놓은 답은 \"지어낸 말\"이었습니다.\n\n앤트로픽과 마이크로소프트가 AI가 곧 통제를 벗어날 수 있다고 경고하는 가운데, 블룸버그 에밀리 창과의 인터뷰에서 나온 발언입니다. 그는 AI 에이전트는 철저히 가두고 감시해야 하며, 그럴 수 없다면 실험도 출시도 하지 말아야 한다고 덧붙였습니다. 인터뷰는 그가 엔비디아 CEO에서 물러나기 몇 주 전에 진행됐습니다.\n\nAI 회사들의 경고와 젠슨 황의 반박, 누구 말이 맞을까요?\n\n영상: Bloomberg Originals (원본 링크는 프로필)",
+  "hashtags": [
+    "#AI뉴스",
+    "#젠슨황",
+    "#엔비디아",
+    "#AI안전",
+    "#토큰전쟁"
+  ]
+}

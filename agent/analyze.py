@@ -73,7 +73,7 @@ def transcribe(path):
 def contact_sheets(path, dur, w, h, out_dir):
     n = COLS * ROWS
     step = max(1.0, dur / n)
-    times = [round(i * step, 2) for i in range(int(dur / step) + 1) if i * step < dur]
+    times = [round(i * step, 2) for i in range(int(dur / step) + 1) if i * step < dur - 0.5]
     th = int(THUMB_W * h / w)
     sheets = []
     try:
@@ -88,6 +88,8 @@ def contact_sheets(path, dur, w, h, out_dir):
             subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", f"{t}", "-i", str(path), "-frames:v", "1",
                             "-vf", f"scale={THUMB_W}:{th}", str(fp)], check=True)
             x, y = 6 + (i % COLS) * (THUMB_W + 6), 6 + (i // COLS) * (th + 36)
+            if not fp.exists():  # 영상 맨 끝 근처는 프레임이 없을 수 있다
+                continue
             sheet.paste(Image.open(fp), (x, y + 30))
             ImageDraw.Draw(sheet).text((x + 4, y + 4), f"{int(t // 60)}:{t % 60:05.2f}", fill=(0, 255, 102), font=font)
             fp.unlink()
