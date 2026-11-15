@@ -104,7 +104,7 @@ def letterbox(path):
     out = []
     for name, box in (("위", (0, 0, w, band)), ("아래", (0, h - band, w, h))):
         st = ImageStat.Stat(im.crop(box))
-        if st.mean[0] < 14 and st.stddev[0] < 8:
+        if st.mean[0] < 20 and st.stddev[0] < 0.6:  # 영상 여백(완전히 고른 검정)만. 검은 옷은 조금이라도 결이 있다
             out.append(name)
     return out
 
