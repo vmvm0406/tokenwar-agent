@@ -144,8 +144,8 @@ async def render_layers(post, cfg, folder, box_h, work):
 # 원본 화면의 가로줄마다 '세게 바뀌는 점'의 밀도를 잰다. 글자 줄은 밀도가 0.1 이상이고 짧은 획이 많다
 # (머스크 대담 영상: 이름 자막 0.12~0.28, 옷·배경 잡음 0.07 이하).
 BURN_DENSITY, BURN_RUNS, BURN_W = 0.10, 50, 480
-MAX_SHIFT = 60          # 우리 자막을 이만큼(px)까지만 위로 옮겨 피한다. 더 옮기면 얼굴을 덮을 수 있어 뒤에 띠를 깐다
-BAR_ALPHA = 0.97        # 원본 글자를 가리는 띠의 불투명도 (브랜드 배경색)
+MAX_SHIFT = 60          # 우리 자막을 이만큼(px)까지만 위로 옮겨 피한다. 더 옮기면 얼굴을 덮을 수 있다
+# 원본 글자를 띠로 가리지 않는다 (운영자 결정: 자막만 보이게). 피할 수 없으면 자막 전체를 영상 창 위쪽으로 옮긴다.
 
 
 def sample_gray(src, start, dur, crop=None, fps=2):
@@ -192,55 +192,59 @@ def alpha_rows(path):
     return (box[1], box[3]) if box else None
 
 
-def avoid_burned(post, src, start, dur, subs, geo, box_h, scale_info, bg_hex):
-    """우리 자막이 원본에 박힌 글자와 겹치면 위로 조금 옮기거나(MAX_SHIFT 이하), 뒤에 띠를 깔아 원본 글자를 가린다.
-    subs: [(png, a, z)] → [(png, a, z, dy)]. 결정 내용을 출력한다."""
-    from PIL import Image, ImageDraw
+def avoid_burned(post, src, start, dur, subs, geo, box_h, scale_info):
+    """우리 자막이 원본에 박힌 글자(이름 자막·하단 자막)와 겹치지 않게 자막 자리만 옮긴다.
+    1) 겹치는 자막을 MAX_SHIFT px 안에서 위로 옮겨 피할 수 있으면 그것만 옮긴다.
+    2) 안 되면 이 릴스의 자막 전체를 영상 창 위쪽(보통 원본 위쪽 빈 배경)으로 옮긴다.
+    3) 그래도 겹치면 경고만 한다 (video.crop / captions_at으로 손으로 정한다).
+    subs: [(png, a, z)] → [(png, a, z, dy)]."""
     v = post.get("video") or {}
     if v.get("captions_at") or v.get("avoid_burned") is False or not geo.get("inside"):
         return [(p, a, z, 0) for p, a, z in subs]
     crop = (float(v["crop"].get("top", 0)), float(v["crop"].get("bottom", 1))) if v.get("crop") else None
     times, frames = sample_gray(src, start, dur, crop)
     box_top = geo["top"] + 6
-    scaled_h, off_y = scale_info            # 영상 창 안에서 원본 높이(px)와 위쪽 잘린 양(px, 음수면 여백)
+    scaled_h, off_y = scale_info
 
     def to_px(fr):
         return box_top + fr * scaled_h - off_y
 
-    out = []
-    for i, (path, a, z) in enumerate(subs):
-        rows = alpha_rows(path)
-        if not rows:
-            out.append((path, a, z, 0))
+    info = []  # (자막 위, 아래, 그 시간대 글자 띠들)
+    for path, a, z in subs:
+        rows = alpha_rows(path) or (0, 0)
+        bands = [(to_px(b0), to_px(b1)) for tt, fr in zip(times, frames) if a - 0.25 <= tt <= z + 0.25
+                 for b0, b1 in text_bands(fr)]
+        info.append((rows[0], rows[1], bands))
+
+    def clash(y0, y1, bands):
+        return any(b[1] > y0 - 10 and b[0] < y1 + 10 for b in bands)
+
+    if not any(y1 > y0 and clash(y0, y1, bands) for y0, y1, bands in info):
+        return [(p, a, z, 0) for p, a, z in subs]
+    # 1) 조금만 올려서 피하기
+    dys, ok = [], True
+    for y0, y1, bands in info:
+        if y1 <= y0 or not clash(y0, y1, bands):
+            dys.append(0)
             continue
-        y0, y1 = rows
-        bands = []
-        for tt, fr in zip(times, frames):
-            if a - 0.25 <= tt <= z + 0.25:
-                bands += [(to_px(b0), to_px(b1)) for b0, b1 in text_bands(fr)]
-        hit = [b for b in bands if b[1] > y0 - 10 and b[0] < y1 + 10]
-        if not hit:
-            out.append((path, a, z, 0))
-            continue
-        dy = int(min(b[0] for b in hit) - 12 - y1)
-        moved = (y0 + dy, y1 + dy)
-        clear = all(not (b[1] > moved[0] - 10 and b[0] < moved[1] + 10) for b in bands)
-        if -MAX_SHIFT <= dy < 0 and clear and moved[0] >= box_top:
-            print(f"  자막 {i + 1}: 원본 글자를 피해 {-dy}px 위로")
-            out.append((path, a, z, dy))
-            continue
-        # 많이 옮겨야 하면 얼굴을 덮을 수 있다 → 제자리에서 뒤에 띠를 깔아 원본 글자를 가린다
-        top = int(min([y0] + [b[0] for b in hit]) - 14)
-        bot = int(max([y1] + [b[1] for b in hit]) + 14)
-        top, bot = max(top, box_top), min(bot, box_top + box_h - 12)
-        im = Image.open(path).convert("RGBA")
-        bar = Image.new("RGBA", im.size, (0, 0, 0, 0))
-        r, g, b_ = (int(bg_hex[k:k + 2], 16) for k in (1, 3, 5))
-        ImageDraw.Draw(bar).rectangle([26, top, 26 + 1028 - 1, bot], fill=(r, g, b_, int(255 * BAR_ALPHA)))
-        Image.alpha_composite(bar, im).save(path)
-        print(f"  자막 {i + 1}: 원본 글자와 겹쳐 뒤에 띠를 깖 ({top}~{bot}px)")
-        out.append((path, a, z, 0))
-    return out
+        dy = int(min(b[0] for b in bands if b[1] > y0 - 10 and b[0] < y1 + 10) - 12 - y1)
+        if -MAX_SHIFT <= dy < 0 and y0 + dy >= box_top and not clash(y0 + dy, y1 + dy, bands):
+            dys.append(dy)
+        else:
+            ok = False
+            break
+    if ok:
+        for i, dy in enumerate(dys):
+            if dy:
+                print(f"  자막 {i + 1}: 원본 글자를 피해 {-dy}px 위로")
+        return [(p, a, z, dy) for (p, a, z), dy in zip(subs, dys)]
+    # 2) 자막 전체를 영상 창 위쪽으로
+    dys = [int(box_top + 16 - y0) if y1 > y0 else 0 for y0, y1, _ in info]
+    if all(not clash(y0 + dy, y1 + dy, bands) for (y0, y1, bands), dy in zip(info, dys) if y1 > y0):
+        print("  원본 아래쪽 글자(이름 자막 등)와 겹쳐 자막 전체를 영상 창 위쪽으로 옮김. 얼굴을 덮지 않는지 미리보기로 확인")
+        return [(p, a, z, dy) for (p, a, z), dy in zip(subs, dys)]
+    print("  경고: 원본에 박힌 글자를 자동으로 피하지 못함 → video.crop 또는 captions_at을 손으로 정할 것")
+    return [(p, a, z, 0) for p, a, z in subs]
 
 
 def remap(t, keep):
@@ -306,7 +310,7 @@ def make_video_reel(post, folder, cfg):
     tall = 1040 / aspect > 1170
     s = min(inner_w / vw, inner_h / vh) if tall else max(inner_w / vw, inner_h / vh)
     scaled_h = vh * s
-    subs = avoid_burned(post, src, start, dur, subs, geo, box_h, (scaled_h, (scaled_h - inner_h) / 2), cfg["brand"]["bg"])
+    subs = avoid_burned(post, src, start, dur, subs, geo, box_h, (scaled_h, (scaled_h - inner_h) / 2))
     bg = cfg["brand"]["bg"].replace("#", "0x")
 
     inputs = ["-f", "lavfi", "-t", f"{dur:.3f}", "-i", f"color=c={bg}:s={W}x{H}:r={FPS}",
