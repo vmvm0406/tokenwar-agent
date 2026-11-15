@@ -39,7 +39,7 @@
     "title": "삼성이 지은\n테슬라 전용 칩 공장",
     "highlight": "테슬라 전용",
     "person": {"name": "일론 머스크", "desc": "테슬라·스페이스X CEO"},
-    "image": {"type": "image", "src": "img/thumb.jpg", "url": "https://www.youtube.com/watch?v=ir-DFO_5yPw", "position": "center 25%"}
+    "image": {"type": "image", "src": "img/thumb.jpg", "url": "https://www.youtube.com/watch?v=ir-DFO_5yPw", "position": "center center"}
   },
   "sources": [
     {"name": "Baron Capital · Baron Investment Conference 2026 (11월 13일)", "url": "https://www.youtube.com/watch?v=ir-DFO_5yPw&t=148"},
