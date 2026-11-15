@@ -100,6 +100,11 @@ html,body{margin:0;background:#000}
 .shot.bleed{left:0;right:0;top:0;border:0;height:SHOTBHpx}
 .shotcap{position:absolute;right:PADXpx;font-size:22px;font-weight:600;color:MUTED}
 .inner.below{justify-content:flex-start;gap:26px}
+/* 소식 번호 (주간 요약처럼 소식마다 한 장일 때): 큰 녹색 번호 + 날짜 + 가로선 */
+.num{display:flex;align-items:center;gap:22px;margin-bottom:-6px}
+.num b{font-family:'Black Han Sans';font-weight:400;font-size:NUMpx;line-height:1;color:ACCENT;letter-spacing:-.02em}
+.num span{font-size:28px;font-weight:700;color:MUTED;white-space:nowrap}
+.num i{flex:1;height:3px;background:ACCENT}
 .bvis{height:BVISpx;flex:none;position:relative;overflow:hidden}
 .bvis img{width:100%;height:100%;object-fit:cover}
 .steps{display:flex;flex-direction:column}
@@ -148,10 +153,10 @@ html,body{margin:0;background:#000}
 DIMS = {
     "carousel": dict(PADX=72, BRANDY=60, VISH=860, BIGTOP=96, LISTTOP=120, CTEXTB=150, CTITLE=80, CSUB=32,
                      INTOP=110, INBOT=140, HEAD=76, BODY=40, PULL=50, BVIS=440, STEPT=38, STEPX=31,
-                     CMP=32, STAT=230, SLOGAN=104, CLIPH=608, SHOTTOP=90, SHOTH=600, SHOTBH=690),
+                     CMP=32, STAT=230, SLOGAN=104, CLIPH=608, SHOTTOP=90, SHOTH=600, SHOTBH=690, NUM=72),
     "reel": dict(PADX=80, BRANDY=330, VISH=1200, BIGTOP=260, LISTTOP=300, CTEXTB=420, CTITLE=92, CSUB=36,
                  INTOP=260, INBOT=420, HEAD=84, BODY=46, PULL=56, BVIS=560, STEPT=44, STEPX=36,
-                 CMP=36, STAT=250, SLOGAN=112, CLIPH=608, SHOTTOP=250, SHOTH=760, SHOTBH=900),
+                 CMP=36, STAT=250, SLOGAN=112, CLIPH=608, SHOTTOP=250, SHOTH=760, SHOTBH=900, NUM=80),
 }
 
 
@@ -268,6 +273,11 @@ def body_html(post, s, n, total, folder):
         unit = f'<small>{esc(s["unit"])}</small>' if s.get("unit") else ""
         parts.append(f'<div class="stat"><div class="n">{esc(s["value"])}{unit}</div>'
                      f'<div class="u">{esc(s.get("label", ""))}</div></div>')
+    if s.get("num"):
+        # 선택: 소식 번호. "num": 1 → 01, "num_note": "11월 12일 · 삼성전자"
+        n_txt = f'{int(s["num"]):02d}' if str(s["num"]).isdigit() else esc(s["num"])
+        note = f'<span>{esc(s["num_note"])}</span>' if s.get("num_note") else ""
+        parts.append(f'<div class="num"><b>{n_txt}</b>{note}<i></i></div>')
     if s.get("heading"):
         parts.append(f'<h2 class="heading">{br(hl(s["heading"], s.get("highlight")))}</h2>')
     if kind == "steps":

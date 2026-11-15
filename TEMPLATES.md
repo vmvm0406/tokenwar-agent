@@ -25,7 +25,7 @@
 
 | kind | 용도 | 필드 |
 |---|---|---|
-| `body` | 일반 설명 | `heading`, `highlight`, `body`, `point`(굵은 녹색 선 아래 큰 녹색 문장), `visual`(선택) |
+| `body` | 일반 설명 | `heading`, `highlight`, `body`, `point`(굵은 녹색 선 아래 큰 녹색 문장), `visual`(선택), `num`·`num_note`(선택: 제목 위 큰 녹색 번호 01과 날짜·출처 한 줄. 주간 요약처럼 소식마다 한 장일 때. 예시 `samples/s11-weekly-ai`) |
 | `stat` | 숫자 하나가 핵심 | `value`, `unit`, `label`(문장으로), `heading`, `body` |
 | `steps` | 따라 하기, 체크리스트 | `heading`, `items`: [{`title`, `text`}] 2~4개 |
 | `compare` | 비교, 전후 | `heading`, `left`/`right`: {`label`, `items`, `on`} |
