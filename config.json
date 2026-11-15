@@ -33,9 +33,10 @@
     "clip_max_ratio": 0.4,
     "video_title_line_chars": 13,
     "subtitle_line_chars": 18,
-    "quote_max_seconds": 32,
-    "quote_min_seconds": 18,
-    "quote_max_ratio": 0.34
+    "quote_min_seconds": 40,
+    "quote_max_ratio": 0.34,
+    "quote_target_seconds": 60,
+    "quote_soft_max_seconds": 80
   },
   "reel": {
     "seconds_per_frame": 3.4,

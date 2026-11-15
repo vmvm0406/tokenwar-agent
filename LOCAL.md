@@ -27,7 +27,7 @@
 
 영상 고르기 → 받기 → 구간 → 번역 자막 → 썸네일 → 렌더링을 한 번에 한다. 기준은 `STYLE_GUIDE.md` 6-1장, 형식은 `TEMPLATES.md`, 세부 순서는 `CLIPS.md` 2~5장과 같다. 다른 점:
 - 영상 후보는 이번 리서치에서 직접 고른다 (`requests/clips/`에 요청이 있으면 그것부터).
-- 유튜브 검색: `yt-dlp --flat-playlist --print "%(id)s | %(channel)s | %(view_count)s | %(duration)s | %(title)s" "https://www.youtube.com/results?search_query=<검색어>&sp=EgQIAhAB"` (최근 1주, 동영상만). 공식 채널의 원본인지 확인한다.
+- 유튜브 검색: `yt-dlp --flat-playlist --print "%(id)s | %(channel)s | %(view_count)s | %(duration)s | %(title)s" "https://www.youtube.com/results?search_query=<검색어>&sp=EgQIAhAB"` (최근 1주, 동영상만). 공식 채널의 원본인지 확인한다. 완성 영상이 **1분 언저리**가 되려면 원본이 3분 이상이어야 한다(원본의 1/3 이하만 인용).
 - 받기: `yt-dlp --js-runtimes node -S "res:1080,ext:mp4:m4a" --merge-output-format mp4 -o "%TEMP%\tokenwar\full.mp4" <url>` 후 ffmpeg로 앞뒤 1초 여유를 두고 잘라 게시물 폴더 `clips/source.mp4`로. 원본 전체는 저장소에 넣지 않는다.
 - 받아쓰기와 단어 시각: `python agent/tighten.py clips/source.mp4 <시작> <끝>`
 - `publish_at`: 오늘 19:10 (지금이 18:30 이후면 내일 19:10).

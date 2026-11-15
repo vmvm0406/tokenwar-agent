@@ -110,11 +110,14 @@ def check_video(post):
         if v.get("end") in (None, ""):
             errors.append("인용은 video.start와 video.end를 직접 정해야 함")
         else:
-            d = float(v["end"]) - float(v.get("start", 0))
-            if d > lim["quote_max_seconds"]:
-                errors.append(f"인용 영상은 {lim['quote_max_seconds']}초 이하: 지금 {d:.1f}초")
-            if d < lim.get("quote_min_seconds", 0):
-                warnings.append(f"인용 구간이 짧음 ({d:.1f}초). 발언이나 장면이 이어지면 {lim['quote_min_seconds']}초 이상으로")
+            d = float(v["end"]) - float(v.get("start", 0))   # 원본에서 쓰는 범위 (비율 계산용)
+            keep = v.get("keep") or []
+            out_d = sum(float(b) - float(a) for a, b in keep) if keep else d   # 완성 영상 길이
+            target = lim.get("quote_target_seconds", 60)
+            if out_d < lim.get("quote_min_seconds", 0):
+                warnings.append(f"영상이 짧음 ({out_d:.1f}초). 1분({target}초) 언저리에서 끝나게, 이야기가 끝나는 곳까지 늘린다")
+            if out_d > lim.get("quote_soft_max_seconds", 10**6):
+                warnings.append(f"영상이 김 ({out_d:.1f}초). 1분({target}초) 언저리에서 이야기가 끝나는 곳을 찾는다")
             src_d = v.get("source_duration")
             if not src_d:
                 errors.append("video.source_duration(원본 전체 길이, 초) 필요: 인용 비율 확인용")
