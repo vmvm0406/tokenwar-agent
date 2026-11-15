@@ -1,4 +1,4 @@
-# 잘 터진 주제 (2026-11-16 00:26 기준)
+# 잘 터진 주제 (2026-11-16 00:43 기준)
 
 주제를 고를 때 이 표의 위쪽 주제와 **같거나 비슷한 것**을 먼저 고른다 (STYLE_GUIDE 3장). PR 본문에 "참고한 잘 터진 주제: …" 한 줄을 적는다.
 
@@ -41,10 +41,10 @@
 - 22.1x 카드 @ai.trend.kr: [핸드폰 배경화면을 바꿨더니, 하루에도 몇 번씩 꺼내 보게 됐어요.🐾](https://www.instagram.com/p/DcdMcZDjzBL/)
 - 8.5x 카드 @ex.treme.ai: [브랜드 URL 하나, 제품 사진 한 장이면](https://www.instagram.com/p/DY35VLhmPJJ/)
 
-### 유명인·CEO 발언 — 순위 점수 15.6, 릴스 92·카드 10, 배수 중간값 1.00x
+### 유명인·CEO 발언 — 순위 점수 15.7, 릴스 92·카드 10, 배수 중간값 1.00x
 - 24.3x 릴스 @bizucafe: [화폐는 의미 없다 (일론 머스크)](https://www.instagram.com/reel/De8mVBGgBJL/)
 - 17.8x 릴스 @ai.talk.kr: [“일론 머스크는 왜 샘 올트먼을 믿지 않는 걸까요?”](https://www.instagram.com/reel/DbzUQ_VvaxQ/)
-- 8.8x 릴스 @bizucafe: [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/)
+- 9.0x 릴스 @bizucafe: [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/)
 
 ### 챗GPT 질문·대화 활용법 — 순위 점수 14.4, 릴스 5·카드 12, 배수 중간값 1.96x
 - 27.4x 카드 @ai.trend.kr: [GPT로 나도 몰랐던 내 정보 싹 다 지우세요. 🧹](https://www.instagram.com/p/Dc-nN8WjyWt/)
@@ -54,7 +54,7 @@
 ### 미중 경쟁·반도체·데이터센터 — 순위 점수 14.0, 릴스 31·카드 6, 배수 중간값 1.46x
 - 485.3x 릴스 @ai.talk.kr: [“중국이 AI로 미국을 이길 수 있을까요?”](https://www.instagram.com/reel/DbwhvfvvknP/)
 - 10.3x 릴스 @ai.talk.kr: [“챗GPT에 질문할 때마다 물이 사용된다는 사실, 알고 계셨나요?”](https://www.instagram.com/reel/DcCmtLip1ZU/)
-- 8.8x 릴스 @bizucafe: [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/)
+- 9.0x 릴스 @bizucafe: [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/)
 
 ### MCP·스킬·클로드 코드 자동화 — 순위 점수 10.2, 릴스 8·카드 101, 배수 중간값 1.23x
 - 12.1x 카드 @ai.trend.kr: [명령어 한 줄이면 프롬프트 2,000개가 내 AI 에이전트에 통째로 들어옵니다. 🔌](https://www.instagram.com/p/DdTM6hvDw-R/)
