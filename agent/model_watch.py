@@ -207,6 +207,26 @@ def address(key, e):
     return (e.get("url") or key) if key.startswith(("hot:", "news:")) else key
 
 
+def recent_posts(now, hours=48):
+    """게시 시각이 hours시간 전 이후인 게시물(예약 포함) [(이름, 비교 글)]. 비교 글 = 주제(topic, dupes.topics 방식으로
+    띄어쓰기 없앤 것도) + 제목 + 표지 제목 + 썸네일 제목."""
+    sys.path.insert(0, str(ROOT / "agent"))
+    from dupes import all_posts, topics
+    out = []
+    for name, post in all_posts():
+        try:
+            at = datetime.fromisoformat(str(post.get("publish_at"))).astimezone(KST)
+        except ValueError:
+            continue
+        if at < now - timedelta(hours=hours):
+            continue
+        cover = next((s for s in post.get("slides", []) if s.get("kind") == "cover"), (post.get("slides") or [{}])[0])
+        parts = list(post.get("topic", [])) + sorted(topics(post)) + [
+            post.get("title") or "", cover.get("title") or "", (post.get("thumb") or {}).get("title") or ""]
+        out.append((name, " ".join(str(p) for p in parts if p)))
+    return out
+
+
 def news_candidates(seen, now, init, verbose):
     """업계 속보 후보를 seen에 넣는다. 돌려주는 것: 이번에 새로 pending이 된 키 목록."""
     cfg = CONFIG.get("news") or {}
@@ -226,13 +246,25 @@ def news_candidates(seen, now, init, verbose):
     thr = float(cfg.get("similar", 0.5))
     prev = [e for k, e in seen.items() if k.startswith("news:")]
     today = [e for e in prev if e.get("status") != "skipped" and e.get("first_seen", "")[:10] == now.date().isoformat()]
+    alias = news._alias_rx()
+    try:
+        posts = recent_posts(now)
+    except Exception as e:
+        log(True, f"업계 속보: 최근 게시물을 읽지 못함 ({type(e).__name__}: {str(e)[:80]})")
+        posts = []
     out = []
     for c in br:
         key = "news:" + c["url"]
         if key in seen:
             continue
         why = ""
-        for e in prev:
+        # 48시간 안에 같은 회사·인물로 이미 만든(또는 예약된) 게시물이 있으면 다시 만들지 않는다
+        for name, blob in posts:
+            hit = next((ent for ent in c["entities"] if alias.get(ent) and alias[ent].search(blob)), None)
+            if hit:
+                why = f"48시간 안에 같은 회사·인물 게시물 있음: {name} ({hit})"
+                break
+        for e in ([] if why else prev):
             age = now - datetime.fromisoformat(e["first_seen"])
             if age < window and news.similar(set(c["tok"]), set(e.get("tok", []))) >= thr:
                 why = f"이미 낸 소식과 같음: {e.get('title', '')[:50]}"
