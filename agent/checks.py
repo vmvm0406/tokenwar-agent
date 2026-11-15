@@ -12,7 +12,10 @@ CONFIG = json.loads((ROOT / "config.json").read_text(encoding="utf-8"))
 
 SERIES = {"전황", "긴급", "생존 가이드", "오픈소스", "AI 용어"}
 COVER_LAYOUTS = {"big", "list", "image"}
-BODY_KINDS = {"body", "steps", "compare", "stat"}
+BODY_KINDS = {"body", "steps", "compare", "stat", "prompt"}
+# 게시물 형식 (선택). howto: 따라 하기, ask: 나를 알려 주는 질문, weekly: 주간 요약, news: 소식 (STYLE_GUIDE 3-1)
+FORMATS = {"news", "howto", "ask", "weekly"}
+PROMPT_MAX = 320  # 프롬프트 상자 하나 글자 수 (넘치면 render.py가 레이아웃 오류로도 막는다)
 CLIP_FIELDS = ("src", "start", "end", "source", "source_url")
 VISUALS = {"image", "bars", "timeline"}
 TYPES = {"carousel", "reel", "video"}
@@ -193,6 +196,7 @@ def check_video(post):
         errors.append("캡션에도 원작자(credit)를 밝힐 것")
     if not post["sources"]:
         errors.append("출처 1개 이상 (원본 영상 링크)")
+    warnings += check_caption_hooks(post["caption"])
     return errors, warnings
 
 
@@ -219,6 +223,55 @@ def check_images(slides):
         if i > 1 and not v.get("credit") and not v.get("prompt"):
             warnings.append(f"{i}번째 장 사진에 credit(예: '화면: Lovable 공식 문서') 없음")
     return errors, warnings
+
+
+def _prompts(slides):
+    out = []
+    for s in slides:
+        if s.get("kind") == "prompt":
+            out += [x for x in (s.get("prompts") or [s.get("prompt")]) if x and str(x).strip()]
+    return out
+
+
+def check_format(post):
+    """따라 하기·질문 형식이면 복사해 쓸 프롬프트가 장 안에 있어야 한다 (STYLE_GUIDE 3-1)."""
+    errors, warnings = [], []
+    f = post.get("format")
+    if f is None:
+        return errors, warnings
+    if f not in FORMATS:
+        return [f"format은 {FORMATS} 중 하나: {f}"], warnings
+    prs = _prompts(post.get("slides", []))
+    if f in ("howto", "ask") and not prs:
+        errors.append(f"format '{f}'에는 복사해 쓸 프롬프트 장(kind: prompt)이 1개 이상 필요")
+    if f == "ask" and prs and not 3 <= len(prs) <= 4:
+        warnings.append(f"질문 형식은 질문 3~4개가 좋음: 지금 {len(prs)}개")
+    if f in ("howto", "ask") and post.get("type") == "carousel":
+        missing = [p for p in prs if p.strip()[:40] not in post.get("caption", "")]
+        if missing:
+            warnings.append("프롬프트를 캡션에도 적어 두면 복사하기 쉬움 (STYLE_GUIDE 3-1)")
+    return errors, warnings
+
+
+NEWSY_RE = re.compile(r"(공개|출시|발표|선보|내놨|소식|업데이트됐|가지)")
+GAIN_RE = re.compile(r"(세요|수 있|하는 법|방법|해 보|해보|됩니다|만들어|바꿔|아끼|찾아)")
+
+
+def check_caption_hooks(caption):
+    """캡션 첫 줄은 '얻는 것'으로, 끝은 댓글을 부르는 질문으로 (STYLE_GUIDE 3-1). 경고만."""
+    warnings = []
+    lines = [l.strip() for l in caption.split("영상:")[0].splitlines() if l.strip()]
+    if not lines:
+        return warnings
+    first = lines[0]
+    if "?" in first:
+        warnings.append(f"캡션 첫 줄이 질문임 → 읽는 사람이 얻는 것으로 시작할 것: '{first[:40]}'")
+    elif NEWSY_RE.search(first) and not GAIN_RE.search(first):
+        warnings.append(f"캡션 첫 줄이 소식 전달임 → 얻는 것을 먼저 (예: '~하는 법', '~해 보세요'): '{first[:40]}'")
+    tail = [l for l in lines if not l.startswith("#")][-2:]
+    if not any("?" in l and "댓글" in l for l in tail):
+        warnings.append("캡션 끝에 댓글을 부르는 질문이 없음 (예: '어디에 써 보고 싶나요? 댓글로 알려 주세요')")
+    return warnings
 
 
 def check_post(post):
@@ -337,6 +390,15 @@ def check_post(post):
                         all_text.append(x)
                         if _len(x) > 22:
                             errors.append(f"{tag} compare 항목은 22자 이하: '{x}'")
+            if kind == "prompt":
+                prs = s.get("prompts") or ([s["prompt"]] if s.get("prompt") else [])
+                if not prs or not all(str(x).strip() for x in prs):
+                    errors.append(f"{tag} prompt 장은 복사해 쓸 프롬프트(prompt 또는 prompts) 필요")
+                for x in prs:
+                    if _len(x) > PROMPT_MAX:
+                        errors.append(f"{tag} 프롬프트는 {PROMPT_MAX}자 이하 (길면 장을 나눌 것): {_len(x)}자")
+                    if EMOJI_RE.search(str(x)):
+                        errors.append(f"{tag} 프롬프트 안에도 이모지를 쓰지 않음")
             if kind == "stat" and not s.get("value"):
                 errors.append(f"{tag} stat은 value 필요")
             all_text += [h, b, p, s.get("label", "")]
@@ -350,6 +412,11 @@ def check_post(post):
         hl = s.get("highlight")
         if hl and hl not in hl_src:
             errors.append(f"{tag} highlight '{hl}'가 제목/소제목 안에 없음")
+
+    e_f, w_f = check_format(post)
+    errors += e_f
+    warnings += w_f
+    warnings += check_caption_hooks(post["caption"])
 
     if post["type"] == "carousel":
         errors_img, warnings_img = check_images(slides)

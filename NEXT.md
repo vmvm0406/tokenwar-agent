@@ -6,6 +6,7 @@ claude.ai 대화에서 하던 작업을 이 컴퓨터의 Claude Code로 옮겼�
 1. **릴스 새 화면(CRT 터미널) 채택 여부** — `experiments/reel-crt/` v7. 운영자 반응: 영상과 아래가 따로 노는 느낌 → 붙임, 상태줄 불필요 → 뺌, 영상이 너무 위 → 안전 영역으로 내림. 괜찮다고 하면 `agent/video.py`를 이 구조로 바꾸고 post.json에 아래 요약(`term` 장면들: 신문 제목체) 형식을 TEMPLATES.md에 추가, LOCAL.md/CLIPS.md 절차 수정.
 2. **주간 요약 카드뉴스** — 샘플 완성: `samples/s11-weekly-ai` (11월 둘째 주, 소식 4개: 삼성 AI 안경·제미나이 카플레이·구글 검색 새 모델·챗GPT 기업 프로필, 소식마다 위쪽 공식 사진 + 번호·제목·설명). 본문 장 `num`/`num_note` 필드 추가함. 운영자가 보고 정한다. 운영자 의견(11-15): 초기 계정은 릴스가 우선, 릴스를 더 많이 찍어내야 함. — 운영자: "이번 주 AI에서 사진·영상 자료를 안 쓴 게 문제". 제안: 매주 일요일 "N월 N주 차 AI 뉴스" 카드뉴스 (ai.trend.kr 7,476 좋아요 글 구조: 강렬한 사진 표지 + 소식마다 한 장, 위쪽에 실제 사진·화면·영상, 아래 번호·제목·설명 3~4줄). 운영자가 샘플을 보고 정한다. 할 일: 오늘 소식으로 샘플 → 승인되면 STYLE_GUIDE의 "한 게시물에 소식 하나" 규칙에 주간 요약 예외 추가, dupes.py에서 주간 요약은 주제 겹침 예외, 캐러셀에 영상 장을 섞으려면 publish.py에 VIDEO 자식 추가.
 3. **댓글 자동 DM (팔로우 확인 방식)** — 설계·조사 끝, 운영자 승인 대기. 아래 "댓글 자동 DM 설계" 절. 승인 전에는 만들지 않는다.
+4. **따라 하기 형식 샘플** — `samples/s12-howto-ai-mode`(카드뉴스 7장), `samples/s13-howto-ai-mode-reel`(카드형 모션 릴스, 장면 6개). 구글 AI 모드에 실제로 넣은 질문과 답 화면(11월 15일). 형식·검사·절차는 이미 main에 들어감(TEMPLATES "게시물 형식", checks.py `format`, LOCAL.md 1장). 운영자가 모양을 보고 고칠 점을 말하면 반영. 릴스 mp4는 이 컴퓨터에 ffmpeg가 없어 아직 안 만들어 봄 → ffmpeg 설치(`winget install Gyan.FFmpeg`) 후 `py -3.12 agent/render.py samples/s13-howto-ai-mode-reel`로 확인.
 
 ## 확인할 것
 - `agent/video.py` 안전 영역 반영(제목 285px부터, 자막 1250px 넘으면 영상 안으로) 후 실제 릴스를 아직 렌더링해 보지 않았다. `py -3.12 agent/render.py samples/s8-huang-quote`로 장면 미리보기 확인.
@@ -64,6 +65,11 @@ claude.ai 대화에서 하던 작업을 이 컴퓨터의 Claude Code로 옮겼�
 5. 인스타 앱 › 설정 › 메시지 › 연결된 도구 접근 허용 켜기.
 6. Cloudflare에서 Workers 편집 권한만 있는 API 토큰 만들어 GitHub Secrets `CLOUDFLARE_API_TOKEN`에 넣기.
 7. 시험용 인스타 계정을 앱 역할(테스터)로 추가 → Standard Access로 끝까지 시험 → 사용 장면 녹화 → 앱 심사 제출.
+
+### 덧붙임 (2026-11-15 두 번째 조사)
+- **웹훅 서버 없이 시작하는 방법:** 비공개 답장은 댓글 뒤 7일 안이면 되므로, Cloudflare Worker 대신 GitHub Actions가 15분마다 최근 게시물 댓글(`GET /<미디어 id>/comments`)을 읽고 아직 안 보낸 댓글에 비공개 답장을 보내는 방식도 된다 (보낸 기록은 저장소 파일). 단점: 최대 15분 늦음, 상대가 답장한 뒤의 24시간 대화(팔로우 확인·버튼)는 웹훅이 있어야 바로 응답할 수 있다. 자료를 첫 답장 한 번에 다 주는 단순한 흐름(팔로우 확인 없음)이면 이 방식으로 충분하다.
+- **로그인 방식별 권한 (Meta 비공개 답장 문서):** Facebook 로그인(지금 우리 방식) = `instagram_basic`, `instagram_manage_comments`, `pages_read_engagement`(+ 비즈니스 관리자 역할이면 `ads_management`, `ads_read`). Instagram 로그인 = `instagram_business_basic`, `instagram_business_manage_comments` (호스트 graph.instagram.com). 메시지를 더 주고받으려면(팔로우 확인 등) 메시지 권한(`instagram_manage_messages` / `instagram_business_manage_messages`)이 추가로 필요하다.
+- **데이터:** ai.trend.kr 릴스 중 첫 줄부터 "댓글에 'OO' 남겨 주세요"로 시작한 6개는 조회수 중앙 33,773으로 전체 중앙 90,508의 37%. 카드뉴스에서는 DM 미끼가 댓글을 2배(중앙 397 vs 200) 올렸지만 좋아요는 그대로였다 (STYLE_GUIDE 3-1). → 하게 되면 카드뉴스 캡션 끝에만 쓰고, 릴스 첫 줄에는 쓰지 않는다.
 
 ### 승인하면 만들 것 (순서)
 1. post.json `dm` 필드 + checks.py 검사 + TEMPLATES/LOCAL.md 절차
