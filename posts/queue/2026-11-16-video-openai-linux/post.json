@@ -20,7 +20,7 @@
     "end": 53.6,
     "source_duration": 2076
   },
-  "title": "AI가 리눅스 구멍\n948개를 고쳤습니다",
+  "title": "AI가 보안 구멍\n948개를 찾아 고쳤다",
   "highlight": "948개",
   "title_en": "OpenAI's GPT-6 Cyber and 948 Linux holes",
   "subtitles": [
@@ -96,7 +96,7 @@
     }
   ],
   "thumb": {
-    "title": "AI가 찾아낸\n리눅스 구멍 948개",
+    "title": "AI가 해킹 구멍\n948개를 막았다",
     "highlight": "948개",
     "person": {
       "name": "클린트 기블러",
