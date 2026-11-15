@@ -38,7 +38,10 @@ def all_posts():
                 seen.add(pj.parent.name)
             except (OSError, json.JSONDecodeError):
                 pass
+    cur = _git("branch", "--show-current").strip()
     for ref in _git("for-each-ref", "--format=%(refname)", "refs/remotes/origin/post/").split():
+        if cur and ref == f"refs/remotes/origin/{cur}":
+            continue  # 지금 고치고 있는 검토 브랜치의 예전 버전(origin)은 비교하지 않는다. 작업 폴더가 최신
         for path in _git("ls-tree", "-r", "--name-only", ref, "posts/queue").splitlines():
             if not path.endswith("/post.json"):
                 continue
