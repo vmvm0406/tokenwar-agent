@@ -32,6 +32,7 @@
 1. **저장소를 공개(Public)로 만든다.** 인스타 서버가 이미지와 영상을 공개 주소(jsDelivr CDN)로 가져가기 때문이다. 토큰은 Secrets에 있으니 공개돼도 안전하다.
 2. **인스타 토큰 넣기:** 저장소 Settings › Secrets and variables › Actions › New repository secret
    - 이름 `IG_ACCESS_TOKEN`, 값은 Meta 개발자 앱에서 받은 토큰
+   - AI 표지 그림용: `CF_ACCOUNT_ID`(Cloudflare 계정 ID), `CF_API_TOKEN`(Workers AI 권한만 준 토큰). 하루 무료 한도 안에서 약 170장.
 3. **토큰 자동 연장 (선택, 권장):** 토큰은 60일 뒤 만료된다. GitHub Settings › Developer settings › Fine-grained tokens에서 이 저장소만, 권한 "Secrets: Read and write"로 토큰을 만들고 `GH_PAT`라는 이름으로 Secrets에 넣는다. 매달 1일과 20일에 자동으로 연장된다.
 4. **Actions 켜기:** 저장소 Actions 탭에서 워크플로 실행을 허용한다.
 5. **시험 게시:** Actions › 인스타 게시 › Run workflow. 올릴 게 없으면 "올릴 시각이 된 게시물 없음"이 나오면 정상.
