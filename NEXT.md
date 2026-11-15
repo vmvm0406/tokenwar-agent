@@ -17,7 +17,7 @@ claude.ai 대화에서 하던 작업을 이 컴퓨터의 Claude Code로 옮겼�
 4. **따라 하기 형식 샘플** — `samples/s12-howto-ai-mode`(카드뉴스 7장), `samples/s13-howto-ai-mode-reel`(카드형 모션 릴스, 장면 6개). 구글 AI 모드에 실제로 넣은 질문과 답 화면(11월 15일). 형식·검사·절차는 이미 main에 들어감(TEMPLATES "게시물 형식", checks.py `format`, LOCAL.md 1장). 운영자가 모양을 보고 고칠 점을 말하면 반영. 릴스 mp4는 이 컴퓨터에 ffmpeg가 없어 아직 안 만들어 봄 → ffmpeg 설치(`winget install Gyan.FFmpeg`) 후 `py -3.12 agent/render.py samples/s13-howto-ai-mode-reel`로 확인.
 
 ## 확인할 것
-- **게시 칸 자동 배정 (2026-11-15 도입):** `config.json` `slots`, `agent/slots.py`, `scripts/make-posts.ps1`, LOCAL.md 5장. 매일 작업 하루 몫 `daily_target`은 **릴스 2, 카드뉴스 1로 임시로 정함** (운영자 "초기에는 릴스 우선"). 운영자가 다른 수를 원하면 config만 바꾼다. 11월 16일 아침 첫 실행에서 `slots.py need`가 PR #2·#3을 오늘 몫으로 세어 카드뉴스는 만들지 않고 릴스 1개만 만드는지 `tokenwar-daily\logs`로 확인.
+- **게시 칸 자동 배정 (2026-11-15 도입):** `config.json` `slots`, `agent/slots.py`, `scripts/make-posts.ps1`, LOCAL.md 5장. 매일 작업 하루 몫 `daily_target`은 **릴스 2, 카드뉴스 1** (2026-11-15 운영자 확정). 바꿀 때는 config만 고친다. 11월 16일 아침 첫 실행에서 `slots.py need`가 PR #2·#3을 오늘 몫으로 세어 카드뉴스는 만들지 않고 릴스 1개만 만드는지 `tokenwar-daily\logs`로 확인.
 - PR #2(카드뉴스, 11/16 10:13)·#3(릴스, 11/16 19:10)은 새 규칙으로 보완함. 운영자 Merge 대기.
 - 이 컴퓨터에 ffmpeg를 다시 설치함(winget 기록만 있고 파일이 없었음). ffmpeg가 윈도우에서 인코딩 뒤 멈추던 문제는 `-nostdin`으로 고침.
 - 카드뉴스 표지는 실제 사진·화면이 먼저. AI 그림이 실제 사건 사진처럼 보이면 쓰지 않는다 (PR #2에서 범행 도구처럼 보이는 AI 표지를 뺌).

@@ -28,7 +28,7 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq ffmpeg
-          pip install -q requests pillow playwright
+          pip install -q requests pillow playwright numpy
           # 러너에 깔린 google-chrome을 쓴다. 없을 때만 Playwright 브라우저를 받는다.
           which google-chrome || python -m playwright install --with-deps chromium
 
