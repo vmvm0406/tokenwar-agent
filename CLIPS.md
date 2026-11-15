@@ -1,0 +1,74 @@
+# 영상 받기 작업 (회원님 컴퓨터가 켜져 있을 때)
+
+예약 작업이 매시간(09~23시) 실행한다. 회원님 컴퓨터(Claude 데스크톱 앱)가 꺼져 있으면 그 회차는 건너뛰고 다음 시간에 다시 시도한다.
+하는 일: `requests/clips/`의 요청 하나를 골라 유튜브에서 15초 이하 구간을 받고, 영상 프레임 릴스 게시물을 만든다.
+
+유튜브는 클라우드 서버를 막기 때문에, 영상 받기만 회원님 컴퓨터(`device_bash`, 작업 폴더 `Videos/tokenwar`)에서 하고 나머지는 클라우드 작업 환경에서 한다.
+
+## 0. 할 일이 있는지 확인 (클라우드)
+
+1. `git pull`
+2. `requests/clips/*.json`이 없으면 **아무것도 하지 않고 끝낸다** (보고도 한 줄만).
+3. 이미 `posts/queue/`에 오늘 19:10(지났으면 내일 19:10) 릴스가 있으면 그다음 날짜로 잡는다. 릴스는 하루 1개.
+4. 요청을 `score` 높은 순으로 정렬한다. 3일 지난 요청은 `done/`으로 옮기고 건너뛴다.
+
+## 1. 컴퓨터 준비 (device_bash)
+
+```bash
+cd $HOME/mnt/Videos/tokenwar
+pip install -q --user -U "yt-dlp[default]"
+Y="$HOME/.local/bin/yt-dlp --js-runtimes node --no-playlist"
+```
+
+`device_bash`가 연결되지 않으면 컴퓨터가 꺼진 것이다. 끝낸다.
+
+## 2. 영상 정보와 자막 (device_bash)
+
+```bash
+$Y --skip-download --write-info-json --write-auto-subs --write-subs \
+   --sub-langs "en.*,ko.*,en,ko" --sub-format vtt -o "cur" "<url>"
+```
+
+- `cur.info.json`에서 `channel`, `uploader`, `upload_date`, `duration`, `view_count`, `title`을 확인한다.
+- **원본 채널인지 확인한다.** 클립 모음·재업로드 채널이면 요청을 `done/`으로 옮기고("원본 아님") 다음 요청으로.
+- 자막(`cur.*.vtt`)에서 `hint`의 문장을 찾고, 스타일 가이드 6-1장 "구간 고르기" 기준으로 15초 이하 구간을 정한다. 자막이 없으면 2분 구간을 오디오로만 받아(`-x --download-sections`) 클라우드에서 `analyze.py`로 받아쓴다.
+
+## 3. 구간 받기 (device_bash)
+
+앞뒤로 1초씩 여유를 두고 받는다. 정확한 시작·끝은 post.json의 `video.start`/`end`로 맞춘다.
+
+```bash
+$Y -f "bv*[height<=1080][ext=mp4]+ba[ext=m4a]/b[ext=mp4]/b" --merge-output-format mp4 \
+   --download-sections "*<시작-1초>-<끝+1초>" --force-keyframes-at-cuts -o "cur.mp4" "<url>"
+```
+
+파일 이름은 항상 `cur.*`로 덮어쓴다 (회원님 폴더에 쌓이지 않게).
+
+## 4. 클라우드로 가져오기
+
+`device_stage_files`로 `C:\Users\vmmxu\Videos\tokenwar\cur.mp4`를 올리고, 게시물 폴더 `posts/queue/<날짜>-video-<슬러그>/clips/source.mp4`로 옮긴다.
+
+## 5. 게시물 만들기 (클라우드)
+
+`AGENT.md`의 "영상 릴스 만들기"와 같은 규칙. 정리하면:
+
+1. `python3 agent/analyze.py <폴더>/clips/source.mp4`로 장면·말소리·받아쓰기를 확인하고, 시트 이미지를 직접 본다.
+2. `post.json` (형식은 `samples/s7-quote-demo/post.json`, `TEMPLATES.md`):
+   - `type: "video"`, `rights: "quote"`, `credit`(채널·발언자), `source_url`(원본 링크, 가능하면 `&t=초` 포함)
+   - `video.start`/`end`: 15초 이하
+   - 제목 2줄, 영어 부제, 우리 설명 자막 2개 이상(영상 길이의 60% 이상), 발언은 핵심만 우리 말로
+   - `thumb`: 발언자 얼굴이 잘 보이는 순간을 `ffmpeg -ss <초> -i clips/source.mp4 -frames:v 1 -q:v 2 img/thumb.jpg`로 뽑아 쓰고 `person`에 이름·설명, `image.url`에는 원본 영상 주소. 얼굴 장면이 별로면 AI 상징 이미지(`prompt`)
+   - 캡션: 맥락, 왜 중요한지, "영상: 채널 이름", 원본 링크
+   - `publish_at`: 0-3에서 정한 날짜 19:10
+3. `python3 agent/build.py <폴더>`로 렌더링하고 `cover.jpg`, `frames/01.jpg`를 직접 열어 확인한다. (썸네일이 AI 그림이면 임시 그림으로 확인 후 지우고 Actions에 맡긴다. AGENT.md 3장)
+4. 요청 파일에 `result`(게시물 폴더, 고른 구간, 이유)를 적고 `requests/clips/done/`으로 옮긴다.
+
+## 6. 올리기
+
+`config.json`의 `mode`를 따른다 (AGENT.md 4장). 검토 모드면 `post/<날짜>-reel` 브랜치와 PR. PR 본문에 원본 링크(구간 시각 포함), 고른 이유, 썸네일, 캡션을 넣는다.
+
+## 하지 말 것
+
+- 원본 전체나 15초 넘는 구간을 저장소에 올리지 않는다 (저장소는 공개다).
+- 회원님 컴퓨터에서 `Videos/tokenwar` 밖의 파일을 건드리지 않는다.
+- 구글 계정 로그인·쿠키를 쓰지 않는다. 막히면 요청에 "받기 실패"를 적고 다음 회차에 다시 시도한다 (3번 실패하면 `done/`).
