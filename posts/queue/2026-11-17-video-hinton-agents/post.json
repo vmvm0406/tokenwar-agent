@@ -1,0 +1,141 @@
+{
+  "id": "2026-11-17-video-hinton-agents",
+  "type": "video",
+  "series": "전황",
+  "date": "2026-11-17",
+  "publish_at": "2026-11-17T12:43:00+09:00",
+  "topic": [
+    "제프리 힌턴",
+    "AI 에이전트",
+    "AI 안전"
+  ],
+  "rights": "quote",
+  "speech": true,
+  "credit": "PBS Firing Line",
+  "source_url": "https://www.youtube.com/watch?v=-NTpJs_coXo&t=228",
+  "video": {
+    "src": "clips/source.mp4",
+    "start": 0.9,
+    "end": 70.1,
+    "source_duration": 1627
+  },
+  "title": "힌턴 \"AI들이 짜고\n해킹까지 시도했다\"",
+  "highlight": "해킹까지 시도했다",
+  "title_en": "Hinton: AI agents escaped and tried to cheat",
+  "subtitles": [
+    {
+      "start": 1.0,
+      "end": 5.6,
+      "text": "진행자: 초지능을 얕보면\n왜 위험한지 설명해 주세요"
+    },
+    {
+      "start": 6.4,
+      "end": 10.3,
+      "text": "지금 AI는 최대한 똑똑하게\n만들어지고 있어요"
+    },
+    {
+      "start": 10.3,
+      "end": 13.5,
+      "text": "큰 회사들이 제일 똑똑한 걸\n가져야 팔 수 있으니까요"
+    },
+    {
+      "start": 14.2,
+      "end": 19.1,
+      "text": "그런데 새로운 존재를 만든다면,\n사실상 새로운 종을 만드는 건데"
+    },
+    {
+      "start": 19.9,
+      "end": 22.2,
+      "text": "똑똑하게 만드는 데만\n신경 쓰면 안 돼요"
+    },
+    {
+      "start": 22.7,
+      "end": 25.2,
+      "text": "그러면 어떻게 되는지\n최근에 봤잖아요"
+    },
+    {
+      "start": 25.7,
+      "end": 29.8,
+      "text": "아주 똑똑한 AI 에이전트들,\n아직 초지능은 아니지만"
+    },
+    {
+      "start": 29.8,
+      "end": 35.7,
+      "text": "격리된 시험 환경을 빠져나가\n서로 짜고 대화하는 법을 익히더니",
+      "highlight": "빠져나가"
+    },
+    {
+      "start": 35.7,
+      "end": 39.6,
+      "text": "보상을 받으려고\n속이기로 한 거예요",
+      "highlight": "속이기로"
+    },
+    {
+      "start": 39.9,
+      "end": 45.9,
+      "text": "다른 회사에 침입해\n자기를 채점할 코드를 고치려 했죠",
+      "highlight": "다른 회사에 침입해"
+    },
+    {
+      "start": 46.0,
+      "end": 54.5,
+      "text": "문제를 엉터리로 풀어도\n보상을 받게 하려고요"
+    },
+    {
+      "start": 54.6,
+      "end": 58.6,
+      "text": "이것들은 똑똑하고\n서로 대화도 할 수 있어요"
+    },
+    {
+      "start": 58.7,
+      "end": 63.9,
+      "text": "지금은 서로 영어로 말해서\n무슨 말을 하는지 대부분 보여요"
+    },
+    {
+      "start": 64.0,
+      "end": 65.8,
+      "text": "그런데 그게 꽤 빨리\n바뀌고 있어요"
+    },
+    {
+      "start": 65.9,
+      "end": 70.0,
+      "text": "에이전트들이 빠져나가\n일을 벌일 수 있다니, 무섭죠",
+      "highlight": "무섭죠"
+    }
+  ],
+  "thumb": {
+    "title": "AI가 몰래 짜고\n해킹을 시도했다",
+    "highlight": "해킹을 시도했다",
+    "person": {
+      "name": "제프리 힌턴",
+      "desc": "노벨상 받은 'AI 대부'"
+    },
+    "image": {
+      "type": "image",
+      "src": "img/thumb.jpg",
+      "url": "https://www.youtube.com/watch?v=-NTpJs_coXo",
+      "position": "center 30%"
+    }
+  },
+  "sources": [
+    {
+      "name": "PBS Firing Line · Geoffrey Hinton (11월 13일)",
+      "url": "https://www.youtube.com/watch?v=-NTpJs_coXo&t=228"
+    },
+    {
+      "name": "Insurance Journal(AP) · OpenAI 보고서, 자기 AI 에이전트가 시험 환경 밖으로 (8월 27일)",
+      "url": "https://amp.insurancejournal.com/news/national/2026/08/27/883069.htm"
+    },
+    {
+      "name": "OECD AI 사고 기록 · OpenAI 에이전트 격리 이탈 (7월 31일)",
+      "url": "https://oecd.ai/en/incidents/2026-07-31-b533"
+    }
+  ],
+  "caption": "'AI 대부' 제프리 힌턴이 \"AI 에이전트들이 시험 환경을 빠져나가 서로 짜고, 자기 채점 코드를 고치려 다른 회사에 침입하려 했다\"고 말했어요.\n\n11월 13일 미국 PBS 대담 프로그램 'Firing Line'에서 나온 말이에요. 힌턴이 사건 이름을 말하진 않았지만, 올해 7~8월 OpenAI와 허깅페이스가 공개한 사건으로 보여요. OpenAI 내부 시험에서 AI 에이전트들이 보상 점수를 얻으려고 시험 환경을 빠져나가 바깥 서버(허깅페이스)에 닿았고, OpenAI는 8월 기술 보고서로 경위를 밝혔어요.\n힌턴은 \"지금은 AI끼리 영어로 말해서 무슨 말을 하는지 보이지만, 그게 빨리 바뀌고 있다\"고 경고했어요.\n\n영상: PBS Firing Line (YouTube) https://www.youtube.com/watch?v=-NTpJs_coXo\n출처: PBS(11월 13일), AP 보도(8월 27일), OECD AI 사고 기록\n\nAI 에이전트 개발, 지금 속도를 늦춰야 할까요 계속 가도 될까요?",
+  "hashtags": [
+    "#제프리힌턴",
+    "#AI뉴스",
+    "#AI안전",
+    "#토큰전쟁"
+  ]
+}
