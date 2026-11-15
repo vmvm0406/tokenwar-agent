@@ -141,6 +141,150 @@
         "알리바바(큐웬)": "Qwen|큐웬|통의"
       }
     },
+    "news": {
+      "enabled": true,
+      "hours": 36,
+      "refresh_minutes": 30,
+      "similar": 0.5,
+      "min_majors": 3,
+      "min_outlets": 8,
+      "max_per_day": 3,
+      "company_cooldown_hours": 12,
+      "major_outlets": [
+        "Financial Times",
+        "Bloomberg",
+        "Reuters",
+        "WSJ",
+        "Wall Street Journal",
+        "The Verge",
+        "TechCrunch",
+        "CNBC",
+        "AP News",
+        "New York Times",
+        "Washington Post",
+        "The Information",
+        "Axios",
+        "연합뉴스",
+        "조선일보",
+        "중앙일보",
+        "동아일보",
+        "한국경제",
+        "매일경제",
+        "한겨레",
+        "경향신문",
+        "서울경제",
+        "KBS",
+        "MBC",
+        "SBS",
+        "JTBC",
+        "YTN",
+        "머니투데이",
+        "전자신문",
+        "지디넷코리아",
+        "ZDNet Korea",
+        "AI타임스"
+      ],
+      "major_sites_en": [
+        "ft.com",
+        "bloomberg.com",
+        "reuters.com",
+        "wsj.com",
+        "theverge.com",
+        "techcrunch.com",
+        "cnbc.com"
+      ],
+      "topic_words_en": [
+        "AI",
+        "OpenAI",
+        "Nvidia",
+        "Google",
+        "Meta",
+        "Microsoft",
+        "Apple",
+        "Anthropic",
+        "Musk",
+        "xAI",
+        "Samsung"
+      ],
+      "major_sites_ko": [
+        "yna.co.kr",
+        "chosun.com",
+        "joongang.co.kr",
+        "donga.com",
+        "hankyung.com",
+        "mk.co.kr",
+        "hani.co.kr",
+        "sedaily.com",
+        "etnews.com",
+        "zdnet.co.kr",
+        "aitimes.com",
+        "news.kbs.co.kr",
+        "imnews.imbc.com",
+        "news.sbs.co.kr"
+      ],
+      "topic_words_ko": [
+        "AI",
+        "인공지능",
+        "오픈AI",
+        "엔비디아",
+        "구글",
+        "메타",
+        "마이크로소프트",
+        "애플",
+        "앤트로픽",
+        "머스크",
+        "삼성전자",
+        "네이버",
+        "SK하이닉스"
+      ],
+      "companies": {
+        "엔비디아": {
+          "ko": "엔비디아 OR 젠슨황 OR \"젠슨 황\"",
+          "en": "Nvidia OR \"Jensen Huang\""
+        },
+        "오픈AI": {
+          "ko": "오픈AI OR 올트먼 OR 챗GPT",
+          "en": "OpenAI OR \"Sam Altman\" OR ChatGPT"
+        },
+        "구글": {
+          "ko": "구글 OR 제미나이 OR 딥마인드 OR 피차이",
+          "en": "Google OR Gemini OR DeepMind OR Pichai"
+        },
+        "메타": {
+          "ko": "메타 OR 저커버그",
+          "en": "\"Meta Platforms\" OR \"Meta AI\" OR Zuckerberg"
+        },
+        "머스크(xAI·테슬라)": {
+          "ko": "머스크 OR xAI OR 그록 OR 테슬라",
+          "en": "Musk OR xAI OR Grok OR Tesla"
+        },
+        "앤트로픽": {
+          "ko": "앤트로픽 OR 클로드 OR 아모데이",
+          "en": "Anthropic OR Claude OR Amodei"
+        },
+        "마이크로소프트": {
+          "ko": "마이크로소프트 OR 나델라 OR 코파일럿",
+          "en": "Microsoft OR Nadella OR Copilot"
+        },
+        "애플": {
+          "ko": "애플 OR 팀쿡 OR \"팀 쿡\"",
+          "en": "Apple OR \"Tim Cook\""
+        },
+        "삼성": {
+          "ko": "삼성전자 OR 이재용",
+          "en": "Samsung"
+        },
+        "네이버": {
+          "ko": "네이버 OR 하이퍼클로바",
+          "en": "Naver"
+        },
+        "SK하이닉스": {
+          "ko": "SK하이닉스 OR 최태원",
+          "en": "\"SK Hynix\""
+        }
+      },
+      "note": "업계 큰 소식 (agent/news.py, LOCAL.md 6장 '업계 속보'). Google News RSS로 주요 매체(site:)와 회사별 검색을 hours시간 안에서 모아 제목 겹침으로 묶는다. 속보 기준: 큰 사건 낱말(인사·인수·규제·상장·감원·모델) + 주요 매체 min_majors곳 이상(또는 매체 min_outlets곳 + 주요 1곳). 하루 max_per_day건, 같은 회사는 company_cooldown_hours시간에 한 번."
+    },
     "note": "새 모델 바로 올리기 (LOCAL.md 6장). scripts/watch-models.ps1이 30분마다 agent/model_watch.py를 돌려 새 발표가 있으면 Claude가 게시물 1개를 바로 올리기(--asap)로 만든다. sources = 항상 보는 공식 블로그(RSS 또는 목록 HTML), hot = data/hot.md 여러 섹션(min_sections곳 이상)에 동시에 뜰 때만 보는 회사. auto_publish=false면 PR(운영자 Merge), true면 main에 바로."
   }
 }

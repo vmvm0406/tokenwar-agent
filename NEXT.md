@@ -7,6 +7,7 @@ claude.ai 대화에서 하던 작업을 이 컴퓨터의 Claude Code로 옮겼�
   `git -C $env:USERPROFILE\tokenwar-daily pull; powershell -ExecutionPolicy Bypass -File $env:USERPROFILE\tokenwar-daily\scripts\setup-local.ps1 -OnlyWatch`
   확인: `Get-ScheduledTask TokenwarModelWatch`. 감시 기록은 `tokenwar-daily\logs\<연-월>-watch.log`, Claude가 게시물을 만들면 `logs\<시각>-model.log`. 지금은 `config.json` `model_watch.auto_publish: false`(PR + Merge). 바로 main에 올리고 싶으면 true로.
 - 첫 몇 주는 감시가 너무 자주(구글 제미나이 블로그의 작은 기능 글) 또는 너무 드물게 잡는지 watch.log로 보고 `agent/model_watch.py`의 낱말 목록을 고친다.
+- **업계 속보 감시 (2026-11-16 추가, 브랜치 fix/news-watch):** 젠슨 황 사임·복귀 논의(FT)를 놓친 일로 추가. `agent/news.py`가 주요 언론(FT·블룸버그·로이터·WSJ·더 버지·테크크런치·CNBC + 국내 주요 매체)을 Google News RSS로 보고, 15분 감시가 "주요 매체 3곳 이상 + 큰 사건 낱말"인 소식을 `[업계 속보: ...]` 후보로 낸다 (하루 3건, 같은 회사 12시간에 한 번, LOCAL.md 6장). 속보는 일반 제작보다 먼저: 매일 작업 중이면 그 Claude를 멈추고 속보부터 만든 뒤 매일 작업을 다시 띄운다. 기존 게시물은 밀지 않고 따라 하기·질문만 `slots.py bump`로 옮긴다. 확인할 것: 첫 주 watch.log에서 속보가 하루 몇 건 잡히는지, 주가·실적 기사 같은 잡음이 섞이는지 → `config.json` `model_watch.news`(`min_majors`, `max_per_day`, `major_outlets`, 회사 검색어)와 `agent/news.py` `BIG` 낱말로 조정. 매일 작업을 멈춘 기록은 watch.log의 "속보 → 매일 작업을 멈추고" 줄.
 
 ## 운영자 답을 기다리는 것
 1. **릴스 새 화면(CRT 터미널) 채택 여부** — `experiments/reel-crt/` v7. 운영자 반응: 영상과 아래가 따로 노는 느낌 → 붙임, 상태줄 불필요 → 뺌, 영상이 너무 위 → 안전 영역으로 내림. 괜찮다고 하면 `agent/video.py`를 이 구조로 바꾸고 post.json에 아래 요약(`term` 장면들: 신문 제목체) 형식을 TEMPLATES.md에 추가, LOCAL.md/CLIPS.md 절차 수정.

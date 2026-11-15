@@ -5,6 +5,12 @@
    애매하면 후보로 내고, 판단은 게시물을 만드는 Claude가 한다 (LOCAL.md 6장).
 2) 화제일 때만: 그록·메타·딥시크·네이버·삼성 등은 data/hot.md의 여러 섹션(구글 트렌드·유튜브·해커뉴스·레딧 등)에
    동시에 뜨고, 그중 한 줄이라도 출시·모델 낱말이 있을 때만 후보. 같은 회사는 cooldown_days 동안 다시 내지 않는다.
+3) 업계 속보 (agent/news.py, config `model_watch.news`): 빅테크 CEO 사임·복귀, 대형 인수, 규제·소송, 주요 모델 발표처럼
+   공식 블로그에 안 나오는 소식. 주요 언론(FT·블룸버그·로이터·WSJ·더 버지·테크크런치·CNBC·국내 주요 매체)을
+   Google News RSS로 보고, 같은 소식 묶음이 큰 사건 낱말 + 주요 매체 min_majors곳 이상이면 후보.
+   제목은 "[업계 속보: 주요 매체 N곳 · 종류] ..."로 시작한다. 하루 max_per_day건, 같은 회사·인물은
+   company_cooldown_hours 동안 한 번, 전에 낸 소식과 제목이 비슷하면 다시 내지 않는다.
+   속보와 공식 블로그의 새 모델은 진행 중인 일반 제작보다 먼저다 (LOCAL.md 6장, watch-models.ps1).
 
 이미 본 글은 data/model_watch.json(주소·제목·처음 본 시각)에 남겨 두 번 잡지 않는다.
 
@@ -15,6 +21,7 @@
     py -3.12 agent/model_watch.py --dry-run  기록 파일을 바꾸지 않음
     py -3.12 agent/model_watch.py --finish <claude 기록> <종료코드>   Claude 실행 뒤 pending 후보 정리
     py -3.12 agent/model_watch.py --mark <주소> done|skipped|failed|retry
+    py -3.12 agent/model_watch.py --dry-run --breaking-only   처음 보는 속보만 (매일 작업 중일 때 끊고 먼저 할지 볼 때)
 후보 상태: pending(만들 차례, 실패하면 다음 회차에 다시) → done(PR 주소 확인) / skipped / failed(max_tries번 실패, 감시 기록에 남김).
 종료 코드: 0 새 것 없음, 10 pending 후보 있음, 2 모든 출처를 읽지 못함.
 기록 파일이 없으면 --init처럼 동작한다 (처음 돌릴 때 옛 글이 한꺼번에 '새 것'으로 나오지 않게).
@@ -162,6 +169,9 @@ def hot_candidates(cfg, verbose):
     for line in HOT.read_text(encoding="utf-8").splitlines():
         if line.startswith("## "):
             cur = line[3:].strip()
+            if cur.startswith("업계 큰 소식"):  # 업계 속보는 news 쪽에서 따로 본다
+                cur = None
+                continue
             sections[cur] = []
         elif cur and line.startswith("- "):
             sections[cur].append(line[2:])
@@ -194,7 +204,88 @@ def save_state(state, now):
 
 
 def address(key, e):
-    return e.get("url") or key if key.startswith("hot:") else key
+    return (e.get("url") or key) if key.startswith(("hot:", "news:")) else key
+
+
+def recent_posts(now, hours=48):
+    """게시 시각이 hours시간 전 이후인 게시물(예약 포함) [(이름, 비교 글)]. 비교 글 = 주제(topic, dupes.topics 방식으로
+    띄어쓰기 없앤 것도) + 제목 + 표지 제목 + 썸네일 제목."""
+    sys.path.insert(0, str(ROOT / "agent"))
+    from dupes import all_posts, topics
+    out = []
+    for name, post in all_posts():
+        try:
+            at = datetime.fromisoformat(str(post.get("publish_at"))).astimezone(KST)
+        except ValueError:
+            continue
+        if at < now - timedelta(hours=hours):
+            continue
+        cover = next((s for s in post.get("slides", []) if s.get("kind") == "cover"), (post.get("slides") or [{}])[0])
+        parts = list(post.get("topic", [])) + sorted(topics(post)) + [
+            post.get("title") or "", cover.get("title") or "", (post.get("thumb") or {}).get("title") or ""]
+        out.append((name, " ".join(str(p) for p in parts if p)))
+    return out
+
+
+def news_candidates(seen, now, init, verbose):
+    """업계 속보 후보를 seen에 넣는다. 돌려주는 것: 이번에 새로 pending이 된 키 목록."""
+    cfg = CONFIG.get("news") or {}
+    if not cfg.get("enabled"):
+        return []
+    sys.path.insert(0, str(ROOT / "agent"))
+    import news
+    try:
+        clusters = news.collect(verbose=verbose)
+    except Exception as e:
+        log(True, f"업계 속보: 읽지 못함 ({type(e).__name__}: {str(e)[:120]})")
+        return []
+    br = news.breaking(clusters)
+    log(verbose, f"업계 속보: 소식 묶음 {len(clusters)}개, 속보 기준 넘은 것 {len(br)}개")
+    cool = timedelta(hours=float(cfg.get("company_cooldown_hours", 12)))
+    window = timedelta(hours=float(cfg.get("hours", 36)))
+    thr = float(cfg.get("similar", 0.5))
+    prev = [e for k, e in seen.items() if k.startswith("news:")]
+    today = [e for e in prev if e.get("status") != "skipped" and e.get("first_seen", "")[:10] == now.date().isoformat()]
+    alias = news._alias_rx()
+    try:
+        posts = recent_posts(now)
+    except Exception as e:
+        log(True, f"업계 속보: 최근 게시물을 읽지 못함 ({type(e).__name__}: {str(e)[:80]})")
+        posts = []
+    out = []
+    for c in br:
+        key = "news:" + c["url"]
+        if key in seen:
+            continue
+        why = ""
+        # 48시간 안에 같은 회사·인물로 이미 만든(또는 예약된) 게시물이 있으면 다시 만들지 않는다
+        for name, blob in posts:
+            hit = next((ent for ent in c["entities"] if alias.get(ent) and alias[ent].search(blob)), None)
+            if hit:
+                why = f"48시간 안에 같은 회사·인물 게시물 있음: {name} ({hit})"
+                break
+        for e in ([] if why else prev):
+            age = now - datetime.fromisoformat(e["first_seen"])
+            if age < window and news.similar(set(c["tok"]), set(e.get("tok", []))) >= thr:
+                why = f"이미 낸 소식과 같음: {e.get('title', '')[:50]}"
+                break
+            if e.get("status") != "skipped" and age < cool and set(c["entities"]) & set(e.get("entities", [])):
+                why = f"같은 회사·인물 속보를 {int(age.total_seconds() // 3600)}시간 전에 냄"
+                break
+        if not why and len(today) >= int(cfg.get("max_per_day", 3)):
+            why = "하루 상한"
+        kinds = "·".join(c["kinds"])
+        entry = {"source": "news", "company": c["company"], "entities": c["entities"], "tok": c["tok"],
+                 "title": f"[업계 속보: 주요 매체 {len(c['majors'])}곳({', '.join(c['majors'][:4])}) · {kinds}] {c['title']}"[:220],
+                 "url": c["url"], "first_seen": now.isoformat(), "why": why or "업계 속보", "tries": 0, "breaking": True,
+                 "status": "skipped" if (init or why) else "pending"}
+        seen[key] = entry
+        prev.append(entry)
+        if entry["status"] == "pending":
+            today.append(entry)
+            out.append(key)
+        log(verbose and not init, f"  {'후보' if entry['status'] == 'pending' else '건너뜀'} [{entry['why']}] {entry['title']}")
+    return out
 
 
 def mark(addr, result, now):
@@ -251,6 +342,8 @@ def main(argv=None):
                     help="후보 처리 결과 기록: done | skipped | failed | retry (retry는 시도 +1, max_tries면 failed)")
     ap.add_argument("--finish", nargs=2, metavar=("기록파일", "종료코드"),
                     help="Claude 실행 뒤: 기록에 PR 주소가 있으면 pending을 done, 아니면 retry (watch-models.ps1이 부름)")
+    ap.add_argument("--breaking-only", action="store_true",
+                    help="이번에 처음 본 속보(업계 속보·공식 블로그 새 모델)만 출력 (--dry-run과 같이, 매일 작업을 끊을지 볼 때)")
     ap.add_argument("-v", "--verbose", action="store_true")
     args = ap.parse_args(argv)
     try:
@@ -268,6 +361,7 @@ def main(argv=None):
 
     state = load_state()
     seen = state.setdefault("seen", {})
+    state_keys = set(seen)  # 이번 실행 전에 이미 본 것
     init = args.init or not STATE.exists()
     if init and not args.init:
         log(True, "기록 파일이 없어 처음 실행으로 보고 --init처럼 기록만 합니다.")
@@ -303,8 +397,22 @@ def main(argv=None):
                           "first_seen": now.isoformat(), "why": "화제", "tries": 0,
                           "status": "skipped" if init else "pending"}
 
+    news_candidates(seen, now, init, args.verbose)
+    # 오래된 업계 속보 기록은 14일 뒤 지운다 (제목 낱말까지 남겨 파일이 커지지 않게)
+    for k in [k for k, e in seen.items() if k.startswith("news:") and e.get("status") != "pending"
+              and now - datetime.fromisoformat(e["first_seen"]) > timedelta(days=14)]:
+        del seen[k]
+
+    def urgent(k, e):  # 속보: 업계 속보, 공식 블로그의 새 모델
+        return k.startswith("news:") or (k.startswith("http") and str(e.get("why", "")).startswith("새 모델"))
+
     # 이번에 새로 찾은 것 + 지난번에 Claude 실행이 실패해 남은 것 (status pending). 끝나면 watch-models.ps1이 --mark로 바꾼다
-    pending = [f"{e['company']} | {e['title']} | {address(k, e)}" for k, e in seen.items() if e.get("status") == "pending"]
+    # 속보를 앞에 둔다 (Claude는 max_posts_per_run개만 만든다)
+    keys = [k for k, e in seen.items() if e.get("status") == "pending"]
+    keys.sort(key=lambda k: not urgent(k, seen[k]))
+    if args.breaking_only:
+        keys = [k for k in keys if urgent(k, seen[k]) and k not in state_keys]
+    pending = [f"{seen[k]['company']} | {seen[k]['title']} | {address(k, seen[k])}" for k in keys]
     if not args.dry_run:
         save_state(state, now)
     if ok == 0 and CONFIG.get("sources"):

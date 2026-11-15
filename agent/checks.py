@@ -560,8 +560,64 @@ def check_reach(post):
     return errors, warnings
 
 
+NC_RE = re.compile(r"(?i)\bBY[- ]?(SA[- ])?NC\b|\bNC[- ]?(SA|ND)\b|non[- ]?commercial|비상업|비영리\s*(전용|라이선스)|상업\s*(적\s*)?이용\s*(금지|불가)")
+
+
+def _license_texts(node, path=""):
+    """license·rights_note·credit·sources 이름처럼 소재 출처를 적는 자리의 글만 모은다."""
+    if isinstance(node, dict):
+        for k, v in node.items():
+            p = f"{path}.{k}" if path else k
+            if k in ("license", "rights_note", "credit", "name") and isinstance(v, str):
+                yield p, v
+            else:
+                yield from _license_texts(v, p)
+    elif isinstance(node, list):
+        for i, v in enumerate(node):
+            yield from _license_texts(v, f"{path}[{i}]")
+
+
+def check_license(post):
+    """비상업(NC) 라이선스 소재 금지 (운영자 결정 2026-11-16: "상업적으로 이용되는 것만").
+    화풍·스킬·글꼴·음악·사진·코드 어느 것이든 license/rights_note/credit/sources에 NC가 보이면 오류. 캡션 출처 줄도 본다."""
+    errs = []
+    texts = list(_license_texts({k: post.get(k) for k in ("license", "rights_note", "credit", "sources", "slides", "thumb", "video", "assets")}))
+    texts += [("caption", l) for l in (post.get("caption") or "").splitlines() if re.match(r"\s*(출처|사진|화면|음악|글꼴|화풍|이미지)\s*[:：]", l)]
+    for where, t in texts:
+        m = NC_RE.search(t)
+        if m:
+            errs.append(f"비상업(NC) 라이선스 소재는 쓰지 않는다 ({where}: '{m.group(0)}') → 직접 만든 것이나 상업 이용이 되는 것(CC0, CC BY, MIT 등)으로 바꿀 것 (STYLE_GUIDE 2-1)")
+    return errs
+
+
+def _ends_l_geot(line):
+    """'넘어야 할 것', '알아둘 것'처럼 ㄹ 받침 + '것'으로 끝나는지."""
+    t = re.sub(r"[\s.!?…'\"’”]+$", "", line)
+    m = re.search(r"([가-힣])\s*것$", t)
+    return bool(m) and (ord(m.group(1)) - 0xAC00) % 28 == 8
+
+
+def awkward_titles(post):
+    """제목·소제목이 '~할 것'으로 끝나면 경고 (운영자 지적 2026-11-16: '돌아가려면 넘어야 할 것')."""
+    out = []
+    cands = [("제목", post.get("title", "")), ("썸네일 제목", (post.get("thumb") or {}).get("title", ""))]
+    for i, s in enumerate(post.get("slides", []) or [], 1):
+        for k in ("title", "heading"):
+            cands.append((f"{i}번째 장 {k}", s.get(k, "")))
+    for where, t in cands:
+        ls = _lines(t or "")
+        if ls and _ends_l_geot(ls[-1]):
+            out.append(f"{where}이 '~할 것'으로 끝남: '{ls[-1]}' → 서술로 풀기 (예: '복귀하려면 이사회·주주·정부를 설득해야 합니다', '복귀를 막는 세 가지') (STYLE_GUIDE 4)")
+    return out
+
+
 def check_post(post):
     """(errors, warnings) 반환."""
+    e, w = _check_post(post)
+    return e + check_license(post), w + awkward_titles(post)
+
+
+def _check_post(post):
     if post.get("type") == "video":
         return check_video(post)
     errors, warnings = [], []

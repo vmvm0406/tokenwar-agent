@@ -1,0 +1,138 @@
+{
+  "id": "2026-11-16-carousel-huang-return",
+  "type": "carousel",
+  "format": "news",
+  "series": "긴급",
+  "date": "2026-11-16",
+  "publish_at": "2026-11-16T07:12:00+09:00",
+  "topic": [
+    "젠슨 황",
+    "엔비디아",
+    "CEO 복귀"
+  ],
+  "slides": [
+    {
+      "kind": "cover",
+      "layout": "image",
+      "title": "물러난 젠슨 황,\n나흘 만에 복귀를 논의합니다",
+      "highlight": "복귀",
+      "sub": "엔비디아 CEO 자리 · FT 11월 15일 보도",
+      "visual": {
+        "type": "image",
+        "src": "img/01.jpg",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/e/e3/Jensen_huang_stanford_2026-04-30_011.jpg",
+        "position": "center 30%",
+        "hook": "가죽 재킷의 젠슨 황이 굳은 얼굴로 옆을 보는 근접 사진: 누구나 아는 얼굴과 생각에 잠긴 표정",
+        "credit": "사진: Anderseidesvik, CC BY 4.0 (위키미디어 공용, 2026년 4월 스탠퍼드)",
+        "license": "CC BY 4.0"
+      }
+    },
+    {
+      "kind": "body",
+      "heading": "엔비디아로 돌아가려 합니다",
+      "highlight": "돌아가려",
+      "body": "11월 12일 CEO에서 물러난 젠슨 황이 측근들과 복귀 방법을 논의했다고 FT가 15일 보도했습니다.",
+      "visual": {
+        "type": "image",
+        "src": "img/02.jpg",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/0/0f/NVIDIA_Headquarters.jpg",
+        "position": "center 55%",
+        "credit": "엔비디아 본사(미국 산타클라라): Coolcaesar, CC BY-SA 4.0 (위키미디어 공용)",
+        "license": "CC BY-SA 4.0"
+      }
+    },
+    {
+      "kind": "stat",
+      "value": "4.8",
+      "unit": "%",
+      "label": "사임을 발표한 11월 12일, 엔비디아 주가가 떨어진 폭입니다.",
+      "heading": "사임 발표 날 주가가 떨어졌습니다",
+      "body": "혼외 관계 보도 뒤 물러났습니다. 지금은 콜렛 크레스 CFO가 CEO 대행을 맡고 있습니다."
+    },
+    {
+      "kind": "body",
+      "heading": "머스크가 복귀를 지지했습니다",
+      "highlight": "복귀",
+      "body": "팀 스위니도 공개 서한을 지지했습니다. 실리콘밸리 경영진은 '워룸'을 꾸려 백악관 지지도 구합니다.",
+      "visual": {
+        "type": "image",
+        "src": "img/03.jpg",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/a/a0/Jensen_huang_stanford_2026-04-30_003.jpg",
+        "position": "center 35%",
+        "credit": "2026년 4월 스탠퍼드 강연 뒤 학생들과: Anderseidesvik, CC BY 4.0 (위키미디어 공용)",
+        "license": "CC BY 4.0"
+      },
+      "point": "주주 2명도 이사회에 복귀까지 열어 두라고 요구했습니다"
+    },
+    {
+      "kind": "steps",
+      "heading": "돌아가려면 넘어야 할 것",
+      "highlight": "넘어야 할 것",
+      "items": [
+        {
+          "title": "이사회 동의",
+          "text": "지분이 많지 않아 이사회가 받아들여야 합니다"
+        },
+        {
+          "title": "미국 정부",
+          "text": "베선트 재무장관은 경영진 쇄신을 요구했습니다"
+        },
+        {
+          "title": "후임 찾기",
+          "text": "이사회는 Arm CEO 르네 하스에게 뜻을 물었다고 합니다"
+        }
+      ]
+    },
+    {
+      "kind": "body",
+      "heading": "삼성·SK하이닉스도 지켜봅니다",
+      "highlight": "삼성·SK하이닉스",
+      "body": "엔비디아 AI 칩에 들어가는 HBM 메모리를 두 회사가 댑니다. 미국 시간 17일 3분기 실적 발표가 대행 체제의 첫 시험입니다.",
+      "visual": {
+        "type": "image",
+        "src": "img/05.jpg",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/a/af/Jensen_Huang_-_RTX_Blackwell_-_Nvidia_Keynote_-_CES_2025_Las_Vegas_%283%29.jpg",
+        "position": "center 45%",
+        "credit": "CES 2025에서 RTX 블랙웰 칩을 소개하는 젠슨 황: Pronoia, CC0 (위키미디어 공용)",
+        "license": "CC0"
+      }
+    }
+  ],
+  "sources": [
+    {
+      "name": "Financial Times 보도를 인용한 Investing.com (11월 16일)",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/jensen-huang-may-return-nvidia-210940404.html"
+    },
+    {
+      "name": "로이터 · 사임 발표와 주가 (11월 12일)",
+      "url": "https://www.theglobeandmail.com/business/article-nvidia-ceo-jensen-huang-to-step-down/"
+    },
+    {
+      "name": "서울경제 · 복귀 논의와 걸림돌 (11월 16일)",
+      "url": "https://en.sedaily.com/world/2026/11/16/jensen-huang-weighs-comeback-four-days-after-quitting-nvidia"
+    },
+    {
+      "name": "사진: Anderseidesvik (CC BY 4.0)",
+      "url": "https://commons.wikimedia.org/wiki/File:Jensen_huang_stanford_2026-04-30_011.jpg"
+    },
+    {
+      "name": "사진: Coolcaesar (CC BY-SA 4.0)",
+      "url": "https://commons.wikimedia.org/wiki/File:NVIDIA_Headquarters.jpg"
+    },
+    {
+      "name": "사진: Anderseidesvik (CC BY 4.0)",
+      "url": "https://commons.wikimedia.org/wiki/File:Jensen_huang_stanford_2026-04-30_003.jpg"
+    },
+    {
+      "name": "사진: Pronoia (CC0)",
+      "url": "https://commons.wikimedia.org/wiki/File:Jensen_Huang_-_RTX_Blackwell_-_Nvidia_Keynote_-_CES_2025_Las_Vegas_(3).jpg"
+    }
+  ],
+  "caption": "젠슨 황이 엔비디아 CEO에서 물러난 지 나흘 만에 복귀를 논의하고 있다고 FT가 보도했어요. 이사회·주주·워싱턴 중 무엇이 걸림돌인지 정리했어요.\n\n젠슨 황은 11월 12일 혼외 관계 보도 끝에 CEO에서 물러났고, 지금은 콜렛 크레스 CFO가 CEO 대행을 맡고 있어요. 발표 날 엔비디아 주가는 4.8% 떨어졌어요.\n일론 머스크와 에픽게임즈의 팀 스위니가 복귀를 요구하는 공개 서한을 지지했고, 실리콘밸리 경영진은 '워룸'을 꾸려 백악관 지지를 구할 계획이라고 해요. 알티미터의 브래드 거스너 등 주주 2명도 이사회에 복귀 가능성까지 열어 두라고 요구했어요.\n\n다만 젠슨 황은 회사를 좌우할 만큼 지분이 많지 않아 이사회가 받아들여야 해요. 스콧 베선트 재무장관은 경영진을 크게 바꿔야 한다고 했고, 이사회는 Arm CEO 르네 하스에게 뜻을 물었다고 알려졌어요. 엔비디아는 공식 후임 절차는 아직 없다고 밝혔어요.\n엔비디아 AI 칩의 HBM 메모리는 SK하이닉스·삼성전자가 대요. 미국 시간 17일 3분기 실적 발표가 대행 체제의 첫 시험이에요.\n\n출처: Financial Times(11월 15일, Investing.com 인용), 로이터(11월 12일), 서울경제(11월 16일)\n사진: 위키미디어 공용 Anderseidesvik(CC BY 4.0), Coolcaesar(CC BY-SA 4.0), Pronoia(CC0)\n\n엔비디아·SK하이닉스 주식을 가진 친구에게 보내 주세요",
+  "hashtags": [
+    "#젠슨황",
+    "#엔비디아",
+    "#AI뉴스",
+    "#토큰전쟁"
+  ]
+}
