@@ -17,7 +17,7 @@
   "video": {
     "src": "clips/source.mp4",
     "start": 0.7,
-    "end": 53.6,
+    "end": 54.15,
     "source_duration": 2076
   },
   "title": "AI가 보안 구멍\n948개를 찾아 고쳤다",
@@ -91,7 +91,7 @@
     },
     {
       "start": 51.3,
-      "end": 53.6,
+      "end": 54.05,
       "text": "아는 방법을 그대로\n따라 하는 게 아니라요"
     }
   ],

@@ -16,7 +16,7 @@
   "video": {
     "src": "clips/source.mp4",
     "start": 9.5,
-    "end": 76.7,
+    "end": 77.1,
     "source_duration": 814
   },
   "title": "MS CEO \"개발자는\n더 중요해졌다\"",
@@ -88,7 +88,7 @@
     },
     {
       "start": 73.8,
-      "end": 76.6,
+      "end": 77.0,
       "text": "그렇지 않다면\n당연히 거부해야 하고요",
       "highlight": "거부"
     }

@@ -15,8 +15,8 @@
   "source_url": "https://www.youtube.com/watch?v=uND6iY2qp_c&t=1086",
   "video": {
     "src": "clips/source.mp4",
-    "start": 1.1,
-    "end": 63.1,
+    "start": 1.0,
+    "end": 63.35,
     "source_duration": 2387
   },
   "title": "5년 걸린 아기의 진단,\nAI가 풀었습니다",
@@ -84,7 +84,7 @@
     },
     {
       "start": 57.9,
-      "end": 63.0,
+      "end": 63.25,
       "text": "퍼즐 조각이 다 맞춰지면서\n진단을 내릴 수 있었어요",
       "highlight": "진단"
     }
