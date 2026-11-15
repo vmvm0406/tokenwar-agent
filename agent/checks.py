@@ -14,7 +14,13 @@ SERIES = {"전황", "긴급", "생존 가이드", "오픈소스", "AI 용어"}
 COVER_LAYOUTS = {"big", "list", "image"}
 BODY_KINDS = {"body", "steps", "compare", "stat", "prompt"}
 # 게시물 형식 (선택). howto: 따라 하기, ask: 나를 알려 주는 질문, weekly: 주간 요약, news: 소식 (STYLE_GUIDE 3-1)
-FORMATS = {"news", "howto", "ask", "weekly"}
+# buzz: 가벼운 화제 (연예인·예능·유명인이 나오는 AI 이야기, STYLE_GUIDE 3-2). 주당 개수는 dupes.py가 센다
+FORMATS = {"news", "howto", "ask", "weekly", "buzz"}
+BUZZ_MIN_SOURCES = 2
+# 가벼운 화제는 AI 화제에 빗댄 패러디·밈도 된다. 농담임을 캡션 앞부분에서 풀어 줘야 한다 (실제 논란으로 오해 금지)
+BUZZ_REVEAL = ["사실은", "사실 ", "실제로는", "실제론", "패러디", "농담", "밈", "알고 보니", "진짜는", "빗댄", "합성"]
+# 가벼운 화제에서 쓰면 안 되는 쪽 (확인 안 된 의혹, 사생활, 조롱). 경고로 알리고 사람이 판단
+BUZZ_RISKY = ["의혹", "카더라", "루머", "열애", "사생활", "폭로", "저격", "망신", "굴욕"]
 PROMPT_MAX = 320  # 프롬프트 상자 하나 글자 수 (넘치면 render.py가 레이아웃 오류로도 막는다)
 CLIP_FIELDS = ("src", "start", "end", "source", "source_url")
 VISUALS = {"image", "bars", "timeline"}
@@ -239,6 +245,12 @@ def check_video(post):
         errors.append("캡션에도 원작자(credit)를 밝힐 것")
     if not post["sources"]:
         errors.append("출처 1개 이상 (원본 영상 링크)")
+    f = post.get("format")
+    if f is not None and f not in FORMATS:
+        errors.append(f"format은 {FORMATS} 중 하나: {f}")
+    e_b, w_b = check_buzz(post)
+    errors += e_b
+    warnings += w_b
     e_c, w_c = check_caption_hooks(post["caption"])
     errors += e_c
     warnings += w_c
@@ -288,6 +300,24 @@ def _prompts(slides):
     return out
 
 
+def check_buzz(post):
+    """가벼운 화제(format buzz): 출처 2곳 이상(오류), 캡션 앞에서 실제 사정 밝히기·위험한 표현(경고) (STYLE_GUIDE 3-2)."""
+    errors, warnings = [], []
+    if post.get("format") != "buzz":
+        return errors, warnings
+    srcs = [s for s in post.get("sources", []) if str(s.get("url", "")).startswith("http")]
+    if len(srcs) < BUZZ_MIN_SOURCES:
+        errors.append(f"가벼운 화제(format buzz)는 출처 {BUZZ_MIN_SOURCES}곳 이상으로 사실 확인: 지금 {len(srcs)}곳 (STYLE_GUIDE 3-2)")
+    head = " / ".join([l for l in post.get("caption", "").splitlines() if l.strip()][:3])
+    if not any(w in head for w in BUZZ_REVEAL):
+        warnings.append("가벼운 화제: 캡션 앞 3줄에 실제 사정을 밝히는 말('사실은', '실제로는', '패러디' 등)이 없음 → 농담·패러디면 앞에서 풀어 줄 것 (STYLE_GUIDE 3-2)")
+    text = json.dumps({k: post.get(k) for k in ("title", "slides", "video", "thumb", "caption")}, ensure_ascii=False)
+    hit = [w for w in BUZZ_RISKY if w in text]
+    if hit:
+        warnings.append(f"가벼운 화제에 조심할 표현 {hit}: 확인 안 된 의혹·사생활·조롱은 다루지 않는다 (STYLE_GUIDE 3-2)")
+    return errors, warnings
+
+
 def check_format(post):
     """따라 하기·질문 형식이면 복사해 쓸 프롬프트가 장 안에 있어야 한다 (STYLE_GUIDE 3-1)."""
     errors, warnings = [], []
@@ -296,6 +326,7 @@ def check_format(post):
         return errors, warnings
     if f not in FORMATS:
         return [f"format은 {FORMATS} 중 하나: {f}"], warnings
+    errors, warnings = check_buzz(post)
     prs = _prompts(post.get("slides", []))
     if f in ("howto", "ask") and not prs:
         errors.append(f"format '{f}'에는 복사해 쓸 프롬프트 장(kind: prompt)이 1개 이상 필요")

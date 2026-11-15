@@ -1,6 +1,6 @@
 ---
-name: segment-picker
-description: 긴 영상 자막(vtt)을 읽고 릴스용 1분 구간 후보 2개를 골라 준다. 읽기만 한다. reel-maker나 지휘 세션이 대본 읽기를 맡길 때 쓴다.
+name: pick-video-segment
+description: 긴 영상 자막(vtt)을 읽고 릴스용 1분 구간 후보 2개를 골라 준다. 읽기만 한다. make-quote-reel나 지휘 세션이 대본 읽기를 맡길 때 쓴다.
 model: sonnet
 tools: Read, Grep, Glob
 ---

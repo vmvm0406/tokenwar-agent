@@ -28,6 +28,12 @@ jobs:
 
       - run: pip install requests
 
+      - name: git 사용자 (게시할 미디어를 docs/media로 push할 때 씀)
+        run: |
+          git config user.name "tokenwar-bot"
+          git config user.email "tokenwar-bot@users.noreply.github.com"
+
+      # 미디어는 docs/media에 복사·push → GitHub Pages 주소로 인스타에 넘긴다 (agent/publish.py 맨 위 설명)
       - name: 게시
         env:
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
@@ -35,12 +41,10 @@ jobs:
           IG_API_HOST: ${{ vars.IG_API_HOST }}
         run: python agent/publish.py
 
-      - name: 결과 저장 (게시된 폴더 이동, 오류 기록)
+      - name: 결과 저장 (게시된 폴더 이동, 오류 기록, docs/media 비우기)
         if: always()
         run: |
-          git config user.name "tokenwar-bot"
-          git config user.email "tokenwar-bot@users.noreply.github.com"
-          git add -A posts
+          git add -A posts docs
           if git diff --cached --quiet; then
             echo "바뀐 것 없음"
           else

@@ -8,7 +8,7 @@
               ▼  (검토 모드: Pull Request / 자동 모드: main에 바로)
            GitHub 저장소 posts/queue/
               │
-              ▼  15분마다 확인, 게시 시각이 되면
+              ▼  15분마다 확인, 게시 시각이 되면 (cron이 늦으면 이 컴퓨터의 watch-models.ps1이 15분마다 직접 실행)
            GitHub Actions ── 인스타 공식 API로 게시 → posts/published/로 이동
 ```
 
@@ -29,7 +29,7 @@
 
 ## 처음 설정
 
-1. **저장소를 공개(Public)로 만든다.** 인스타 서버가 이미지와 영상을 공개 주소(jsDelivr CDN)로 가져가기 때문이다. 토큰은 Secrets에 있으니 공개돼도 안전하다.
+1. **저장소를 공개(Public)로 만든다.** 인스타 서버가 이미지와 영상을 공개 주소(GitHub Pages, `docs/media/`)로 가져가기 때문이다. 게시 작업이 그때그때 미디어를 `docs/media/`에 올리고, 게시가 끝나면 지운다. Settings › Pages에서 `main` 브랜치 `/docs` 폴더로 켜 둔다. 토큰은 Secrets에 있으니 공개돼도 안전하다.
 2. **인스타 연결 (Facebook 로그인 방식):** 경쟁 계정 조회수 분석(Business Discovery)이 이 방식에서만 되므로 이쪽으로 한다.
    - 인스타 @tokenwar_ai를 Facebook 페이지에 연결한다 (인스타 설정 › 계정 센터, 또는 페이지 설정 › 연결된 계정).
    - Meta 개발자 앱(비즈니스 유형)에서 Facebook 로그인을 추가하고 권한 `instagram_basic`, `instagram_content_publish`, `instagram_manage_insights`, `pages_show_list`, `pages_read_engagement`, `business_management`을 받는다.
@@ -52,6 +52,7 @@
 ## 매일 쓰는 법
 
 - **검토 모드 (`config.json`의 `"mode": "review"`)**: 매일 아침 Pull Request가 열린다. 휴대폰 GitHub 앱에서 이미지와 캡션을 보고 **Merge**를 누르면 게시 시각에 올라간다. 마음에 안 들면 PR에 댓글로 고칠 점을 남기거나 닫는다.
+- **검토 페이지**: https://vmvm0406.github.io/tokenwar-agent/review/ — 열린 검토 PR의 릴스 영상을 바로 재생하고 카드 장을 옆으로 넘겨 본다 (GitHub PR 화면에서는 영상·카드가 안 보임). 캡션·해시태그·출처도 함께. 괜찮으면 '승인(Merge)하러 가기'로 PR에 가서 Merge, 아니면 '고칠 점 남기기'. PR이 바뀌면 몇 분 안에, 아니면 30분마다 새로 만든다.
 - **자동 모드 (`"auto"`)**: 사람 확인 없이 게시 시각에 올라간다. 2주쯤 검토 모드로 품질을 확인한 뒤 바꾸는 것을 권장.
 - 게시에 실패하면 GitHub가 이메일로 알려주고, 해당 게시물 폴더에 `error.log`가 남는다. 3번 실패하면 더 시도하지 않는다. 원인을 고친 뒤 `error.log`를 지우면 다시 시도한다.
 

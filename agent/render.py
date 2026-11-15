@@ -454,8 +454,15 @@ def main(folder):
         if not src.exists():
             print(f"영상 파일 없음: {post['video']['src']}")
             sys.exit(1)
-        from video import make_video_reel
-        dur = make_video_reel(post, out_dir, CONFIG)
+        from video import make_video_reel, EdgeCutError
+        try:
+            dur = make_video_reel(post, out_dir, CONFIG,
+                                  soft_edges="/samples/" in str(out_dir).replace("\\", "/"))
+        except EdgeCutError as e:
+            print("구간 경계 문제로 렌더링 중단:")
+            for line in str(e).splitlines():
+                print(" -", line)
+            sys.exit(1)
         print(f"영상 릴스 길이: {dur:.1f}초")
         thumb_or_exit(post, out_dir)
         print("완료:", out_dir)
