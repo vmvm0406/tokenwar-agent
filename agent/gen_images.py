@@ -25,9 +25,11 @@ from PIL import Image
 
 MODEL = "@cf/black-forest-labs/flux-1-schnell"
 STYLE = (
-    "cinematic editorial photograph, dark moody scene, deep black shadows, "
-    "vivid neon green (#00FF66) accent light as the only color, high contrast, sharp focus, "
-    "no text, no letters, no words, no logos, no watermark, no recognizable real people"
+    "cinematic editorial photograph, dark scene lit by vivid neon green (#00FF66) light, "
+    "strong green glow and green color cast, everything else near black, high contrast, sharp focus, "
+    "minimal composition with one clear subject, "
+    "no text, no letters, no numbers, no signs, no billboards, no screens with writing, "
+    "no logos, no watermark, no recognizable real people"
 )
 BANNED = ["logo", "text saying", "written", "elon", "altman", "huang", "zuckerberg", "musk",
           "openai logo", "nvidia logo", "photo of ", "portrait of "]
