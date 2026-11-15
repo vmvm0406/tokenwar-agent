@@ -286,7 +286,14 @@ def check_video(post):
     e_b, w_b = check_buzz(post)
     errors += e_b
     warnings += w_b
-    e_c, w_c = check_caption_hooks(post["caption"])
+    # 따라 하기 영상 릴스(format howto + dm)도 카드형처럼 DM 자료를 검사하고 '받기' 안내를 허용한다
+    kw = None
+    if post.get("dm"):
+        e_d, w_d = check_dm(post)
+        errors += e_d
+        warnings += w_d
+        kw = post["dm"].get("keyword") or CONFIG.get("dm", {}).get("keyword", "받기")
+    e_c, w_c = check_caption_hooks(post["caption"], kw)
     errors += e_c
     warnings += w_c
     e_r, w_r = check_reach(post)

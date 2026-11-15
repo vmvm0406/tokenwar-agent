@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>말 한 줄로 수묵화 영상 받기 · 토큰전쟁</title>
+<meta name="description" content="클로드 코드에 Lemo-Opuscar 스킬을 깔면, 말 한 줄로 화풍 있는 짧은 영상을 코드로 만들어 줍니다. 11월 16일에 직접 깔고 만들어 본 순서입니다.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0B0A;--fg:#F2F5F3;--ac:#00FF66;--mu:#9AA59F}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg)}
+body{font-family:'Wanted Sans Variable','Wanted Sans',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  line-height:1.65;word-break:keep-all;overflow-wrap:break-word}
+main{max-width:680px;margin:0 auto;padding:40px 16px 64px}
+.brand{font-family:'Black Han Sans',sans-serif;color:var(--ac);font-size:20px;letter-spacing:.01em}
+h1{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:clamp(30px,8vw,44px);line-height:1.2;margin:18px 0 12px}
+h1 .hl{color:var(--ac)}
+.intro{color:#CFD6D2;font-size:18px;margin:0 0 28px}
+.rule{height:4px;background:var(--ac);margin:28px 0}
+.step{border-top:2px solid #2A3530;padding:22px 0}
+.step .k{font-family:'Black Han Sans',sans-serif;color:var(--ac);font-size:32px;line-height:1}
+.step .lb{color:var(--mu);font-weight:700;font-size:15px;margin-left:10px}
+h2{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:24px;line-height:1.3;margin:10px 0 6px}
+h3{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:22px;margin:0 0 10px}
+p{margin:6px 0;color:#CFD6D2}
+.pr{position:relative;margin:12px 0 4px;border:2px solid var(--ac);background:#0E1310}
+.pr pre{margin:0;padding:16px 16px 52px;white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere;
+  font-family:'JetBrains Mono',ui-monospace,Consolas,monospace;font-size:15px;line-height:1.6;color:var(--fg)}
+.pr button{position:absolute;right:0;bottom:0;border:0;background:var(--ac);color:var(--bg);
+  font-family:inherit;font-weight:700;font-size:15px;line-height:1;padding:12px 16px;cursor:pointer}
+ul{padding-left:20px;color:#CFD6D2}
+.src{color:var(--mu);font-size:14px;border-top:2px solid #2A3530;padding-top:16px;margin-top:32px}
+.src a{color:var(--mu)}
+.foot{margin-top:28px;font-weight:700}
+.foot a{color:var(--ac)}
+</style></head>
+<body><main>
+<div class="brand">TOKEN WAR</div>
+<h1>말 한 줄로<br><span class="hl">수묵화 영상</span> 받기</h1>
+<p class="intro">클로드 코드에 Lemo-Opuscar 스킬을 깔면, 말 한 줄로 화풍 있는 짧은 영상을 코드로 만들어 줍니다. 11월 16일에 직접 깔고 만들어 본 순서입니다.</p>
+<section class="step"><span class="k">01</span><span class="lb">터미널에 넣을 명령 두 줄</span><h2>터미널에 두 줄 넣어 설치합니다</h2><div class="pr"><pre>claude plugin marketplace add lemomo-ai/lemo-opuscar</pre><button type="button" onclick="cp(this)">복사</button></div><div class="pr"><pre>claude plugin install lemo-opuscar@lemolab</pre><button type="button" onclick="cp(this)">복사</button></div><p></p></section><section class="step"><span class="k">02</span><span class="lb">요청</span><h2>클로드에게 원하는 장면을 한 줄로 말합니다</h2><div class="pr"><pre>수묵화 화풍으로, 산골 마을에 첫눈이 내리는 20초 영상을 만들어 줘.</pre><button type="button" onclick="cp(this)">복사</button></div><p></p></section><section class="step"><span class="k">03</span><span class="lb">결과</span><h2>20초 수묵화 영상이 나왔습니다</h2><p>붓질로 산이 그려지고 기와지붕에 눈이 쌓입니다. 배경 음악과 효과음도 코드로 만들었습니다.</p></section><section class="step"><span class="k">04</span><span class="lb">주의할 점</span><h2>PC용 클로드 코드가 있어야 합니다</h2><p>휴대폰 앱에서는 안 됩니다. Node.js, ffmpeg, Python이 깔려 있어야 하고, 한 편에 40분쯤 걸리며 토큰도 꽤 씁니다.</p></section>
+<div class="rule"></div><h3>직접 해 본 결과</h3><p>수묵화 화풍으로 산골 마을에 첫눈이 내리는 20초 영상이 나왔습니다. 붓질 하나가 산등성이가 되고, 기와지붕이 하나씩 그려진 뒤 눈이 내려 지붕이 하얘집니다. 배경 음악과 효과음도 코드로 만들었고, 처음 설치부터 완성까지 40분쯤 걸렸습니다.</p><div class="rule"></div><h3>주의할 점</h3><ul><li>휴대폰 앱이 아니라 PC용 클로드 코드에서만 됩니다. Node.js 20 이상, ffmpeg 7 이상, Python 3.11 이상이 필요합니다.</li><li>처음 쓸 때 화풍 자료와 도구를 내려받느라 몇 분 더 걸립니다.</li><li>시작할 때 클로드가 목소리·음악 자료가 있는지 한 번 묻습니다. 없다고 하면 알아서 만듭니다.</li><li>화풍 설명서는 비상업 이용(CC BY-NC) 조건이 붙어 있습니다. 만든 영상은 내 것이지만, 설명서 자체를 팔거나 퍼뜨리면 안 됩니다.</li></ul>
+<div class="src">출처<ul><li><a href="https://github.com/lemomo-ai/lemo-opuscar" rel="noopener">Lemo-Opuscar (코드로 영상을 만드는 클로드 스킬, 화풍 99개)</a></li><li><a href="https://lemomo-ai.github.io/lemo-opuscar/" rel="noopener">클로드 코드 + Lemo-Opuscar 직접 사용 (11월 16일)</a></li></ul>2026.11.16 기준. 결과는 직접 해 본 것이고, AI 답은 그때그때 달라질 수 있습니다.</div>
+<p class="foot">매일 AI 소식은 <a href="https://www.instagram.com/tokenwar_ai/">@tokenwar_ai</a></p>
+</main>
+<script>
+function cp(b){const t=b.previousElementSibling.innerText;
+(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{b.textContent='복사됨';setTimeout(()=>b.textContent='복사',1500)})
+.catch(()=>{const r=document.createRange();r.selectNodeContents(b.previousElementSibling);const s=getSelection();s.removeAllRanges();s.addRange(r)})}
+</script>
+</body></html>
