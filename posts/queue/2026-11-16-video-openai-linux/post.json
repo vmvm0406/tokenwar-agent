@@ -123,7 +123,7 @@
       "url": "https://www.bleepingcomputer.com/news/security/openais-new-gpt-6-cyber-ai-finds-81-firefox-flaws-948-linux-bugs/"
     }
   ],
-  "caption": "OpenAI의 보안 전용 AI가 리눅스에서 관리자 권한을 빼앗을 수 있는 보안 구멍 948개를 찾아 고쳤어요. 석 달 전 모델보다 5배 넘게 많아요.\n\nOpenAI가 11월 12일 보안 발표 라이브에서 공개한 내용이에요. 리눅스는 안드로이드 스마트폰, 웹사이트 서버, 클라우드의 밑바탕이 되는 운영체제예요. 보안 전용 모델 GPT-6 사이버로 한 번 돌린 결과이고, 사람 연구자가 확인한 뒤 리눅스 관리자들에게 고친 코드를 넘겼다고 해요. 같은 모델은 파이어폭스에서도 몰랐던 심각한 구멍 81개를 찾았어요.\nOpenAI는 이 모델의 해킹 능력을 가장 높은 위험 등급(Critical)으로 매기고, 승인받은 보안 기관에만 먼저 열었어요.\n\n영상: OpenAI (YouTube) https://www.youtube.com/watch?v=YmxpxJZvm4M\n출처: OpenAI 발표·블로그(11월 12일), BleepingComputer\n\n회사 서버나 보안을 맡은 동료에게 보내 주세요.\n해킹까지 잘하는 AI, 지키는 쪽에 유리할까요, 공격하는 쪽에 유리할까요?",
+  "caption": "OpenAI 보안 전용 AI가 찾아 고친 리눅스 보안 구멍 948개, 석 달 전 모델의 5배가 넘는 이 숫자가 무슨 뜻인지 정리했습니다.\n\n🗞️ OpenAI가 11월 12일 보안 발표 라이브에서 공개한 결과입니다.\n📍 리눅스는 안드로이드 스마트폰, 웹사이트 서버, 클라우드의 밑바탕이 되는 운영체제.\n📊 948개는 관리자 권한을 빼앗을 수 있는 구멍으로, 보안 전용 모델 GPT-6 사이버로 한 번 돌린 결과입니다. 사람 연구자가 확인한 뒤 리눅스 관리자들에게 고친 코드를 넘겼다고 밝혔습니다.\n📍 같은 모델이 파이어폭스에서 찾은, 몰랐던 심각한 구멍은 81개.\n🔫 OpenAI는 이 모델의 해킹 능력을 가장 높은 위험 등급(Critical)으로 매기고, 승인받은 보안 기관에만 먼저 열었습니다.\n\n영상: OpenAI (YouTube) https://www.youtube.com/watch?v=YmxpxJZvm4M\n출처: OpenAI 발표·블로그(11월 12일), BleepingComputer\n\n회사 서버나 보안을 맡은 동료에게 보내 주세요.\n해킹까지 잘하는 AI, 지키는 쪽에 유리할까요, 공격하는 쪽에 유리할까요?",
   "hashtags": [
     "#OpenAI",
     "#리눅스",
