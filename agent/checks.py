@@ -112,10 +112,45 @@ def body_sentences(text, where):
     return errs
 
 
-def title_sentence(title, where):
-    """제목이 서술어로 끝나는지. 따옴표 인용("~했다")도 서술어로 본다."""
+# 구어체 반박·강조 끝맺음 (STYLE_GUIDE 3-3, 운영자 결정 2026-11-16): "아니 컴공 안 죽었다니까?", "끝났다고? 아니거든",
+# "안 죽었잖아", "아니야". 물음표가 붙어도 답이 정해진 반박이면 서술어로 본다.
+COLLOQUIAL_RE = re.compile(r"(거든|거든요|[다라냐]고|니까|니까요|잖아|잖아요|는데|는데요|[이거니]야|[았었였했겠]지)[\s\"'”’.!?…]*$")
+_TAIL = r"[\s\"'”’.!?…]*$"
+
+
+def _jong(ch):
+    """한글 음절의 받침 번호 (0 = 받침 없음, 8 = ㄹ, 17 = ㅂ). 한글이 아니면 -1."""
+    c = ord(ch) - 0xAC00
+    return c % 28 if 0 <= c < 11172 else -1
+
+
+def is_real_question(text):
+    """답을 독자에게 미루는 진짜 질문형인지: "~일까요?", "~할까?", "~인가요?", "~나요?", "~습니까?".
+    "안 죽었다니까?"(다니까), "끝났다고?"는 반박이라 질문으로 보지 않는다."""
+    w = re.sub(_TAIL, "", str(text).strip())
+    if not w:
+        return False
+    if re.search(r"(나요|가요|는가|ㄴ가|은가|인가|던가)$", w):
+        return True
+    m = re.search(r"(.)(까요|까)$", w)   # 받침 ㄹ + 까(요): 할까, 일까요, 될까 / 받침 ㅂ + 니까: 합니까, 입니까
+    if m and _jong(m.group(1)) == 8:
+        return True
+    m = re.search(r"(.)니까(요)?$", w)
+    if m and (_jong(m.group(1)) == 17 or m.group(1) == "습"):
+        return True
+    return False
+
+
+def title_sentence(title, where, no_question=True):
+    """제목이 서술어로 끝나는지. 따옴표 인용("~했다")도 서술어로 본다.
+    구어체 반박("안 죽었다니까?", "아니거든", "끝났다고?")은 통과, 진짜 질문("~일까요?", "~할까?")은 막는다."""
     one = " ".join(_lines(title)).strip()
-    if one and not PREDICATE_RE.search(one):
+    if not one:
+        return []
+    if no_question and is_real_question(one):   # 카드 표지("토큰, 정확히 뭘까")는 설명형 질문을 허용
+        return [f"{where}이 질문형: '{one}' → 답을 미루는 질문 대신 단정이나 구어체 반박으로 "
+                "(예: '컴공은 끝났을까요?' 대신 '아니 컴공 안 죽었다니까?', STYLE_GUIDE 3-3)"]
+    if not (PREDICATE_RE.search(one) or COLLOQUIAL_RE.search(one)):
         return [f"{where}이 서술어 없이 끝남: '{one}' → 누가·무엇이 어떻게 했는지 끝까지 쓴다 "
                 "(예: '3년 만에 밀레니엄 난제' 대신 'AI가 3년 만에 수학 최대 난제를 풀었다')"]
     return []
@@ -500,7 +535,7 @@ def check_post(post):
             if not s.get("title"):
                 errors.append(f"{tag} 표지 제목(title) 필요")
             t = s.get("title", "")
-            errors += title_sentence(t, f"{tag} 표지 제목")
+            errors += title_sentence(t, f"{tag} 표지 제목", no_question=False)
             ls = _lines(t) if t else []
             if len(ls) > lim["cover_title_lines"]:
                 errors.append(f"{tag} 표지 제목은 {lim['cover_title_lines']}줄 이하: {len(ls)}줄")
