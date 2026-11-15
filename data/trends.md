@@ -1,4 +1,4 @@
-# 인스타 반응 분석 (2026-11-15 16:29 기준)
+# 인스타 반응 분석 (2026-11-15 16:34 기준)
 
 에이전트는 주제를 고를 때 이 파일을 먼저 읽는다 (STYLE_GUIDE 3장, 6-1장 '인스타 반응').
 배수 = 그 계정의 최근 60일 같은 유형(릴스/피드) 중간값 대비. 2배 이상이면 '먹힌 주제'.
@@ -24,11 +24,11 @@
 
 | 배수 | 계정 | 유형 | 날짜 | 수치 | 첫 줄 |
 |---|---|---|---|---|---|
-| 31.5x | @ai.trend.kr | REELS | 10-20 | 2,863,728 | [눈 뭉치 던진 범인이 나라고요? ❄️](https://www.instagram.com/reel/DetX442xkFz/) |
+| 31.5x | @ai.trend.kr | REELS | 10-20 | 2,863,736 | [눈 뭉치 던진 범인이 나라고요? ❄️](https://www.instagram.com/reel/DetX442xkFz/) |
 | 17.2x | @ai.asap.kr | FEED | 10-18 | 1,394 | [Filee는 Ctrl을 누른 채 파일을 끌면 커서 옆에 변환할 형식이 동그랗게 뜨고, 원하는 형식에 놓으면 바로 바꿔 주는 변환기입니다. 이미지](https://www.instagram.com/p/DeoW-TQj9F5/) |
-| 11.7x | @ai.trend.kr | REELS | 10-23 | 1,062,829 | [식이 시작도 안 했는데 하객석이 뒤집어졌어요 🎉](https://www.instagram.com/reel/De0VCSbPO_M/) |
+| 11.7x | @ai.trend.kr | REELS | 10-23 | 1,062,845 | [식이 시작도 안 했는데 하객석이 뒤집어졌어요 🎉](https://www.instagram.com/reel/De0VCSbPO_M/) |
 | 10.5x | @ai.trend.kr | FEED | 10-27 | 16,174 | [올해가 가기 전에, GPT랑 새해 계획을 세워봤어요. 🗓️](https://www.instagram.com/p/De_YpGSkS7D/) |
-| 7.4x | @ai.trend.kr | REELS | 11-04 | 669,800 | [AI로 오늘도 감동을 받네요 🥹](https://www.instagram.com/reel/DfUlNHxPiTT/) |
+| 7.4x | @ai.trend.kr | REELS | 11-04 | 669,874 | [AI로 오늘도 감동을 받네요 🥹](https://www.instagram.com/reel/DfUlNHxPiTT/) |
 | 7.1x | @ai.trend.kr | FEED | 10-28 | 10,884 | [사진 한 장으로 다섯 시대를 살아 봤어요 📷](https://www.instagram.com/p/DfB9iInE-54/) |
 | 6.8x | @ai.asap.kr | FEED | 10-28 | 553 | [Oh-My-Hermes는 Nous Research의 오픈소스 에이전트 Hermes Agent에 쓸 세팅을 묶은 올인원 패키지입니다. 설치하고 o](https://www.instagram.com/p/DfA7xqjE1nL/) |
 | 6.7x | @ai.asap.kr | FEED | 10-17 | 546 | [Happy는 Claude·Codex·Grok을 한 앱에서 골라 쓰게 해 주는 MIT 오픈소스입니다. 새 구독이 아니라 이미 내고 있는 각 회사 ](https://www.instagram.com/p/Del2nkwj2Xu/) |
@@ -39,7 +39,7 @@
 | 5.1x | @ai.asap.kr | FEED | 10-27 | 412 | [오픈AI가 GPT-6.1 Terra를 공개했습니다. 화면을 읽고 앱을 다루는 컴퓨터 사용을 더 싸고 빠르게 만든 모델입니다.](https://www.instagram.com/p/De-Uua7k_rj/) |
 | 4.8x | @ai.asap.kr | FEED | 10-22 | 389 | [피클은 할 일을 대신 끝내 주는 국내 개인 AI 에이전트 앱입니다. 웹사이트에서는 사람처럼 일을 처리하고, 웹으로 안 되는 일은 직접 전화를 겁](https://www.instagram.com/p/DeyeaxzD52g/) |
 | 4.5x | @ai.asap.kr | FEED | 11-10 | 366 | [앤트로픽이 Haiku·Sonnet·Opus 5.5와 Fable 5.2 중 무엇을 언제 쓸지 정리한 가이드를 냈습니다.](https://www.instagram.com/p/Dfi7XDrDwhh/) |
-| 4.4x | @ai.trend.kr | FEED | 11-08 | 6,812 | [AI로 쓴 글을 내가 쓴 것처럼 만드는 방법 ](https://www.instagram.com/p/DfeWpJxj3Xu/) |
+| 4.4x | @ai.trend.kr | FEED | 11-08 | 6,815 | [AI로 쓴 글을 내가 쓴 것처럼 만드는 방법 ](https://www.instagram.com/p/DfeWpJxj3Xu/) |
 | 4.4x | @ai.asap.kr | FEED | 10-25 | 356 | [앤트로픽이 Claude로 오픈소스 라이브러리 123개에 버그가 없다는 걸 수학으로 증명했습니다. 이걸 형식 검증이라고 하는데, 지금까지는 전문가](https://www.instagram.com/p/De5VM-zE0Xz/) |
 | 4.3x | @ai.asap.kr | FEED | 11-08 | 352 | [아이폰처럼 맥북도 얼굴만 보면 잠금이 풀리게 해 주는 무료 오픈소스 Glance입니다.](https://www.instagram.com/p/Dfd5xYnDxc7/) |
 | 4.1x | @ai.asap.kr | FEED | 10-22 | 334 | [앤트로픽이 메타 Muse, OpenAI Dots에 이어 먼저 할 일을 챙겨 주는 에이전트 앱 Claude Duet을 리서치 프리뷰로 공개했습니다](https://www.instagram.com/p/DexcORbE1w_/) |
