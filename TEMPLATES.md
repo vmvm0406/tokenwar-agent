@@ -119,6 +119,8 @@
 
 릴스(`type: "video"`)에는 꼭 넣는다. `cover.jpg`로 만들어져 프로필 격자와 피드에 보인다. 1080x1920, 그림이 꽉 차고 아래가 어두워지며 가운데 정렬 제목 2줄, 그 아래 작은 TOKEN WAR.
 
+**그림은 빈칸 없이 꽉 채운다.** 영상 장면(16:9)을 그대로 넣으면 위아래가 검게 빈다. 인물 쪽을 세로 9:16으로 잘라 1080x1920으로 만든다: `ffmpeg -nostdin -ss <초> -i clips/source.mp4 -frames:v 1 -vf "crop=<w>:<h>:<x>:<y>,scale=1080:1920:flags=lanczos" img/thumb.jpg` (w = h×9/16). 위아래에 검은 띠가 있으면 thumb.py가 멈춘다. 제목·인물 표기·TOKEN WAR는 안전 영역(285~1250px) 안에 자동으로 놓인다.
+
 ```json
 "thumb": {
   "title": "AI 피싱 시대,\n2중 보안은 필수다",

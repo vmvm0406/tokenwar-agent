@@ -10,7 +10,7 @@ post.json의 "thumb":
                 "prompt": "a giant glowing padlock ..."}     # 2순위: 실물이 없을 때 AI로 만듦
     }
 
-배치: 그림이 화면을 꽉 채우고, 아래가 어두워지며 가운데 정렬 제목 2줄.
+배치: 그림이 화면을 빈칸 없이 꽉 채우고 (위아래 검은 띠가 있는 그림은 검사에서 막는다), 아래가 어두워지며 가운데 정렬 제목 2줄.
 프로필 격자에서는 가운데 3:4(위아래 240px씩 잘림)만 보인다. 릴스 화면에서는 아래쪽이 캡션·버튼에 가리므로
 제목·인물 표기·TOKEN WAR는 인스타 안전 영역(config.json reel_safe, 세로 285~1250px) 안에 둔다.
 """
@@ -47,8 +47,8 @@ def page(post, folder):
 #t{{width:{W}px;height:{H}px;position:relative;overflow:hidden;background:#000;color:#fff;
   font-family:'Wanted',sans-serif;word-break:keep-all}}
 #t img{{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:{pos}}}
-.shade{{position:absolute;left:0;right:0;bottom:0;height:72%;
-  background:linear-gradient(to bottom,rgba(0,0,0,0) 0%,rgba(0,0,0,.55) 38%,rgba(0,0,0,.92) 72%,#000 100%)}}
+.shade{{position:absolute;left:0;right:0;bottom:0;height:60%;
+  background:linear-gradient(to bottom,rgba(0,0,0,0) 0%,rgba(0,0,0,.5) 35%,rgba(0,0,0,.78) 70%,rgba(0,0,0,.85) 100%)}}
 .txt{{position:absolute;left:60px;right:60px;bottom:{BOT + 60}px;text-align:center}}
 .person{{position:absolute;left:60px;bottom:{BOT + 330}px;text-align:left;font-size:30px;line-height:1.3;
   text-shadow:0 2px 10px rgba(0,0,0,.8)}}
@@ -95,7 +95,27 @@ async def _shoot(html_text, folder, out):
     return problems
 
 
+def letterbox(path):
+    """그림 위나 아래에 검은 띠(빈칸)가 있는지. 영상 화면을 줄여 넣은 그림에서 자주 생긴다."""
+    from PIL import Image, ImageStat
+    im = Image.open(path).convert("L")
+    w, h = im.size
+    band = max(8, h // 12)
+    out = []
+    for name, box in (("위", (0, 0, w, band)), ("아래", (0, h - band, w, h))):
+        st = ImageStat.Stat(im.crop(box))
+        if st.mean[0] < 14 and st.stddev[0] < 8:
+            out.append(name)
+    return out
+
+
 def make_thumb(post, folder):
     """썸네일을 cover.jpg로 저장. 문제가 있으면 문제 목록을 돌려준다."""
     folder = Path(folder).resolve()
+    src = folder / post["thumb"]["image"]["src"]
+    if src.exists():
+        bands = letterbox(src)
+        if bands:
+            return [f"썸네일 그림 {'·'.join(bands)}쪽에 검은 빈칸이 있음 → 인물·상징이 화면을 꽉 채우게 9:16으로 잘라 다시 만들 것 "
+                    "(영상 장면이면 ffmpeg crop으로 인물 쪽을 세로로 잘라 1080x1920)"]
     return asyncio.run(_shoot(page(post, folder), folder, folder / "cover.jpg"))
