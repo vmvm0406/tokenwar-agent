@@ -217,27 +217,27 @@ def burned_bands(post, src, start, dur, geo, scale_info):
             for tt, fr in zip(times, frames)]
 
 
-def _overlaps(subs, burned, i):
-    """자막 i와 겹치는 (시각, 띠위px) 목록."""
+def _overlaps(subs, burned, i, shift=0, rows=None):
+    """자막 i와 겹치는 (시각, 띠위px) 목록. shift: 자막을 위로 올린 만큼(px), rows: 미리 잰 글자 세로 범위."""
     path, a, z = subs[i]
-    rows = alpha_rows(path)
+    rows = rows or alpha_rows(path)
     if not rows:
         return []
-    y0, y1 = rows
+    y0, y1 = rows[0] - shift, rows[1] - shift
     return [(tt, b0) for tt, bands in burned if a - 0.25 <= tt <= z + 0.25
             for b0, b1 in bands if b1 > y0 - 10 and b0 < y1 + 10]
 
 
-def clashing(subs, burned):
+def clashing(subs, burned, shift=0, rows=None):
     """원본 글자와 겹치는 자막 번호 목록. subs: [(png, a, z)]."""
-    return [i + 1 for i in range(len(subs)) if _overlaps(subs, burned, i)]
+    return [i + 1 for i in range(len(subs)) if _overlaps(subs, burned, i, shift, rows and rows[i])]
 
 
-def clash_spans(subs, burned, start):
+def clash_spans(subs, burned, start, shift=0, rows=None):
     """겹치는 구간을 릴스 시각(초)으로 [(a, z)] 묶어서."""
     spans = []
     for i in range(len(subs)):
-        ts = [tt for tt, _ in _overlaps(subs, burned, i)]
+        ts = [tt for tt, _ in _overlaps(subs, burned, i, shift, rows and rows[i])]
         if ts:
             _, a, z = subs[i]
             spans.append((max(a, min(ts) - 0.25) - start, min(z, max(ts) + 0.25) - start))
@@ -251,20 +251,14 @@ def clash_spans(subs, burned, start):
     return merged
 
 
-def need_lift(subs, burned):
-    """바닥 자리에서 겹치는 원본 글자 띠 위로 올라서기 위해 필요한 높이(px)."""
-    lift = 0
-    for i in range(len(subs)):
-        hits = _overlaps(subs, burned, i)
-        if hits:
-            y1 = alpha_rows(subs[i][0])[1]
-            lift = max(lift, y1 - (min(b0 for _, b0 in hits) - 10))
-    return int(round(lift / 2) * 2)
+def _clash_secs(spans):
+    return sum(z - a for a, z in spans)
 
 
 def place_subs(post, cfg, folder, box_h, work, src, start, dur, scale_info):
     """자막 크기·자리를 정하고 그린다. 자막은 항상 영상 창 바닥. 순서: 바닥 50px → 겹치면 44px → 40px
-    → 그래도 겹치면 원본 글자 띠 바로 위로 조금 올림(영상 창 아래쪽 1/3 안에서만) → 그래도 안 되면 바닥에 두고 겹침 감수.
+    → 그래도 겹치면 원본 글자 띠 바로 위로 조금 올림(올린 자막 위 끝이 영상 창 아래쪽 1/3 안일 때만)
+    → 남는 겹침은 감수(띠로 가리지 않음)하고 "겹침 감수: a~b초"로 알린다. 겹치는 시간이 가장 짧은 자리를 고른다.
     video.captions_size(px)를 적으면 그 크기만 쓴다. captions_pos: "top"은 더 쓰지 않는다(경고 후 바닥)."""
     v = post.get("video") or {}
     pos_fix, size_fix = v.get("captions_pos"), v.get("captions_size")
@@ -278,42 +272,40 @@ def place_subs(post, cfg, folder, box_h, work, src, start, dur, scale_info):
     if burned is None:
         print(f"  자막: 영상 창 맨 아래, {sizes[0]}px")
         return geo, subs
-    tried = []  # (겹친 자막 수, 순번, size, bad)
-    bad = clashing(subs, burned)
-    tried.append((len(bad), 0, sizes[0], bad))
-    if not bad:
-        print(f"  자막: 영상 창 맨 아래, {sizes[0]}px")
-        return geo, subs
-    first_bad = bad
-    for k, size in enumerate(sizes[1:], 1):
-        geo, subs = asyncio.run(render_layers(post, cfg, folder, box_h, work, size))
-        bad = clashing(subs, burned)
-        tried.append((len(bad), k, size, bad))
-        if not bad:
-            print(f"  자막 크기 {size}px로 줄여 바닥 유지 (50px에서 원본 글자와 겹쳤던 자막: {first_bad})")
-            return geo, subs
-    # 원본 글자 띠 바로 위로 조금 올리기: 영상 창 안쪽의 아래 1/3 안에서만 (얼굴 검출이 없어 보수적으로)
     inner_top = geo["top"] + 6
     zone_top = inner_top + (box_h - 12) * (1 - LIFT_ZONE)
-    for size in sizes:
-        geo0, subs0 = asyncio.run(render_layers(post, cfg, folder, box_h, work, size))
-        lift = need_lift(subs0, burned)
-        if lift <= 0:
-            continue
-        geo, subs = asyncio.run(render_layers(post, cfg, folder, box_h, work, size, lift))
-        tops = [r[0] for r in (alpha_rows(p_) for p_, _, _ in subs) if r]
-        if tops and min(tops) < zone_top:
-            continue
-        if not clashing(subs, burned):
-            print(f"  자막: 영상 창 바닥에서 {lift}px 올림, {size}px (원본 글자 띠 바로 위, 영상 창 아래쪽 1/3 안)."
-                  " 얼굴(턱·입)을 덮지 않는지 장면 시트로 확인")
+    cands = []  # (겹친 시간, 올림, 크기 순번, 크기, 겹친 자막)
+    first_bad = None
+    for k, size in enumerate(sizes):
+        if k:
+            geo, subs = asyncio.run(render_layers(post, cfg, folder, box_h, work, size))
+        rows = [alpha_rows(p_) for p_, _, _ in subs]
+        bad = clashing(subs, burned, 0, rows)
+        if not bad:
+            if k:
+                print(f"  자막 크기 {size}px로 줄여 바닥 유지 ({sizes[0]}px에서 원본 글자와 겹쳤던 자막: {first_bad})")
+            else:
+                print(f"  자막: 영상 창 맨 아래, {size}px")
             return geo, subs
-    # 그래도 안 되면 바닥에 두고 겹침 감수 (띠로 가리지 않는다). 겹치는 자막이 가장 적은 크기로.
-    n, _, size, bad = min(tried)
-    geo, subs = asyncio.run(render_layers(post, cfg, folder, box_h, work, size))
-    spans = ", ".join(f"{a:.1f}~{z:.1f}초" for a, z in clash_spans(subs, burned, start))
-    print(f"  자막: 영상 창 맨 아래, {size}px")
-    print(f"  겹침 감수: {spans} 원본 글자와 겹침 (릴스 시각, 자막 {bad})")
+        first_bad = first_bad or bad
+        cands.append((_clash_secs(clash_spans(subs, burned, start, 0, rows)), 0, k, size, bad))
+        # 올림 후보: 겹치는 원본 글자 띠마다 '그 띠 위 끝 - 10px'에 자막 아래 끝이 오게
+        y1 = max(r[1] for r in rows if r)
+        top0 = min(r[0] for r in rows if r)
+        lifts = sorted({int(round((y1 - (b0 - 10)) / 2) * 2) for i in range(len(subs))
+                        for _, b0 in _overlaps(subs, burned, i, 0, rows[i])})
+        for lift in lifts:
+            if lift <= 0 or top0 - lift < zone_top:
+                continue
+            spans = clash_spans(subs, burned, start, lift, rows)
+            cands.append((_clash_secs(spans), lift, k, size, clashing(subs, burned, lift, rows)))
+    secs, lift, k, size, bad = min(cands)
+    geo, subs = asyncio.run(render_layers(post, cfg, folder, box_h, work, size, lift))
+    where = f"영상 창 바닥에서 {lift}px 올림 (원본 글자 띠 바로 위, 영상 창 아래쪽 1/3 안)" if lift else "영상 창 맨 아래"
+    print(f"  자막: {where}, {size}px" + (". 얼굴(턱·입)을 덮지 않는지 장면 시트로 확인" if lift else ""))
+    if bad:
+        spans = ", ".join(f"{a:.1f}~{z:.1f}초" for a, z in clash_spans(subs, burned, start))
+        print(f"  겹침 감수: {spans} 원본 글자와 겹침 (릴스 시각, 자막 {bad})")
     return geo, subs
 
 

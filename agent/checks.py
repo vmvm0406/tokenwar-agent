@@ -289,6 +289,9 @@ def check_video(post):
     e_c, w_c = check_caption_hooks(post["caption"])
     errors += e_c
     warnings += w_c
+    e_r, w_r = check_reach(post)
+    errors += e_r
+    warnings += w_r
     return errors, warnings
 
 
@@ -483,6 +486,72 @@ def check_hashtags(tags):
     return warnings
 
 
+# ---- 인스타 추천 체크리스트 (STYLE_GUIDE 9장) ----
+REEL_REC_MAX_SECONDS = 180      # 3분이 넘는 릴스는 추천(둘러보기·릴스 탭)에 못 나간다 (Instagram for Creators)
+CAPTION_FOLD = 125              # 피드에서 '더 보기' 전에 보이는 첫 부분
+HASHTAG_RE = re.compile(r"(?<![\w&])#[0-9A-Za-z가-힣_]+")
+# 다른 플랫폼·다른 인스타 계정의 영상: 재업로드는 '원본 아님'으로 추천에서 빠진다
+REPOST_HOSTS = ("instagram.com", "tiktok.com", "facebook.com/reel", "fb.watch")
+# 반응 구걸(engagement bait): 좋아요·공유·태그를 조르는 말
+BAIT = ["좋아요 눌러", "좋아요 부탁", "좋아요 꾹", "공유 부탁", "공유해 주세요", "공유해주세요", "친구 태그", "친구를 태그",
+        "태그해 주세요", "태그해주세요", "팔로우 부탁", "맞팔"]
+TOPIC_ALIAS = {"챗gpt": ["chatgpt", "gpt", "오픈ai", "openai"], "chatgpt": ["챗gpt", "gpt"], "openai": ["오픈ai", "챗gpt", "chatgpt"],
+               "제미나이": ["gemini", "구글"], "gemini": ["제미나이"], "클로드": ["claude", "앤트로픽"], "claude": ["클로드"],
+               "앤트로픽": ["anthropic", "클로드"], "엔비디아": ["nvidia"], "구글": ["google", "제미나이"]}
+
+
+def _norm(x):
+    return re.sub(r"\s+", "", str(x)).lower()
+
+
+def check_reach(post):
+    """인스타 추천에 걸리는 것 (STYLE_GUIDE 9장). (errors, warnings)
+    - 캡션 본문 해시태그 + hashtags 합이 5개 넘으면 오류 (인스타 제한, 2025-12)
+    - 릴스 3분 초과 오류 (추천 대상 아님)
+    - 인용 원본이 인스타·틱톡 등 다른 계정 영상이면 오류 (재업로드 = 원본 아님)
+    - 캡션 첫 125자에 주제 이름(해시태그 주제어)이 없으면 경고 (검색은 캡션 키워드로 찾는다)
+    - 좋아요·공유·태그 구걸 문구 경고"""
+    errors, warnings = [], []
+    cap = post.get("caption", "")
+    tags = post.get("hashtags", []) or []
+    in_cap = HASHTAG_RE.findall(cap)
+    if in_cap:
+        total = len({_norm(t) for t in list(tags) + in_cap})
+        mx = CONFIG["limits"].get("hashtags_max", 5)
+        if total > mx:
+            errors.append(f"캡션 본문 해시태그 {len(in_cap)}개 + hashtags 합이 {total}개: 인스타는 게시물당 {mx}개까지 (STYLE_GUIDE 9장)")
+        else:
+            warnings.append(f"캡션 본문에 해시태그 {in_cap}: 해시태그는 hashtags 필드에만 (게시할 때 캡션 끝에 붙는다)")
+    v = post.get("video") or {}
+    if post.get("type") == "video" and v.get("end") not in (None, ""):
+        keep = v.get("keep") or []
+        d = sum(float(b) - float(a) for a, b in keep) if keep else float(v["end"]) - float(v.get("start", 0))
+        if d > REEL_REC_MAX_SECONDS:
+            errors.append(f"릴스 {d:.0f}초: 3분({REEL_REC_MAX_SECONDS}초)이 넘으면 추천에 못 나간다 (STYLE_GUIDE 9장)")
+    if post.get("rights") == "quote":
+        urls = [str(post.get("source_url", "")), str(v.get("source_url", ""))]
+        bad = [u for u in urls if any(h in u.lower() for h in REPOST_HOSTS)]
+        if bad:
+            errors.append(f"인용 원본이 다른 SNS 계정 영상({bad[0][:60]}): 재업로드는 '원본 아님'으로 추천에서 빠지고 "
+                          "워터마크가 남는다. 공식 유튜브·공식 사이트 원본에서 받을 것 (STYLE_GUIDE 9장)")
+    first = cap.strip()[:CAPTION_FOLD]
+    topics = [t.lstrip("#") for t in tags if str(t) != TAG_BRAND]
+    if first and topics:
+        f = _norm(first)
+        names = set()
+        for t in topics:
+            n = _norm(t)
+            names.add(n)
+            names.update(TOPIC_ALIAS.get(n, []))
+        if not any(n and n in f for n in names):
+            warnings.append(f"캡션 첫 {CAPTION_FOLD}자에 주제 이름이 없음 (해시태그 {topics} 중 하나라도): "
+                            "인스타 검색은 캡션 키워드로 찾는다. 첫 줄에 서비스·회사·인물 이름을 (STYLE_GUIDE 9장)")
+    hit = [w for w in BAIT if w in cap]
+    if hit:
+        warnings.append(f"반응 구걸 문구 {hit}: 좋아요·공유·태그를 조르지 말고, 보낼 이유를 구체적으로 (예: '다음 주 회의 전에 팀에 보내 두세요') (STYLE_GUIDE 9장)")
+    return errors, warnings
+
+
 def check_post(post):
     """(errors, warnings) 반환."""
     if post.get("type") == "video":
@@ -673,6 +742,9 @@ def check_post(post):
     cap = post["caption"] + "\n\n" + " ".join(tags)
     if len(cap) > 2200:
         errors.append("캡션+해시태그는 2,200자 이하")
+    e_r, w_r = check_reach(post)
+    errors += e_r
+    warnings += w_r
 
     srcs = post["sources"]
     need = 1 if post["series"] in ("생존 가이드", "오픈소스", "AI 용어") else 2
