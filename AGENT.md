@@ -25,7 +25,9 @@
 
 - 장의 형식은 `TEMPLATES.md`, 실제 예시는 `samples/*/post.json`을 본다.
 - 표지 유형(layout: big, list, image)은 최근 2개 게시물과 겹치지 않게 고른다. 본문도 body, stat, steps, compare를 섞는다. STYLE_GUIDE.md 1-1장의 AI 디자인 티 금지 목록을 지킨다.
-- 오픈소스 도구를 다룰 때는 저장소의 LICENSE를 `https://raw.githubusercontent.com/<owner>/<repo>/HEAD/LICENSE`로 확인하고, 상업적 이용이 허용될 때만 로고나 화면 이미지를 `curl`로 받아 게시물 폴더의 `img/`에 넣는다. 스타일 가이드 2-1장.
+- **이미지는 실물 먼저.** 리서치하면서 회사 공식 뉴스룸·보도자료·공식 블로그·공식 SNS의 이미지, 제품 공식 화면을 찾아 주소를 그림 정보의 `url`에 적는다. 실물이 없을 때만 `prompt`로 AI 이미지를 만든다. 통신사·언론사 보도사진은 쓰지 않는다. 스타일 가이드 2-1장.
+- 오픈소스 도구는 저장소의 LICENSE를 `https://raw.githubusercontent.com/<owner>/<repo>/HEAD/LICENSE`로 확인하고, 상업적 이용이 허용될 때만 로고나 화면 이미지를 쓴다.
+- **릴스에는 썸네일(`thumb`)을 꼭 만든다.** 제목 2줄(줄당 13자 이하), 강조 한 구절, 그림. 실물 인물 사진이 있으면 그것(인용 영상의 한 장면 포함), 없으면 AI로 간결한 상징 이미지. 색감과 배치는 스타일 가이드 2-1장대로 매번 정하고, 최근 썸네일 3개와 주조색이 겹치지 않게 한다. 형식은 `TEMPLATES.md`.
 
 ```json
 {
@@ -91,10 +93,10 @@
 
 ## 3. 렌더링과 검수
 
-AI 이미지(`prompt`)는 이 작업 환경에서 만들 수 없다 (Cloudflare 접속 불가). GitHub Actions의 `render.yml`이 push 뒤에 그림을 만들고 렌더링까지 해서 같은 브랜치에 커밋한다. 그래서:
+`url`(실물 이미지)과 `prompt`(AI 이미지)는 이 작업 환경에서 채울 수 없다 (일반 사이트·Cloudflare 접속 불가). GitHub Actions의 `render.yml`이 push 뒤에 그림을 만들고 렌더링까지 해서 같은 브랜치에 커밋한다. 그래서:
 
-- **AI 이미지가 없는 게시물:** 아래 1~4를 하고 `python3 agent/build.py posts/queue/<폴더>`로 마무리한다 (`.render_hash`가 생긴다).
-- **AI 이미지가 있는 게시물:** 레이아웃만 확인하려면 `src` 위치에 임시 그림을 넣고 1~3을 한 뒤, **임시 그림과 `slides/`, `.render_hash`를 지우고** `post.json`만 커밋한다. 실제 결과는 Actions가 만든다. 검토 모드면 PR 본문에 "표지 그림은 Actions가 만든 뒤 PR에 커밋됨"이라고 적는다.
+- **`url`·`prompt` 그림이 없는 게시물:** 아래 1~4를 하고 `python3 agent/build.py posts/queue/<폴더>`로 마무리한다 (`.render_hash`가 생긴다).
+- **`url`·`prompt` 그림이 있는 게시물:** 레이아웃만 확인하려면 `src` 위치에 임시 그림을 넣고 1~3을 한 뒤, **임시 그림과 `slides/`, `cover.jpg`, `.render_hash`를 지우고** `post.json`만 커밋한다. 실제 결과는 Actions가 만든다. 검토 모드면 PR 본문에 "표지 그림은 Actions가 만든 뒤 PR에 커밋됨"이라고 적는다.
 - `publish.py`는 `.render_hash`가 지금 `post.json`과 맞는 게시물만 올린다. 고친 뒤 렌더링을 안 하면 안 올라간다.
 
 1. `python3 agent/render.py posts/queue/<폴더>` (릴스는 모션 그래픽 렌더링에 1~2분 걸린다)
