@@ -1,0 +1,110 @@
+{
+  "id": "2026-11-16-reel-howto-ai-mode-trip",
+  "type": "reel",
+  "format": "howto",
+  "series": "생존 가이드",
+  "date": "2026-11-16",
+  "publish_at": "2026-11-16T19:10:00+09:00",
+  "slides": [
+    {
+      "kind": "cover",
+      "layout": "image",
+      "visual": {
+        "type": "image",
+        "src": "img/cover.jpg",
+        "position": "left top"
+      },
+      "title": "질문 한 줄로\n여행 일정표 받기",
+      "highlight": "여행 일정표",
+      "sub": "구글 검색 AI 모드에서 직접 해 봄"
+    },
+    {
+      "kind": "body",
+      "num": 1,
+      "num_note": "구글 첫 화면",
+      "visual": {
+        "type": "image",
+        "src": "img/01-home.jpg",
+        "position": "center center",
+        "credit": "화면: 구글 검색 (11월 15일)"
+      },
+      "heading": "검색창 오른쪽\nAI 모드를 누릅니다",
+      "highlight": "AI 모드",
+      "body": "로그인하지 않은 상태에서도 열렸습니다."
+    },
+    {
+      "kind": "prompt",
+      "num": 2,
+      "num_note": "질문 넣기",
+      "visual": {
+        "type": "image",
+        "src": "img/02-ask.jpg",
+        "position": "center top",
+        "credit": "화면: 구글 AI 모드에 직접 넣은 질문"
+      },
+      "heading": "조건을 한 문장에\n다 넣습니다",
+      "highlight": "한 문장",
+      "prompt": "12월 주말 부산 1박 2일, 초등학생 아이 둘과 가요. 비 오면 실내 위주로, 이동은 지하철로만. 시간대별 일정을 표로 짜 줘"
+    },
+    {
+      "kind": "body",
+      "num": 3,
+      "num_note": "실제 결과",
+      "visual": {
+        "type": "image",
+        "src": "img/03-result.jpg",
+        "position": "center top",
+        "credit": "화면: 구글 AI 모드 답변 (11월 15일)"
+      },
+      "heading": "시간대별 표로\n답이 나왔습니다",
+      "highlight": "표",
+      "body": "장소마다 내릴 역 이름이 붙어 있습니다."
+    },
+    {
+      "kind": "body",
+      "num": 4,
+      "num_note": "주의할 점",
+      "visual": {
+        "type": "image",
+        "src": "img/04-caution.jpg",
+        "position": "center center",
+        "credit": "화면: 같은 답변의 2일 차",
+        "height": 400
+      },
+      "heading": "조건을 다 지키지는\n않습니다",
+      "highlight": "다 지키지는",
+      "body": "지하철로만 간다고 했는데 과학관은 버스·택시를 타라고 했습니다."
+    }
+  ],
+  "sources": [
+    {
+      "name": "구글 블로그: 검색에 새 모델 적용 (11월 12일)",
+      "url": "https://blog.google/products-and-platforms/products/search/gemini-4-hydrogen-search-upgrade/"
+    },
+    {
+      "name": "구글 AI 모드 직접 사용 (11월 15일)",
+      "url": "https://www.google.com/search?udm=50"
+    }
+  ],
+  "caption": "구글 검색에 질문 하나 넣고 여행 일정표를 표로 받아 보세요.\n\n검색창 오른쪽 'AI 모드'에 조건을 한 문장으로 다 넣으면 시간대별 표로 답해요. 저희가 넣어 본 질문은 이거예요.\n\n\"12월 주말 부산 1박 2일, 초등학생 아이 둘과 가요. 비 오면 실내 위주로, 이동은 지하철로만. 시간대별 일정을 표로 짜 줘\"\n\n'지하철로만'이라는 조건은 다 지키지 않았으니, 가기 전에 지도 앱으로 동선을 다시 확인하세요.\n\n출처: 구글 블로그 (11월 12일), 구글 AI 모드 직접 사용 (11월 15일)\n\n댓글에 '받기'를 남기면 복사해 쓸 질문 전체를 DM으로 보내 드려요. (팔로우한 분께 보내집니다)",
+  "dm": {
+    "keyword": "받기",
+    "message": "부산 1박 2일 일정표를 받아 낸 질문이에요.\n아래 '자료 보기'를 누르면 복사 버튼이 있는 페이지가 열립니다. 날짜, 인원, 이동 수단만 바꿔서 우리 가족 일정으로 써 보세요.\n답에 나온 동선은 지도 앱으로 한 번 더 확인하세요.",
+    "page": {
+      "intro": "구글 검색의 AI 모드에 조건을 한 문장으로 다 넣으면 시간대별 일정표로 답합니다. 11월 15일에 직접 넣어 본 질문과 결과입니다.",
+      "result": "1일 차는 키자니아와 아쿠아리움, 2일 차는 박물관과 과학관으로 시간대별 표가 나왔고, 내릴 역 이름이 붙어 있었습니다. 다만 '지하철로만'이라고 했는데도 과학관은 역에서 버스나 택시를 타라고 했습니다."
+    }
+  },
+  "hashtags": [
+    "#AI뉴스",
+    "#구글AI모드",
+    "#여행일정",
+    "#AI활용법",
+    "#토큰전쟁"
+  ],
+  "topic": [
+    "구글 검색",
+    "AI 모드",
+    "여행 일정"
+  ]
+}

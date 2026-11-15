@@ -1,0 +1,138 @@
+{
+  "id": "2026-11-15-carousel-weekly-ai",
+  "type": "carousel",
+  "series": "전황",
+  "weekly": true,
+  "date": "2026-11-15",
+  "publish_at": "2026-11-15T10:13:00+09:00",
+  "slides": [
+    {
+      "kind": "cover",
+      "layout": "image",
+      "visual": {
+        "type": "image",
+        "src": "img/cover.jpg",
+        "url": "https://img.global.news.samsung.com/global/wp-content/uploads/2026/11/12154257/Samsung-Mobile-Intelligent-Eyewear-Launch-Gentle-Monster-Warby-Parker_dl1.jpg",
+        "position": "center 25%"
+      },
+      "title": "11월 둘째 주\nAI 뉴스 4가지",
+      "highlight": "AI 뉴스",
+      "sub": "11월 9일~15일 · 삼성, 구글, OpenAI"
+    },
+    {
+      "kind": "body",
+      "num": 1,
+      "num_note": "11월 12일 · 삼성전자",
+      "visual": {
+        "type": "image",
+        "src": "img/01.jpg",
+        "url": "https://img.global.news.samsung.com/global/wp-content/uploads/2026/11/12154300/Samsung-Mobile-Intelligent-Eyewear-Launch-Gentle-Monster-Warby-Parker_dl3.jpg",
+        "bleed": true,
+        "position": "center 45%",
+        "credit": "사진: 삼성전자 뉴스룸"
+      },
+      "heading": "삼성 AI 안경,\n12월 10일 한국 출시",
+      "highlight": "12월 10일",
+      "body": "제미나이가 들어간 안경. 눈앞 사물을 묻고 메뉴판 번역과 길 안내를 합니다. 국내 가격은 65만 원부터입니다."
+    },
+    {
+      "kind": "body",
+      "num": 2,
+      "num_note": "11월 11일 · 구글",
+      "visual": {
+        "type": "image",
+        "src": "img/02.jpg",
+        "url": "https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Carplay_hero_image.width-1300.png",
+        "bleed": true,
+        "position": "center center",
+        "credit": "화면: 구글 공식 블로그"
+      },
+      "heading": "운전 중에 제미나이와\n대화합니다",
+      "highlight": "제미나이",
+      "body": "아이폰 카플레이에 제미나이 앱이 들어왔습니다. 오늘 일정과 안 읽은 메일을 말로 확인합니다."
+    },
+    {
+      "kind": "body",
+      "num": 3,
+      "num_note": "11월 12일 · 구글",
+      "visual": {
+        "type": "image",
+        "src": "img/03.jpg",
+        "url": "https://storage.googleapis.com/gweb-uniblog-publish-prod/images/HydrogenUI_socialshare.width-1300.png",
+        "bleed": true,
+        "position": "center center",
+        "credit": "이미지: 구글 공식 블로그"
+      },
+      "heading": "구글 검색 AI가\n새 모델로 바뀝니다",
+      "highlight": "새 모델",
+      "body": "전 세계 모든 사용자 대상. 여러 가지를 한 번에 묻거나 오타를 내도 알아듣고, 표와 사진으로 답합니다."
+    },
+    {
+      "kind": "body",
+      "num": 4,
+      "num_note": "11월 10일 · OpenAI",
+      "visual": {
+        "type": "image",
+        "src": "img/04.jpg",
+        "url": "https://images.ctfassets.net/kftzwdyauwt9/7Eicp7g84HA3PCzyVJTfbT/d423890d5a1a863bf69a57bcbbbf6e99/business-agents-blog-social.png?w=1600&h=900&fit=fill",
+        "bleed": true,
+        "position": "center center",
+        "credit": "이미지: OpenAI 공식 발표"
+      },
+      "heading": "챗GPT 안에\n회사 공식 프로필",
+      "highlight": "공식 프로필",
+      "body": "답변에 나온 회사를 누르면 프로필로 이동. 상품 질문에는 회사의 AI 상담원이 답합니다. 미국부터 베타."
+    },
+    {
+      "kind": "steps",
+      "heading": "이번 주 바로 해 볼 것",
+      "highlight": "해 볼 것",
+      "items": [
+        {
+          "title": "구글 검색에 긴 질문",
+          "text": "조건 여러 개를 한 문장에 넣어 묻기"
+        },
+        {
+          "title": "차에서 제미나이 켜기",
+          "text": "아이폰 제미나이 앱을 업데이트한 뒤"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "삼성전자 뉴스룸 (11월 12일)",
+      "url": "https://news.samsung.com/global/samsung-announces-december-release-for-intelligent-eyewear-bringing-a-smarter-way-to-see-the-world"
+    },
+    {
+      "name": "국민일보 (국내 가격)",
+      "url": "https://www.kmib.co.kr/article/20261112502146"
+    },
+    {
+      "name": "구글 블로그 (11월 11일)",
+      "url": "https://blog.google/innovation-and-ai/products/gemini-app/gemini-on-apple-carplay/"
+    },
+    {
+      "name": "구글 블로그 (11월 12일)",
+      "url": "https://blog.google/products-and-platforms/products/search/gemini-4-hydrogen-search-upgrade/"
+    },
+    {
+      "name": "OpenAI (11월 10일)",
+      "url": "https://openai.com/index/introducing-businesses-chatgpt/"
+    }
+  ],
+  "caption": "이번 주 AI 소식, 이 4가지만 알면 됩니다.\n\n1. 삼성 AI 안경이 12월 10일 한국에 나와요. 제미나이가 들어가 있고, 국내가는 65만 원부터예요.\n2. 아이폰 카플레이에서 제미나이 앱을 쓸 수 있어요. 운전하면서 일정과 메일을 말로 확인해요.\n3. 구글 검색 AI가 새 모델로 바뀌었어요. 긴 질문도 한 번에 알아들어요.\n4. 챗GPT 답변에 나온 회사를 누르면 공식 프로필이 떠요. 미국부터 베타예요.\n\n출처: 삼성전자 뉴스룸, 구글 블로그, OpenAI (11월 10~12일)",
+  "hashtags": [
+    "#삼성",
+    "#제미나이",
+    "#AI뉴스",
+    "#인공지능",
+    "#토큰전쟁"
+  ],
+  "topic": [
+    "주간 요약",
+    "삼성 AI 안경",
+    "제미나이",
+    "챗GPT"
+  ]
+}

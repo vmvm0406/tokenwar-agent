@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>구글 검색에 물으면 여행 일정표가 나옵니다 · 토큰전쟁</title>
+<meta name="description" content="구글 검색의 AI 모드에 조건을 한 문장으로 다 넣으면 시간대별 일정표로 답합니다. 11월 15일에 직접 넣어 본 질문과 결과입니다.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0B0A;--fg:#F2F5F3;--ac:#00FF66;--mu:#9AA59F}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg)}
+body{font-family:'Wanted Sans Variable','Wanted Sans',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  line-height:1.65;word-break:keep-all;overflow-wrap:break-word}
+main{max-width:680px;margin:0 auto;padding:40px 16px 64px}
+.brand{font-family:'Black Han Sans',sans-serif;color:var(--ac);font-size:20px;letter-spacing:.01em}
+h1{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:clamp(30px,8vw,44px);line-height:1.2;margin:18px 0 12px}
+h1 .hl{color:var(--ac)}
+.intro{color:#CFD6D2;font-size:18px;margin:0 0 28px}
+.rule{height:4px;background:var(--ac);margin:28px 0}
+.step{border-top:2px solid #2A3530;padding:22px 0}
+.step .k{font-family:'Black Han Sans',sans-serif;color:var(--ac);font-size:32px;line-height:1}
+.step .lb{color:var(--mu);font-weight:700;font-size:15px;margin-left:10px}
+h2{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:24px;line-height:1.3;margin:10px 0 6px}
+h3{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:22px;margin:0 0 10px}
+p{margin:6px 0;color:#CFD6D2}
+.pr{position:relative;margin:12px 0 4px;border:2px solid var(--ac);background:#0E1310}
+.pr pre{margin:0;padding:16px 16px 52px;white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere;
+  font-family:'JetBrains Mono',ui-monospace,Consolas,monospace;font-size:15px;line-height:1.6;color:var(--fg)}
+.pr button{position:absolute;right:0;bottom:0;border:0;background:var(--ac);color:var(--bg);
+  font-family:inherit;font-weight:700;font-size:15px;line-height:1;padding:12px 16px;cursor:pointer}
+ul{padding-left:20px;color:#CFD6D2}
+.src{color:var(--mu);font-size:14px;border-top:2px solid #2A3530;padding-top:16px;margin-top:32px}
+.src a{color:var(--mu)}
+.foot{margin-top:28px;font-weight:700}
+.foot a{color:var(--ac)}
+</style></head>
+<body><main>
+<div class="brand">TOKEN WAR</div>
+<h1>구글 검색에 물으면<br><span class="hl">여행 일정표</span>가 나옵니다</h1>
+<p class="intro">구글 검색의 AI 모드에 조건을 한 문장으로 다 넣으면 시간대별 일정표로 답합니다. 11월 15일에 직접 넣어 본 질문과 결과입니다.</p>
+<section class="step"><span class="k">01</span><span class="lb">구글 첫 화면</span><h2>검색창 오른쪽 AI 모드를 누릅니다</h2><p>로그인하지 않은 상태에서도 열렸습니다. 11월 12일부터 새 제미나이 모델이 답합니다.</p></section><section class="step"><span class="k">02</span><span class="lb">질문 넣기</span><h2>조건을 한 문장에 다 넣습니다</h2><div class="pr"><pre>12월 주말 부산 1박 2일, 초등학생 아이 둘과 가요. 비 오면 실내 위주로, 이동은 지하철로만. 시간대별 일정을 표로 짜 줘</pre><button type="button" onclick="cp(this)">복사</button></div><p>언제, 누구와, 날씨, 이동 수단, 받고 싶은 모양(표)까지 적었습니다.</p></section><section class="step"><span class="k">03</span><span class="lb">실제 결과</span><h2>시간대별 표로 답이 나왔습니다</h2><p>1일 차는 키자니아와 아쿠아리움, 2일 차는 박물관과 과학관. 내릴 역 이름이 붙어 있습니다.</p></section><section class="step"><span class="k">04</span><span class="lb">주의할 점</span><h2>조건을 다 지키지는 않습니다</h2><p>지하철로만 다닌다고 했는데, 과학관은 역에서 버스나 택시를 타라고 했습니다.</p></section>
+<div class="rule"></div><h3>직접 해 본 결과</h3><p>1일 차는 키자니아와 아쿠아리움, 2일 차는 박물관과 과학관으로 시간대별 표가 나왔고, 내릴 역 이름이 붙어 있었습니다. 다만 &#x27;지하철로만&#x27;이라고 했는데도 과학관은 역에서 버스나 택시를 타라고 했습니다.</p><div class="rule"></div><h3>주의할 점</h3><ul><li>지도 앱으로 동선 확인: 역에서 걷는 시간과 환승을 다시 보기</li><li>운영 시간과 예약: 체험 시설은 회차와 예약 여부 확인</li><li>고칠 점은 바로 다시 묻기: 같은 대화창에 바꿀 조건만 이어서 적기</li></ul>
+<div class="src">출처<ul><li><a href="https://blog.google/products-and-platforms/products/search/gemini-4-hydrogen-search-upgrade/" rel="noopener">구글 블로그: 검색에 새 모델 적용 (11월 12일)</a></li><li><a href="https://www.google.com/search?udm=50" rel="noopener">구글 AI 모드 직접 사용 (11월 15일)</a></li></ul>2026.11.16 기준. 결과는 직접 해 본 것이고, AI 답은 그때그때 달라질 수 있습니다.</div>
+<p class="foot">매일 AI 소식은 <a href="https://www.instagram.com/tokenwar_ai/">@tokenwar_ai</a></p>
+</main>
+<script>
+function cp(b){const t=b.previousElementSibling.innerText;
+(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{b.textContent='복사됨';setTimeout(()=>b.textContent='복사',1500)})
+.catch(()=>{const r=document.createRange();r.selectNodeContents(b.previousElementSibling);const s=getSelection();s.removeAllRanges();s.addRange(r)})}
+</script>
+</body></html>

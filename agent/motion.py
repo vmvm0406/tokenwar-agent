@@ -44,7 +44,7 @@ window.twSetup = (idx, dur) => {
   const wall = s.querySelector('.wall');
   if (wall) { wall.style.animation = `twDrift ${dur}s linear both`; }
   // 글과 목록은 순서대로 아래에서 올라온다
-  const seq = [...s.querySelectorAll('.tag,.ctitle,.csub,.num,.heading,.body,.point,.step,.cmp .col,.tli,.opt,.bub,.brow,.stat .u,.bignum .c,.word .lab,.word .wd,.slogan,.mark,.cta,.src,.term pre')];
+  const seq = [...s.querySelectorAll('.tag,.ctitle,.csub,.num,.heading,.pbox,.body,.point,.step,.cmp .col,.tli,.opt,.bub,.brow,.stat .u,.bignum .c,.word .lab,.word .wd,.slogan,.mark,.cta,.src,.term pre')];
   // 그림 속 요소(설정 항목, 말풍선 등)와 글은 따로 순서를 매겨 동시에 진행한다
   let dv = 0.3;
   seq.forEach(el => {
@@ -212,6 +212,10 @@ async def make_motion_reel(page_html, post, folder, config):
                     d = rc["seconds_per_frame"] + 0.8
                 else:
                     d = rc["seconds_per_frame"] + 0.25 * len(s.get("items", []))
+                    if s["kind"] == "prompt":
+                        # 프롬프트는 읽을 시간을 더 준다 (한글 초당 약 12자)
+                        chars = sum(len(x) for x in (s.get("prompts") or [s.get("prompt", "")]))
+                        d = max(d, 2.5 + chars / 12)
                 await render_scene(page, i, d + fade, out)
                 d = d + fade
             parts.append(out)
