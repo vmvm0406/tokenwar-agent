@@ -5,7 +5,7 @@ on:
   schedule:
     - cron: "7 21 * * *"
   push:
-    paths: [".github/workflows/benchmarks.yml", "agent/benchmarks.py", "config.json"]
+    paths: [".github/workflows/benchmarks.yml", "agent/benchmarks.py", "agent/hot.py", "config.json"]
   workflow_dispatch:
 
 permissions:
@@ -24,7 +24,9 @@ jobs:
         env:
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
-        run: python agent/benchmarks.py
+        run: |
+          python agent/benchmarks.py
+          python agent/hot.py
       - name: 저장
         run: |
           git config user.name "tokenwar-bot"

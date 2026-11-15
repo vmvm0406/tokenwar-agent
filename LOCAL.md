@@ -10,8 +10,8 @@
 윈도우에서 파이썬은 `py -3.12`로 부른다 (문서의 `python3`도 이것으로 바꿔 실행). ffmpeg, yt-dlp, gh, git은 PATH에 있다.
 
 
-1. `git pull`
-2. `AGENT.md`, `STYLE_GUIDE.md`, `TEMPLATES.md`, `config.json`, `data/trends.md`를 읽는다.
+1. `git pull`, 그리고 `git fetch origin "+refs/heads/post/*:refs/remotes/origin/post/*"` (검토 중인 게시물과 겹치지 않게)
+2. `py -3.12 agent/hot.py`로 지금 관심 주제를 새로 모은 뒤, `AGENT.md`, `STYLE_GUIDE.md`, `TEMPLATES.md`, `config.json`, `data/hot.md`, `data/trends.md`를 읽는다. **지금 관심도가 높은 주제부터** 고른다 (STYLE_GUIDE 6-1장 점수표).
 3. 오늘 날짜(한국 시간)를 확인하고, 오늘 이미 만든 것을 확인한다:
    - `posts/queue/`, `posts/published/`에 오늘 날짜의 carousel / video 폴더가 있는지
    - 열린 PR: `gh pr list --state open --json headRefName,title` (브랜치 `post/<날짜>`, `post/<날짜>-reel`)

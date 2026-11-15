@@ -359,6 +359,11 @@ def main(folder):
     out_dir = Path(folder).resolve()
     post = json.loads((out_dir / "post.json").read_text(encoding="utf-8"))
     errors, warnings = check_post(post)
+    if "/samples/" not in str(out_dir).replace("\\", "/"):
+        from dupes import check as dupe_check  # 같은 내용 반복 막기 (예시 폴더는 제외)
+        e2, w2 = dupe_check(post, out_dir.name)
+        errors += e2
+        warnings += w2
     for w in warnings:
         print("경고:", w)
     if errors:
