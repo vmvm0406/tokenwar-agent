@@ -49,7 +49,7 @@
 }
 ```
 
-- `publish_at`: `config.json`의 `slots` 시각 (카드뉴스 10:13, 릴스 19:10, 한국 시간. data/trends.md 시간대 분석으로 매달 다시 정한다). 이미 지난 시각이면 다음 슬롯으로.
+- `publish_at`: `python3 agent/slots.py next <carousel|reel>`이 주는 가장 가까운 빈 칸 (`config.json` `slots`: 카드뉴스 10:13·13:13·17:13, 릴스 12:43·15:43·19:10·20:43, 한국 시간. LOCAL.md 5장).
 - `title`, `heading`의 줄바꿈은 `\n`으로 직접 넣는다. 단어 중간에서 끊지 않는다.
 - `highlight`는 제목·소제목 안에 실제로 있는 글자여야 한다.
 - 마지막 장(슬로건, 출처)은 자동으로 붙으므로 넣지 않는다.

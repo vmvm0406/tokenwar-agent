@@ -1,7 +1,7 @@
 ﻿# 토큰전쟁 하루 작업 실행. 윈도우 작업 스케줄러가 로그인할 때와 9:30, 12:30, 15:30에 부른다.
-# 오늘 카드뉴스와 릴스가 이미 있으면 Claude를 부르지 않고 바로 끝낸다 (사용량 절약).
-# 운영자가 Code 탭에서 쓰는 %USERPROFILE%	okenwar-agent와 겹치지 않게, 매일 작업 전용 저장소
-# %USERPROFILE%	okenwar-daily 에서만 돈다. 시작할 때마다 최신 main을 받는다.
+# 오늘 몫(config.json slots.daily_target)이 미리 만든 게시물로 차 있으면 Claude를 부르지 않고 끝낸다 (사용량 절약).
+# 운영자가 Code 탭에서 쓰는 %USERPROFILE%\tokenwar-agent와 겹치지 않게, 매일 작업 전용 저장소
+# %USERPROFILE%\tokenwar-daily 에서만 돈다. 시작할 때마다 최신 main을 받는다.
 $ErrorActionPreference = "Continue"
 # 한글 기록이 깨지지 않게 (claude 출력은 UTF-8)
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
@@ -39,14 +39,15 @@ try {
         exit 1
     }
     $today = Get-Date -Format "yyyy-MM-dd"
-    $have = @(Get-ChildItem -Directory posts\queue, posts\published -ErrorAction SilentlyContinue | Where-Object { $_.Name -like "$today-*" } | ForEach-Object { $_.Name })
-    $prs = ""
-    try { $prs = (gh pr list --state open --json headRefName -q ".[].headRefName" 2>$null) -join " " } catch {}
-    $carousel = ($have -match "carousel").Count -gt 0 -or $prs -match "post/$today( |$)"
-    $reel = ($have -match "video|reel").Count -gt 0 -or $prs -match "post/$today-reel"
-    if ($carousel -and $reel) { exit 0 }
+    # 게시 칸(config.json slots): 오늘 몫(daily_target)이 미리 만든 게시물로 차 있으면 만들지 않고, 빈 만큼만 만든다
+    $need = (py -3.12 agent/slots.py need 2>$null | Select-Object -Last 1)
+    $nCard = 0; $nReel = 0
+    if ($need -match "carousel=(\d+)") { $nCard = [int]$Matches[1] }
+    if ($need -match "reel=(\d+)") { $nReel = [int]$Matches[1] }
+    if (-not $need) { $nCard = 1; $nReel = 1 }   # 칸 계산이 실패하면 예전처럼 하나씩
+    if ($nCard -eq 0 -and $nReel -eq 0) { exit 0 }
     $log = Join-Path $LogDir ("{0}-{1}.log" -f $today, (Get-Date -Format "HHmm"))
-    $prompt = "Follow LOCAL.md for today. Work and write in Korean. Today carousel exists: $carousel, today reel exists: $reel."
+    $prompt = "Follow LOCAL.md for today. Work and write in Korean. Make $nCard carousel(s) and $nReel reel(s). Get each publish_at from 'py -3.12 agent/slots.py next <kind> --count N' (LOCAL.md 5장)."
     claude -p $prompt --permission-mode auto --max-turns 300 2>&1 | Out-File -FilePath $log -Encoding utf8
 }
 finally {

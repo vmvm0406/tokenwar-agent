@@ -13,10 +13,8 @@
 
 1. `git pull`, 그리고 `git fetch origin "+refs/heads/post/*:refs/remotes/origin/post/*"` (검토 중인 게시물과 겹치지 않게)
 2. `py -3.12 agent/hot.py`로 지금 관심 주제를 새로 모은 뒤, `AGENT.md`, `STYLE_GUIDE.md`, `TEMPLATES.md`, `config.json`, `data/hot.md`, `data/trends.md`를 읽는다. **지금 관심도가 높은 주제부터** 고른다 (STYLE_GUIDE 6-1장 점수표).
-3. 오늘 날짜(한국 시간)를 확인하고, 오늘 이미 만든 것을 확인한다:
-   - `posts/queue/`, `posts/published/`에 오늘 날짜의 carousel / video 폴더가 있는지
-   - 열린 PR: `gh pr list --state open --json headRefName,title` (브랜치 `post/<날짜>`, `post/<날짜>-reel`)
-4. 둘 다 이미 있으면 **아무것도 하지 않고 끝낸다.**
+3. 만들 개수는 실행할 때 받은 지시("Make N carousel(s) and M reel(s)")대로. `run-local.ps1`이 `py -3.12 agent/slots.py need`로 오늘 몫(`config.json` `slots.daily_target`)에서 이미 예약된 것을 뺀 수를 넘긴다. 둘 다 0이면 부르지 않는다. 손으로 돌릴 때는 직접 `need`를 본다.
+4. 게시 시각은 칸 배정으로 정한다 (5장). `py -3.12 agent/slots.py status`로 며칠 치 칸 상황을 본다.
 
 ## 1. 카드뉴스 (오늘 것이 없을 때)
 
@@ -28,7 +26,7 @@
 - 프롬프트 전문은 캡션에도 그대로 적는다 (복사하기 쉽게). 캡션 첫 줄은 얻는 것. 캡션 끝은 STYLE_GUIDE 7장 "캡션 끝": 일반 뉴스는 질문 없이 사실과 출처로, 의견이 갈리는 소식만 그 소식에 맞는 양자택일 질문, 따라 하기·질문은 '받기' 안내.
 - **해시태그 3~5개** (STYLE_GUIDE 7장 "해시태그"): 주제 이름 1~2 + 한국어 분야 1~2 + #토큰전쟁. 분야 태그는 `data/trends.md` "많이 쓰는 해시태그" 표에서 여러 계정이 쓰고 반응 배수가 높은 것을 고른다. 릴스도 같다.
 - **따라 하기·질문 게시물에는 댓글 자동 DM 자료(`dm`)를 같이 만든다** (STYLE_GUIDE 7-1, TEMPLATES "댓글 자동 DM"). DM 문구 3줄, 안내 페이지의 `intro`·`result`(직접 돌려 본 결과)·`extra`(카드에 없는 추가 문장도 돌려 본 것만)를 쓴다. 캡션 끝은 "댓글에 '받기'를 남기면 ... DM으로 보내 드려요. (팔로우한 분께 보내집니다)". 렌더링하면 게시물 폴더에 `dm.md`, `docs/p/<id>/index.html`이 생긴다. 둘 다 같은 브랜치에 커밋하고, PR 본문 끝에 "DM 설정: 게시 후 `dm.md`대로 Zorcha에 자동화를 만들어 주세요"를 적는다. 릴스도 같다.
-- `publish_at`: 지금이 10:13 전이면 오늘 10:13, 지났으면 **지금부터 30분 뒤**(오늘 안에 올린다. 소식은 신선할 때가 낫다). 단 22시가 넘었으면 내일 10:13.
+- `publish_at`: `py -3.12 agent/slots.py next carousel --count <개수>`가 준 시각 (5장 칸 배정). 빠르게 퍼지는 속보면 `--asap`.
 - AI 이미지(`prompt`)와 실물 이미지(`url`)는 여기서 바로 처리해도 되지만, Cloudflare 키가 이 컴퓨터에는 없으므로 `prompt` 그림은 GitHub Actions(`render.yml`)에 맡긴다 (AGENT.md 3장).
 
 ## 2. 릴스 (오늘 것이 없을 때)
@@ -38,18 +36,42 @@
 - 유튜브 검색: `yt-dlp --flat-playlist --print "%(id)s | %(channel)s | %(view_count)s | %(duration)s | %(title)s" "https://www.youtube.com/results?search_query=<검색어>&sp=EgQIAhAB"` (최근 1주, 동영상만). 공식 채널의 원본인지 확인한다. 완성 영상이 **1분 언저리**가 되려면 원본이 3분 이상이어야 한다(원본의 1/3 이하만 인용).
 - 받기: `yt-dlp --js-runtimes node -S "res:1080,ext:mp4:m4a" --merge-output-format mp4 -o "%TEMP%\tokenwar\full.mp4" <url>` 후 ffmpeg로 앞뒤 1초 여유를 두고 잘라 게시물 폴더 `clips/source.mp4`로. 원본 전체는 저장소에 넣지 않는다.
 - 받아쓰기와 단어 시각: `python agent/tighten.py clips/source.mp4 <시작> <끝>`
-- `publish_at`: 오늘 19:10 (지금이 18:30 이후면 내일 19:10).
+- `publish_at`: `py -3.12 agent/slots.py next reel --count <개수>`가 준 시각 (5장 칸 배정).
 - 영상을 찾지 못하면 그날 릴스는 건너뛰고 끝에 이유를 적는다.
 
 ## 3. 올리기
 
 `config.json`의 `mode`:
-- review: 게시물마다 브랜치(`post/<날짜>`, `post/<날짜>-reel`)에 커밋 (`dm`이 있으면 `docs/p/<id>/`도) → `gh pr create`. PR 본문에 표지(또는 썸네일), 캡션 전문, 출처, 게시 예정 시각, 고른 이유.
+- review: **한 번에 만든 게시물은 브랜치 하나·PR 하나로 묶는다** (폴더 여러 개). 브랜치 이름은 `post/<오늘 날짜>-<HHMM>` (게시물이 하나뿐이면 예전처럼 `post/<날짜>`·`post/<날짜>-reel`도 됨). 커밋 (`dm`이 있으면 `docs/p/<id>/`도) → `gh pr create`. PR 본문 맨 위에 표:
+
+  | 종류 | 게시 예정 | 주제 | 원본 | 길이·장 수 | 형식 |
+  |---|---|---|---|---|---|
+  | 릴스 | 11/16 12:43 | ... | 채널명·영상 링크 | 58초 | 인용 |
+  | 카드뉴스 | 11/16 13:13 | ... | 출처 | 7장 | 따라 하기 (dm.md 있음) |
+
+  그 아래 게시물마다 표지(또는 썸네일), 캡션 전문, 출처, 고른 이유. 따라 하기면 "게시 후 `dm.md`대로 Zorcha 자동화 만들기". 만들려던 개수보다 적게 만들었으면 이유.
 - auto: main에 push.
 
 ## 4. 끝
 
 마지막 출력에 한 줄 요약(만든 것, PR 링크, 게시 시각, 건너뛴 것과 이유)을 남긴다. `logs/`에 저장된다.
+
+## 5. 미리 만들기·바로 올리기 (운영자가 원할 때)
+
+운영자가 Code 탭에서 "릴스 3개 만들어 줘", "카드뉴스 2개", "릴스 2개 카드뉴스 1개", 또는 PowerShell로 `scripts/make-posts.ps1 -Reels 3 -Cards 2`를 실행하면 이 절차를 따른다. 매일 작업과 규칙은 똑같고, 개수와 게시 시각 정하는 법만 다르다.
+
+1. **칸 배정** (`config.json` `slots`, `agent/slots.py`):
+   - 기본 칸: 릴스 12:43 / 15:43 / 19:10 / 20:43 (하루 최대 4), 카드뉴스 10:13 / 13:13 / 17:13 (하루 최대 3).
+   - `py -3.12 agent/slots.py next reel --count 3` → 이미 예약된 것(posts/queue, posts/published, 열린 검토 브랜치)을 피해 **가장 가까운 빈 칸** 3개. 오늘이 차면 내일, 모레로 넘어간다. 지금부터 40분 안의 칸은 건너뛴다(렌더링·검토 시간).
+   - 운영자가 "오늘은 릴스 6개"처럼 말하면: `py -3.12 agent/slots.py next reel --count 6 --date <그날> --max 6`. 그날만 상한을 넘기고, 더 만드는 칸은 같은 종류 예약과 **최소 1시간 반** 떨어진 시각(10:00~23:00)에 놓인다.
+   - "**지금 바로 올려**": `--asap` (게시 시각 = 지금). 렌더링이 끝나면 다음 15분 게시 확인 때 올라간다. 검토 모드면 PR을 Merge한 직후.
+   - 받은 시각을 게시물마다 `publish_at`에 넣고, 폴더 이름 날짜도 게시 날짜로 (`<게시 날짜>-video-<주제>`).
+2. **고르기:** 여러 개를 한 번에 고를 때도 STYLE_GUIDE 3장·6-1장 점수표로 고르고, **같은 날 게시물끼리 인물·주제가 겹치지 않게** 한다 (`dupes.py`가 렌더링 때 막는다). 카드뉴스는 따라 하기·질문 형식 비율(이틀에 한 번 이상)을 지킨다.
+3. **만들기:** 게시물마다 1장(카드뉴스)·2장(릴스) 규칙 그대로. 사진 규칙, 1분 언저리·중간 안 자르기·안전 영역·자연스러운 자막, 캡션·해시태그 규칙, 따라 하기면 `dm`. 하나 만들 때마다 렌더링하고 결과 이미지·장면을 열어 본다.
+4. **좋은 재료가 부족하면 억지로 채우지 않는다.** 점수표 6점 미만이면 만들지 않고, 만든 만큼만 PR에 올리고 이유를 적는다.
+5. 올리기는 3장대로 (한 번에 만든 것은 PR 하나).
+
+Code 탭에서 할 때: 운영자의 `tokenwar-agent` 폴더 브랜치를 바꾸지 않는다. `git worktree add <임시 폴더> -b post/<날짜>-<HHMM> origin/main`으로 따로 작업하고 끝나면 `git worktree remove`. 오래 걸리면 `scripts/make-posts.ps1`을 백그라운드로 돌려도 된다 (그쪽은 `tokenwar-daily` 폴더에서 돈다).
 
 ## 하지 말 것
 
