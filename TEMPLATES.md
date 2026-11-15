@@ -34,7 +34,7 @@
 
 | type | 필드 | 쓰는 곳 |
 |---|---|---|
-| `image` | `src` (게시물 폴더 기준), `fit`, `prompt`(선택) | 실제 이미지. 오픈소스 저장소 화면(라이선스 확인), 직접 넣은 사진. `prompt`가 있고 파일이 없으면 GitHub Actions가 AI로 만든다 (STYLE_GUIDE 2-1) |
+| `image` | `src`(게시물 폴더 기준), `credit`(사진 아래 작은 출처 글씨), `position`(보여줄 부분, 기본 `top center`), `fit`(`cover`/`contain`), `bleed`(true면 위쪽 가장자리까지 꽉), `place`(`inline`이면 예전처럼 글 사이에), 파일 구하기: `url`(내려받기) → `shot`(화면 캡처: `url`, `selector`, `scroll`, `width`, `height`, `dark`) → `prompt`(AI) | 본문 장 위쪽 절반에 실제 화면·사진, 아래에 제목·설명 (다른 AI 계정들의 기본 모양). 카드뉴스는 표지 포함 사진 장 2장 이상 (STYLE_GUIDE 2-1) |
 | `bars` | `items`: [{`label`, `value`, `display`, `on`}], `unit` | 실제 숫자 비교 (가격, 점수) |
 | `timeline` | `items`: [{`date`, `text`, `on`}] | 사건 순서 |
 

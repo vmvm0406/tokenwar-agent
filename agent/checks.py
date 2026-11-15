@@ -194,6 +194,31 @@ def check_video(post):
     return errors, warnings
 
 
+IMAGE_RULE = "사진 규칙"
+
+
+def check_images(slides):
+    """카드뉴스 사진: 다른 AI 정보 계정처럼 실제 화면·사진을 넣는다 (STYLE_GUIDE 2-1).
+    표지 포함 사진 장이 2장 이상 (6장 넘는 카드뉴스는 3장 이상). 표지는 사진 표지를 기본으로."""
+    errors, warnings = [], []
+    lim = CONFIG["limits"]
+    imgs = []
+    for i, s in enumerate(slides, 1):
+        v = s.get("visual") or {}
+        if v.get("type") == "image":
+            imgs.append((i, v))
+    need = lim.get("carousel_min_images", 2) + (1 if len(slides) > 6 else 0)
+    if len(imgs) < need:
+        errors.append(f"{IMAGE_RULE}: 사진(실제 화면 캡처·공식 이미지) 장이 {need}장 이상 필요: 지금 {len(imgs)}장. "
+                      "서비스 화면, 공식 발표 페이지, 논문 그림, X 게시물 등을 agent/shot.py로 찍어 본문 장 visual에 넣는다")
+    if slides and slides[0].get("layout") != "image":
+        warnings.append("표지가 사진 표지가 아님. 상징이 되는 실제 사진·화면이 있으면 layout image를 먼저 쓴다")
+    for i, v in imgs:
+        if i > 1 and not v.get("credit") and not v.get("prompt"):
+            warnings.append(f"{i}번째 장 사진에 credit(예: '화면: Lovable 공식 문서') 없음")
+    return errors, warnings
+
+
 def check_post(post):
     """(errors, warnings) 반환."""
     if post.get("type") == "video":
@@ -323,6 +348,11 @@ def check_post(post):
         hl = s.get("highlight")
         if hl and hl not in hl_src:
             errors.append(f"{tag} highlight '{hl}'가 제목/소제목 안에 없음")
+
+    if post["type"] == "carousel":
+        errors_img, warnings_img = check_images(slides)
+        errors += errors_img
+        warnings += warnings_img
 
     if clip_secs:
         rc = CONFIG["reel"]

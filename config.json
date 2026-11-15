@@ -36,7 +36,8 @@
     "quote_min_seconds": 40,
     "quote_max_ratio": 0.34,
     "quote_target_seconds": 60,
-    "quote_soft_max_seconds": 80
+    "quote_soft_max_seconds": 80,
+    "carousel_min_images": 2
   },
   "reel": {
     "seconds_per_frame": 3.4,

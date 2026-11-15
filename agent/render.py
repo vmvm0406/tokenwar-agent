@@ -94,6 +94,12 @@ html,body{margin:0;background:#000}
 .heading{margin:0;font-family:'Black Han Sans';font-weight:400;font-size:HEADpx;line-height:1.2;letter-spacing:-.02em;text-wrap:balance}
 .body{margin:0;font-size:BODYpx;font-weight:500;line-height:1.62;color:#CFD6D2;text-wrap:pretty}
 .pull{border-top:6px solid ACCENT;padding-top:22px;font-family:'Black Han Sans';font-size:PULLpx;line-height:1.3;color:ACCENT;text-wrap:balance}
+/* 본문 장 위쪽 실제 화면 (다른 AI 계정들의 기본 모양: 위에 캡처, 아래에 제목과 설명) */
+.shot{position:absolute;left:PADXpx;right:PADXpx;top:SHOTTOPpx;height:SHOTHpx;overflow:hidden;background:#141A17;border:2px solid #2A3530}
+.shot img{width:100%;height:100%;display:block}
+.shot.bleed{left:0;right:0;top:0;border:0;height:SHOTBHpx}
+.shotcap{position:absolute;right:PADXpx;font-size:22px;font-weight:600;color:MUTED}
+.inner.below{justify-content:flex-start;gap:26px}
 .bvis{height:BVISpx;flex:none;position:relative;overflow:hidden}
 .bvis img{width:100%;height:100%;object-fit:cover}
 .steps{display:flex;flex-direction:column}
@@ -142,10 +148,10 @@ html,body{margin:0;background:#000}
 DIMS = {
     "carousel": dict(PADX=72, BRANDY=60, VISH=860, BIGTOP=96, LISTTOP=120, CTEXTB=150, CTITLE=80, CSUB=32,
                      INTOP=110, INBOT=140, HEAD=76, BODY=40, PULL=50, BVIS=440, STEPT=38, STEPX=31,
-                     CMP=32, STAT=230, SLOGAN=104, CLIPH=608),
+                     CMP=32, STAT=230, SLOGAN=104, CLIPH=608, SHOTTOP=90, SHOTH=600, SHOTBH=690),
     "reel": dict(PADX=80, BRANDY=330, VISH=1200, BIGTOP=260, LISTTOP=300, CTEXTB=420, CTITLE=92, CSUB=36,
                  INTOP=260, INBOT=420, HEAD=84, BODY=46, PULL=56, BVIS=560, STEPT=44, STEPX=36,
-                 CMP=36, STAT=250, SLOGAN=112, CLIPH=608),
+                 CMP=36, STAT=250, SLOGAN=112, CLIPH=608, SHOTTOP=250, SHOTH=760, SHOTBH=900),
 }
 
 
@@ -217,17 +223,45 @@ def cover_html(post, s, folder):
             f'{text}{brand_html()}</div>')
 
 
-def frame(inner, extra_cls=""):
-    return f'<div class="slide {extra_cls}"><div class="inner">{inner}</div>{brand_html()}</div>'
+def frame(inner, extra_cls="", top="", style=""):
+    st = f' style="{style}"' if style else ""
+    return (f'<div class="slide {extra_cls}">{top}<div class="inner{" below" if top else ""}"{st}>{inner}</div>'
+            f'{brand_html()}</div>')
+
+
+def shot_html(post, v, folder):
+    """본문 장 위쪽 그림. (그림 html, 아래 글이 시작할 y) 반환."""
+    kind = post.get("type", "carousel")
+    d = DIMS["reel" if kind in ("reel", "video") else "carousel"]
+    pos = v.get("position", "top center")
+    fit = v.get("fit", "cover")
+    img = f'<img src="{img_uri(folder, v["src"])}" style="object-fit:{fit};object-position:{pos}">'
+    if v.get("bleed"):
+        h = d["SHOTBH"]
+        box = f'<div class="shot bleed">{img}</div>'
+        bottom = h
+    else:
+        box = f'<div class="shot">{img}</div>'
+        bottom = d["SHOTTOP"] + d["SHOTH"]
+    cap = ""
+    if v.get("credit"):
+        cap = f'<div class="shotcap" style="top:{bottom + 12}px">{esc(v["credit"])}</div>'
+        bottom += 34
+    return box + cap, bottom + 44
 
 
 def body_html(post, s, n, total, folder):
     kind = s["kind"]
     parts = []
+    top, style = "", ""
     if s.get("visual"):
         v = s["visual"]
-        if v.get("type") == "image":
+        if v.get("type") == "image" and v.get("place") == "inline":
             parts.append(f'<div class="bvis">{visual_html(v, folder)}</div>')
+        elif v.get("type") == "image":
+            # 기본: 위쪽에 실제 화면, 아래에 제목·설명
+            top, y = shot_html(post, v, folder)
+            style = f"top:{y}px"
         else:
             parts.append(visual_html(v, folder))
     if kind == "stat":
@@ -253,7 +287,7 @@ def body_html(post, s, n, total, folder):
         parts.append(f'<p class="body">{br(esc(s["body"]))}</p>')
     if s.get("point"):
         parts.append(f'<div class="pull">{br(esc(s["point"]))}</div>')
-    return frame("".join(parts))
+    return frame("".join(parts), top=top, style=style)
 
 
 def clip_html(post, s, n, total):
@@ -359,6 +393,10 @@ def main(folder):
     out_dir = Path(folder).resolve()
     post = json.loads((out_dir / "post.json").read_text(encoding="utf-8"))
     errors, warnings = check_post(post)
+    if "/samples/" in str(out_dir).replace("\\", "/"):
+        # 예시 폴더는 사진 파일이 없을 수 있어 사진 규칙은 경고로만
+        warnings += [e for e in errors if e.startswith("사진 규칙")]
+        errors = [e for e in errors if not e.startswith("사진 규칙")]
     if "/samples/" not in str(out_dir).replace("\\", "/"):
         from dupes import check as dupe_check  # 같은 내용 반복 막기 (예시 폴더는 제외)
         e2, w2 = dupe_check(post, out_dir.name)
