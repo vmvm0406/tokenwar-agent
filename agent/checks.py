@@ -81,6 +81,13 @@ def check_video(post):
             d = float(v["end"]) - float(v.get("start", 0))
             if d > lim["quote_max_seconds"]:
                 errors.append(f"인용 영상은 {lim['quote_max_seconds']}초 이하: 지금 {d:.1f}초")
+            if d < lim.get("quote_min_seconds", 0):
+                warnings.append(f"인용 구간이 짧음 ({d:.1f}초). 발언이나 장면이 이어지면 {lim['quote_min_seconds']}초 이상으로")
+            src_d = v.get("source_duration")
+            if not src_d:
+                errors.append("video.source_duration(원본 전체 길이, 초) 필요: 인용 비율 확인용")
+            elif d > float(src_d) * lim.get("quote_max_ratio", 1):
+                errors.append(f"원본 길이의 {int(lim['quote_max_ratio'] * 100)}% 이하만 인용: 원본 {float(src_d):.0f}초 중 {d:.1f}초")
             subs = post.get("subtitles", [])
             covered = sum(float(s["end"]) - float(s["start"]) for s in subs if "start" in s and "end" in s)
             if len(subs) < 2 or covered < d * 0.6:

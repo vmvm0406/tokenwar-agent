@@ -111,7 +111,12 @@ async def render_layers(post, cfg, folder, box_h, work):
             const credH = cr.getBoundingClientRect().height ? 84 : 0;
             const inside = bottom + credH + 40 + 136 > {UI_SAFE_BOTTOM};
             const sub = document.getElementById('sub');
-            if (inside) sub.style.top = (bottom - 230) + 'px'; else sub.style.top = (bottom + credH + 40) + "px";
+            const capAt = {float((post.get("video") or {}).get("captions_at") or 0)};
+            if (inside && capAt > 0) {{
+              // 원본에 박힌 자막 바로 위에 우리 자막을 둔다 (자막 아래쪽 끝 기준)
+              sub.style.top = 'auto';
+              sub.style.bottom = ({H} - (top + 6 + capAt * ({box_h} - 12) - 14)) + 'px';
+            }} else if (inside) sub.style.top = (bottom - 230) + 'px'; else sub.style.top = (bottom + credH + 40) + "px";
             const headOver = head.bottom > top - 20;
             return {{top, inside, headOver, titleH: document.querySelector('.title').getBoundingClientRect().height}};
         }}""")

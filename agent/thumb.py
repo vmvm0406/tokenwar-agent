@@ -90,5 +90,5 @@ async def _shoot(html_text, folder, out):
 
 def make_thumb(post, folder):
     """썸네일을 cover.jpg로 저장. 문제가 있으면 문제 목록을 돌려준다."""
-    folder = Path(folder)
+    folder = Path(folder).resolve()
     return asyncio.run(_shoot(page(post, folder), folder, folder / "cover.jpg"))

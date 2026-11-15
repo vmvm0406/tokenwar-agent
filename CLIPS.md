@@ -1,7 +1,7 @@
 # 영상 받기 작업 (회원님 컴퓨터가 켜져 있을 때)
 
 예약 작업이 매시간(09~23시) 실행한다. 회원님 컴퓨터(Claude 데스크톱 앱)가 꺼져 있으면 그 회차는 건너뛰고 다음 시간에 다시 시도한다.
-하는 일: `requests/clips/`의 요청 하나를 골라 유튜브에서 15초 이하 구간을 받고, 영상 프레임 릴스 게시물을 만든다.
+하는 일: `requests/clips/`의 요청 하나를 골라 유튜브에서 20~30초(원본 길이의 1/3 이하) 구간을 받고, 영상 프레임 릴스 게시물을 만든다.
 
 유튜브는 클라우드 서버를 막기 때문에, 영상 받기만 회원님 컴퓨터(`device_bash`, 작업 폴더 `Videos/tokenwar`)에서 하고 나머지는 클라우드 작업 환경에서 한다.
 
@@ -35,7 +35,7 @@ $Y --skip-download --no-simulate --write-info-json --write-auto-subs --write-sub
 
 - `cur.info.json`에서 `channel`, `uploader`, `upload_date`, `duration`, `view_count`, `title`을 확인한다.
 - **원본 채널인지 확인한다.** 클립 모음·재업로드 채널이면 요청을 `done/`으로 옮기고("원본 아님") 다음 요청으로.
-- 자막(`cur.*.vtt`)에서 `hint`의 문장을 찾고, 스타일 가이드 6-1장 "구간 고르기" 기준으로 15초 이하 구간을 정한다. 자막이 없으면 2분 구간을 오디오로만 받아(`-x --download-sections`) 클라우드에서 `analyze.py`로 받아쓴다.
+- 자막(`cur.*.vtt`)에서 `hint`의 문장을 찾고, 스타일 가이드 6-1장 "구간 고르기" 기준으로 20~30초(원본 길이의 1/3 이하) 구간을 정한다. 자막이 없으면 2분 구간을 오디오로만 받아(`-x --download-sections`) 클라우드에서 `analyze.py`로 받아쓴다.
 
 ## 3. 구간 받기 (device_bash)
 
@@ -59,11 +59,12 @@ cp clip.mp4 $HOME/mnt/Videos/tokenwar/cur.mp4
 `AGENT.md`의 "영상 릴스 만들기"와 같은 규칙. 정리하면:
 
 1. `python3 agent/analyze.py <폴더>/clips/source.mp4`로 장면·말소리·받아쓰기를 확인하고, 시트 이미지를 직접 본다.
-2. `post.json` (형식은 `samples/s7-quote-demo/post.json`, `TEMPLATES.md`):
+2. `post.json` (형식은 `samples/s8-huang-quote/post.json`, `TEMPLATES.md`):
    - `type: "video"`, `rights: "quote"`, `credit`(채널·발언자), `source_url`(원본 링크, 가능하면 `&t=초` 포함)
-   - `video.start`/`end`: 15초 이하
+   - `video.start`/`end`: 20~30초(원본 길이의 1/3 이하)
    - 원본에 영어 자막이 박혀 있거나 이름표가 있으면 `video.crop: {"top": 0, "bottom": 0.7}`처럼 그 아래를 잘라낸다. 우리 자막과 겹치지 않게 (예시: `samples/s8-huang-quote`)
-   - 제목 2줄, 영어 부제, 우리 설명 자막 2개 이상(영상 길이의 60% 이상), 발언은 핵심만 우리 말로
+   - 제목 2줄, 영어 부제, 자막. **말이 있는 영상은 발언을 문장 단위로 빠짐없이 번역**한다 (요약 금지, 질문하는 사람은 `기자:`처럼 표시). 말이 없는 영상(AI 생성 영상, 시연)은 장면마다 우리 설명 자막. 어느 쪽이든 영상 길이의 60% 이상을 덮는다
+   - `video.source_duration`: 원본 전체 길이(초). 인용 비율 확인용
    - `thumb`: 발언자 얼굴이 잘 보이는 순간을 `ffmpeg -ss <초> -i clips/source.mp4 -frames:v 1 -q:v 2 img/thumb.jpg`로 뽑아 쓰고 `person`에 이름·설명, `image.url`에는 원본 영상 주소. 얼굴 장면이 별로면 AI 상징 이미지(`prompt`)
    - 캡션: 맥락, 왜 중요한지, "영상: 채널 이름", 원본 링크
    - `publish_at`: 0-3에서 정한 날짜 19:10
@@ -76,6 +77,6 @@ cp clip.mp4 $HOME/mnt/Videos/tokenwar/cur.mp4
 
 ## 하지 말 것
 
-- 원본 전체나 15초 넘는 구간을 저장소에 올리지 않는다 (저장소는 공개다).
+- 원본 전체나 30초 넘는 구간을 저장소에 올리지 않는다 (저장소는 공개다).
 - 회원님 컴퓨터에서 `Videos/tokenwar` 밖의 파일을 건드리지 않는다.
 - 구글 계정 로그인·쿠키를 쓰지 않는다. 막히면 요청에 "받기 실패"를 적고 다음 회차에 다시 시도한다 (3번 실패하면 `done/`).

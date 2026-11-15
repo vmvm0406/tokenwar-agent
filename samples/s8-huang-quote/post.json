@@ -6,42 +6,59 @@
   "publish_at": "2026-11-15T19:10:00+09:00",
   "rights": "quote",
   "credit": "Bloomberg Originals",
-  "source_url": "https://www.youtube.com/watch?v=zz1DPfPATAo&t=46",
+  "source_url": "https://www.youtube.com/watch?v=zz1DPfPATAo&t=37",
   "video": {
     "src": "clips/source.mp4",
-    "start": 1.1,
-    "end": 12.1,
-    "crop": {
-      "top": 0,
-      "bottom": 0.7
-    }
+    "start": 2.0,
+    "end": 27.3,
+    "source_duration": 120,
+    "captions_at": 0.72
   },
   "title": "젠슨 황, AI 위험론에\n\"지어낸 말\"",
   "highlight": "지어낸 말",
   "title_en": "Jensen Huang: \"That's just made up\"",
   "subtitles": [
     {
-      "start": 1.1,
-      "end": 3.3,
-      "text": "기자: AI를 통제할 수\n없다는 경고가 있는데요"
+      "start": 2.0,
+      "end": 5.8,
+      "text": "기자: 그게 연구소를\n닫아야 할 이유가 될까요?"
     },
     {
-      "start": 3.3,
-      "end": 5.7,
-      "text": "\"그건 지어낸 말이다\"",
+      "start": 5.9,
+      "end": 11.0,
+      "text": "아니요. 그 실험들을\n가두고 감시해야죠"
+    },
+    {
+      "start": 11.1,
+      "end": 13.3,
+      "text": "기자: 하지만 가둘 수\n없다고들 하는데요"
+    },
+    {
+      "start": 13.3,
+      "end": 15.0,
+      "text": "아니요, 그건 그냥\n지어낸 말이에요",
       "highlight": "지어낸 말"
     },
     {
-      "start": 5.7,
-      "end": 9.2,
-      "text": "앤트로픽·MS의 경고를\n정면으로 반박",
-      "highlight": "정면으로 반박"
+      "start": 15.0,
+      "end": 17.2,
+      "text": "말도 안 돼요.\n증명할 수 없는 얘기죠"
     },
     {
-      "start": 9.2,
-      "end": 12.1,
-      "text": "\"통제도 감시도\n얼마든지 할 수 있다\"",
+      "start": 17.2,
+      "end": 19.1,
+      "text": "제게 증명하지 못할걸요"
+    },
+    {
+      "start": 19.1,
+      "end": 22.5,
+      "text": "얼마든지 가둘 수 있고,\n얼마든지 감시할 수 있어요",
       "highlight": "얼마든지"
+    },
+    {
+      "start": 22.6,
+      "end": 27.3,
+      "text": "해보지도 않고\n못 한다고 하지 마세요"
     }
   ],
   "thumb": {
