@@ -15,8 +15,8 @@
       "20:43"
     ],
     "daily_target": {
-      "carousel": 1,
-      "reel": 2
+      "carousel": 3,
+      "reel": 4
     },
     "min_gap_minutes": 90,
     "lead_minutes": 40,
