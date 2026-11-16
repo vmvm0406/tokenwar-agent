@@ -4,14 +4,14 @@
   "format": "howto",
   "series": "생존 가이드",
   "date": "2026-11-17",
-  "publish_at": "2026-12-31T23:59:00+09:00",
+  "publish_at": "2026-11-17T18:13:00+09:00",
   "rights": "license",
   "credit": "Matt Shumer",
   "rights_note": "게임 코드·prompt.md: mshumer/Claude-of-Duty, MIT License (Copyright (c) 2026 mshumer). 플레이 화면은 그 코드를 토큰전쟁이 직접 실행해 녹화(저장소의 tools/demo.mjs 봇 플레이, 소리는 tools/demo-audio.mjs가 코드로 합성). 원본 X 영상(Matt Shumer, 7월 25일, 55.9초) 중 5초만 인용. 영상은 우리 녹화 두 구간(12초, 14초) 사이에 X 원본 5초(원본 3.5~8.5초)를 넣어 이어 붙임(1.6:1로 가운데를 잘라 확대). X 부분은 인용이며 자막으로 원본임을 밝힘.",
   "video": {
     "src": "clips/source.mp4",
     "start": 0,
-    "end": 31.0,
+    "end": 22.0,
     "avoid_edge_check": false,
     "avoid_burned": false,
     "sub_motion": "rise"
@@ -51,33 +51,9 @@
     },
     {
       "start": 17.0,
-      "end": 19.9,
-      "text": "그 세 문단은\n오픈소스로 공개돼 있고",
-      "highlight": "오픈소스"
-    },
-    {
-      "start": 20.0,
-      "end": 22.9,
-      "text": "코딩 지식 없이\n글로만 쓴 요청입니다",
-      "highlight": "글로만"
-    },
-    {
-      "start": 23.0,
-      "end": 25.9,
-      "text": "저희가 그 세 문단을\n한국어로 정리해 뒀습니다",
-      "highlight": "한국어로"
-    },
-    {
-      "start": 26.0,
-      "end": 28.4,
-      "text": "복사해서 클로드에\n그대로 넣으면 됩니다",
-      "highlight": "그대로"
-    },
-    {
-      "start": 28.5,
-      "end": 31.0,
-      "text": "오늘 바로\n만들어 보세요",
-      "highlight": "오늘 바로"
+      "end": 21.9,
+      "text": "게임 하나에 필요한 건\n글 세 문단이었습니다",
+      "highlight": "글 세 문단"
     }
   ],
   "slides": [
@@ -154,7 +130,7 @@
       "url": "https://www.digitaltoday.co.kr/en/view/86733/three-paragraph-prompt-enough-claude-opus-5-builds-fps-game-two-days-after-launch"
     }
   ],
-  "caption": "클로드 Opus 5로 브라우저 FPS 게임을 만든 프롬프트와 사용법을 정리했습니다.\n\n🗞️ Matt Shumer가 7월 25일 X에 올린 Claude-of-Duty. 클로드 코드가 여러 시간 스스로 작업해 만들었고, 코드와 프롬프트는 오픈소스(MIT 라이선스)로 공개돼 있습니다.\n📍 그림·소리 파일 없이 Three.js 코드만으로 벽 무늬와 총, 적 플레이어, 소리까지 만들어 내는 게임. 영상 속 플레이 화면은 그 코드를 저희 컴퓨터에서 실행해 녹화했어요.\n📊 AI 에이전트들이 쓴 코드는 약 5만 5천 줄, 외부 그림·소리 파일은 0개입니다.\n🔫 다만 완성도에는 한계가 있어요. 제작자도 상용 게임 수준에는 못 미친다고 직접 밝혔습니다.\n👉 출처: GitHub mshumer/Claude-of-Duty(README·prompt.md, MIT), Matt Shumer X 원본 영상, 디지털투데이 (7월 25~29일)\n\n게임 만들어 보고 싶다던 친구에게 보내 주세요.\n\n팔로우하고 댓글에 '자료'라고 남기면 프롬프트와 사용법을 DM으로 보내 드려요. (팔로우한 분께 보내집니다)",
+  "caption": "클로드 Opus 5로 브라우저 FPS 게임을 만든 프롬프트와 사용법을 정리했습니다.\n댓글에 '자료'라고 남기면 프롬프트를 DM으로 보내 드립니다(팔로우한 분께).\n\n🗞️ Matt Shumer가 7월 25일 X에 올린 Claude-of-Duty. 클로드 코드가 여러 시간 스스로 작업해 만들었고, 코드와 프롬프트는 오픈소스(MIT 라이선스)로 공개돼 있습니다.\n📍 그림·소리 파일 없이 Three.js 코드만으로 벽 무늬와 총, 적 플레이어, 소리까지 만들어 내는 게임. 영상 속 플레이 화면은 그 코드를 저희 컴퓨터에서 실행해 녹화했어요.\n📊 AI 에이전트들이 쓴 코드는 약 5만 5천 줄, 외부 그림·소리 파일은 0개입니다.\n🔫 다만 완성도에는 한계가 있어요. 제작자도 상용 게임 수준에는 못 미친다고 직접 밝혔습니다.\n👉 출처: GitHub mshumer/Claude-of-Duty(README·prompt.md, MIT), Matt Shumer X 원본 영상, 디지털투데이 (7월 25~29일)\n\n게임 만들어 보고 싶다던 친구에게 보내 주세요.\n\n팔로우하고 댓글에 '자료'라고 남기면 프롬프트와 사용법을 DM으로 보내 드려요. (팔로우한 분께 보내집니다)",
   "dm": {
     "keyword": "자료",
     "message": "Claude-of-Duty를 만든 프롬프트와 사용법입니다.\n아래 '자료 보기'를 누르면 번역 프롬프트와 클로드 코드 설치, 프롬프트 넣는 곳, 브라우저에서 여는 법까지 정리한 페이지가 열립니다.\n클로드 코드가 여러 시간 작업하는 프롬프트라 사용량을 먼저 확인하십시오.",
@@ -417,7 +393,8 @@
         }
       ]
     },
-    "cta": "팔로우하고\n댓글에 '자료' 남기면\n프롬프트와 사용법\n보내 드립니다"
+    "cta": "팔로우하고\n댓글에 '자료' 남기면\n프롬프트와 사용법\n보내 드립니다",
+    "banner": "댓글에 '자료'라고 남기면\n프롬프트를 DM으로 보내 드립니다"
   },
   "thumb": {
     "title": "프롬프트 3문단으로\nFPS 게임 만든다",
@@ -439,5 +416,7 @@
     "클로드",
     "Claude-of-Duty",
     "FPS 게임"
-  ]
+  ],
+  "approved": true,
+  "approved_at": "2026-11-16T21:18:02+09:00"
 }
