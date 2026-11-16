@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-15T15:02:08.928456+00:00",
+  "checked_at": "2026-11-16T04:38:52.565679+00:00",
   "problems": [],
   "type": "PAGE",
   "valid": true,
@@ -17,6 +17,9 @@
   "instagram": {
     "username": "tokenwar_ai",
     "followers_count": 0,
-    "media_count": 0
+    "media_count": 6
+  },
+  "threads": {
+    "skipped": "THREADS_ACCESS_TOKEN 없음"
   }
 }
