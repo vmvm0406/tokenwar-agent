@@ -52,6 +52,7 @@ def has_audio(path):
 
 
 CTA_SECONDS = 2.5
+FADE_END = 2.5  # 끝 화면 앞에서 음악을 자연스럽게 줄인다 (뚝 끊기지 않게, 운영자 지적 2026-11-16)
 
 
 def dm_cta(post):
@@ -106,7 +107,7 @@ def append_cta_card(mp4, text, cfg, work, dur):
                     "-filter_complex",
                     f"[1:v]scale={W}:{H},setsar=1,fps={FPS},format=yuv420p,fade=t=in:d=0.25[cv];"
                     f"[0:v]setsar=1,fps={FPS},format=yuv420p[mv];"
-                    f"[0:a]aresample=44100,aformat=channel_layouts=stereo[ma];"
+                    f"[0:a]aresample=44100,aformat=channel_layouts=stereo,afade=t=out:st={max(0.0, dur - FADE_END):.3f}:d={min(FADE_END, dur):.3f}[ma];"
                     f"[mv][ma][cv][2:a]concat=n=2:v=1:a=1[v][a]",
                     "-map", "[v]", "-map", "[a]", "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-r", str(FPS),
                     "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart", str(tmp)], check=True)
