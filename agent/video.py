@@ -115,6 +115,19 @@ def append_cta_card(mp4, text, cfg, work, dur):
     return total
 
 
+# 각주 (선택): 자막의 낯선 이름 뒤에 '*'를 달고, 그 자막이 떠 있는 동안 영상 창 바로 아래에 작은 글씨로 풀이.
+# subtitles[i].note = "* 이름: 직함" 또는 video.notes = [{"start", "end", "text"}] (원본 시각). 짧은 페이드로 나타남.
+# 각주가 있으면 출처(credit)를 각주 한 줄만큼 내린다. 왼쪽 정렬, 오른쪽 아래 버튼 줄(x 850~)을 넘으면 렌더링이 멈춘다.
+NOTE_SIZE, NOTE_LEFT, NOTE_BAND, NOTE_MAX_RIGHT, NOTE_FADE = 28, 65, 50, 840, 0.25
+
+
+def note_list(post):
+    """[(start, end, text)] 원본 시각."""
+    out = [(float(s["start"]), float(s["end"]), s["note"]) for s in post.get("subtitles", []) if s.get("note")]
+    out += [(float(n["start"]), float(n["end"]), n["text"]) for n in (post.get("video") or {}).get("notes", [])]
+    return out
+
+
 def page_html(post, cfg, box_h, fonts_uri, size=50):
     b = cfg["brand"]
     credit = post.get("credit")
@@ -143,12 +156,14 @@ def page_html(post, cfg, box_h, fonts_uri, size=50):
 .sub{{position:absolute;left:70px;right:70px;text-align:center;font-size:{size}px;font-weight:800;line-height:1.35;letter-spacing:-.02em;
   color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.85),0 0 2px rgba(0,0,0,.9);white-space:pre-line}}
 .sub .hl{{color:{b['accent']}}}
+.note{{position:absolute;left:{NOTE_LEFT}px;font-size:{NOTE_SIZE}px;font-weight:700;line-height:1.3;letter-spacing:-.01em;color:#C9D2CD;white-space:nowrap}}
+.note .hl{{color:{b['accent']}}}
 </style></head><body><div id="frame">
 <div class="head"><div class="brand">TOKEN WAR</div>
 <h1 class="title">{hl(post['title'], post.get('highlight'))}</h1>
 <div class="en">{esc(post.get('title_en', ''))}</div></div>
 <div class="box" id="box"></div>{credit_html}
-<div class="sub" id="sub"></div>
+<div class="sub" id="sub"></div><div class="note" id="note"></div>
 </div></body></html>"""
 
 
@@ -173,7 +188,10 @@ async def render_layers(post, cfg, folder, box_h, work, size=50, lift=0):
             top = Math.round(top / 2) * 2;
             box.style.top = top + 'px';
             const cr = document.querySelector('.credit');
-            cr.style.top = (top + {box_h} + 20) + 'px';
+            // 각주(notes)가 있으면 영상 창 바로 아래에 각주 한 줄 자리를 두고 출처를 그만큼 내린다
+            const noteH = {NOTE_BAND if note_list(post) else 0};
+            document.getElementById('note').style.top = (top + {box_h} + 14) + 'px';
+            cr.style.top = (top + {box_h} + 20 + noteH) + 'px';
             const bottom = top + {box_h};
             const credH = cr.getBoundingClientRect().height ? 84 : 0;
             const inside = bottom + credH + 40 + 136 > {UI_SAFE_BOTTOM};
@@ -192,6 +210,11 @@ async def render_layers(post, cfg, folder, box_h, work, size=50, lift=0):
               // 영상 아래 빈칸이 안전 영역 안이면 영상 아래 (2줄 기준 위 끝)
               sub.style.bottom = ({H} - (bottom + credH + 40 + twoLine)) + 'px';
             }}
+            if (!inside) {{
+              // 자막이 영상 아래 빈칸에 있으면 각주는 자막 아래로 (출처는 원래 자리)
+              cr.style.top = (top + {box_h} + 20) + 'px';
+              document.getElementById('note').style.top = (bottom + credH + 40 + twoLine + 12) + 'px';
+            }}
             const headOver = head.bottom > top - 20;
             return {{top, inside, headOver, titleH: document.querySelector('.title').getBoundingClientRect().height}};
         }}""")
@@ -209,6 +232,23 @@ async def render_layers(post, cfg, folder, box_h, work, size=50, lift=0):
             path = work / f"sub_{i:02d}.png"
             await frame.screenshot(path=str(path), omit_background=True)
             subs.append((path, float(s["start"]), float(s["end"])))
+        await pg.evaluate("() => { document.getElementById('sub').innerHTML = ''; }")
+        notes = []
+        for i, (a, z, text) in enumerate(note_list(post)):
+            # 첫 글자 '*'는 초록으로
+            body = esc(text)
+            if body.startswith("*"):
+                body = f'<span class="hl">*</span>{body[1:]}'
+            await pg.evaluate("([t]) => { document.getElementById('note').innerHTML = t; }", [body])
+            r = await pg.evaluate("() => { const b = document.getElementById('note').getBoundingClientRect(); return [b.right, b.top, b.bottom]; }")
+            if r[0] > NOTE_MAX_RIGHT:
+                await browser.close()
+                raise SystemExit(f"각주가 너무 김 (오른쪽 끝 {r[0]:.0f}px > {NOTE_MAX_RIGHT}px, 오른쪽 아래 버튼 줄) → 줄일 것: {text}")
+            path = work / f"note_{i:02d}.png"
+            await frame.screenshot(path=str(path), omit_background=True)
+            notes.append((path, a, z))
+            print(f"  각주: {a:g}~{z:g}초 (원본 시각), 세로 {r[1]:.0f}~{r[2]:.0f}px, 가로 {NOTE_LEFT}~{r[0]:.0f}px: {text}")
+        geo["notes"] = notes
         await browser.close()
     return geo, subs
 
@@ -571,6 +611,9 @@ def make_video_reel(post, folder, cfg, soft_edges=False):
         post = dict(post)
         post["subtitles"] = [dict(s, start=remap(float(s["start"]), keep), end=remap(float(s["end"]), keep))
                              for s in post.get("subtitles", [])]
+        if v.get("notes"):
+            post["video"] = dict(post["video"], notes=[dict(n, start=remap(float(n["start"]), keep),
+                                                            end=remap(float(n["end"]), keep)) for n in v["notes"]])
         v = dict(v, start=0, end=sum(z - a for a, z in keep))
     vw, vh, vdur = probe(src)
     start = float(v.get("start", 0))
@@ -601,6 +644,10 @@ def make_video_reel(post, folder, cfg, soft_edges=False):
     # 매 프레임 다시 읽어(자막 13장 x 1,700프레임) 윈도우에서 인코딩이 멈추곤 했다.
     for path, _, _, _ in subs:
         inputs += ["-i", str(path)]
+    # 각주 PNG: 페이드를 주려고 -loop 1로 넣는다 (각주는 몇 장뿐이라 느려지지 않음)
+    notes = geo.get("notes", [])
+    for path, _, _ in notes:
+        inputs += ["-loop", "1", "-framerate", str(FPS), "-t", f"{dur:.3f}", "-i", str(path)]
     if tall:  # 세로가 긴 영상은 자르지 않고 양옆을 채운다
         fit = (f"scale={inner_w}:{inner_h}:force_original_aspect_ratio=decrease,"
                f"pad={inner_w}:{inner_h}:(ow-iw)/2:(oh-ih)/2:color={bg}")
@@ -616,6 +663,13 @@ def make_video_reel(post, folder, cfg, soft_edges=False):
         y = (f"'{dy}+22*pow(max(0,1-(t-{a:.3f})/0.3),2)':eval=frame" if rise else f"{dy}")
         fc.append(f"{last}[{3 + i}:v]overlay=0:{y}:enable='between(t,{a:.3f},{z:.3f})'[s{i}]")
         last = f"[s{i}]"
+    for j, (_, a, z) in enumerate(notes):
+        a, z = max(0.0, a - start), min(dur, z - start)
+        k = 3 + len(subs) + j
+        fc.append(f"[{k}:v]format=rgba,fade=t=in:st={a:.3f}:d={NOTE_FADE}:alpha=1,"
+                  f"fade=t=out:st={max(a, z - NOTE_FADE):.3f}:d={NOTE_FADE}:alpha=1[nt{j}]")
+        fc.append(f"{last}[nt{j}]overlay=0:0:enable='between(t,{a:.3f},{z:.3f})'[n{j}]")
+        last = f"[n{j}]"
     fc.append(f"{last}format=yuv420p[vout]")
     if has_audio(src):
         fades = ""
@@ -626,13 +680,13 @@ def make_video_reel(post, folder, cfg, soft_edges=False):
         # 소리는 따로 읽는다: -ss를 -i 앞에 두면 일부 원본에서 소리만 0.1~0.7초 어긋나(입 모양과 안 맞음)
         # 처음부터 읽어 원본 시각 그대로 자른다
         inputs += ["-i", str(src)]
-        ai = 3 + len(subs)
+        ai = 3 + len(subs) + len(notes)
         fc.append(f"[{ai}:a]atrim=start={start:.3f}:end={end:.3f},asetpts=PTS-STARTPTS,"
                   f"aresample=44100,aformat=channel_layouts=stereo{fades}[aout]")
         amap = ["-map", "[aout]"]
     else:
         inputs += ["-f", "lavfi", "-t", f"{dur:.3f}", "-i", "anullsrc=r=44100:cl=stereo"]
-        amap = ["-map", f"{3 + len(subs)}:a"]
+        amap = ["-map", f"{3 + len(subs) + len(notes)}:a"]
     out = folder / "reel.mp4"
     subprocess.run(["ffmpeg", "-nostdin", "-y", "-loglevel", "error", *inputs, "-filter_complex", ";".join(fc),
                     "-map", "[vout]", *amap, "-t", f"{dur:.3f}", "-c:v", "libx264", "-preset", "veryfast",
