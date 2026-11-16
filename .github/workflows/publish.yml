@@ -21,6 +21,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # 기다렸다 도는 실행도 그때의 최신 main을 받는다. 예전 커밋을 받으면 이미 올린 게시물을 또 올림 (2026-11-16 힌턴 릴스 중복)
+          ref: main
 
       - uses: actions/setup-python@v5
         with:
