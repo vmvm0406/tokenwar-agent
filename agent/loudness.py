@@ -62,8 +62,9 @@ def stats(path):
     return float(d["input_i"]), float(d["input_tp"]), float(d["input_lra"])
 
 
-def normalize(mp4, target_i=TARGET_I, target_tp=TARGET_TP):
-    """mp4의 소리만 바꿔 다시 쓴다 (영상은 그대로 복사). 성공하면 (전, 후) 수치, 실패하면 None."""
+def normalize(mp4, target_i=TARGET_I, target_tp=TARGET_TP, comp=True):
+    """mp4의 소리만 바꿔 다시 쓴다 (영상은 그대로 복사). 성공하면 (전, 후) 수치, 실패하면 None.
+    comp=False: 1단계 압축(COMP)을 건너뛴다. 이미 섞을 때 소리를 다듬어 총소리 어택을 살려야 하는 릴스용 (post.json video.keep_transients)."""
     mp4 = Path(mp4)
     ff = _ffmpeg()
     if not ff or not mp4.exists():
@@ -73,7 +74,7 @@ def normalize(mp4, target_i=TARGET_I, target_tp=TARGET_TP):
         if before is None:
             return None  # 소리 없음: 손대지 않는다
         # 1단계: 대략 목표 크기로 올리고(내리고) 튀는 소리를 압축으로 누른다
-        pre = f"volume={target_i - before[0]:.2f}dB,{COMP}"
+        pre = f"volume={target_i - before[0]:.2f}dB" + (f",{COMP}" if comp else "")
         # 2단계: 누른 결과를 다시 재서(loudnorm 측정) 남은 차이만큼 맞추고, 마지막 리미터로 봉우리를 자른다.
         # 결과를 재서 크기가 모자라거나 봉우리가 솟으면 보정해 다시 만든다 (최대 4번, 기준을 넘는 결과는 쓰지 않는다)
         m = measure(mp4, pre)

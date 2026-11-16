@@ -14,7 +14,8 @@
     "end": 16.7,
     "avoid_edge_check": false,
     "avoid_burned": false,
-    "sub_motion": "rise"
+    "sub_motion": "rise",
+    "keep_transients": true
   },
   "title": "프롬프트 3문단으로\nFPS 게임이 나왔습니다",
   "highlight": "프롬프트 3문단",
@@ -398,6 +399,6 @@
     "generate": true,
     "mixed_into": "clips/source.mp4",
     "credit": "토큰전쟁 코드 음악 (agent/music_gen.py make_light_music, 외부 음원 없음)",
-    "note": "106.5 BPM 밝은 장조 비트(Cmaj7-G-Am7-Fmaj7), 운영자 2026-11-17 '배경음악이 너무 긴장감있고'. 음악이 주인공: 게임 소리는 '띠링' 효과음 주파수(786·1180·1572·1766·2099·2401·3198·4102·4802Hz)를 노치로 깎고, 5kHz -10dB·8kHz 위 -6dB, acompressor(-28dB, 10:1)+alimiter로 누른 뒤 음악보다 5.5dB 작게(운영자 \"총소리는 조금 나게 약하게\")(통합 LUFS 기준) 섞음"
+    "note": "106.5 BPM 밝은 장조 비트(Cmaj7-G-Am7-Fmaj7). 게임 소리: '띠링' 노치(786·1180·1572·1766·2099·2401·3198·4102·4802Hz), 5kHz -4.5dB·2.75kHz -3.5dB(날카로운 부분만), 약한 컴프레서(어택 30ms, 1.5:1)·리미터(-6dBFS)로 총소리 어택을 살림. 게임 소리와 음악은 같은 크기(통합 LUFS)로 섞어 총소리 순간이 직전 음악보다 중앙값 +5.7dB 솟음 (운영자 2026-11-17 '거의 안들리는데 총소리')"
   }
 }
