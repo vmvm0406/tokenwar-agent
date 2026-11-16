@@ -464,6 +464,7 @@ def main(folder):
                 print(" -", line)
             sys.exit(1)
         print(f"영상 릴스 길이: {dur:.1f}초")
+        check_sound_or_exit(out_dir)
         thumb_or_exit(post, out_dir)
         print("완료:", out_dir)
         return
@@ -487,7 +488,36 @@ def main(folder):
         shutil.copy(sorted((out_dir / "frames").glob("*.jpg"))[0], out_dir / "cover.jpg")
         thumb_or_exit(post, out_dir)
         print(f"릴스 길이: {total:.1f}초")
+        check_sound_or_exit(out_dir)
     print("완료:", out_dir)
+
+
+def audio_mean_db(mp4):
+    """ffmpeg volumedetect 평균 음량(dB). 오디오 트랙이 없으면 None."""
+    import re
+    import subprocess
+    r = subprocess.run(["ffmpeg", "-hide_banner", "-nostdin", "-i", str(mp4), "-vn", "-af", "volumedetect", "-f", "null", "-"],
+                       capture_output=True, text=True, encoding="utf-8", errors="replace")
+    m = re.search(r"mean_volume:\s*(-?[\d.]+|-inf) dB", r.stderr)
+    if not m:
+        return None
+    return -999.0 if m.group(1) == "-inf" else float(m.group(1))
+
+
+SILENT_DB = -50.0
+
+
+def check_sound_or_exit(out_dir):
+    """소리 없는 릴스는 올리지 않는다 (운영자 결정 2026-11-16, STYLE_GUIDE 6장)."""
+    mp4 = Path(out_dir) / "reel.mp4"
+    if not mp4.exists() or not shutil.which("ffmpeg"):
+        return
+    db = audio_mean_db(mp4)
+    if db is None or db < SILENT_DB:
+        print(f"규칙 위반으로 중단: 릴스에 소리가 없음 (평균 {db} dB, 기준 {SILENT_DB} dB). "
+              "post.json music으로 상업 이용 가능한 음원(src·credit)을 넣거나 music.generate=true로 코드 음악을 깐다 (STYLE_GUIDE 6장)")
+        sys.exit(1)
+    print(f"소리: 평균 {db:.1f} dB")
 
 
 if __name__ == "__main__":

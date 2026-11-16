@@ -173,6 +173,15 @@ def join_scenes(parts, durs, fade, out_mp4, music=None, music_volume=0.3):
     return total
 
 
+def _clip_has_sound(src):
+    """인용 영상에 실제 소리가 있는지 (평균 -50dB 이상). 화면 녹화처럼 무음이면 False."""
+    import re
+    r = subprocess.run(["ffmpeg", "-hide_banner", "-nostdin", "-i", str(src), "-vn", "-af", "volumedetect", "-f", "null", "-"],
+                       capture_output=True, text=True, encoding="utf-8", errors="replace")
+    m = re.search(r"mean_volume:\s*(-?[\d.]+) dB", r.stderr)
+    return bool(m and float(m.group(1)) >= -50)
+
+
 async def make_motion_reel(page_html, post, folder, config):
     from playwright.async_api import async_playwright
 
@@ -222,8 +231,26 @@ async def make_motion_reel(page_html, post, folder, config):
             durs.append(d)
         await browser.close()
     tmp.unlink()
+    # 소리 없는 릴스 금지 (운영자 결정 2026-11-16): post.music(상업 이용 가능한 음원, credit 필수) → assets/music → 코드로 생성
+    pm = post.get("music") or {}
     music_files = sorted((ROOT / "assets" / "music").glob("*.mp3")) + sorted((ROOT / "assets" / "music").glob("*.m4a"))
-    music = random.choice(music_files) if music_files else None
-    total = join_scenes(parts, durs, fade, folder / "reel.mp4", music, rc["music_volume"])
+    vol = rc["music_volume"]
+    gen = None
+    if pm.get("src") and (folder / pm["src"]).exists():
+        music = folder / pm["src"]
+        vol = float(pm.get("volume", vol))
+    elif music_files and not pm.get("generate"):
+        music = random.choice(music_files)
+    else:
+        from music_gen import make_music
+        gen = folder / "_music.wav"
+        info = make_music(gen, durs, fade, seed=int(pm.get("seed", 7)))
+        print(f"배경음악: 코드로 생성 (BPM {info['bpm']}, 장면 전환 {len(info['bounds'])}곳에 박자 맞춤)")
+        music = gen
+        has_clip_sound = any(s.get("kind") == "clip" and _clip_has_sound(folder / s["src"]) for s in post["slides"])
+        vol = float(pm.get("volume", 0.25 if has_clip_sound else 0.8))
+    total = join_scenes(parts, durs, fade, folder / "reel.mp4", music, vol)
+    if gen and gen.exists():
+        gen.unlink()
     shutil.rmtree(work)
     return total
