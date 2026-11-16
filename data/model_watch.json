@@ -1095,7 +1095,33 @@
    "tries": 0,
    "breaking": true,
    "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMiakFVX3lxTE02QUV5emtlY1VPM2lQdUpVMGR0QUJDTkNIMjZ3Yjh3MEZMdUhybFFZOExvMEpHX1RJR2lmQk9kbTRfUUlDMVpSaGRyRHZqbU5KaHFLSG80TGFEVG5HOE51VDJRNUVSRERIT1E?oc=5": {
+   "source": "news",
+   "company": "메타",
+   "entities": [
+    "메타"
+   ],
+   "tok": [
+    "1조",
+    "과징",
+    "리아",
+    "무단",
+    "사진",
+    "이탈",
+    "접근",
+    "진첩",
+    "징금",
+    "탈리"
+   ],
+   "title": "[업계 속보: 주요 매체 4곳(AI타임스, SBS, 동아일보, 서울경제) · 규제] 이탈리아, 메타에 1조 과징금…\"사진첩 무단 접근\"",
+   "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE02QUV5emtlY1VPM2lQdUpVMGR0QUJDTkNIMjZ3Yjh3MEZMdUhybFFZOExvMEpHX1RJR2lmQk9kbTRfUUlDMVpSaGRyRHZqbU5KaHFLSG80TGFEVG5HOE51VDJRNUVSRERIT1E?oc=5",
+   "first_seen": "2026-11-16T10:34:18+09:00",
+   "why": "이미 낸 소식과 같음: [업계 속보: 주요 매체 5곳(AI타임스, SBS, 동아일보, 서울경제) · 규제] 이탈리",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
   }
  },
- "updated": "2026-11-16T10:19:20+09:00"
+ "updated": "2026-11-16T10:34:18+09:00"
 }
