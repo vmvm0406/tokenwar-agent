@@ -535,6 +535,19 @@ def check_dm(post):
             errors.append("dm.page.extra 항목은 title과 prompt 필요")
     if f"'{kw}'" not in post.get("caption", "") and f"‘{kw}’" not in post.get("caption", ""):
         warnings.append(f"캡션에 댓글 키워드 안내가 없음 (예: \"댓글에 '{kw}' 남기면 프롬프트 전체를 DM으로 보내 드려요\")")
+    else:
+        # 앞쪽 안내 (운영자 결정 2026-11-16, 평균 시청 비율 12%): 캡션 첫 줄이나 둘째 줄에도 키워드 안내 (끝에만 두지 않기)
+        head = [l for l in post.get("caption", "").splitlines() if l.strip()][:2]
+        if not any(f"'{kw}'" in l or f"‘{kw}’" in l for l in head):
+            warnings.append(f"캡션 첫 줄이나 둘째 줄에 '{kw}' 안내가 없음 → \"댓글에 '{kw}' 남기면 …을 DM으로 보내 드려요(팔로우한 분께)\" (캡션 끝에만 두지 않기, STYLE_GUIDE 7-1)")
+    if post.get("type") in ("reel", "video") and not (d.get("banner") or "").strip():
+        warnings.append(f"참여형 릴스에 dm.banner(앞쪽 안내 띠) 없음 → 예: \"댓글 '{kw}' → 프롬프트와 사용법\" (3초부터 본편 끝까지, STYLE_GUIDE 7-1)")
+    elif (d.get("banner") or "").strip():
+        b = d["banner"].strip()
+        if f"'{kw}'" not in b and f"‘{kw}’" not in b:
+            errors.append(f"dm.banner에 댓글 키워드 '{kw}'가 따옴표로 들어가야 함: '{b}'")
+        if len(b.splitlines()) > 1 or len(b) > 24:
+            errors.append(f"dm.banner는 한 줄 24자 이하 (작은 띠): '{b}'")
     for t in [msg, d.get("follow_text", "")] + [x.get("note", "") for x in pg.get("extra") or []] + [pg.get("result", ""), pg.get("intro", "")]:
         if t:
             e_t, _ = ai_tone(t, "DM 자료")

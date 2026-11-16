@@ -259,7 +259,13 @@ def shot_html(post, v, folder, height=None):
         bottom = h
     else:
         h = height or d["SHOTH"]
-        box = f'<div class="shot" style="height:{h}px">{img}</div>'
+        dy = 0
+        if kind == "reel" and ((post.get("dm") or {}).get("banner") or "").strip():
+            # 앞쪽 '자료' 안내 띠(dm.banner)가 안전 영역 맨 위에 들어가므로 그림을 띠 아래에서 시작하고 그만큼 줄인다
+            from banner import BANNER_H, BANNER_GAP
+            dy = BANNER_H + BANNER_GAP
+        box = (f'<div class="shot" style="height:{h - dy}px;top:{d["SHOTTOP"] + dy}px">{img}</div>' if dy
+               else f'<div class="shot" style="height:{h}px">{img}</div>')
         bottom = d["SHOTTOP"] + h
     cap = ""
     if v.get("credit"):
@@ -358,7 +364,14 @@ def build_page(post, folder):
         else:
             parts.append(body_html(post, s, i, total, folder))
     parts.append(outro_html(post, total, total))
-    return (f'<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>{build_css(kind)}</style>'
+    css = build_css(kind)
+    if kind == "reel" and ((post.get("dm") or {}).get("banner") or "").strip():
+        # 앞쪽 '자료' 안내 띠(dm.banner, motion.py)가 안전 영역 맨 위에 들어가므로 본문을 그만큼 아래로 (표지·마무리 장 제외)
+        from banner import BANNER_H, BANNER_GAP
+        dy = BANNER_H + BANNER_GAP
+        # 위쪽 그림이 없는 장: 본문 칸을 띠 높이만큼 아래로. 위쪽 그림이 있는 장은 shot_html이 그림을 그만큼 줄인다
+        css += f".slide:not(.outro) .inner:not(.below){{bottom:{DIMS['reel']['INBOT'] + dy}px;transform:translateY({dy}px)}}"
+    return (f'<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>{css}</style>'
             f'</head><body>{"".join(parts)}</body></html>')
 
 
