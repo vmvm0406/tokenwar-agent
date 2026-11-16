@@ -13,6 +13,7 @@
 
 post.json 선택 필드 (TEMPLATES.md "스레드 글"):
     "threads": {"text": "...", "images": ["cover", 2, 3], "topic": "AI Threads", "replies": ["출처: ... https://..."]}
+    topic(선택): 커뮤니티 주제 태그. 게임·앱 따라 하기 "바이브코딩", 그림·영상 따라 하기 "AI 콘텐츠"/"AI 영상 제작", 없으면 "AI Threads" (STYLE_GUIDE 7-2)
 사용자 ID 대신 /me를 쓴다. 토큰 값은 어디에도 출력하지 않는다.
 """
 import os

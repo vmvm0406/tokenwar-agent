@@ -823,6 +823,12 @@ THREADS_MAX = 500               # 스레드 글 한도. 이모지는 UTF-8 바�
 THREADS_MAX_IMAGES = 10         # 스레드 캐러셀은 20장까지 되지만 우리는 10장 안
 THREADS_MAX_LINKS = 5           # 글 하나에 서로 다른 링크 5개까지 (Threads API)
 THREADS_DEFAULT_TOPIC = "AI Threads"
+# 스레드 커뮤니티(주제 태그) 허용 목록 (운영자 결정 2026-11-17, STYLE_GUIDE 7-2).
+# 게임·앱 따라 하기 = 바이브코딩, 그림·영상 따라 하기 = AI 콘텐츠/AI 영상 제작, 그 밖 = AI Threads.
+# 이름은 커뮤니티 이름과 글자까지 같아야 한다. 운영자가 앱에서 확인하면 여기 고친다.
+THREADS_TOPICS = ("AI Threads", "바이브코딩", "AI 콘텐츠", "AI 영상 제작")
+THREADS_STORY_RE = re.compile(r"직접 (?:해|돌려|넣어|실행해|만들어|써) ?봤|해 봤더니|돌려 봤|저희|\d+분 (?:만에|걸)")
+THREADS_BAIT_RE = re.compile(r"맞팔|스하리|반하리|선팔")
 URL_RE = re.compile(r"(?i)https?://\S+|www\.\S+|\b[a-z0-9][a-z0-9-]*\.(?:com|net|org|io|ai|kr|co|ly|gg|app|dev|me|tv|news|link)\b(?:/\S*)?")
 _EMOJI_EXTRA = {"‍", "️", "⃣"}
 
@@ -863,8 +869,14 @@ def check_threads(post):
         errors.append(f"threads.topic은 주제 태그 1개 (문자열, 기본 '{THREADS_DEFAULT_TOPIC}'): {topic!r}")
     elif len(topic) > 50 or "." in topic or "&" in topic or topic.startswith("#"):
         errors.append(f"threads.topic은 50자 안, '.'·'&'·'#' 없이: '{topic}'")
-    elif topic.strip() != THREADS_DEFAULT_TOPIC:
-        warnings.append(f"threads.topic이 '{THREADS_DEFAULT_TOPIC}'가 아님: '{topic}'. 스레드 글은 'AI Threads' 커뮤니티에만 올린다 (맞팔로우 커뮤니티 금지, STYLE_GUIDE 7-2)")
+    elif topic.strip() not in THREADS_TOPICS:
+        warnings.append(f"threads.topic '{topic}'은 허용 목록 밖: {', '.join(THREADS_TOPICS)} 중 하나 (맞팔로우 커뮤니티 금지, STYLE_GUIDE 7-2)")
+    m = THREADS_STORY_RE.search(text)
+    if m:
+        warnings.append(f"스레드 글에 제작 이야기 '{m.group(0)}': 결과 중심으로 ('이 문장 하나로 이렇게 나옵니다', STYLE_GUIDE 7-2)")
+    m = THREADS_BAIT_RE.search(text)
+    if m:
+        errors.append(f"스레드 글에 '{m.group(0)}': 맞팔·품앗이 문구 금지 (STYLE_GUIDE 7-2)")
     if HASHTAG_RE.search(text):
         errors.append("스레드 본문에 해시태그: 주제 태그는 글당 1개라 threads.topic에만 쓴다")
     # 이미지: 장 번호(카드뉴스) 또는 "cover"
