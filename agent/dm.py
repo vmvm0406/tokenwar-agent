@@ -62,16 +62,30 @@ def steps_from_slides(post):
 
 
 def page_steps(post):
-    """카드 순서 장 + dm.page.setup(선택)의 처음 하는 사람용 단계를 합친다.
+    """카드 순서 장 + dm.page의 페이지 전용 단계(모두 선택)를 합친다.
     setup: {"before": <카드 장 num>, "steps": [{label, title, text, prompts, groups: [{name, text, prompts, src: {name, url} 또는 그 목록}]}]}
-    before가 없거나 맞는 장이 없으면 맨 앞에 넣는다."""
-    steps = steps_from_slides(post)
-    setup = (dm_conf(post).get("page") or {}).get("setup") or {}
-    extra = setup.get("steps") or []
-    if not extra:
-        return steps
-    at = next((i for i, st in enumerate(steps) if st.get("num") == setup.get("before")), 0)
-    return steps[:at] + extra + steps[at:]
+           여러 곳에 넣으려면 이런 묶음의 목록. before가 없거나 맞는 장이 없으면 맨 앞.
+    skip: [카드 장 num] 페이지에서 뺄 장 (카드·영상은 그대로)
+    append: [{"num": 카드 장 num, "text": 덧붙일 글, "groups": [...]}] 카드 장 단계 뒤에 페이지에서만 덧붙임"""
+    pg = dm_conf(post).get("page") or {}
+    skip = set(pg.get("skip") or [])
+    adds = {a.get("num"): a for a in pg.get("append") or []}
+    steps = []
+    for st in steps_from_slides(post):
+        if st.get("num") in skip:
+            continue
+        a = adds.get(st.get("num"))
+        if a:
+            st = dict(st, more=a.get("text", ""), groups=a.get("groups") or [])
+        steps.append(st)
+    setup = pg.get("setup") or []
+    for blk in ([setup] if isinstance(setup, dict) else setup):
+        extra = blk.get("steps") or []
+        if not extra:
+            continue
+        at = next((i for i, st in enumerate(steps) if st.get("num") == blk.get("before")), 0)
+        steps = steps[:at] + extra + steps[at:]
+    return steps
 
 
 def checklist_from_slides(post):
@@ -151,6 +165,12 @@ p{margin:6px 0;color:#CFD6D2}
 ul{padding-left:20px;color:#CFD6D2}
 .src{color:var(--mu);font-size:14px;border-top:2px solid #2A3530;padding-top:16px;margin-top:32px}
 .src a{color:var(--mu)}
+.kv{list-style:none;padding:0;margin:6px 0}
+.kv li{margin:4px 0}
+.kv b{color:var(--fg);margin-right:6px}
+.notice{border-left:4px solid var(--ac);padding:4px 0 4px 14px;margin:0 0 28px}
+.notice ul{margin:6px 0}
+.notice a{color:var(--ac)}
 .grp{margin:18px 0 0}
 .grp h4{margin:0 0 2px;font-size:17px;font-weight:700;color:var(--ac)}
 .grp .gs{font-size:13px;color:var(--mu);margin:2px 0 0}
@@ -158,6 +178,14 @@ ul{padding-left:20px;color:#CFD6D2}
 .foot{margin-top:28px;font-weight:700}
 .foot a{color:var(--ac)}
 """
+
+
+HEADINGS = {
+    "default": {"result": "직접 해 본 결과", "extra": "더 써 볼 문장", "caution": "주의할 점",
+                "note": "결과는 직접 해 본 것이고, AI 답은 그때그때 달라질 수 있습니다."},
+    "formal": {"result": "테스트 환경 및 결과", "extra": "추가 명령어", "caution": "유의 사항",
+               "note": "테스트 결과는 작성 시점 기준이며, AI의 응답은 실행할 때마다 달라질 수 있습니다."},
+}
 
 
 def page_html(post):
@@ -168,6 +196,8 @@ def page_html(post):
     if cover.get("highlight"):
         h = esc(cover["highlight"])
         title = title.replace(h, f'<span class="hl">{h}</span>', 1)
+    # 섹션 이름: 기본, 또는 dm.page.style = "formal"(회사 안내서 말투)
+    H = HEADINGS.get(pg.get("style") or "default", HEADINGS["default"])
     css = PAGE_CSS
     for k in ("ACCENT", "MUTED", "TEXT", "BG"):
         css = css.replace(k, B[k.lower()])
@@ -183,14 +213,14 @@ def page_html(post):
         gs = ('<p class="gs">출처: ' + " · ".join(
             f'<a href="{esc(x["url"])}" rel="noopener">{esc(x.get("name") or x["url"])}</a>' for x in srcs) + '</p>'
               if srcs else "")
-        return (f'<div class="grp"><h4>{esc(g.get("name", ""))}</h4>{txt}'
+        return (f'<div class="grp">{"<h4>" + esc(g["name"]) + "</h4>" if g.get("name") else ""}{txt}'
                 f'{"".join(prompt_box(p) for p in g.get("prompts") or [])}{gs}</div>')
 
     parts = []
     for i, st in enumerate(page_steps(post), 1):
         lb = f'<span class="lb">{esc(st["label"])}</span>' if st.get("label") else ""
         boxes = "".join(prompt_box(p) for p in st.get("prompts") or [])
-        text = f'<p>{esc(st["text"])}</p>' if st.get("text") else ""
+        text = "".join(f'<p>{esc(st[k])}</p>' for k in ("text", "more") if st.get(k))
         groups = "".join(group(g) for g in st.get("groups") or [])
         parts.append(f'<section class="step"><span class="k">{i:02d}</span>{lb}<h2>{esc(st["title"])}</h2>'
                      f'{boxes}{text}{groups}</section>')
@@ -199,14 +229,28 @@ def page_html(post):
         rows = "".join(
             f'<section class="step"><h2>{esc(x.get("title", ""))}</h2>{prompt_box(x["prompt"])}'
             f'{"<p>" + esc(x["note"]) + "</p>" if x.get("note") else ""}</section>' for x in pg["extra"])
-        extra = f'<div class="rule"></div><h3>더 써 볼 문장</h3>{rows}'
-    result = f'<div class="rule"></div><h3>직접 해 본 결과</h3><p>{esc(pg["result"])}</p>' if pg.get("result") else ""
+        extra = f'<div class="rule"></div><h3>{H["extra"]}</h3>{rows}'
+    res = pg.get("result")
+    if isinstance(res, list):  # 항목형: [{"k": "테스트 일자", "v": "11월 16일"}, ...]
+        res_html = "<ul class=\"kv\">" + "".join(
+            f'<li><b>{esc(x.get("k", ""))}</b> {esc(x.get("v", ""))}</li>' for x in res) + "</ul>"
+    else:
+        res_html = f'<p>{esc(res)}</p>' if res else ""
+    result = f'<div class="rule"></div><h3>{H["result"]}</h3>{res_html}' if res else ""
     cautions = list(pg.get("caution") or []) + checklist_from_slides(post)
-    caut = ("<div class=\"rule\"></div><h3>주의할 점</h3><ul>" + "".join(f"<li>{esc(c)}</li>" for c in cautions) + "</ul>"
+    caut = ("<div class=\"rule\"></div><h3>" + H["caution"] + "</h3><ul>" + "".join(f"<li>{esc(c)}</li>" for c in cautions) + "</ul>"
             if cautions else "")
     srcs = "".join(f'<li><a href="{esc(s["url"])}" rel="noopener">{esc(s["name"])}</a></li>' for s in post["sources"])
     handle = CONFIG["handle"]
     intro = esc(pg.get("intro") or cover.get("sub", ""))
+    nt = pg.get("notice") or {}
+    notice = ""
+    if nt:
+        links = "".join(f'<li><a href="{esc(x["url"])}" rel="noopener">{esc(x.get("name") or x["url"])}</a>'
+                        f'{" · " + esc(x["note"]) if x.get("note") else ""}</li>' for x in nt.get("links") or [])
+        notice = (f'<div class="notice">{"<h3>" + esc(nt["title"]) + "</h3>" if nt.get("title") else ""}'
+                  f'{"<p>" + esc(nt["text"]) + "</p>" if nt.get("text") else ""}'
+                  f'{"<ul>" + links + "</ul>" if links else ""}</div>')
     desc = esc((pg.get("intro") or cover.get("sub", ""))[:120])
     return f"""<!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
@@ -221,9 +265,10 @@ def page_html(post):
 <div class="brand">TOKEN WAR</div>
 <h1>{title}</h1>
 <p class="intro">{intro}</p>
+{notice}
 {"".join(parts)}
 {result}{extra}{caut}
-<div class="src">출처<ul>{srcs}</ul>{esc(post["date"].replace("-", "."))} 기준. 결과는 직접 해 본 것이고, AI 답은 그때그때 달라질 수 있습니다.</div>
+<div class="src">출처<ul>{srcs}</ul>{esc(post["date"].replace("-", "."))} 기준. {H["note"]}</div>
 <p class="foot">매일 AI 소식은 <a href="https://www.instagram.com/{esc(handle.lstrip("@"))}/">{esc(handle)}</a></p>
 </main>
 <script>
