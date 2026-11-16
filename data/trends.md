@@ -1,4 +1,4 @@
-# 인스타 반응 분석 (2026-11-16 17:37 기준)
+# 인스타 반응 분석 (2026-11-16 17:38 기준)
 
 **목표 진행** (2026-11-16): 현재 0명 / 목표 10,000명 (2026-12-16까지), 남은 30일, 필요한 하루 증가 333명, 최근 7일 평균 기록 2일 미만
 
@@ -6,13 +6,13 @@
 배수 = 그 계정의 최근 60일 같은 유형(릴스/피드) 중간값 대비. 2배 이상이면 '먹힌 주제'.
 
 ## @ai.talk.kr (팔로워 1879)
-- REELS 중간값 455조회, 게시물 29개
-  - 3,352조회 7.4x: [AI가 보이는 사고과정과 실제 추론이 다를 수 있다면, 인간은 무엇으로 AI를 검증할 수 있을까요?](https://www.instagram.com/reel/Dd8BPz-BhvC/)
-  - 3,009조회 6.6x: [AI가 발전하면 내 노트북은 더 좋아질까, 더 비싸질까?](https://www.instagram.com/reel/De0PR-Qj5n2/)
-  - 2,776조회 6.1x: [2027년, AI 거품은 붕괴한다?](https://www.instagram.com/reel/Dd0-1xPBNso/)
+- REELS 중간값 460조회, 게시물 29개
+  - 3,352조회 7.3x: [AI가 보이는 사고과정과 실제 추론이 다를 수 있다면, 인간은 무엇으로 AI를 검증할 수 있을까요?](https://www.instagram.com/reel/Dd8BPz-BhvC/)
+  - 3,009조회 6.5x: [AI가 발전하면 내 노트북은 더 좋아질까, 더 비싸질까?](https://www.instagram.com/reel/De0PR-Qj5n2/)
+  - 2,776조회 6.0x: [2027년, AI 거품은 붕괴한다?](https://www.instagram.com/reel/Dd0-1xPBNso/)
 - FEED 중간값 6반응, 게시물 1개
 
-## @ai.trend.kr (팔로워 273295)
+## @ai.trend.kr (팔로워 273298)
 - REELS 중간값 90,538조회, 게시물 35개
   - 2,866,014조회 31.7x: [눈 뭉치 던진 범인이 나라고요? ❄️](https://www.instagram.com/reel/DetX442xkFz/)
   - 2,071,787조회 22.9x: [포장해 달라던 선물이 내 거였다고요? 🎁](https://www.instagram.com/reel/DeWZecova75/)
@@ -21,19 +21,19 @@
 
 ## @ai.asap.kr (팔로워 9710)
 - REELS 중간값 8,300조회, 게시물 4개
-  - 40,577조회 4.9x: [AI가 일자리를 없앨까 묻는 래리 핑크에게 팔란티어 CEO 알렉스 카프가 답했습니다. 먼저 팔기 어려워지는 건 엘리트 학교 철학 전공이고, 고등](https://www.instagram.com/reel/DfwH1hxpWaQ/)
+  - 40,585조회 4.9x: [AI가 일자리를 없앨까 묻는 래리 핑크에게 팔란티어 CEO 알렉스 카프가 답했습니다. 먼저 팔기 어려워지는 건 엘리트 학교 철학 전공이고, 고등](https://www.instagram.com/reel/DfwH1hxpWaQ/)
   - 9,628조회 1.2x: [AI가 소프트웨어를 끝낸다? '정반대' (젠슨 황, 엔비디아)](https://www.instagram.com/reel/DfCV6uPpezi/)
   - 6,973조회 0.8x: [🦆 에이전트로 에이전트를 만든다 (젠슨 황, 엔비디아)](https://www.instagram.com/reel/De8rXgTJKcV/)
 - FEED 중간값 80반응, 게시물 132개
 
-## @bizucafe (팔로워 95428)
-- REELS 중간값 23,011조회, 게시물 197개
+## @bizucafe (팔로워 95431)
+- REELS 중간값 23,012조회, 게시물 197개
   - 582,162조회 25.3x: [화폐는 의미 없다 (일론 머스크)](https://www.instagram.com/reel/De8mVBGgBJL/)
-  - 437,562조회 19.0x: [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/)
+  - 437,797조회 19.0x: [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/)
   - 177,955조회 7.7x: [아이들 미국학교 보내는 이유 (유튜브 창업자 Steve Chen)](https://www.instagram.com/reel/DfL0yn5DYXf/)
 - FEED 중간값 21반응, 게시물 11개
 
-## @prompt_what (팔로워 250739)
+## @prompt_what (팔로워 250742)
 - REELS 중간값 35,150조회, 게시물 127개
   - 4,395,120조회 125.0x: [황궁에서 벌어지는 맞불륜, 전개는 한국 막장 드라마입니다.](https://www.instagram.com/reel/DeSnhNJTiyr/)
   - 1,358,694조회 38.7x: [바탕화면 정리도 이제 러그로 덮고 모른 척합니다.](https://www.instagram.com/reel/DePBnqgSztY/)
@@ -41,30 +41,30 @@
 - FEED 중간값 1,427반응, 게시물 69개
 
 ## @ai_dori_ (팔로워 129080)
-- REELS 중간값 32,346조회, 게시물 11개
-  - 345,577조회 10.7x: [이 가격에 이런 퀄리티...? 같은 프롬프트로 AI 영상 모델 비교해보기 ( 제작지원 higgsfield.ai )](https://www.instagram.com/reel/De0_IT-Tw_C/)
-  - 293,876조회 9.1x: [관객의 심리를 조종하는 카메라 기법!! AI로 써먹어보기 ( 제작지원 higgsfield.ai ) ](https://www.instagram.com/reel/DfCJcq-ziyK/)
-  - 108,715조회 3.4x: [아니 AI가 연기를 왜이렇게 잘해요 ㄷㄷ  ( 제작지원 higgsfield.ai )](https://www.instagram.com/reel/DfrO4VHTQ1Z/)
-- FEED 중간값 4,052반응, 게시물 6개
+- REELS 중간값 32,352조회, 게시물 11개
+  - 345,578조회 10.7x: [이 가격에 이런 퀄리티...? 같은 프롬프트로 AI 영상 모델 비교해보기 ( 제작지원 higgsfield.ai )](https://www.instagram.com/reel/De0_IT-Tw_C/)
+  - 293,881조회 9.1x: [관객의 심리를 조종하는 카메라 기법!! AI로 써먹어보기 ( 제작지원 higgsfield.ai ) ](https://www.instagram.com/reel/DfCJcq-ziyK/)
+  - 108,726조회 3.4x: [아니 AI가 연기를 왜이렇게 잘해요 ㄷㄷ  ( 제작지원 higgsfield.ai )](https://www.instagram.com/reel/DfrO4VHTQ1Z/)
+- FEED 중간값 4,053반응, 게시물 6개
 
 ## @trenddalkak.ai (팔로워 66752)
 - REELS 중간값 29,872조회, 게시물 15개
-  - 365,655조회 12.2x: [인외 로판이라니...](https://www.instagram.com/reel/DeLOxM_BNsq/)
+  - 365,656조회 12.2x: [인외 로판이라니...](https://www.instagram.com/reel/DeLOxM_BNsq/)
   - 136,102조회 4.6x: [클로드 Opus 5.5한테](https://www.instagram.com/reel/Dd3cfDbyOHJ/)
   - 110,165조회 3.7x: [일론 머스크가 ”이것이 우리가 만들어갈 미래다“라며 공유한 영상.](https://www.instagram.com/reel/Ddi3mkOBwHe/)
 - FEED 중간값 1,020반응, 게시물 30개
 
 ## @gojaehyun.go (팔로워 41575)
-- REELS 중간값 98,790조회, 게시물 21개
-  - 562,541조회 5.7x: [오늘은 트랙패드를 터치바처럼 활용하는 프로그램을 만들었어요. 넘버패드가 없어서 불편할 때가 가끔 있거든요. 컨트롤 키를 누르고 있을때만 트랙패드](https://www.instagram.com/reel/DelKyOjv2Fw/)
-  - 506,228조회 5.1x: [오늘은 에어팟으로 마우스를 만들었어요. 에어팟의 가속도센서를 활용한 거예요! 케이스에 넣은 채로 작동하게 하는 게 어려웠어요.(방법이 되게 킹받](https://www.instagram.com/reel/DfB9L5GPJr7/)
-  - 377,413조회 3.8x: [오늘은 닌텐도ds에서 클로드를 돌려봤어요. 신기하죠? 세상 참 좋아졌네요… 닌텐도에서 클로드도 하고 ㅎㅎ](https://www.instagram.com/reel/Debr0FPvp8x/)
+- REELS 중간값 98,792조회, 게시물 21개
+  - 562,543조회 5.7x: [오늘은 트랙패드를 터치바처럼 활용하는 프로그램을 만들었어요. 넘버패드가 없어서 불편할 때가 가끔 있거든요. 컨트롤 키를 누르고 있을때만 트랙패드](https://www.instagram.com/reel/DelKyOjv2Fw/)
+  - 506,236조회 5.1x: [오늘은 에어팟으로 마우스를 만들었어요. 에어팟의 가속도센서를 활용한 거예요! 케이스에 넣은 채로 작동하게 하는 게 어려웠어요.(방법이 되게 킹받](https://www.instagram.com/reel/DfB9L5GPJr7/)
+  - 377,417조회 3.8x: [오늘은 닌텐도ds에서 클로드를 돌려봤어요. 신기하죠? 세상 참 좋아졌네요… 닌텐도에서 클로드도 하고 ㅎㅎ](https://www.instagram.com/reel/Debr0FPvp8x/)
 - FEED 중간값 316반응, 게시물 1개
 
 ## @soheejeon_ (팔로워 17420)
 - REELS 중간값 4,660조회, 게시물 56개
-  - 187,035조회 40.1x: [맡은 프로젝트만 80개,](https://www.instagram.com/reel/De_PobHhv1h/)
-  - 104,987조회 22.5x: [(많아서 나눠올리는 중 3트째,,)](https://www.instagram.com/reel/DfLpxNmBvNi/)
+  - 187,037조회 40.1x: [맡은 프로젝트만 80개,](https://www.instagram.com/reel/De_PobHhv1h/)
+  - 104,989조회 22.5x: [(많아서 나눠올리는 중 3트째,,)](https://www.instagram.com/reel/DfLpxNmBvNi/)
   - 57,676조회 12.4x: [(많아서 나눠올리는 중)](https://www.instagram.com/reel/DfE1xfqBLbQ/)
 - FEED 중간값 37반응, 게시물 1개
 
@@ -80,22 +80,22 @@
 | 배수 | 계정 | 유형 | 날짜 | 수치 | 첫 줄 |
 |---|---|---|---|---|---|
 | 49.2x | @bizucafe | FEED | 11-07 | 1,033 | [광고(廣告). 한문으로 널리 알린다는 뜻이다.. 많은 사람들에게 무언가 정보를 알리는 것..](https://www.instagram.com/p/DfbYTYnmiGm/) |
-| 40.1x | @soheejeon_ | REELS | 10-27 | 187,035 | [맡은 프로젝트만 80개,](https://www.instagram.com/reel/De_PobHhv1h/) |
+| 40.1x | @soheejeon_ | REELS | 10-27 | 187,037 | [맡은 프로젝트만 80개,](https://www.instagram.com/reel/De_PobHhv1h/) |
 | 31.7x | @ai.trend.kr | REELS | 10-20 | 2,866,014 | [눈 뭉치 던진 범인이 나라고요? ❄️](https://www.instagram.com/reel/DetX442xkFz/) |
 | 27.6x | @prompt_what | REELS | 10-19 | 969,883 | [1화가 333만 번 재생된 K-막장 로판, 이번엔 2화입니다 🎬](https://www.instagram.com/reel/DerFayOyKMm/) |
 | 25.3x | @bizucafe | REELS | 10-26 | 582,162 | [화폐는 의미 없다 (일론 머스크)](https://www.instagram.com/reel/De8mVBGgBJL/) |
-| 22.5x | @soheejeon_ | REELS | 11-01 | 104,987 | [(많아서 나눠올리는 중 3트째,,)](https://www.instagram.com/reel/DfLpxNmBvNi/) |
-| 19.0x | @bizucafe | REELS | 11-15 | 437,562 | [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/) |
+| 22.5x | @soheejeon_ | REELS | 11-01 | 104,989 | [(많아서 나눠올리는 중 3트째,,)](https://www.instagram.com/reel/DfLpxNmBvNi/) |
+| 19.0x | @bizucafe | REELS | 11-15 | 437,797 | [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/) |
 | 17.4x | @ai.asap.kr | FEED | 10-18 | 1,394 | [Filee는 Ctrl을 누른 채 파일을 끌면 커서 옆에 변환할 형식이 동그랗게 뜨고, 원하는 형식에 놓으면 바로 바꿔 주는 변환기입니다. 이미지](https://www.instagram.com/p/DeoW-TQj9F5/) |
-| 15.0x | @prompt_what | REELS | 11-09 | 527,182 | [댓글에 ‘Elsa’ 남겨주시면 프롬프트 보내드릴게요 ❄️](https://www.instagram.com/reel/DfhJl3-y3Lv/) |
+| 15.0x | @prompt_what | REELS | 11-09 | 527,237 | [댓글에 ‘Elsa’ 남겨주시면 프롬프트 보내드릴게요 ❄️](https://www.instagram.com/reel/DfhJl3-y3Lv/) |
 | 12.4x | @soheejeon_ | REELS | 10-29 | 57,676 | [(많아서 나눠올리는 중)](https://www.instagram.com/reel/DfE1xfqBLbQ/) |
 | 11.9x | @prompt_what | FEED | 10-25 | 17,003 | [학교에 도입이 시급한 3D 교과서가 나왔습니다 📖](https://www.instagram.com/p/De6rZd7lL1e/) |
 | 11.8x | @ai.trend.kr | REELS | 10-23 | 1,065,689 | [식이 시작도 안 했는데 하객석이 뒤집어졌어요 🎉](https://www.instagram.com/reel/De0VCSbPO_M/) |
-| 10.7x | @ai_dori_ | REELS | 10-23 | 345,577 | [이 가격에 이런 퀄리티...? 같은 프롬프트로 AI 영상 모델 비교해보기 ( 제작지원 higgsfield.ai )](https://www.instagram.com/reel/De0_IT-Tw_C/) |
+| 10.7x | @ai_dori_ | REELS | 10-23 | 345,578 | [이 가격에 이런 퀄리티...? 같은 프롬프트로 AI 영상 모델 비교해보기 ( 제작지원 higgsfield.ai )](https://www.instagram.com/reel/De0_IT-Tw_C/) |
 | 10.5x | @ai.trend.kr | FEED | 10-27 | 16,209 | [올해가 가기 전에, GPT랑 새해 계획을 세워봤어요. 🗓️](https://www.instagram.com/p/De_YpGSkS7D/) |
 | 10.1x | @yangyum.zip | FEED | 10-31 | 905 | [The Korean Aesthetic: Buildings of Seoul](https://www.instagram.com/p/DfJM6QRkQ-C/) |
-| 9.2x | @soheejeon_ | REELS | 10-27 | 42,688 | [본업때문에 한개도 못했다는 슬픈 전설이...](https://www.instagram.com/reel/De_yUKXBj0e/) |
-| 9.1x | @ai_dori_ | REELS | 10-28 | 293,876 | [관객의 심리를 조종하는 카메라 기법!! AI로 써먹어보기 ( 제작지원 higgsfield.ai ) ](https://www.instagram.com/reel/DfCJcq-ziyK/) |
+| 9.2x | @soheejeon_ | REELS | 10-27 | 42,690 | [본업때문에 한개도 못했다는 슬픈 전설이...](https://www.instagram.com/reel/De_yUKXBj0e/) |
+| 9.1x | @ai_dori_ | REELS | 10-28 | 293,881 | [관객의 심리를 조종하는 카메라 기법!! AI로 써먹어보기 ( 제작지원 higgsfield.ai ) ](https://www.instagram.com/reel/DfCJcq-ziyK/) |
 | 8.8x | @prompt_what | REELS | 11-01 | 310,732 | [작은 친절을 베푸는 AI 애니메이션이 8,200만 번 재생됐습니다 ☂️](https://www.instagram.com/reel/DfMkn35Ssmw/) |
 | 8.3x | @prompt_what | REELS | 10-18 | 293,408 | [캡처 한 장으로 끝나는 챗GPT 업무 코드 4개입니다 📎](https://www.instagram.com/reel/DenpnlJyf3l/) |
 | 7.7x | @bizucafe | REELS | 11-01 | 177,955 | [아이들 미국학교 보내는 이유 (유튜브 창업자 Steve Chen)](https://www.instagram.com/reel/DfL0yn5DYXf/) |
