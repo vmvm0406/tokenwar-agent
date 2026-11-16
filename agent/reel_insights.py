@@ -75,15 +75,16 @@ def load():
 
 
 def folder_map():
-    """media_id → posts/published 폴더."""
+    """media_id 또는 permalink → posts/published 폴더 (media_id가 비어 있는 폴더도 있어 둘 다)."""
     out = {}
     for pj in PUBLISHED.glob("*/published.json"):
         try:
-            mid = str(json.loads(pj.read_text(encoding="utf-8")).get("media_id") or "")
+            d = json.loads(pj.read_text(encoding="utf-8"))
         except (ValueError, OSError):
             continue
-        if mid:
-            out[mid] = pj.parent
+        for key in (str(d.get("media_id") or ""), (d.get("permalink") or "").rstrip("/")):
+            if key:
+                out[key] = pj.parent
     return out
 
 
@@ -179,7 +180,7 @@ def collect(store):
     rows = {}
     for m in reels:
         mid = m["id"]
-        folder = fmap.get(mid)
+        folder = fmap.get(mid) or fmap.get((m.get("permalink") or "").rstrip("/"))
         if durations.get(mid) is None:
             durations[mid] = duration_of(folder)
         row = {"timestamp": m["timestamp"], "permalink": m.get("permalink"),
