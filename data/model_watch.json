@@ -1249,7 +1249,16 @@
    "tries": 0,
    "breaking": true,
    "status": "skipped"
+  },
+  "https://openai.com/index/the-kings-trust-and-openai": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "The King’s Trust and OpenAI launch £1m partnership",
+   "first_seen": "2026-11-16T21:04:20+09:00",
+   "why": "모델·기능 발표 아님",
+   "tries": 0,
+   "status": "skipped"
   }
  },
- "updated": "2026-11-16T20:49:19+09:00"
+ "updated": "2026-11-16T21:04:20+09:00"
 }
