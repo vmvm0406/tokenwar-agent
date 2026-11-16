@@ -93,3 +93,5 @@ claude.ai 대화에서 하던 작업을 이 컴퓨터의 Claude Code로 옮겼�
 3. `worker/` (Cloudflare Worker + D1 스키마, wrangler 설정은 비밀값 없이) + 배포 워크플로
 4. publish.py: 게시 후 미디어 id ↔ dm 자료 연결
 5. 시험 계정으로 Standard Access 시험 → 운영자 심사 제출
+
+- **팔로워 1,000명 되면 카드 비중 재검토 (2026-11-16 운영자 결정):** 지금은 릴스 위주(config slots: 릴스 6칸·daily_target 5, 카드 10:13 1칸). 근거는 data/trends.md '우리 계정 성과'(카드 조회 0~1, 릴스 164~280). 1,000명을 넘으면 카드 칸(예전 10:13·13:13·17:13)과 소식 카드 복귀를 다시 정한다.

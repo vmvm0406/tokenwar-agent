@@ -76,6 +76,9 @@ def taken():
 
     for d in ("posts/queue", "posts/published"):
         for pj in (ROOT / d).glob("*/post.json"):
+            st = pj.parent / "published.json"
+            if d == "posts/published" and st.exists() and '"status"' in st.read_text(encoding="utf-8"):
+                continue  # 운영자가 지운 게시물(다시 안 올림 등)은 칸을 차지하지 않는다
             try:
                 add(pj.parent.name, json.loads(pj.read_text(encoding="utf-8")), pj if d == "posts/queue" else None)
             except (OSError, json.JSONDecodeError):

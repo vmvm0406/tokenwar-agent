@@ -49,7 +49,7 @@
 }
 ```
 
-- `publish_at`: `python3 agent/slots.py next <carousel|reel>`이 주는 가장 가까운 빈 칸 (`config.json` `slots`: 카드뉴스 10:13·13:13·17:13, 릴스 12:43·15:43·19:10·20:43, 한국 시간. LOCAL.md 5장).
+- `publish_at`: `python3 agent/slots.py next <carousel|reel>`이 주는 가장 가까운 빈 칸 (`config.json` `slots`: 카드뉴스 10:13, 릴스 07:20·12:43·15:43·19:10·20:43·22:15, 한국 시간. LOCAL.md 5장).
 - `title`, `heading`의 줄바꿈은 `\n`으로 직접 넣는다. 단어 중간에서 끊지 않는다.
 - `highlight`는 제목·소제목 안에 실제로 있는 글자여야 한다.
 - 마지막 장(슬로건, 출처)은 자동으로 붙으므로 넣지 않는다.
