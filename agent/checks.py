@@ -201,6 +201,9 @@ def title_sentence(title, where, no_question=True):
     one = " ".join(_lines(title)).strip()
     if not one:
         return []
+    # 유형 B '큰 의미를 던지는 짧은 질문' (운영자 결정 2026-11-17, 'AI로 의학 대체 가능?'): 15자 안팎 짧은 물음표 제목은 허용
+    if one.endswith("?") and len(one.replace(" ", "")) <= 15 and not re.search(r"(까요|까)\?$", one):
+        return []
     if no_question and is_real_question(one):   # 카드 표지("토큰, 정확히 뭘까")는 설명형 질문을 허용
         return [f"{where}이 질문형: '{one}' → 답을 미루는 질문 대신 단정이나 구어체 반박으로 "
                 "(예: '컴공은 끝났을까요?' 대신 '아니 컴공 안 죽었다니까?', STYLE_GUIDE 3-3)"]
