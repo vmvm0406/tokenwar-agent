@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>클로드에 화풍 99개를 꽂는 순서입니다 · 토큰전쟁</title>
+<meta name="description" content="Lemo-Opuscar는 화풍 99개를 모은 클로드 코드용 스킬입니다. 제작자 Lemomo(LemoLab)가 깃허브에 공개했고, 화풍마다 코드로만 만든 예시 영상이 있습니다. 아래는 받는 곳, 등록 순서, 화풍을 골">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0B0A;--fg:#F2F5F3;--ac:#00FF66;--mu:#9AA59F}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg)}
+body{font-family:'Wanted Sans Variable','Wanted Sans',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  line-height:1.65;word-break:keep-all;overflow-wrap:break-word}
+main{max-width:680px;margin:0 auto;padding:40px 16px 64px}
+.brand{font-family:'Black Han Sans',sans-serif;color:var(--ac);font-size:20px;letter-spacing:.01em}
+h1{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:clamp(30px,8vw,44px);line-height:1.2;margin:18px 0 12px}
+h1 .hl{color:var(--ac)}
+.intro{color:#CFD6D2;font-size:18px;margin:0 0 28px}
+.rule{height:4px;background:var(--ac);margin:28px 0}
+.step{border-top:2px solid #2A3530;padding:22px 0}
+.step .k{font-family:'Black Han Sans',sans-serif;color:var(--ac);font-size:32px;line-height:1}
+.step .lb{color:var(--mu);font-weight:700;font-size:15px;margin-left:10px}
+h2{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:24px;line-height:1.3;margin:10px 0 6px}
+h3{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:22px;margin:0 0 10px}
+p{margin:6px 0;color:#CFD6D2}
+.pr{position:relative;margin:12px 0 4px;border:2px solid var(--ac);background:#0E1310}
+.pr pre{margin:0;padding:16px 16px 52px;white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere;
+  font-family:'JetBrains Mono',ui-monospace,Consolas,monospace;font-size:15px;line-height:1.6;color:var(--fg)}
+.pr button{position:absolute;right:0;bottom:0;border:0;background:var(--ac);color:var(--bg);
+  font-family:inherit;font-weight:700;font-size:15px;line-height:1;padding:12px 16px;cursor:pointer}
+ul{padding-left:20px;color:#CFD6D2}
+.src{color:var(--mu);font-size:14px;border-top:2px solid #2A3530;padding-top:16px;margin-top:32px}
+.src a{color:var(--mu)}
+.foot{margin-top:28px;font-weight:700}
+.foot a{color:var(--ac)}
+</style></head>
+<body><main>
+<div class="brand">TOKEN WAR</div>
+<h1>클로드에 <span class="hl">화풍 99개</span>를<br>꽂는 순서입니다</h1>
+<p class="intro">Lemo-Opuscar는 화풍 99개를 모은 클로드 코드용 스킬입니다. 제작자 Lemomo(LemoLab)가 깃허브에 공개했고, 화풍마다 코드로만 만든 예시 영상이 있습니다. 아래는 받는 곳, 등록 순서, 화풍을 골라 쓰는 프롬프트 예시입니다. 스킬 파일은 저희가 나눠 드리지 않으니 제작자 저장소에서 받으세요.</p>
+<section class="step"><span class="k">01</span><span class="lb">받는 곳</span><h2>제작자 깃허브에서만 받습니다</h2><p>공식 저장소는 github.com/lemomo-ai/lemo-opuscar입니다. 공식 갤러리 lemomo-ai.github.io/lemo-opuscar에서 화풍마다 예시 영상을 먼저 보고 고를 수 있습니다. 저희는 스킬 파일을 따로 나눠 드리지 않습니다.</p></section><section class="step"><span class="k">02</span><span class="lb">클로드 코드에 등록</span><h2>터미널에 두 줄을 넣습니다</h2><div class="pr"><pre>claude plugin marketplace add lemomo-ai/lemo-opuscar
+claude plugin install lemo-opuscar@lemolab</pre><button type="button" onclick="cp(this)">복사</button></div><p></p></section><section class="step"><span class="k">03</span><span class="lb">등록 확인</span><h2>설치 목록에 바로 뜹니다</h2><p>claude plugin list를 넣으면 lemo-opuscar@lemolab이 enabled로 보입니다. 저희는 첫 줄이 19초쯤, 둘째 줄은 바로 끝났습니다. 화풍 설명서와 도구는 처음 쓸 때 내 컴퓨터로 받아 옵니다.</p></section><section class="step"><span class="k">04</span><span class="lb">화풍 골라 쓰기</span><h2>화풍 이름을 넣어 말합니다</h2><div class="pr"><pre>우키요에 화풍으로 우리 동네 빵집을 소개하는 30초 영상 만들어 줘</pre><button type="button" onclick="cp(this)">복사</button></div><p></p></section><section class="step"><span class="k">05</span><span class="lb">클로드 앱(claude.ai)</span><h2>클로드 앱은 zip으로 올립니다</h2><p>공식 도움말 순서입니다(메뉴 이름은 영어 화면 기준). Settings → Capabilities에서 Code execution and file creation을 켭니다. 그다음 Customize → Skills에서 + → + Create skill → Upload a skill을 눌러 스킬 폴더를 묶은 zip을 올리고, 목록에서 켜면 됩니다.</p></section>
+<div class="rule"></div><h3>직접 해 본 결과</h3><p>11월 16일 이 컴퓨터의 클로드 코드(2.1.281)에 위 두 줄을 넣었습니다. 첫 줄은 19초쯤 걸려 &#x27;lemolab&#x27; 마켓플레이스가 추가됐고, 둘째 줄은 바로 &#x27;lemo-opuscar@lemolab&#x27; 설치가 끝났습니다. claude plugin list에 enabled로 떴고, claude plugin details로 보면 스킬 1개(lemo-opuscar)가 들어 있었습니다. 영상 한 편을 끝까지 만드는 것과 클로드 앱에 올리는 것은 직접 해 보지 않았습니다.</p><div class="rule"></div><h3>더 써 볼 문장</h3><section class="step"><h2>어떤 화풍을 고를지 모를 때</h2><div class="pr"><pre>/lemo-opuscar:lemo-opuscar</pre><button type="button" onclick="cp(this)">복사</button></div><p>제작자 안내에 따르면 이것만 넣으면 언어를 묻고, 라이브러리 화풍으로 만들지, 화풍을 내 것으로 고칠지, 저장해 둔 화풍을 쓸지 차례로 묻습니다. 저희는 돌려 보지 않았습니다.</p></section><section class="step"><h2>지우고 싶을 때</h2><div class="pr"><pre>claude plugin uninstall lemo-opuscar@lemolab</pre><button type="button" onclick="cp(this)">복사</button></div><p>제작자 안내 명령입니다. 처음 쓸 때 받아 온 ~/lemo-opuscar 폴더는 따로 지워야 합니다.</p></section><div class="rule"></div><h3>주의할 점</h3><ul><li>라이선스: 코드는 MIT, 예시 영상·그림은 CC BY 4.0, 화풍 설명서(STYLE.md 등)는 CC BY-NC 4.0입니다. 설명서로 내 영상을 만드는 것은 상업용까지 된다고 제작자가 따로 허락했지만, 설명서를 다시 나눠 주거나 파는 것은 따로 허락이 필요합니다. 자세한 것은 저장소의 LICENSE 파일을 보세요.</li><li>클로드 앱 등록 순서는 Claude 공식 도움말(11월 16일 확인)을 옮긴 것입니다. 제작자는 클로드 코드 설치를 권장하고, 이 스킬은 내 컴퓨터의 Node·ffmpeg로 영상을 그립니다.</li><li>클로드가 명령을 실행하고 파일을 만드니, 작업 중 묻는 허락을 확인하고 눌러 주세요. 빈 폴더에서 시작하세요.</li><li>PC가 필요합니다: Node 20 이상, ffmpeg 7 이상, Python 3.11 이상이 깔려 있어야 한다고 제작자가 안내합니다</li><li>시간과 토큰: 영상 한 편에 30~60분이 걸리고 토큰을 꽤 쓴다고 제작자가 밝혔습니다</li><li>저희가 확인한 범위: 클로드 코드 설치와 목록 확인까지 직접 했고, 영상 한 편 완성과 클로드 앱 업로드는 해 보지 않았습니다</li></ul>
+<div class="src">출처<ul><li><a href="https://github.com/lemomo-ai/lemo-opuscar" rel="noopener">Lemo-Opuscar 공식 저장소 (Lemomo, LemoLab)</a></li><li><a href="https://lemomo-ai.github.io/lemo-opuscar/" rel="noopener">Lemo-Opuscar 공식 갤러리</a></li><li><a href="https://support.claude.com/en/articles/12512180-use-skills-in-claude" rel="noopener">Claude 도움말: Use skills in Claude (11월 16일 확인)</a></li></ul>2026.11.16 기준. 결과는 직접 해 본 것이고, AI 답은 그때그때 달라질 수 있습니다.</div>
+<p class="foot">매일 AI 소식은 <a href="https://www.instagram.com/tokenwar_ai/">@tokenwar_ai</a></p>
+</main>
+<script>
+function cp(b){const t=b.previousElementSibling.innerText;
+(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{b.textContent='복사됨';setTimeout(()=>b.textContent='복사',1500)})
+.catch(()=>{const r=document.createRange();r.selectNodeContents(b.previousElementSibling);const s=getSelection();s.removeAllRanges();s.addRange(r)})}
+</script>
+</body></html>
