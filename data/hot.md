@@ -1,11 +1,11 @@
-# 지금 관심 주제 (2026-11-16 17:36 기준)
+# 지금 관심 주제 (2026-11-16 17:37 기준)
 
 주제를 고를 때 가장 먼저 본다 (STYLE_GUIDE 3장, 6-1장 '지금 관심도'). 여러 곳에 동시에 뜬 주제가 가장 뜨겁다.
 
 ## 업계 큰 소식 (주요 매체가 동시에 다룬 빅테크 소식, 주요 매체 수 순)
-- 애플 · 매체 61곳(주요 7: 경향신문, 머니투데이, 서울경제, 연합뉴스, 전자신문) · - — 카카오뱅크, 애플페이 도입 (https://news.google.com/rss/articles/CBMiZEFVX3lxTE13RGhTTGVZRFZhbDVSUXlMcGcwS1FITWkxbGVvc2g0Z2Rhd0tlYkJUSXhFR0dncE1IZDJoZXQ5cjNZdlNZY3AxYXlfcFpJdmwwMGtIcXZTQ0k3NU5EMzNjVFdtUGg?oc=5)
+- 애플 · 매체 62곳(주요 7: 경향신문, 머니투데이, 서울경제, 연합뉴스, 전자신문) · - — 카카오뱅크, 애플페이 도입 (https://news.google.com/rss/articles/CBMiZEFVX3lxTE13RGhTTGVZRFZhbDVSUXlMcGcwS1FITWkxbGVvc2g0Z2Rhd0tlYkJUSXhFR0dncE1IZDJoZXQ5cjNZdlNZY3AxYXlfcFpJdmwwMGtIcXZTQ0k3NU5EMzNjVFdtUGg?oc=5)
 - [속보 기준] 앤트로픽 · 매체 9곳(주요 5: KBS, YTN, 서울경제, 연합뉴스, 중앙일보) · 상장·투자 — [단독] 앤트로픽 IPO, 중국·홍콩 기관투자자 청약 배제｜Global Money Club (https://news.google.com/rss/articles/CBMiW0FVX3lxTE8zT3Q2QXktcWItcG00aTFORzFwMUNvTDZ1NW5mRTlMdENaWGdDaWFlTmlkWmFQSHRvdXRnVFZUMllzQ0xqS3FHZUdmaElkWkc5d2FWNF9GTGJSR0k?oc=5)
-- [속보 기준] 메타 · 매체 18곳(주요 4: AI타임스, SBS, 동아일보, 서울경제) · 규제 — 이탈리아, 메타에 1조 과징금…이용자 사진에 무단 접근 (https://news.google.com/rss/articles/CBMiWEFVX3lxTE1qVE5DV3Q1ekZob0d0Z2RkR0xOTGFRdC1kaXRFUU01UnBLcXVLRV9VS2tRaldfRmxZbXRPdXVIN3YyYzAwM01saU83WWd4UGozWlVEZDhNNUzSAVhBVV95cUxNalROQ1d0NXpGaG9HdGdkZEdMTkxhUXQtZGl0RVFNNVJwS3F1S0VfVUtrUWpXX0ZsWW10T3V1SDd2MmMwMDNNbGlPN1lneFBqM1pVRGQ4TTVM?oc=5)
+- [속보 기준] 메타 · 매체 19곳(주요 4: AI타임스, SBS, 동아일보, 서울경제) · 규제 — 이탈리아, 메타에 1조 과징금…이용자 사진에 무단 접근 (https://news.google.com/rss/articles/CBMiWEFVX3lxTE1qVE5DV3Q1ekZob0d0Z2RkR0xOTGFRdC1kaXRFUU01UnBLcXVLRV9VS2tRaldfRmxZbXRPdXVIN3YyYzAwM01saU83WWd4UGozWlVEZDhNNUzSAVhBVV95cUxNalROQ1d0NXpGaG9HdGdkZEdMTkxhUXQtZGl0RVFNNVJwS3F1S0VfVUtrUWpXX0ZsWW10T3V1SDd2MmMwMDNNbGlPN1lneFBqM1pVRGQ4TTVM?oc=5)
 - 삼성 · 매체 16곳(주요 4: 서울경제, 연합뉴스, 전자신문, 지디넷코리아) · - — 삼성전자서비스, 수능 고사장 시스템에어컨 긴급 서비스 지원 (https://news.google.com/rss/articles/CBMiYEFVX3lxTE1ZNGVpc3RKNklodHdaMUZ5NVF0VlpOSWlPcmlhRzNtMGNVMzFjckw2bUZnalBjZTNXZnloZU1PX2hndGIzVjg1THpDNXQ4OFVfSHNtelY0dVZ6bkJqczI2MdIBYEFVX3lxTE1ZNGVpc3RKNklodHdaMUZ5NVF0VlpOSWlPcmlhRzNtMGNVMzFjckw2bUZnalBjZTNXZnloZU1PX2hndGIzVjg1THpDNXQ4OFVfSHNtelY0dVZ6bkJqczI2MQ?oc=5)
 - 엔비디아 · 매체 11곳(주요 3: 매일경제, 조선일보, 한국경제) · - — "삼성전자, 脫엔비디아 시대 최대 수혜주" (https://news.google.com/rss/articles/CBMiWkFVX3lxTE1FZTFGTVM4ZzVrVXdKbkJvb2lDa0RhVUt4T3dySWhZUGtvdEN6Z1RnSm9QSDRlc1p4X3NCRjFkeElyaE05dUNabWtNSURJOVd4aXNZSk5DWG1sZw?oc=5)
 - SK하이닉스 · 매체 9곳(주요 3: 머니투데이, 연합뉴스, 지디넷코리아) · - — SK스퀘어, 3분기 영업익 7조9천406억원…전년 대비 3배↑ (https://news.google.com/rss/articles/CBMidEFVX3lxTE81NFF4V3BtV1FZSS1YZ2x4S0lfakhwQWFIV2QzSldBLTNoN1VMWnBlV282YUhwUVExNEQ4WVpoREtrZnQ2UHR4Rjd5RkNaaVlHd1ZfRGkwRl8xZ1pTUERSbFhzYk0yQ3liUVNxSjNMWm9idk9V?oc=5)
