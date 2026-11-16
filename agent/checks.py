@@ -454,6 +454,14 @@ def check_dm(post):
         errors.append("dm.message(보낼 DM 문구) 필요")
     elif _len(msg) > 900:
         errors.append(f"dm.message는 900자 이하 (인스타 DM 1,000자 제한, 링크 자리 남김): {_len(msg)}자")
+    cta = (d.get("cta") or "").strip()
+    if not cta:
+        (errors if str(post.get("date", "")) >= "2026-11-16" else warnings).append(f"dm.cta(화면 안 '{kw}' 안내) 필요: 얻는 것을 구체적으로, 예: \"화풍 스킬 적용법 받고 싶으면 댓글에 '{kw}'\" "
+                      "(릴스는 끝 화면 2.5초, 카드는 마지막 장. STYLE_GUIDE 7-1)")
+    elif f"'{kw}'" not in cta and f"‘{kw}’" not in cta:
+        errors.append(f"dm.cta에 댓글 키워드 '{kw}'가 따옴표로 들어가야 함: '{cta}'")
+    elif len(cta.replace("\n", "")) > 40:
+        warnings.append(f"dm.cta는 40자 안으로 짧게: '{cta}'")
     for key, mx in (("follow_text", 300), ("comment_reply", 150)):
         if d.get(key) and _len(d[key]) > mx:
             errors.append(f"dm.{key}는 {mx}자 이하")

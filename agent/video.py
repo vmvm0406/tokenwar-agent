@@ -51,6 +51,69 @@ def has_audio(path):
     return bool(out)
 
 
+CTA_SECONDS = 2.5
+
+
+def dm_cta(post):
+    """참여형(dm 있음) 게시물 화면 안 '자료' 안내 문구 (운영자 결정 2026-11-16). dm.cta 또는 없으면 None."""
+    d = post.get("dm") or {}
+    return (d.get("cta") or "").strip() or None
+
+
+def cta_html(text, cfg, fonts_uri):
+    b = cfg["brand"]
+    import re as _re
+    body = esc(text).replace("\n", "<br>")
+    body = _re.sub(r"(?:'|&#x27;|‘)(.+?)(?:'|&#x27;|’)", lambda m: f"<span class=\"hl\">'{m.group(1)}'</span>", body)
+    return f"""<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>
+@import url('{fonts_uri}/black-han-sans/index.css');
+*{{box-sizing:border-box}}html,body{{margin:0}}
+#frame{{width:{W}px;height:{H}px;position:relative;background:{b['bg']};color:{b['text']};word-break:keep-all}}
+.wrap{{position:absolute;left:90px;right:90px;top:{UI_SAFE_TOP + 120}px;bottom:{H - UI_SAFE_BOTTOM + 60}px;display:flex;flex-direction:column;
+  justify-content:center;align-items:center;gap:44px;text-align:center}}
+.brand{{font-family:'Black Han Sans';font-size:44px;color:{b['accent']}}}
+.t{{font-family:'Black Han Sans';font-size:82px;line-height:1.25;letter-spacing:-.02em;text-wrap:balance}}
+.hl{{color:{b['accent']}}}
+.bar{{width:160px;height:8px;background:{b['accent']}}}
+</style></head><body><div id="frame"><div class="wrap"><div class="brand">TOKEN WAR</div><div class="t">{body}</div><div class="bar"></div></div></div></body></html>"""
+
+
+def append_cta_card(mp4, text, cfg, work, dur):
+    """다 만든 릴스 끝에 '자료' 안내 화면(CTA_SECONDS초)을 붙인다. 소리는 앞 영상 끝에서 이어 작게 페이드."""
+    import asyncio
+    from playwright.async_api import async_playwright
+
+    fonts_uri = (ROOT / "assets" / "fonts").as_uri()
+    html = work / "cta.html"
+    html.write_text(cta_html(text, cfg, fonts_uri), encoding="utf-8")
+    png = work / "cta.png"
+
+    async def shoot():
+        async with async_playwright() as p:
+            exe = shutil.which("google-chrome") or shutil.which("chromium")
+            browser = await p.chromium.launch(executable_path=exe) if exe else await p.chromium.launch()
+            pg = await browser.new_page(viewport={"width": W, "height": H})
+            await pg.goto(html.as_uri())
+            await pg.evaluate("document.fonts.ready")
+            await (await pg.query_selector("#frame")).screenshot(path=str(png))
+            await browser.close()
+    asyncio.run(shoot())
+    tmp = work / "with_cta.mp4"
+    total = dur + CTA_SECONDS
+    subprocess.run(["ffmpeg", "-nostdin", "-y", "-loglevel", "error", "-i", str(mp4),
+                    "-loop", "1", "-t", f"{CTA_SECONDS}", "-framerate", str(FPS), "-i", str(png),
+                    "-f", "lavfi", "-t", f"{CTA_SECONDS}", "-i", "anullsrc=r=44100:cl=stereo",
+                    "-filter_complex",
+                    f"[1:v]scale={W}:{H},setsar=1,fps={FPS},format=yuv420p,fade=t=in:d=0.25[cv];"
+                    f"[0:v]setsar=1,fps={FPS},format=yuv420p[mv];"
+                    f"[0:a]aresample=44100,aformat=channel_layouts=stereo[ma];"
+                    f"[mv][ma][cv][2:a]concat=n=2:v=1:a=1[v][a]",
+                    "-map", "[v]", "-map", "[a]", "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-r", str(FPS),
+                    "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart", str(tmp)], check=True)
+    shutil.move(str(tmp), str(mp4))
+    return total
+
+
 def page_html(post, cfg, box_h, fonts_uri, size=50):
     b = cfg["brand"]
     credit = post.get("credit")
@@ -571,6 +634,9 @@ def make_video_reel(post, folder, cfg, soft_edges=False):
                     "-map", "[vout]", *amap, "-t", f"{dur:.3f}", "-c:v", "libx264", "-preset", "veryfast",
                     "-crf", "20", "-r", str(FPS), "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart",
                     str(out)], check=True)
+    cta = dm_cta(post)
+    if cta:
+        dur = append_cta_card(out, cta, cfg, work, dur)
     # 표지와 미리보기: 1초 지점 화면
     frames = folder / "frames"
     if frames.exists():

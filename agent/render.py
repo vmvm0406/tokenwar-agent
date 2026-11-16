@@ -155,6 +155,7 @@ html,body{margin:0;background:#000}
 .slogan{margin:0;font-family:'Black Han Sans';font-weight:400;font-size:SLOGANpx;line-height:1.12;letter-spacing:-.03em;white-space:pre-line}
 .outro .who{font-family:'Black Han Sans';font-size:44px}
 .outro .cta{font-size:34px;font-weight:800}
+.outro .dmcta{font-family:'Black Han Sans';font-size:46px;line-height:1.3;background:BG;color:ACCENT;padding:22px 28px;align-self:flex-start;white-space:pre-line}
 .outro .src{font-size:22px;line-height:1.55;font-weight:600;opacity:.8;border-top:3px solid BG;padding-top:20px}
 .outro .brand{color:BG}
 """
@@ -338,7 +339,8 @@ def outro_html(post, n, total):
     srcs = " · ".join(esc(x["name"]) for x in post["sources"])
     date = post["date"].replace("-", ".")
     inner = (f'<h2 class="slogan">{esc(B["slogan"])}</h2>'
-             f'<div><div class="who">{esc(CONFIG["handle"])}</div><div class="cta">{esc(B["cta"])}</div></div>'
+             + (f'<div class="dmcta">{esc(post["dm"]["cta"])}</div>' if (post.get("dm") or {}).get("cta") else "")
+             + f'<div><div class="who">{esc(CONFIG["handle"])}</div><div class="cta">{esc(B["cta"])}</div></div>'
              f'<div class="src">출처 {srcs} · {date} 기준</div>')
     return frame(inner, "outro")
 
