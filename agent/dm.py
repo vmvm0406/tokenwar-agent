@@ -6,11 +6,10 @@ post.json에 `dm`이 있으면 두 가지를 만든다 (STYLE_GUIDE 7-1, TEMPLAT
   2. 자료 안내 페이지 — 공개 저장소 GitHub Pages(docs/p/<게시물 id>/index.html).
      카드에 나온 프롬프트 전체 + dm.page의 추가 자료. DM 안 링크가 이 페이지를 가리킨다.
      예시 폴더(samples/)는 docs에 올리지 않고 폴더 안 page.html로만 만든다(미리보기).
-  3. 자료실 — docs/p/index.html. docs/p/<id>/ 안내 페이지 전체 목록(최신순, 제목·날짜·한 줄 설명).
-     인스타 프로필 링크에 거는 주소(<pages_base>/p/). 안내 페이지를 만들 때마다 다시 만든다(예시 폴더는 빼고).
+  안내 페이지 목록(자료실)은 만들지 않는다 (운영자 결정 2026-11-16: 팔로우 안 한 사람도 받게 되므로).
+  주소는 DM으로만 알리고, 검색 제외(noindex, docs/robots.txt).
 
 사용법: py -3.12 agent/dm.py <게시물 폴더>   (render.py가 렌더링할 때 자동으로 부른다)
-        py -3.12 agent/dm.py --index       (자료실만 다시 만들기)
 """
 import html
 import json
@@ -196,7 +195,7 @@ def page_html(post):
 {"".join(parts)}
 {result}{extra}{caut}
 <div class="src">출처<ul>{srcs}</ul>{esc(post["date"].replace("-", "."))} 기준. 결과는 직접 해 본 것이고, AI 답은 그때그때 달라질 수 있습니다.</div>
-<p class="foot">다른 자료는 <a href="../">자료실</a>에서. 매일 AI 소식은 <a href="https://www.instagram.com/{esc(handle.lstrip("@"))}/">{esc(handle)}</a></p>
+<p class="foot">매일 AI 소식은 <a href="https://www.instagram.com/{esc(handle.lstrip("@"))}/">{esc(handle)}</a></p>
 </main>
 <script>
 function cp(b){{const t=b.previousElementSibling.innerText;
@@ -205,100 +204,6 @@ function cp(b){{const t=b.previousElementSibling.innerText;
 </script>
 </body></html>
 """
-
-
-# ---------- 3. 자료실 (안내 페이지 목록) ----------
-
-PAGES_DIR = ROOT / "docs" / "p"
-
-INDEX_CSS = """
-:root{--bg:BG;--fg:TEXT;--ac:ACCENT;--mu:MUTED}
-*{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--fg)}
-body{font-family:'Wanted Sans Variable','Wanted Sans',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
-  line-height:1.6;word-break:keep-all;overflow-wrap:break-word}
-main{max-width:680px;margin:0 auto;padding:40px 16px 64px}
-.brand{font-family:'Black Han Sans',sans-serif;color:var(--ac);font-size:20px;letter-spacing:.01em}
-h1{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:clamp(34px,9vw,48px);line-height:1.15;margin:18px 0 10px}
-.intro{color:#CFD6D2;font-size:17px;margin:0}
-.rule{height:4px;background:var(--ac);margin:24px 0 0}
-ol{list-style:none;margin:0;padding:0}
-li{border-bottom:2px solid #2A3530}
-li a{display:block;padding:18px 0;color:inherit;text-decoration:none}
-li a:hover h2,li a:focus h2{color:var(--ac)}
-.d{color:var(--ac);font-weight:700;font-size:14px;letter-spacing:.02em}
-h2{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:22px;line-height:1.3;margin:4px 0}
-p{margin:0;color:#CFD6D2;font-size:15px}
-.foot{margin-top:28px;font-weight:700;color:var(--fg);font-size:16px}
-.foot a{color:var(--ac)}
-"""
-
-
-def _meta(text, pat):
-    m = re.search(pat, text, re.S)
-    return html.unescape(m.group(1)).strip() if m else ""
-
-
-def one_line(desc, limit=70):
-    """설명의 첫 문장, 길면 자른다."""
-    first = re.split(r"(?<=[.!?])\s", desc.strip(), maxsplit=1)[0]
-    return first if len(first) <= limit else first[:limit - 1].rstrip() + "…"
-
-
-def page_entries(pages_dir=PAGES_DIR):
-    """docs/p/<id>/index.html에서 제목·날짜·설명을 읽어 최신순 목록으로."""
-    out = []
-    for f in sorted(Path(pages_dir).glob("*/index.html")):
-        t = f.read_text(encoding="utf-8")
-        pid = f.parent.name
-        m = re.match(r"(\d{4})-(\d{2})-(\d{2})", pid)
-        out.append({
-            "id": pid,
-            "href": f"{pid}/",
-            "date": f"{m.group(1)}.{m.group(2)}.{m.group(3)}" if m else "",
-            "title": re.sub(r"\s*·\s*토큰전쟁\s*$", "", _meta(t, r"<title>(.*?)</title>")),
-            "desc": one_line(_meta(t, r'<meta name="description" content="(.*?)">')),
-        })
-    return sorted(out, key=lambda e: e["id"], reverse=True)
-
-
-def index_html(entries):
-    css = INDEX_CSS
-    for k in ("ACCENT", "MUTED", "TEXT", "BG"):
-        css = css.replace(k, B[k.lower()])
-    handle = CONFIG["handle"]
-    rows = "".join(
-        f'<li><a href="{esc(e["href"])}"><span class="d">{esc(e["date"])}</span>'
-        f'<h2>{esc(e["title"])}</h2><p>{esc(e["desc"])}</p></a></li>' for e in entries)
-    if not rows:
-        rows = "<li><p>아직 올린 자료가 없습니다.</p></li>"
-    return f"""<!doctype html>
-<html lang="ko"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>자료실 · 토큰전쟁</title>
-<meta name="description" content="토큰전쟁 게시물에서 소개한 프롬프트·순서·자료를 모았습니다. 최신순.">
-<meta name="robots" content="noindex">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
-<style>{css}</style></head>
-<body><main>
-<div class="brand">TOKEN WAR</div>
-<h1>자료실</h1>
-<p class="intro">게시물에서 소개한 프롬프트와 순서를 모았습니다. 최신순으로 {len(entries)}개. 댓글 DM을 못 받으셨어도 여기서 보실 수 있습니다.</p>
-<div class="rule"></div>
-<ol>{rows}</ol>
-<p class="foot">매일 AI 소식은 <a href="https://www.instagram.com/{esc(handle.lstrip("@"))}/">{esc(handle)}</a></p>
-</main></body></html>
-"""
-
-
-def write_index(pages_dir=PAGES_DIR):
-    """docs/p/index.html(자료실)을 다시 만든다."""
-    pages_dir = Path(pages_dir)
-    pages_dir.mkdir(parents=True, exist_ok=True)
-    out = pages_dir / "index.html"
-    out.write_text(index_html(page_entries(pages_dir)), encoding="utf-8")
-    return out
 
 
 def make_dm(post, folder):
@@ -314,19 +219,13 @@ def make_dm(post, folder):
         page = ROOT / "docs" / "p" / post["id"] / "index.html"
         page.parent.mkdir(parents=True, exist_ok=True)
     page.write_text(page_html(post), encoding="utf-8")
-    made = [memo, page]
-    if not is_sample(folder):
-        made.append(write_index())
-    return made
+    return [memo, page]
 
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         print(__doc__)
         sys.exit(2)
-    if sys.argv[1] == "--index":
-        print("만듦:", write_index())
-        sys.exit(0)
     f = Path(sys.argv[1])
     for p in make_dm(json.loads((f / "post.json").read_text(encoding="utf-8")), f):
         print("만듦:", p)
