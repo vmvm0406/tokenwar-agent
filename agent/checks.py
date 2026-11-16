@@ -131,6 +131,9 @@ RIGHTS = {"quote", "own", "permission", "license"}
 PREDICATE_RE = re.compile(r"(다|요|죠|까|나|네)[\s\"'”’.!?…]*$")
 
 
+COVER_SUB_PHOTO_RE = re.compile(r"연출|자료\s*사진|이미지\s*출처|사진\s*출처|AI\s*(그림|이미지|생성)|생성\s*이미지|합성\s*(사진|이미지)|사진\s*[:：]")
+
+
 def body_sentences(text, where):
     """카드 본문 설명은 문장을 끝까지 쓴다. "전 세계 모든 사용자 대상.", "미국부터 베타."처럼 명사로 툭 끝나면 어색하다
     (운영자 지적 2026-11-15). 숫자만 있는 짧은 조각은 봐준다."""
@@ -373,6 +376,12 @@ def check_images(slides):
             errors.append("표지에 화면 캡처·표·문서를 쓰지 않는다: 사람 얼굴·표정, 강한 장면, 결과물처럼 눈길을 끄는 사진으로")
         if slides[0].get("layout") == "image" and not cv.get("hook"):
             errors.append("표지 사진 visual.hook에 이 사진이 왜 눈길을 끄는지 한 줄 적을 것 (예: '아이와 여행 가는 가족 사진: 바로 내 얘기')")
+    # 표지 부제에 사진 설명 군더더기 금지 (운영자 결정 2026-11-16, STYLE_GUIDE 4장 표지 부제)
+    if slides and slides[0].get("kind") == "cover":
+        hit = COVER_SUB_PHOTO_RE.search(str(slides[0].get("sub", "")))
+        if hit:
+            warnings.append(f"표지 부제에 사진 설명('{hit.group(0)}')을 쓰지 않는다: 독자에게 필요한 정보(날짜, 누가 공개했는지)만. "
+                            "꼭 밝혀야 하면 캡션의 출처·사진 줄에 (STYLE_GUIDE 4장)")
     for i, v in imgs:
         if i > 1 and not v.get("credit") and not v.get("prompt"):
             warnings.append(f"{i}번째 장 사진에 credit(예: '화면: Lovable 공식 문서') 없음")
