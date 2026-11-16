@@ -245,9 +245,12 @@ def check_video(post):
                 warnings.append("video.keep으로 중간을 잘라 붙임: 급해 보여서 지금은 쓰지 않는다. start~end 한 구간 그대로 (STYLE_GUIDE 6-1)")
             out_d = sum(float(b) - float(a) for a, b in keep) if keep else d   # 완성 영상 길이
             target = lim.get("quote_target_seconds", 60)
-            if out_d < lim.get("quote_min_seconds", 0):
-                warnings.append(f"영상이 짧음 ({out_d:.1f}초). 1분({target}초) 언저리에서 끝나게, 이야기가 끝나는 곳까지 늘린다")
-            if out_d > lim.get("quote_soft_max_seconds", 10**6):
+            if post.get("length") == "short":
+                if not 18 <= out_d <= 38:
+                    warnings.append(f"짧은 릴스(length: short)는 20~35초: 지금 {out_d:.1f}초 (STYLE_GUIDE 6장)")
+            elif out_d < lim.get("quote_min_seconds", 0):
+                warnings.append(f"영상이 짧음 ({out_d:.1f}초). 1분({target}초) 언저리에서 끝나게, 이야기가 끝나는 곳까지 늘린다 (짧은 릴스면 length: short)")
+            if post.get("length") != "short" and out_d > lim.get("quote_soft_max_seconds", 10**6):
                 warnings.append(f"영상이 김 ({out_d:.1f}초). 1분({target}초) 언저리에서 이야기가 끝나는 곳을 찾는다")
             src_d = v.get("source_duration")
             if not src_d:
@@ -836,6 +839,13 @@ DEV_WORDS_RE = re.compile(r"그림 파일|이미지 파일|코드로 만듭니�
 OUR_STORY_RE = re.compile(r"저희 컴퓨터|저희가 직접 돌려|직접 돌려 봤|직접 실행해 봤")
 
 
+def check_length_field(post):
+    v = post.get("length")
+    if v is not None and v not in ("short", "long"):
+        return [f"length는 'short' 또는 'long': {v!r}"]
+    return []
+
+
 def writing_rules(post):
     """자막·끝 화면 글 규칙 (STYLE_GUIDE 4장, 운영자 지적 모음 2026-11-16). 경고 목록."""
     w = []
@@ -896,6 +906,7 @@ def check_post(post):
     """(errors, warnings) 반환."""
     e, w = _check_post(post)
     w = w + writing_rules(post)
+    e = e + check_length_field(post)
     e_t, w_t = check_threads(post)
     return e + check_license(post) + e_t, w + awkward_titles(post) + w_t
 
