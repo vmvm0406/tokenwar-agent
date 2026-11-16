@@ -18,8 +18,15 @@ ROOT = Path(__file__).resolve().parent.parent
 FPS = 30
 BANNER_START = 3.0   # 첫 3~5초 안에 나타난다
 BANNER_FADE = 0.3
-BANNER_H = 64        # 띠 높이(px). motion은 본문을 이만큼 + 여백 아래로 민다
+BANNER_H = 64        # 한 줄 띠 높이(px). motion은 본문을 띠 높이 + 여백만큼 아래로 민다
+BANNER_LINE = 40     # 줄이 늘 때마다 더하는 높이(px). 두 줄 띠는 104px
 BANNER_GAP = 20
+
+
+def banner_height(text):
+    """띠 높이: 한 줄 64px, 두 줄 104px (dm.banner는 두 줄까지)."""
+    n = max(1, len([l for l in (text or "").splitlines() if l.strip()]))
+    return BANNER_H + BANNER_LINE * (n - 1)
 
 
 def banner_text(post):
@@ -29,22 +36,23 @@ def banner_text(post):
 
 def banner_html(text, cfg, width):
     b = cfg["brand"]
+    h = banner_height(text)
     fonts_uri = (ROOT / "assets" / "fonts").as_uri()
-    body = _html.escape(text)
+    body = "<br>".join(_html.escape(l.strip()) for l in text.splitlines() if l.strip())
     body = re.sub(r"(?:'|&#x27;|‘)(.+?)(?:'|&#x27;|’)", lambda m: f"<span class=\"hl\">'{m.group(1)}'</span>", body)
     return f"""<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>
 @font-face{{font-family:'Wanted';src:url('{fonts_uri}/WantedSans-ExtraBold.otf');font-weight:800}}
 *{{box-sizing:border-box}}html,body{{margin:0;background:transparent}}
-#b{{width:{width}px;height:{BANNER_H}px;display:flex;align-items:center;gap:18px;padding:0 24px 0 0;
+#b{{width:{width}px;height:{h}px;display:flex;align-items:center;gap:18px;padding:0 24px 0 0;
   background:rgba(10,11,10,.86);border-left:10px solid {b['accent']};border-radius:0;
-  font-family:'Wanted',sans-serif;font-weight:800;font-size:31px;letter-spacing:-.01em;color:#fff;white-space:nowrap;overflow:hidden}}
+  font-family:'Wanted',sans-serif;font-weight:800;font-size:31px;letter-spacing:-.01em;color:#fff;line-height:1.3;white-space:nowrap;overflow:hidden}}
 #b .t{{padding-left:18px}}
 .hl{{color:{b['accent']}}}
 </style></head><body><div id="b"><span class="t">{body}</span></div></body></html>"""
 
 
 async def make_banner_png_async(text, cfg, width, out_png):
-    """띠 그림(투명 배경 PNG, width x BANNER_H). 글이 띠보다 길면 ValueError. (motion.py처럼 이미 async 안에서 부를 때)"""
+    """띠 그림(투명 배경 PNG, width x banner_height(text)). 글이 띠보다 길면 ValueError. (motion.py처럼 이미 async 안에서 부를 때)"""
     from playwright.async_api import async_playwright
 
     out_png = Path(out_png)
@@ -53,7 +61,7 @@ async def make_banner_png_async(text, cfg, width, out_png):
     async with async_playwright() as p:
         exe = shutil.which("google-chrome") or shutil.which("chromium")
         browser = await p.chromium.launch(executable_path=exe) if exe else await p.chromium.launch()
-        pg = await browser.new_page(viewport={"width": width, "height": BANNER_H})
+        pg = await browser.new_page(viewport={"width": width, "height": banner_height(text)})
         await pg.goto(page_file.as_uri())
         await pg.evaluate("document.fonts.ready")
         over = await pg.evaluate("() => { const b = document.getElementById('b'); return b.scrollWidth > b.clientWidth + 1; }")

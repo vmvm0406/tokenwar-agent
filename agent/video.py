@@ -639,12 +639,12 @@ def make_video_reel(post, folder, cfg, soft_edges=False):
                     "-crf", "20", "-r", str(FPS), "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart",
                     str(out)], check=True)
     # 앞쪽 '자료' 안내 띠 (dm.banner, 선택): 영상 창 위쪽 테두리 안쪽 (자막은 바닥이라 반대쪽), 3초부터 본편 끝까지
-    from banner import banner_text, make_banner_png, apply_banner, BANNER_H
+    from banner import banner_text, make_banner_png, apply_banner, banner_height
     btxt = banner_text(post)
     if btxt:
         png = make_banner_png(btxt, cfg, inner_w, work / "banner.png")
         apply_banner(out, png, 26, top + 6, dur)
-        print(f"  안내 띠 자리: 영상 창 위쪽 안 (세로 {top + 6}~{top + 6 + BANNER_H}px, 가로 26~{26 + inner_w}px)")
+        print(f"  안내 띠 자리: 영상 창 위쪽 안 (세로 {top + 6}~{top + 6 + banner_height(btxt)}px, 가로 26~{26 + inner_w}px)")
     cta = dm_cta(post)
     if cta:
         dur = append_cta_card(out, cta, cfg, work, dur)

@@ -541,13 +541,19 @@ def check_dm(post):
         if not any(f"'{kw}'" in l or f"‘{kw}’" in l for l in head):
             warnings.append(f"캡션 첫 줄이나 둘째 줄에 '{kw}' 안내가 없음 → \"댓글에 '{kw}' 남기면 …을 DM으로 보내 드려요(팔로우한 분께)\" (캡션 끝에만 두지 않기, STYLE_GUIDE 7-1)")
     if post.get("type") in ("reel", "video") and not (d.get("banner") or "").strip():
-        warnings.append(f"참여형 릴스에 dm.banner(앞쪽 안내 띠) 없음 → 예: \"댓글 '{kw}' → 프롬프트와 사용법\" (3초부터 본편 끝까지, STYLE_GUIDE 7-1)")
+        warnings.append(f"참여형 릴스에 dm.banner(앞쪽 안내 띠) 없음 → 예: \"댓글에 '{kw}'라고 남기면\\n프롬프트를 DM으로 보내 드려요\" (3초부터 본편 끝까지, STYLE_GUIDE 7-1)")
     elif (d.get("banner") or "").strip():
         b = d["banner"].strip()
+        lines = [l for l in b.splitlines() if l.strip()]
         if f"'{kw}'" not in b and f"‘{kw}’" not in b:
             errors.append(f"dm.banner에 댓글 키워드 '{kw}'가 따옴표로 들어가야 함: '{b}'")
-        if len(b.splitlines()) > 1 or len(b) > 24:
-            errors.append(f"dm.banner는 한 줄 24자 이하 (작은 띠): '{b}'")
+        if len(lines) > 2 or any(len(l.strip()) > 24 for l in lines):
+            errors.append(f"dm.banner는 두 줄까지, 한 줄 24자 이하 (작은 띠): '{b}'")
+        # 운영자 지적 2026-11-16: "댓글 '자료' → 프롬프트와 사용법"은 무엇을 하라는 건지 모른다 → 완전한 문장으로
+        if "→" in b or "->" in b:
+            warnings.append(f"dm.banner에 기호(→)를 쓰지 않는다. '어디에 무엇을 쓰면 무엇을 어떻게 받는지' 완전한 문장으로: '{b}' (STYLE_GUIDE 7-1)")
+        if not re.search(r"(보내|드려|드립니다|드릴|받을 수|받아 가)", b):
+            warnings.append(f"dm.banner가 문장이 아님: 받는 방법(예: 'DM으로 보내 드려요')까지 쓴다: '{b}' (STYLE_GUIDE 7-1)")
     for t in [msg, d.get("follow_text", "")] + [x.get("note", "") for x in pg.get("extra") or []] + [pg.get("result", ""), pg.get("intro", "")]:
         if t:
             e_t, _ = ai_tone(t, "DM 자료")

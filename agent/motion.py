@@ -255,14 +255,14 @@ async def make_motion_reel(page_html, post, folder, config):
     total = join_scenes(parts, durs, fade, folder / "reel.mp4", music, vol)
     # 앞쪽 '자료' 안내 띠 (dm.banner, 선택): 안전 영역 맨 위(세로 285px부터). 본문은 render.py가 그만큼 아래로 민다.
     # 3초부터 마무리 장(끝 화면, dm.cta가 크게 들어감) 앞까지
-    from banner import banner_text, make_banner_png_async, apply_banner, BANNER_H
+    from banner import banner_text, make_banner_png_async, apply_banner, banner_height
     btxt = banner_text(post)
     if btxt:
         safe_top = config.get("reel_safe", {}).get("top", 285)
         png = await make_banner_png_async(btxt, config, W - 2 * 80, work / "banner.png")
         outro_at = sum(durs[:-1]) - fade * (len(durs) - 1)
         apply_banner(folder / "reel.mp4", png, 80, safe_top, outro_at + fade / 2)
-        print(f"  안내 띠 자리: 안전 영역 맨 위 (세로 {safe_top}~{safe_top + BANNER_H}px, 가로 80~{W - 80}px)")
+        print(f"  안내 띠 자리: 안전 영역 맨 위 (세로 {safe_top}~{safe_top + banner_height(btxt)}px, 가로 80~{W - 80}px)")
     # 소리 크기 맞추기: -14 LUFS, 순간 최대 -1.5 dBTP, 튀는 효과음 누르기 (실패하면 원래 소리 그대로)
     from loudness import normalize
     normalize(folder / "reel.mp4")
