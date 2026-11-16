@@ -143,5 +143,17 @@
     "테슬라 사이버캡",
     "자율주행차",
     "로보택시"
-  ]
+  ],
+  "threads": {
+    "text": "테슬라 사이버캡, 이제 개인도 살 수 있습니다. 운전대도 페달도 없이 테슬라 자율주행 AI가 모는 차예요.\n\n차값은 미국 시장 기준 2만 9,990달러(약 4,010만 원)인데, 움직이려면 월 299달러 자율주행 구독이 따로 붙습니다.\n초대받은 일부 고객만 주문할 수 있고, 테슬라 로보택시 서비스 구역 안에서만 달립니다. 국내 출시 일정은 미정입니다.\n\n결국 '내 차'라기보다 내 이름으로 된 로보택시에 가깝습니다.",
+    "images": [
+      "cover",
+      2
+    ],
+    "topic": "AI Threads",
+    "replies": [
+      "출처: 테슬라 로보택시 공식 X (11월 13일), Electrek, InsideEVs\nhttps://x.com/robotaxi/status/2121384435241402737\nhttps://electrek.co/2026/11/13/tesla-cybercab-personal-use-orders-299-subscription-geofence/\nhttps://insideevs.com/news/815473/tesla-cybercab-pricing-sales-announced/",
+      "카드뉴스 전체는 인스타 @tokenwar_ai에 있습니다.\nhttps://www.instagram.com/p/DfykMUek3Bd/"
+    ]
+  }
 }
