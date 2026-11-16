@@ -1,0 +1,505 @@
+{
+  "id": "2026-11-16-video-howto-claude-style-skill-v3",
+  "type": "video",
+  "format": "howto",
+  "series": "생존 가이드",
+  "date": "2026-11-16",
+  "publish_at": "2026-11-16T20:10:00+09:00",
+  "rights": "license",
+  "credit": "화풍 예시: Lemo-Opuscar by Lemomo (LemoLab)",
+  "rights_note": "영상은 11월 16일 엮은 것(설치 과정 화면 없음, 결과만). 화풍 예시 포스터 12장(16-bit Pixel RPG, Ukiyo-e, Neon Tubes, Risograph, Pop Art, Impasto, Woodcut, Crayon Picture Book, Silkscreen Travel Poster, Art Deco, Red Paper-cut, Watercolor)은 Lemo-Opuscar 저장소 styles/*/poster.jpg로 CC BY 4.0(상업 이용 가능, 출처 표시; Watercolor는 퍼블릭 도메인 지도, Woodcut은 CC0 질감 포함), 잘라 천천히 확대함(변경 표시), 화면 오른쪽 위에 출처 표시. Clawd가 나오는 그림은 쓰지 않음. 종이 오림 전환·단화(5.3~12.5초, 15초)와 먹 붓 한 획·먹 번짐(12.5~15초)은 11월 16일 이 컴퓨터에서 Lemo-Opuscar 스킬(Red Paper-cut, Chinese Ink Wash 화풍)로 클로드가 그린 결과물(데모 엔진 paper.js·motifs.js·tuanhua.js·ink.js는 MIT 코드). 제작자 LICENSE: 라이브러리로 만든 영상은 상업용까지 만든 사람 것. 설명서(.md)는 재배포하지 않고 링크만. 배경음은 코드로 합성(5음계 쟁 뜯는 소리, 목탁, 북, 종이 스치는 소리, 96BPM 박자에 전환을 맞춤), 외부 음원 없음. 글꼴 원티드 산스(OFL). 썸네일 img/thumb.jpg는 Crayon Picture Book 포스터(CC BY 4.0)의 달 쪽을 9:16으로 잘라 키운 것",
+  "video": {
+    "src": "clips/source.mp4",
+    "start": 0,
+    "end": 18.75,
+    "avoid_edge_check": false,
+    "avoid_burned": false
+  },
+  "title": "클로드도\n그림 그릴 수 있어!",
+  "highlight": "그림 그릴 수 있어!",
+  "title_en": "Claude can paint, too",
+  "subtitles": [
+    {
+      "start": 0.0,
+      "end": 2.4,
+      "text": "이 그림들,\n화가가 그린 게 아닙니다",
+      "highlight": "화가가 그린 게"
+    },
+    {
+      "start": 2.5,
+      "end": 4.9,
+      "text": "전부 클로드가\n그려 낸 장면입니다",
+      "highlight": "클로드"
+    },
+    {
+      "start": 5.0,
+      "end": 9.9,
+      "text": "화풍 이름을 입력하면\n그림이 완전히 달라집니다",
+      "highlight": "완전히 달라집니다"
+    },
+    {
+      "start": 10.0,
+      "end": 14.9,
+      "text": "어떤 그림체든\n소화합니다",
+      "highlight": "어떤 그림체든"
+    },
+    {
+      "start": 15.0,
+      "end": 18.7,
+      "text": "지금 바로 클로드에게\n손을 달아 주세요",
+      "highlight": "손을 달아"
+    }
+  ],
+  "thumb": {
+    "title": "클로드도\n그림 그릴 수 있어!",
+    "highlight": "그림 그릴 수 있어!",
+    "image": {
+      "type": "image",
+      "src": "img/thumb.jpg",
+      "url": "https://lemomo-ai.github.io/lemo-opuscar/styles/crayon-book/",
+      "position": "center center",
+      "credit": "Lemo-Opuscar by Lemomo (LemoLab), CC BY 4.0"
+    }
+  },
+  "slides": [
+    {
+      "kind": "cover",
+      "layout": "image",
+      "visual": {
+        "type": "image",
+        "src": "img/thumb.jpg",
+        "position": "center center",
+        "credit": "Lemo-Opuscar by Lemomo (LemoLab), CC BY 4.0"
+      },
+      "title": "클로드에게 그림 그리는\n손을 달아 주는 방법입니다",
+      "highlight": "손을 달아 주는",
+      "sub": "Lemo-Opuscar · 클로드 코드에서 직접 설치해 봄"
+    },
+    {
+      "kind": "body",
+      "num": 1,
+      "num_note": "받는 곳",
+      "heading": "제작자 깃허브에서만\n받습니다",
+      "highlight": "제작자 깃허브",
+      "body": "공식 저장소는 github.com/lemomo-ai/lemo-opuscar입니다. 공식 갤러리 lemomo-ai.github.io/lemo-opuscar에서 그림체마다 예시 영상을 먼저 보고 고를 수 있습니다. 저희는 스킬 파일을 따로 나눠 드리지 않습니다."
+    },
+    {
+      "kind": "prompt",
+      "num": 2,
+      "num_note": "클로드 코드에 등록",
+      "heading": "터미널에\n두 줄을 넣습니다",
+      "highlight": "두 줄",
+      "prompt": "claude plugin marketplace add lemomo-ai/lemo-opuscar\nclaude plugin install lemo-opuscar@lemolab"
+    },
+    {
+      "kind": "body",
+      "num": 3,
+      "num_note": "등록 확인",
+      "heading": "설치 목록에\n바로 뜹니다",
+      "highlight": "설치 목록",
+      "body": "claude plugin list를 넣으면 lemo-opuscar@lemolab이 enabled로 보입니다. 저희는 첫 줄이 19초쯤, 둘째 줄은 바로 끝났습니다. 그림체 설명서와 도구는 처음 쓸 때 내 컴퓨터로 받아 옵니다."
+    },
+    {
+      "kind": "prompt",
+      "num": 4,
+      "num_note": "그림체 골라 쓰기",
+      "heading": "그림체 이름을 넣어\n말합니다",
+      "highlight": "그림체 이름",
+      "prompt": "Lemo-Opuscar 스킬로, Red Paper-cut(빨간 종이 오림) 화풍의 릴스 장면 전환용 짧은 영상을 만들어 줘. 질문하지 말고 스토리보드 확인 없이 바로 끝까지 만들어 줘.",
+      "body": "저희가 이 릴스의 장면 전환을 만들 때 넣은 요청의 첫 부분입니다. 이어서 크기(1920x1080), 길이(1초짜리 전환 8개), 종이가 화면을 덮었다가 빠져나가는 움직임, 합성용 초록 배경을 적었습니다."
+    },
+    {
+      "kind": "body",
+      "num": 5,
+      "num_note": "클로드 앱(claude.ai)",
+      "heading": "클로드 앱은\nzip으로 올립니다",
+      "highlight": "zip",
+      "body": "공식 도움말 순서입니다(메뉴 이름은 영어 화면 기준). Settings → Capabilities에서 Code execution and file creation을 켭니다. 그다음 Customize → Skills에서 + → + Create skill → Upload a skill을 눌러 스킬 폴더를 묶은 zip을 올리고, 목록에서 켜면 됩니다."
+    },
+    {
+      "kind": "steps",
+      "num": 6,
+      "num_note": "주의할 점",
+      "heading": "해 보기 전에\n알아 둘 점",
+      "items": [
+        {
+          "title": "PC가 필요합니다",
+          "text": "Node 20 이상, ffmpeg 7 이상, Python 3.11 이상이 깔려 있어야 한다고 제작자가 안내합니다"
+        },
+        {
+          "title": "시간과 토큰",
+          "text": "영상 한 편에 30~60분이 걸리고 토큰을 꽤 쓴다고 제작자가 밝혔습니다"
+        },
+        {
+          "title": "저희가 확인한 범위",
+          "text": "클로드 코드 설치와 목록 확인까지 직접 했고, 영상 한 편 완성과 클로드 앱 업로드는 해 보지 않았습니다"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "Lemo-Opuscar 공식 저장소 (Lemomo, LemoLab)",
+      "url": "https://github.com/lemomo-ai/lemo-opuscar"
+    },
+    {
+      "name": "Lemo-Opuscar 공식 갤러리",
+      "url": "https://lemomo-ai.github.io/lemo-opuscar/"
+    },
+    {
+      "name": "Claude 도움말: Use skills in Claude (11월 16일 확인)",
+      "url": "https://support.claude.com/en/articles/12512180-use-skills-in-claude"
+    }
+  ],
+  "caption": "클로드도 그림 그릴 수 있어요. 화풍 스킬 하나면 그림체 이름만 바꿔 어떤 그림이든 그려 냅니다.\n\n🗞️ Lemo-Opuscar는 그림체 99개를 모은 클로드 코드용 화풍 스킬. 그림체마다 영상 생성 AI 없이 코드로만 그린 예시 영상이 있습니다.\n💡 영상 속 장면 전환도 같은 화풍 스킬로 클로드가 그린 결과입니다.\n📊 깃허브 별 1만 6천여 개, 마지막 업데이트는 11월 12일.\n참고: 코드는 MIT, 예시 영상·그림은 CC BY 4.0, 화풍 설명서는 CC BY-NC 4.0입니다. 설명서로 내 영상을 만드는 것은 상업용까지 된다고 제작자가 따로 허락했고, 설명서를 다시 나눠 주거나 파는 것은 안 돼요. 스킬은 제작자 깃허브에서만 받으세요.\n화면 속 화풍 예시: Lemo-Opuscar by Lemomo (LemoLab), CC BY 4.0 (잘라 확대함)\n\n출처: Lemo-Opuscar 공식 저장소·갤러리 (11월 16일 확인)\n\n그림 못 그려서 영상 만들기를 미뤄 온 친구에게 보내 두세요.\n\n팔로우하고 댓글에 '자료'라고 남기면 화풍 스킬 적용법을 DM으로 보내 드려요. 팔로우하지 않은 분께는 팔로우 안내가 먼저 갑니다.",
+  "dm": {
+    "keyword": "자료",
+    "message": "클로드에게 그림 그리는 손을 달아 주는 방법이에요.\n아래 '자료 보기'를 누르면 받는 곳(제작자 깃허브), 클로드 코드·클로드 앱 등록 단계, 그림체를 골라 쓰는 프롬프트 예시가 열립니다.\n스킬은 꼭 제작자 깃허브에서 받으세요.",
+    "follow_text": "팔로우한 분께 자료를 보내 드려요. 팔로우한 뒤 이 게시물에 다시 '자료'라고 댓글을 남기면 보내 드립니다.",
+    "page": {
+      "intro": "Lemo-Opuscar는 그림체 99개를 모은 클로드 코드용 화풍 스킬입니다. 제작자 Lemomo(LemoLab)가 깃허브에 공개했고, 그림체마다 코드로만 만든 예시 영상이 있습니다. 아래는 처음 사용하는 분을 위한 준비(터미널, 클로드 코드, 필요한 프로그램)부터 스킬 등록, 그림체 골라 영상 받기까지의 순서입니다.",
+      "result": [
+        {
+          "k": "테스트 일자:",
+          "v": "2026년 11월 16일"
+        },
+        {
+          "k": "테스트 환경:",
+          "v": "Windows 11, 클로드 코드 2.1.281"
+        },
+        {
+          "k": "등록:",
+          "v": "'터미널에 두 줄' 단계의 명령 중 첫 줄(마켓플레이스 추가)은 약 19초, 둘째 줄(lemo-opuscar@lemolab 설치)은 바로 완료되었습니다."
+        },
+        {
+          "k": "등록 확인:",
+          "v": "claude plugin list에서 enabled로 표시되었고, claude plugin details에서 스킬 1개(lemo-opuscar)를 확인했습니다."
+        },
+        {
+          "k": "제작:",
+          "v": "Red Paper-cut 그림체로 릴스 장면 전환 8개(총 8초)를 만들었습니다. 스킬 호출, 패키지 설치, 무늬 수정 1회, 영상 출력까지 약 5분이 걸렸으며, 본 릴스의 장면 전환이 그 결과물입니다."
+        },
+        {
+          "k": "미확인 범위:",
+          "v": "긴 영상 한 편(제작자 안내 30~60분)과 클로드 앱 업로드는 테스트하지 않았습니다."
+        }
+      ],
+      "extra": [
+        {
+          "title": "스킬 삭제",
+          "prompt": "claude plugin uninstall lemo-opuscar@lemolab",
+          "note": "제작자가 안내한 명령입니다. 처음 사용할 때 내려받은 ~/lemo-opuscar 폴더는 별도로 삭제해야 합니다."
+        }
+      ],
+      "caution": [
+        "라이선스: 코드는 MIT, 예시 영상·그림은 CC BY 4.0, 화풍 설명서(STYLE.md 등)는 CC BY-NC 4.0입니다. 설명서로 내 영상을 만드는 것은 상업용까지 된다고 제작자가 따로 허락했지만, 설명서를 다시 나눠 주거나 파는 것은 따로 허락이 필요합니다. 자세한 내용은 저장소의 LICENSE 파일을 확인하십시오.",
+        "클로드 앱 등록 순서는 Claude 공식 도움말(11월 16일 확인)을 옮긴 것입니다. 제작자는 클로드 코드 설치를 권장하고, 이 스킬은 내 컴퓨터의 Node·ffmpeg로 영상을 그립니다.",
+        "클로드가 명령을 실행하고 파일을 만드니, 작업 중 허락을 요청하면 내용을 확인한 뒤 승인하십시오. '빈 폴더를 만들고 그 안에서 클로드를 켭니다' 단계와 같이 빈 폴더에서 시작하십시오."
+      ],
+      "setup": [
+        {
+          "before": 2,
+          "steps": [
+            {
+              "label": "사전 준비",
+              "title": "터미널부터 엽니다",
+              "text": "터미널은 마우스 대신 글자로 컴퓨터에 일을 시키는 창입니다. 커서만 깜빡이는 빈 창이 뜨면 맞게 연 것입니다. 이 페이지의 명령은 복사 버튼으로 복사해 그 창에 붙여 넣고 Enter를 누르면 됩니다.",
+              "groups": [
+                {
+                  "name": "윈도우",
+                  "text": "시작 메뉴에서 PowerShell을 검색해 열거나, Win + X를 누르고 Windows PowerShell(또는 터미널)을 고릅니다. 줄 앞에 PS가 붙어 있으면 PowerShell입니다. 붙여 넣기는 Ctrl + V 또는 마우스 오른쪽 클릭입니다.",
+                  "src": {
+                    "name": "Claude Code 공식 문서: 처음 쓰는 사람을 위한 터미널 안내",
+                    "url": "https://code.claude.com/docs/en/terminal-guide"
+                  }
+                },
+                {
+                  "name": "맥",
+                  "text": "Cmd + Space로 Spotlight 검색을 열고 '터미널'(Terminal)을 입력한 뒤 Enter를 누릅니다. 붙여 넣기는 Cmd + V입니다.",
+                  "src": {
+                    "name": "Claude Code 공식 문서: 터미널 안내",
+                    "url": "https://code.claude.com/docs/en/terminal-guide"
+                  }
+                },
+                {
+                  "name": "리눅스",
+                  "text": "대부분의 배포판에서 Ctrl + Alt + T를 누르거나, 앱 메뉴에서 '터미널'을 찾습니다. 붙여 넣기는 Ctrl + Shift + V입니다.",
+                  "src": {
+                    "name": "Claude Code 공식 문서: 터미널 안내",
+                    "url": "https://code.claude.com/docs/en/terminal-guide"
+                  }
+                }
+              ]
+            },
+            {
+              "label": "사전 준비",
+              "title": "클로드 코드를 설치합니다",
+              "text": "공식 문서에 있는 설치 명령 그대로입니다. 받는 동안 진행 표시가 없으니 창을 닫지 말고 기다립니다. 끝나면 터미널을 새로 열고 확인 명령을 넣어 버전 숫자가 나오면 성공입니다. 처음 claude를 실행하면 브라우저가 열려 로그인합니다. 무료 요금제로는 쓸 수 없고 Pro 이상 요금제가 필요합니다.",
+              "groups": [
+                {
+                  "name": "윈도우 (PowerShell)",
+                  "prompts": [
+                    "irm https://claude.ai/install.ps1 | iex"
+                  ],
+                  "src": {
+                    "name": "Claude Code 공식 문서: 설치",
+                    "url": "https://code.claude.com/docs/en/setup"
+                  }
+                },
+                {
+                  "name": "윈도우 (CMD, 줄 앞에 PS가 없는 창)",
+                  "prompts": [
+                    "curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd"
+                  ],
+                  "src": {
+                    "name": "Claude Code 공식 문서: 설치",
+                    "url": "https://code.claude.com/docs/en/setup"
+                  }
+                },
+                {
+                  "name": "맥 · 리눅스",
+                  "prompts": [
+                    "curl -fsSL https://claude.ai/install.sh | bash"
+                  ],
+                  "src": {
+                    "name": "Claude Code 공식 문서: 설치",
+                    "url": "https://code.claude.com/docs/en/setup"
+                  }
+                },
+                {
+                  "name": "설치 확인 (공통)",
+                  "text": "2.1.281 (Claude Code)처럼 버전이 표시되면 정상입니다. claude를 찾을 수 없다고 나오면 터미널을 닫았다 다시 열어 확인합니다.",
+                  "prompts": [
+                    "claude --version"
+                  ],
+                  "src": {
+                    "name": "Claude Code 공식 문서: 설치 확인",
+                    "url": "https://code.claude.com/docs/en/setup"
+                  }
+                }
+              ]
+            },
+            {
+              "label": "사전 준비",
+              "title": "Node.js·ffmpeg·Python을 설치합니다",
+              "text": "화풍 스킬이 영상을 만들 때 쓰는 프로그램입니다. 제작자 안내 기준 Node 20 이상, ffmpeg 7 이상, Python 3.11 이상이 필요합니다. 클로드 코드를 먼저 설치했으므로, 설치는 클로드에게 맡기는 방법을 권장합니다.",
+              "groups": [
+                {
+                  "name": "권장 방법: 클로드에게 맡기기",
+                  "text": "앞 단계에서 설치한 클로드 코드에 설치를 맡깁니다. 터미널에 claude를 넣어 켜고, 켜진 창에 아래 문장을 붙여 넣고 Enter를 누릅니다. 클로드가 내 컴퓨터에 맞는 방법으로 설치하며, 명령을 실행하기 전마다 허락을 묻습니다. 내용을 확인한 뒤 승인합니다. 관리자 비밀번호가 필요한 명령은 클로드 창에서 바로 실행되지 않을 수 있습니다. 이 경우 클로드가 알려 주는 명령을 터미널 창을 하나 더 열어 직접 넣습니다. 다 끝나면 exit를 넣어 클로드를 끄고, 터미널을 닫았다 다시 연 뒤 맨 아래 확인 명령으로 버전을 봅니다.",
+                  "prompts": [
+                    "Node.js 20 이상, ffmpeg 7 이상, Python 3.11 이상을 이 컴퓨터에 설치해 줘. 이미 깔려 있으면 버전만 확인해 주고, 기준보다 낮으면 새 버전으로 깔아 줘."
+                  ],
+                  "src": [
+                    {
+                      "name": "Claude Code 공식 문서: 터미널 안내(켜기·끄기)",
+                      "url": "https://code.claude.com/docs/en/terminal-guide"
+                    }
+                  ]
+                },
+                {
+                  "name": "직접 설치하는 경우: 윈도우",
+                  "text": "윈도우에 들어 있는 앱 설치 도구 winget으로 설치합니다. 첫 줄은 Node.js, 둘째 줄은 ffmpeg(공식 사이트가 안내하는 gyan.dev 빌드), 셋째 줄은 Python 설치 관리자입니다. Python은 설치 관리자를 설치한 뒤 처음 python을 실행할 때 최신판이 자동으로 설치됩니다.",
+                  "prompts": [
+                    "winget install --id OpenJS.NodeJS.LTS -e\nwinget install --id Gyan.FFmpeg -e\nwinget install 9NQ7512CXL7T -e --accept-package-agreements --disable-interactivity"
+                  ],
+                  "src": [
+                    {
+                      "name": "Python 공식 문서: 윈도우에서 쓰기",
+                      "url": "https://docs.python.org/3/using/windows.html"
+                    },
+                    {
+                      "name": "gyan.dev ffmpeg 빌드",
+                      "url": "https://www.gyan.dev/ffmpeg/builds/"
+                    }
+                  ]
+                },
+                {
+                  "name": "직접 설치하는 경우: 맥",
+                  "text": "앱 설치 도구 Homebrew가 없으면 첫 줄로 먼저 설치합니다. 넣으면 무엇을 할지 설명하고 멈추는데, Enter를 누르면 진행합니다. 맥 로그인 비밀번호를 물으면 입력합니다. 입력해도 화면에 아무것도 표시되지 않는 것이 정상이므로, 입력을 마치면 Enter를 누릅니다. 설치가 끝나면 맨 아래 'Next steps'에 PATH에 추가하는 명령(brew shellenv가 들어간 줄)이 나옵니다. 화면에 나온 그대로 복사해 넣어야 brew 명령이 인식됩니다. 공식 문서에 따르면 이 안내를 따르지 않으면 Homebrew가 작동하지 않습니다. 그다음 터미널을 새로 열고 둘째 줄로 Node.js와 ffmpeg를 설치합니다. Python은 python.org 다운로드 페이지의 macOS 설치 파일(.pkg)을 받아 엽니다.",
+                  "prompts": [
+                    "/bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\"",
+                    "brew install node ffmpeg"
+                  ],
+                  "src": [
+                    {
+                      "name": "Homebrew 공식 사이트",
+                      "url": "https://brew.sh/"
+                    },
+                    {
+                      "name": "Homebrew 공식 문서: 설치",
+                      "url": "https://docs.brew.sh/Installation"
+                    },
+                    {
+                      "name": "Homebrew 설치 스크립트",
+                      "url": "https://github.com/Homebrew/install/blob/HEAD/install.sh"
+                    },
+                    {
+                      "name": "Python 공식 다운로드",
+                      "url": "https://www.python.org/downloads/"
+                    }
+                  ]
+                },
+                {
+                  "name": "직접 설치하는 경우: 리눅스 (우분투·데비안)",
+                  "text": "Python은 배포판 것으로 충분합니다(우분투 24.04는 3.12). Node.js와 ffmpeg는 우분투 24.04 기본 저장소 판이 Node 18, ffmpeg 6.1로 기준보다 낮습니다. 그래서 리눅스는 위의 '클로드에게 맡기기' 방법을 권장합니다. 직접 하려면 Node.js는 nodejs.org 다운로드 페이지에서 Linux용을 받고, ffmpeg는 ffmpeg.org 다운로드 페이지가 안내하는 Linux 정적 빌드를 받습니다.",
+                  "prompts": [
+                    "sudo apt install python3"
+                  ],
+                  "src": [
+                    {
+                      "name": "Node.js 공식 다운로드",
+                      "url": "https://nodejs.org/en/download"
+                    },
+                    {
+                      "name": "FFmpeg 공식 다운로드",
+                      "url": "https://ffmpeg.org/download.html"
+                    }
+                  ]
+                },
+                {
+                  "name": "버전 확인 (공통)",
+                  "text": "윈도우는 python, 맥·리눅스는 python3를 넣습니다. 숫자가 위 기준보다 낮으면 새로 설치합니다.",
+                  "prompts": [
+                    "node --version\nffmpeg -version\npython --version"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "before": 4,
+          "steps": [
+            {
+              "label": "클로드 켜기",
+              "title": "빈 폴더를 만들고 그 안에서 클로드를 켭니다",
+              "text": "클로드는 켠 폴더 안에 파일을 만듭니다. 영상 재료와 결과가 다른 파일과 섞이지 않게 빈 폴더를 하나 만들어 그 안에서 켭니다. 터미널을 새로 열고 아래 세 줄을 한 줄씩 넣고 Enter를 누릅니다. 첫 줄은 lemo-film이라는 빈 폴더를 만들고, 둘째 줄(cd)은 그 폴더로 들어가고, 셋째 줄이 클로드를 켭니다. 켜진 창이 다음 단계의 요청을 붙여 넣을 곳입니다. 파일을 만들거나 바꾸기 전에 허락을 물으면 내용을 확인한 뒤 Enter로 승인합니다.",
+              "groups": [
+                {
+                  "name": "윈도우 (PowerShell)",
+                  "text": "터미널은 C:\\Users\\내 이름 폴더에서 시작하므로, 새 폴더는 C:\\Users\\내 이름\\lemo-film에 생깁니다.",
+                  "prompts": [
+                    "mkdir lemo-film\ncd lemo-film\nclaude"
+                  ],
+                  "src": {
+                    "name": "Claude Code 공식 문서: 작업할 폴더에서 claude 실행",
+                    "url": "https://code.claude.com/docs/en/setup"
+                  }
+                },
+                {
+                  "name": "맥 · 리눅스",
+                  "text": "터미널은 내 홈 폴더(맥은 /Users/내 이름, 리눅스는 /home/내 이름)에서 시작하므로, 새 폴더는 그 안에 lemo-film으로 생깁니다.",
+                  "prompts": [
+                    "mkdir lemo-film\ncd lemo-film\nclaude"
+                  ],
+                  "src": {
+                    "name": "Claude Code 공식 문서: 작업할 폴더에서 claude 실행",
+                    "url": "https://code.claude.com/docs/en/setup"
+                  }
+                },
+                {
+                  "name": "다음에 다시 켤 때",
+                  "text": "터미널을 열고 cd lemo-film을 넣은 뒤 claude를 넣으면 같은 폴더에서 다시 켜집니다. 끌 때는 exit를 넣습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "before": 5,
+          "steps": [
+            {
+              "label": "결과 영상",
+              "title": "완성 영상은 그 폴더 안에 생깁니다",
+              "text": "스킬 지침에 따르면 클로드를 켠 폴더(앞의 lemo-film) 안에 작품 이름으로 폴더가 하나 생기고, 그 안에 완성 영상 <작품 이름>.mp4와 대표 그림 poster.jpg가 놓입니다. 다 만들면 클로드가 위치를 알려 줍니다. 테스트에서 만든 장면 전환도 작업 폴더 안에 mp4로 생성되었습니다. 윈도우는 파일 탐색기, 맥은 Finder, 리눅스는 파일 관리자에서 lemo-film 폴더를 찾아 mp4를 두 번 누르면 열립니다. 제작자 안내로 한 편에 30~60분이 걸리니, 만드는 동안 터미널 창을 닫지 마십시오.",
+              "groups": [
+                {
+                  "name": "",
+                  "src": [
+                    {
+                      "name": "Lemo-Opuscar 공식 저장소 (스킬 지침 plugin/skills/lemo-opuscar/SKILL.md, DIRECTOR.md 11장)",
+                      "url": "https://github.com/lemomo-ai/lemo-opuscar"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "notice": {
+        "title": "스킬은 제작자 깃허브에 있습니다",
+        "text": "스킬 파일은 별도로 배포하지 않으며, 따로 내려받을 필요도 없습니다. 아래 '터미널에 두 줄' 단계의 명령이 제작자 저장소에서 스킬을 받아 클로드 코드에 등록합니다. 그림체는 갤러리에서 예시 영상을 보고 고릅니다.",
+        "links": [
+          {
+            "name": "공식 저장소: github.com/lemomo-ai/lemo-opuscar",
+            "url": "https://github.com/lemomo-ai/lemo-opuscar"
+          },
+          {
+            "name": "공식 갤러리: lemomo-ai.github.io/lemo-opuscar",
+            "url": "https://lemomo-ai.github.io/lemo-opuscar/",
+            "note": "그림체마다 예시 영상"
+          }
+        ]
+      },
+      "skip": [
+        1
+      ],
+      "append": [
+        {
+          "num": 2,
+          "text": "클로드를 켜기 전, 터미널에 바로 넣습니다. 두 줄을 한꺼번에 붙여 넣지 말고, 첫 줄을 넣고 Enter를 누른 뒤, 끝나면 둘째 줄을 넣고 Enter를 누릅니다. 이 명령이 제작자 저장소에서 스킬을 받아 클로드 코드에 등록합니다."
+        },
+        {
+          "num": 4,
+          "text": "앞 단계에서 켠 클로드 창에 붙여 넣습니다. 그림체 이름은 공식 갤러리에 적힌 영어 이름(예: Red Paper-cut)을 그대로 복사해 프롬프트의 Red Paper-cut 자리에 넣으면 됩니다."
+        },
+        {
+          "num": 5,
+          "text": "zip 얻는 법: 공식 저장소 첫 화면에서 파일 목록 위 Code 버튼 → Download ZIP으로 저장소 전체를 받습니다(깃허브 공식 안내). 압축을 풀면 스킬 폴더는 plugin/skills/lemo-opuscar입니다. Claude 도움말은 스킬 폴더를 zip으로 묶어 올리라고 안내하므로, 이 폴더만 다시 zip으로 묶어 올립니다. 클로드 앱 업로드는 직접 테스트하지 않았습니다. 업로드가 되지 않으면 클로드 코드 방법을 이용하십시오.",
+          "groups": [
+            {
+              "name": "",
+              "src": [
+                {
+                  "name": "깃허브 공식 문서: 소스 코드 압축 파일 받기",
+                  "url": "https://docs.github.com/en/repositories/working-with-files/using-files/downloading-source-code-archives"
+                },
+                {
+                  "name": "Claude 도움말: Use skills in Claude",
+                  "url": "https://support.claude.com/en/articles/12512180-use-skills-in-claude"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "style": "formal"
+    },
+    "cta": "팔로우하고 댓글에\n'자료' 남기면\n화풍 스킬 적용법\n보내 드립니다"
+  },
+  "hashtags": [
+    "#클로드",
+    "#클로드코드",
+    "#AI영상",
+    "#AI활용법",
+    "#토큰전쟁"
+  ],
+  "topic": [
+    "Lemo-Opuscar",
+    "클로드 스킬",
+    "화풍 스킬"
+  ],
+  "threads": {
+    "text": "클로드 코드에 그림체 99개를 한 번에 꽂는 스킬이 있습니다. Lemo-Opuscar라는 공개 화풍 스킬이에요.\n\n명령어 두 줄로 설치하고 그림체 이름만 말하면 그 그림체로 짧은 영상을 코드로 만들어 줍니다. 저희가 해 보니 8초짜리 장면 전환이 5분쯤 걸렸어요.\n다만 긴 영상은 30~60분씩 걸리고 PC에 Node·ffmpeg·Python이 있어야 합니다.\n\n그림 실력보다 어떤 그림체를 고를지 아는 눈이 더 중요해지는 중입니다.",
+    "images": [
+      "cover"
+    ],
+    "replies": [
+      "출처: Lemo-Opuscar 공식 저장소 (코드 MIT, 예시 CC BY 4.0, 화풍 설명서 CC BY-NC 4.0. 스킬은 제작자 저장소에서만 받으세요)\nhttps://github.com/lemomo-ai/lemo-opuscar",
+      "설치 화면과 실제로 만든 장면 전환은 인스타 릴스에서 볼 수 있습니다.\nhttps://www.instagram.com/tokenwar_ai/"
+    ],
+    "topic": "AI Threads"
+  }
+}
