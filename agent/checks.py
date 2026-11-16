@@ -489,6 +489,7 @@ def check_format(post):
 
 
 NEWSY_RE = re.compile(r"(공개|출시|발표|선보|내놨|소식|업데이트됐|가지)")
+HYPE_RE = re.compile(r"(충격|경악|아직도|소름|미쳤|역대급|난리|대박)")  # 자극어: 벤치마크 피드 첫 줄 0.30x (weekly_insights 2026-11-16)
 GAIN_RE = re.compile(r"(세요|수 있|하는 법|방법|해 보|해보|됩니다|만들어|바꿔|아끼|찾아)")
 
 
@@ -566,6 +567,8 @@ def check_caption_hooks(caption, dm_keyword=None):
             warnings.append(f"캡션 첫 줄이 질문임 → 읽는 사람이 얻는 것으로 시작할 것: '{first[:40]}'")
         elif NEWSY_RE.search(first) and not GAIN_RE.search(first):
             warnings.append(f"캡션 첫 줄이 소식 전달임 → 얻는 것을 먼저 (예: '~하는 법', '~해 보세요'): '{first[:40]}'")
+        if HYPE_RE.search(first):
+            warnings.append(f"캡션 첫 줄에 자극어 '{HYPE_RE.search(first).group(0)}' → '~하세요' 권유형이나 받는 개수 'N개'로 (STYLE_GUIDE 7장)")
     for q in GENERIC_Q:
         if q in caption:
             errors.append(f"캡션에 아무 데나 붙는 질문 '{q}' → 빼거나, 의견이 갈리는 소식이면 그 소식에 맞는 양자택일로 "
@@ -599,6 +602,8 @@ def check_hashtags(tags):
         warnings.append(f"캡션 첫 줄이 질문임 → 읽는 사람이 얻는 것으로 시작할 것: '{first[:40]}'")
     elif NEWSY_RE.search(first) and not GAIN_RE.search(first):
         warnings.append(f"캡션 첫 줄이 소식 전달임 → 얻는 것을 먼저 (예: '~하는 법', '~해 보세요'): '{first[:40]}'")
+        if HYPE_RE.search(first):
+            warnings.append(f"캡션 첫 줄에 자극어 '{HYPE_RE.search(first).group(0)}' → '~하세요' 권유형이나 받는 개수 'N개'로 (STYLE_GUIDE 7장)")
     tail = [l for l in lines if not l.startswith("#")][-2:]
     if dm_keyword and any(dm_keyword in l and "댓글" in l for l in tail):
         return warnings  # 댓글 키워드 안내(자동 DM)로 끝나면 충분
