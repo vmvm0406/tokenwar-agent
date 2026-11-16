@@ -665,6 +665,8 @@ def check_threads(post):
         errors.append(f"threads.topic은 주제 태그 1개 (문자열, 기본 '{THREADS_DEFAULT_TOPIC}'): {topic!r}")
     elif len(topic) > 50 or "." in topic or "&" in topic or topic.startswith("#"):
         errors.append(f"threads.topic은 50자 안, '.'·'&'·'#' 없이: '{topic}'")
+    elif topic.strip() != THREADS_DEFAULT_TOPIC:
+        warnings.append(f"threads.topic이 '{THREADS_DEFAULT_TOPIC}'가 아님: '{topic}'. 스레드 글은 'AI Threads' 커뮤니티에만 올린다 (맞팔로우 커뮤니티 금지, STYLE_GUIDE 7-2)")
     if HASHTAG_RE.search(text):
         errors.append("스레드 본문에 해시태그: 주제 태그는 글당 1개라 threads.topic에만 쓴다")
     # 이미지: 장 번호(카드뉴스) 또는 "cover"
