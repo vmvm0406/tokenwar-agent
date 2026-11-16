@@ -5,6 +5,7 @@ post.json에 `dm`이 있으면 두 가지를 만든다 (STYLE_GUIDE 7-1, TEMPLAT
      운영자가 게시 후 이 메모대로 도구에 자동화를 하나 만든다. (도구 계정·비밀번호는 여기에 없다)
   2. 자료 안내 페이지 — 공개 저장소 GitHub Pages(docs/p/<게시물 id>/index.html).
      카드에 나온 프롬프트 전체 + dm.page의 추가 자료. DM 안 링크가 이 페이지를 가리킨다.
+     목록형 자료 릴스(post.list)는 복사용 프롬프트 없이 '쓰는 법'(용어를 요청 문장 어디에 넣는지) + 용어 목록 + 예시 그림.
      예시 폴더(samples/)는 docs에 올리지 않고 폴더 안 page.html로만 만든다(미리보기).
   안내 페이지 목록(자료실)은 만들지 않는다 (운영자 결정 2026-11-16: 팔로우 안 한 사람도 받게 되므로).
   주소는 DM으로만 알리고, 검색 제외(noindex, docs/robots.txt).
@@ -52,6 +53,75 @@ OWN_SRC_RE = re.compile(r"직접\s*(?:실행|사용|제작)|로\s*실행\s*\(|�
 OWN_DATE_RE = re.compile(r"\s*\(\d+\s*월\s*\d+\s*일\s*확인\)")
 # 예전 항목형 결과([{"k": "테스트 일자:", "v": ...}])에서 통째로 빼는 항목 이름
 META_KEY_RE = re.compile(r"일자|날짜|환경|미확인|범위|버전|실행|등록|제작")
+
+
+# 목록형 자료 릴스(post.list) 자료 페이지: 복사해 붙이는 완성 프롬프트는 싣지 않고, 용어를 요청 문장에 어떻게 넣는지만
+# 설명한다 (운영자 결정 2026-11-17, STYLE_GUIDE 7-1). 종류별 '쓰는 법' 기본 문구. 게시물 id의 'list-<종류>'로 고르고,
+# post.json dm.page.usage(문장 하나나 목록)가 있으면 그것을 쓴다. dm.page.kind로 종류를 직접 정해도 된다.
+LIST_USAGE = {
+    "lighting": [
+        "요청 문장에는 장면(누가, 어디서, 무엇을 하는지)을 먼저 쓰고, 끝에 조명 용어를 영어로 붙입니다.",
+        "조명 용어는 한두 개만 넣습니다. 하나씩 바꿔 넣으면 같은 장면에서 분위기만 달라집니다.",
+        "이미 만든 그림의 조명만 바꾸려면 그 그림을 함께 올리고, 조명만 바꿔 달라는 말 뒤에 용어를 붙입니다.",
+        "AI 영상 도구에서도 같습니다. 장면 설명 끝에 조명 용어를 붙이면 됩니다.",
+    ],
+    "camera": [
+        "요청 문장에는 장면(누가, 어디서, 무엇을 하는지)을 먼저 쓰고, 끝에 카메라 용어를 영어로 붙입니다.",
+        "화면 크기(클로즈업, 와이드 샷), 앵글(로우 앵글, 하이 앵글), 초점(얕은 심도)에서 한두 개만 고릅니다.",
+        "이미 만든 그림의 구도만 바꾸려면 그 그림을 함께 올리고, 카메라만 바꿔 달라는 말 뒤에 용어를 붙입니다.",
+        "AI 영상 도구에서도 같습니다. 카메라 움직임 용어도 장면 설명 끝에 붙이면 됩니다.",
+    ],
+    "art-style": [
+        "사진을 바꿀 때는 사진을 올리고, 이 사진을 다른 그림으로 다시 그려 달라는 말 뒤에 그림체 이름을 영어로 붙입니다.",
+        "새로 그릴 때는 장면(누가, 어디서, 무엇을 하는지)을 먼저 쓰고, 끝에 그림체 이름을 붙입니다.",
+        "그림체는 한 번에 하나만 넣습니다. 이름만 바꿔 넣으면 같은 장면이 다른 그림이 됩니다.",
+        "AI 영상 도구에서도 같습니다. 장면 설명 끝에 그림체 이름을 붙이면 됩니다.",
+    ],
+    "luxury-photo": [
+        "요청 문장에는 찍을 대상(상품, 인물)과 장면을 먼저 쓰고, 끝에 촬영 용어를 영어로 붙입니다.",
+        "사진 느낌(시네마틱), 배경(대리석, 벨벳), 렌즈(85mm)처럼 성격이 다른 용어에서 한두 개만 고릅니다.",
+        "가지고 있는 상품 사진을 바꾸려면 사진을 함께 올리고, 배경이나 분위기만 바꿔 달라는 말 뒤에 용어를 붙입니다.",
+        "AI 영상 도구에서도 같습니다. 장면 설명 끝에 촬영 용어를 붙이면 됩니다.",
+    ],
+}
+LIST_USAGE_DEFAULT = [
+    "요청 문장에는 장면(누가, 어디서, 무엇을 하는지)을 먼저 쓰고, 끝에 영어 용어를 붙입니다.",
+    "용어는 한두 개만 넣습니다. 하나씩 바꿔 넣으면 같은 장면에서 그 부분만 달라집니다.",
+    "AI 영상 도구에서도 같습니다. 장면 설명 끝에 용어를 붙이면 됩니다.",
+]
+# 자료 페이지 낱말 (운영자 결정 2026-11-17: '만드는 사람' 말고 '제작자'). 뒤 조사도 받침 없는 말에 맞춘다.
+WORD_RE = re.compile(r"만드는\s*사람(이|은|을|과)?(?![가-힣])|만드는\s*사람")
+WORD_JOSA = {"이": "가", "은": "는", "을": "를", "과": "와"}
+# 목록형 페이지 글에서 빼는 복사 안내: "(복사 버튼)"은 지우고, '복사'가 남은 문장은 문장째 뺀다
+COPY_PAREN_RE = re.compile(r"\s*\(\s*복사\s*버튼\s*\)")
+
+
+def words(text):
+    """자료 페이지 낱말 바꾸기: 만드는 사람 → 제작자."""
+    return WORD_RE.sub(lambda m: "제작자" + WORD_JOSA.get(m.group(1) or "", m.group(1) or ""), str(text or ""))
+
+
+def no_copy(text):
+    """목록형 자료 페이지 글에서 복사 안내를 뺀다 (복사해 붙이는 프롬프트를 싣지 않으므로)."""
+    t = COPY_PAREN_RE.sub("", str(text or ""))
+    parts = re.split(r"(?<=[.!?])\s+", t.strip())
+    return " ".join(x for x in parts if x and "복사" not in x).strip()
+
+
+def list_kind(post):
+    k = ((post.get("dm") or {}).get("page") or {}).get("kind")
+    if k:
+        return k
+    m = re.search(r"list-(.+)$", str(post.get("id", "")))
+    return m.group(1) if m else ""
+
+
+def list_usage(post):
+    """목록형 자료 페이지 '쓰는 법' 문장 목록. dm.page.usage(문장 하나나 목록)가 있으면 그것, 없으면 종류별 기본."""
+    u = ((post.get("dm") or {}).get("page") or {}).get("usage")
+    if u:
+        return [u] if isinstance(u, str) else list(u)
+    return LIST_USAGE.get(list_kind(post), LIST_USAGE_DEFAULT)
 
 
 def process_phrases(text):
@@ -252,6 +322,9 @@ ul{padding-left:20px;color:#CFD6D2}
 .step.li .ex{display:block;width:100%;max-width:360px;margin:10px 0 0}
 .step.li .pr pre{padding:12px 96px 12px 16px;font-size:17px}
 .foot a{color:var(--ac)}
+.step.li .en{font-family:'JetBrains Mono',ui-monospace,Consolas,monospace;color:var(--ac);font-size:16px;margin-left:10px}
+.usage{margin:6px 0 0}
+.usage li{margin:6px 0}
 """
 
 
@@ -268,6 +341,7 @@ def page_html(post, folder=None):
     d = dm_conf(post)
     pg = d.get("page") or {}
     cover = cover_of(post)
+    cover = dict(cover, title=words(cover.get("title", "")), sub=words(cover.get("sub", "")))
     title = esc(cover.get("title", "")).replace("\n", "<br>")
     if cover.get("highlight"):
         h = esc(cover["highlight"])
@@ -304,35 +378,40 @@ def page_html(post, folder=None):
         groups = "".join(group(g) for g in st.get("groups") or [])
         parts.append(f'<section class="step"><span class="k">{i:02d}</span>{lb}<h2>{esc(st["title"])}</h2>'
                      f'{boxes}{text}{groups}</section>')
-    # 목록형 자료 릴스(post.list): 전체 목록 + 영어 프롬프트 단어(복사 상자). 화면에는 한국어 이름만 나온다
+    # 목록형 자료 릴스(post.list): '쓰는 법' + 전체 목록(번호·한국어 이름·영어 용어·뜻과 분위기 한 줄·예시 그림).
+    # 복사해 붙이는 완성 프롬프트(복사 상자, template, extra)는 싣지 않는다 (운영자 결정 2026-11-17, STYLE_GUIDE 7-1).
+    # 화면에는 한국어 이름만 나온다. 소개 글의 복사 안내는 no_copy()로 뺀다 (승인된 post.json을 고치지 않고 페이지에서만).
     lst = ""
     L = post.get("list") or {}
-    if L.get("items"):
-        tpl = pg.get("template")
-        tpl_html = (f'<section class="step"><h2>{esc(pg.get("template_title") or "프롬프트에 넣는 자리")}</h2>'
-                    f'{prompt_box(tpl)}{"<p>" + esc(clean(pg["template_note"])) + "</p>" if clean(pg.get("template_note")) else ""}</section>'
-                    if tpl else "")
+    is_list = bool(L.get("items"))
+    if is_list:
+        def txt(v):
+            return words(no_copy(clean(v)))
+        usage = [x for x in (txt(u) for u in list_usage(post)) if x]
+        usage_html = (f'<div class="rule"></div><h3>{esc(pg.get("usage_title") or "쓰는 법")}</h3>'
+                      '<ul class="usage">' + "".join(f"<li>{esc(x)}</li>" for x in usage) + "</ul>" if usage else "")
+
         def term(i, it):
-            # 번호·한국어 이름·한 줄 설명(사실만)·영어 용어(복사 상자)·직접 만든 예시 그림(있을 때만)
+            # 번호·한국어 이름·영어 용어(글자로만, 복사 상자 없음)·뜻과 분위기 한 줄(사실만)·직접 만든 예시 그림(있을 때만)
             img = ""
             if folder and it.get("src") and (Path(folder) / it["src"]).exists():
                 img = f'<img class="ex" loading="lazy" alt="{esc(it.get("name", ""))} 예시" src="{esc(it["src"])}">'
-            return (f'<section class="step li"><span class="k">{i:02d}</span><span class="lb">{esc(it.get("name", ""))}</span>'
-                    f'{"<p>" + esc(clean(it["desc"])) + "</p>" if clean(it.get("desc")) else ""}'
-                    f'{prompt_box(it["en"]) if it.get("en") else ""}{img}'
-                    f'{"<p>" + esc(clean(it["note"])) + "</p>" if clean(it.get("note")) else ""}</section>')
+            en = f'<span class="en" lang="en">{esc(it["en"])}</span>' if it.get("en") else ""
+            return (f'<section class="step li"><span class="k">{i:02d}</span><span class="lb">{esc(it.get("name", ""))}</span>{en}'
+                    f'{"<p>" + esc(txt(it["desc"])) + "</p>" if txt(it.get("desc")) else ""}{img}'
+                    f'{"<p>" + esc(txt(it["note"])) + "</p>" if txt(it.get("note")) else ""}</section>')
         n = len(L["items"])
         rows = "".join(term(i, it) for i, it in enumerate(L["items"], 1))
         more = pg.get("more") or []
         more_html = ""
         if more:
             more_html = (f'<div class="rule"></div><h3>{esc(pg.get("more_title") or "추가 용어")}</h3>'
-                         f'{"<p>" + esc(clean(pg["more_intro"])) + "</p>" if clean(pg.get("more_intro")) else ""}'
+                         f'{"<p>" + esc(txt(pg["more_intro"])) + "</p>" if txt(pg.get("more_intro")) else ""}'
                          + "".join(term(n + i, it) for i, it in enumerate(more, 1)))
-        lst = (f'<div class="rule"></div><h3>{esc(pg.get("list_title") or "전체 목록")}</h3>'
-               f'{"<p>" + esc(clean(pg["list_intro"])) + "</p>" if clean(pg.get("list_intro")) else ""}{tpl_html}{rows}{more_html}')
+        lst = (f'{usage_html}<div class="rule"></div><h3>{esc(pg.get("list_title") or "전체 목록")}</h3>'
+               f'{"<p>" + esc(txt(pg["list_intro"])) + "</p>" if txt(pg.get("list_intro")) else ""}{rows}{more_html}')
     extra = ""
-    if pg.get("extra"):
+    if pg.get("extra") and not is_list:
         rows = "".join(
             f'<section class="step"><h2>{esc(x.get("title", ""))}</h2>{prompt_box(x["prompt"])}'
             f'{"<p>" + esc(clean(x["note"])) + "</p>" if clean(x.get("note")) else ""}</section>' for x in pg["extra"])
@@ -365,7 +444,10 @@ def page_html(post, folder=None):
     srcs = "".join(f'<li><a href="{esc(s["url"])}" rel="noopener">{esc(OWN_DATE_RE.sub("", s["name"]))}</a></li>'
                    for s in post["sources"] if not OWN_SRC_RE.search(s.get("name", "")))
     handle = CONFIG["handle"]
-    intro = esc(clean(pg.get("intro") or cover.get("sub", "")))
+    intro_t = words(clean(pg.get("intro") or cover.get("sub", "")))
+    if is_list:
+        intro_t = no_copy(intro_t)
+    intro = esc(intro_t)
     nt = pg.get("notice") or {}
     notice = ""
     if nt:
@@ -374,7 +456,14 @@ def page_html(post, folder=None):
         notice = (f'<div class="notice">{"<h3>" + esc(nt["title"]) + "</h3>" if nt.get("title") else ""}'
                   f'{"<p>" + esc(clean(nt["text"])) + "</p>" if clean(nt.get("text")) else ""}'
                   f'{"<ul>" + links + "</ul>" if links else ""}</div>')
-    desc = esc(clean(pg.get("intro") or cover.get("sub", ""))[:120])
+    desc = esc(intro_t[:120])
+    body = "".join(parts) + lst + result + extra + caut
+    script = ("""<script>
+function cp(b){const t=b.previousElementSibling.innerText;
+(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{b.textContent='복사됨';setTimeout(()=>b.textContent='복사',1500)})
+.catch(()=>{const r=document.createRange();r.selectNodeContents(b.previousElementSibling);const s=getSelection();s.removeAllRanges();s.addRange(r)})}
+</script>
+""" if 'class="pr"' in body + notice + prep_html else "")
     return f"""<!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -390,17 +479,11 @@ def page_html(post, folder=None):
 <p class="intro">{intro}</p>
 {notice}
 {prep_html}
-{"".join(parts)}
-{lst}{result}{extra}{caut}
+{body}
 <div class="src">출처<ul>{srcs}</ul></div>
 <p class="foot">매일 AI 소식은 <a href="https://www.instagram.com/{esc(handle.lstrip("@"))}/">{esc(handle)}</a></p>
 </main>
-<script>
-function cp(b){{const t=b.previousElementSibling.innerText;
-(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{{b.textContent='복사됨';setTimeout(()=>b.textContent='복사',1500)}})
-.catch(()=>{{const r=document.createRange();r.selectNodeContents(b.previousElementSibling);const s=getSelection();s.removeAllRanges();s.addRange(r)}})}}
-</script>
-</body></html>
+{script}</body></html>
 """
 
 
