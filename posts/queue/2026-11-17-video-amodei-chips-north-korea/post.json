@@ -1,6 +1,4 @@
 {
-  "approved": true,
-  "approved_at": "2026-11-17T00:20:36+09:00",
   "id": "2026-11-17-video-amodei-chips-north-korea",
   "type": "video",
   "series": "전황",
@@ -25,7 +23,7 @@
     "end": 66.2,
     "source_duration": 1524.6
   },
-  "title": "AI 칩을 중국에 파는 건\n북한에 핵 파는 것과 같다",
+  "title": "칩을 중국에 팔 거면\n차라리 북한에 핵을 팔아라",
   "highlight": "북한에 핵",
   "title_en": "11월 블룸버그: 앤트로픽 상장 일부 주관사, 중국·홍콩 기관 주문 거절",
   "subtitles": [
@@ -129,7 +127,7 @@
     }
   ],
   "thumb": {
-    "title": "칩을 중국에 파는 건\n북한에 핵 파는 격이다",
+    "title": "칩을 중국에 팔 거면\n차라리 북한에 핵을 팔아라",
     "highlight": "북한에 핵",
     "person": {
       "name": "다리오 아모데이",

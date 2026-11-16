@@ -151,6 +151,8 @@ def body_sentences(text, where):
 # "안 죽었잖아", "아니야". 물음표가 붙어도 답이 정해진 반박이면 서술어로 본다.
 COLLOQUIAL_RE = re.compile(r"(거든|거든요|[다라냐]고|니까|니까요|잖아|잖아요|는데|는데요|[이거니]야|[았었였했겠]지|[있없]어|[했됐봤왔갔]어|해|돼)[\s\"'”’.!?…]*$")  # 반말 단정("그림 그릴 수 있어!", 운영자 결정 2026-11-16)
 _TAIL = r"[\s\"'”’.!?…]*$"
+# 명령형 끝 ("차라리 북한에 핵을 팔아라", "하라", "가거라"): 제목에서 서술어로 본다 (운영자 결정 2026-11-17, 아모데이 릴스)
+IMPERATIVE_RE = re.compile(r"(?:[아어여해]라|하라|거라|너라)" + _TAIL)
 
 
 def _jong(ch):
@@ -202,7 +204,7 @@ def title_sentence(title, where, no_question=True):
     if no_question and is_real_question(one):   # 카드 표지("토큰, 정확히 뭘까")는 설명형 질문을 허용
         return [f"{where}이 질문형: '{one}' → 답을 미루는 질문 대신 단정이나 구어체 반박으로 "
                 "(예: '컴공은 끝났을까요?' 대신 '아니 컴공 안 죽었다니까?', STYLE_GUIDE 3-3)"]
-    if not (PREDICATE_RE.search(one) or COLLOQUIAL_RE.search(one) or clause_noun_end(one)):
+    if not (PREDICATE_RE.search(one) or COLLOQUIAL_RE.search(one) or IMPERATIVE_RE.search(one) or clause_noun_end(one)):
         return [f"{where}이 서술어 없이 끝남: '{one}' → 누가·무엇이 어떻게 했는지 끝까지 쓴다 "
                 "(예: '3년 만에 밀레니엄 난제' 대신 'AI가 3년 만에 수학 최대 난제를 풀었다')"]
     return []
