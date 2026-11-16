@@ -181,11 +181,12 @@ ul{padding-left:20px;color:#CFD6D2}
 
 
 HEADINGS = {
-    "default": {"result": "직접 해 본 결과", "extra": "더 써 볼 문장", "caution": "주의할 점",
+    "casual": {"result": "직접 해 본 결과", "extra": "더 써 볼 문장", "caution": "주의할 점",
                 "note": "결과는 직접 해 본 것이고, AI 답은 그때그때 달라질 수 있습니다."},
-    "formal": {"result": "테스트 환경 및 결과", "extra": "추가 명령어", "caution": "유의 사항",
+    "default": {"result": "테스트 환경 및 결과", "extra": "추가 명령어", "caution": "유의 사항",
                "note": "테스트 결과는 작성 시점 기준이며, AI의 응답은 실행할 때마다 달라질 수 있습니다."},
 }
+HEADINGS["formal"] = HEADINGS["default"]  # 예전 dm.page.style = "formal" 게시물 호환
 
 
 def page_html(post):
@@ -196,7 +197,7 @@ def page_html(post):
     if cover.get("highlight"):
         h = esc(cover["highlight"])
         title = title.replace(h, f'<span class="hl">{h}</span>', 1)
-    # 섹션 이름: 기본, 또는 dm.page.style = "formal"(회사 안내서 말투)
+    # 섹션 이름: 기본은 회사 안내서 말투(운영자 결정 2026-11-16), 예전 말투는 dm.page.style = "casual"
     H = HEADINGS.get(pg.get("style") or "default", HEADINGS["default"])
     css = PAGE_CSS
     for k in ("ACCENT", "MUTED", "TEXT", "BG"):
