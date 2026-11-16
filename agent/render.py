@@ -520,6 +520,13 @@ def check_sound_or_exit(out_dir):
               "post.json music으로 상업 이용 가능한 음원(src·credit)을 넣거나 music.generate=true로 코드 음악을 깐다 (STYLE_GUIDE 6장)")
         sys.exit(1)
     print(f"소리: 평균 {db:.1f} dB")
+    # 듣기 편한 크기인지 (STYLE_GUIDE 6장 "릴스 소리"): 통합 -16~-12 LUFS, 순간 최대 -1.0 dBTP 이하. 벗어나면 경고만
+    from loudness import check as loud_check, stats as loud_stats
+    s = loud_stats(mp4)
+    if s:
+        print(f"소리 크기: {s[0]:.1f} LUFS, 순간 최대 {s[1]:.1f} dBTP, 폭 {s[2]:.1f} LU")
+    for w in loud_check(mp4):
+        print("경고:", w, "→ agent/loudness.py --fix 또는 다시 렌더링")
 
 
 if __name__ == "__main__":

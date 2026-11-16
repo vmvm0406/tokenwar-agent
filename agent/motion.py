@@ -164,7 +164,10 @@ def join_scenes(parts, durs, fade, out_mp4, music=None, music_volume=0.3):
         m = len(parts)
         fc.append(f"[{m}:a]volume={music_volume},atrim=duration={total:.3f},"
                   f"afade=t=in:d=0.6,afade=t=out:st={total - 1.5:.3f}:d=1.5[m]")
-        fc.append(f"{a_prev}[m]amix=inputs=2:duration=first:normalize=0[aout]")
+        # 말소리·영상 소리가 나오는 동안 배경음악을 눌러(덕킹) 말소리보다 15~20dB 낮게 둔다 (STYLE_GUIDE 6장 "릴스 소리")
+        fc.append(f"{a_prev}asplit=2[amain][akey]")
+        fc.append("[m][akey]sidechaincompress=threshold=0.015:ratio=5:attack=30:release=500:knee=4[md]")
+        fc.append("[amain][md]amix=inputs=2:duration=first:normalize=0[aout]")
         a_prev = "[aout]"
     cmd += ["-filter_complex", ";".join(fc), "-map", v_prev, "-map", a_prev, "-t", f"{total:.3f}",
             "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-pix_fmt", "yuv420p", "-r", str(FPS),
@@ -250,6 +253,9 @@ async def make_motion_reel(page_html, post, folder, config):
         has_clip_sound = any(s.get("kind") == "clip" and _clip_has_sound(folder / s["src"]) for s in post["slides"])
         vol = float(pm.get("volume", 0.25 if has_clip_sound else 0.8))
     total = join_scenes(parts, durs, fade, folder / "reel.mp4", music, vol)
+    # 소리 크기 맞추기: -14 LUFS, 순간 최대 -1.5 dBTP, 튀는 효과음 누르기 (실패하면 원래 소리 그대로)
+    from loudness import normalize
+    normalize(folder / "reel.mp4")
     if gen and gen.exists():
         gen.unlink()
     shutil.rmtree(work)

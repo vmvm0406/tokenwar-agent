@@ -637,6 +637,9 @@ def make_video_reel(post, folder, cfg, soft_edges=False):
     cta = dm_cta(post)
     if cta:
         dur = append_cta_card(out, cta, cfg, work, dur)
+    # 소리 크기 맞추기: -14 LUFS, 순간 최대 -1.5 dBTP, 튀는 효과음 누르기 (실패하면 원래 소리 그대로)
+    from loudness import normalize
+    normalize(out)
     # 표지와 미리보기: 1초 지점 화면
     frames = folder / "frames"
     if frames.exists():
