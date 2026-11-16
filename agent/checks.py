@@ -1084,10 +1084,39 @@ def writing_rules(post):
     return w
 
 
+DEIXIS_RE = re.compile(r"^(?:이게|그게|이런|그런|그|이|저)\s")
+
+
+def deixis(post):
+    """맨 앞 지시어 경고 (STYLE_GUIDE 4장 17, 운영자 결정 2026-11-17): '이 게임' → 'FPS 게임'처럼 이름으로."""
+    w = []
+
+    def hit(t):
+        m = DEIXIS_RE.match(str(t or "").strip())
+        return m.group(0).strip() if m else None
+
+    for i, s in enumerate(post.get("subtitles") or [], 1):
+        if s.get("speech", post.get("speech", False)):
+            continue
+        m = hit(s.get("text"))
+        if m:
+            w.append(f"{i}번 자막이 지시어 '{m}'로 시작 → 가리키는 대상을 이름으로 (예: '이 게임' → 'FPS 게임') (STYLE_GUIDE 4장 17)")
+    for where, t in (("릴스 제목", post.get("title")), ("썸네일 제목", (post.get("thumb") or {}).get("title"))):
+        m = hit(t)
+        if m:
+            w.append(f"{where}이 지시어 '{m}'로 시작 → 이름으로 (STYLE_GUIDE 4장 17)")
+    for i, s in enumerate(post.get("slides") or [], 1):
+        for k in ("title", "heading"):
+            m = hit(s.get(k))
+            if m:
+                w.append(f"{i}번째 장 {k}이 지시어 '{m}'로 시작 → 이름으로 (STYLE_GUIDE 4장 17)")
+    return w
+
+
 def check_post(post):
     """(errors, warnings) 반환."""
     e, w = _check_post(post)
-    w = w + writing_rules(post) + our_story(post)
+    w = w + writing_rules(post) + our_story(post) + deixis(post)
     e = e + check_length_field(post)
     e_t, w_t = check_threads(post)
     return e + check_license(post) + e_t, w + awkward_titles(post) + w_t
