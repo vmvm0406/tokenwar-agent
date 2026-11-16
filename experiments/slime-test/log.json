@@ -1,0 +1,54 @@
+{
+  "model": "@cf/black-forest-labs/flux-2-klein-4b",
+  "seed": 424242,
+  "size": [
+    1088,
+    1360
+  ],
+  "items": [
+    {
+      "file": "0-base.jpg",
+      "seconds": 9.3,
+      "ref": null
+    },
+    {
+      "file": "1-golden-hour.jpg",
+      "seconds": 4.3,
+      "ref": [
+        819,
+        1024
+      ]
+    },
+    {
+      "file": "seedonly-1-golden-hour.jpg",
+      "seconds": 8.7,
+      "ref": null
+    },
+    {
+      "file": "2-neon.jpg",
+      "seconds": 5.4,
+      "ref": [
+        819,
+        1024
+      ]
+    },
+    {
+      "file": "seedonly-2-neon.jpg",
+      "seconds": 10.0,
+      "ref": null
+    },
+    {
+      "file": "3-low-key-rim.jpg",
+      "seconds": 4.1,
+      "ref": [
+        819,
+        1024
+      ]
+    },
+    {
+      "file": "seedonly-3-low-key-rim.jpg",
+      "seconds": 7.9,
+      "ref": null
+    }
+  ]
+}
