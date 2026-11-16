@@ -55,6 +55,9 @@
 | `data/` | 분석 결과 (봇이 갱신. 손으로 고치지 않는다) |
 | `data/hot_topics.md` | 잘 터진 주제 묶음: 벤치마크 계정 게시물을 평소 대비 반응 배수로 줄 세워 주제(AI 영상 만들기, 사진 변환, 돈·일자리 등)별로 묶은 표. `agent/benchmarks.py`가 매일(단독: `--hot-topics-only`, 저장된 데이터만) |
 | `data/followers.csv` | 우리 팔로워 수 날짜별 기록 (`agent/benchmarks.py`가 매일). 목표(config.json `goal`: 2026-12-16까지 1만 명) 진행은 `data/trends.md` 맨 위 한 줄 (코드 계산) |
+| `agent/patterns.py` | 벤치마크 패턴 (AI·API 없음): 계정별 중간값 대비 배수로 첫 줄 모양(길이·질문·숫자 약속·권유·자극어)·자료 DM·시리즈·주제·시간대·형식 효과 → `data/benchmark_patterns.md` (맨 위 "지금 우리에게 맞는 것"). analysis.yml이 매일 benchmarks 뒤 |
+| `agent/peer_followers.py` | 벤치마크 계정 팔로워를 날짜별로 `data/followers_peers.csv`에 쌓고 7·30일 증가 순위 (`--backfill`: git 기록에서 채움). analysis.yml이 매일 |
+| `ANALYSIS.md` / `scripts/weekly-analysis.ps1` | 주간 계정 분석 (월요일 run-local.ps1 첫 실행에서 claude -p): 새 벤치마크 계정 찾기·목록 고치기(`data/benchmark_changes.md`), `data/weekly_insights.md` "이번 주 우리에게 바로 적용할 3가지" |
 | `experiments/` | 아직 매일 작업에 안 들어간 시제품 (릴스 CRT 화면 등). README에 렌더링 방법 |
 | `NEXT.md` | 이어서 할 일, 운영자 답을 기다리는 것 |
 

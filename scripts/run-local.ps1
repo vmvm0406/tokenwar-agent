@@ -39,6 +39,14 @@ try {
         exit 1
     }
     $today = Get-Date -Format "yyyy-MM-dd"
+    # 주간 계정 분석 (ANALYSIS.md): 월요일 그날 첫 실행에서만, 이번 주 data/weekly_insights.md가 있으면 건너뜀
+    $weekly = Join-Path $Repo "scripts\weekly-analysis.ps1"
+    if ((Test-Path $weekly) -and (Get-Date).DayOfWeek -eq [DayOfWeek]::Monday) {
+        try { & $weekly } catch { "주간 분석 실패: $_" | Out-File -Append -FilePath $start -Encoding utf8 }
+        Set-Location $Repo
+        [void](Git-Log checkout --quiet main)
+        [void](Git-Log pull --ff-only --quiet origin main)
+    }
     # 게시 칸(config.json slots): 오늘 몫(daily_target)이 미리 만든 게시물로 차 있으면 만들지 않고, 빈 만큼만 만든다
     $need = (py -3.12 agent/slots.py need 2>$null | Select-Object -Last 1)
     $nCard = 0; $nReel = 0
