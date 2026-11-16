@@ -29,7 +29,7 @@ jobs:
         with:
           python-version: "3.12"
 
-      - run: pip install requests
+      - run: pip install requests pillow
 
       - name: git 사용자 (게시할 미디어를 docs/media로 push할 때 씀)
         run: |

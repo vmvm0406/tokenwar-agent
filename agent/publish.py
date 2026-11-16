@@ -51,7 +51,10 @@ MEDIA_BASE = (os.environ.get("MEDIA_BASE") or f"https://{_owner.lower()}.github.
 CONTENT_TYPES = {".jpg": "image/jpeg", ".mp4": "video/mp4"}
 MAX_TRIES = 3
 THREADS_DELAY_MIN = int(CONFIG.get("threads_delay_min", 40))
-THREADS_MAX_AGE_H = float(CONFIG.get("threads_max_age_hours", 12))  # 이보다 늦어진 스레드 글은 올리지 않는다 (지난 소식)
+THREADS_MAX_AGE_H = float(CONFIG.get("threads_max_age_hours", 12))
+# 게시 직후 docs/media를 바로 비우면 인스타가 뒤늦게 사진을 다시 가져갈 때 파일이 없어 회색 장이 생긴다
+# (2026-11-16 사이버캡 카드 4번 장). 게시 뒤 이 시간 동안은 미디어를 Pages에 남긴다.
+MEDIA_KEEP_MIN = int(CONFIG.get("media_keep_min", 120))  # 이보다 늦어진 스레드 글은 올리지 않는다 (지난 소식)
 
 
 class PublishError(Exception):
@@ -163,6 +166,13 @@ def media_url(folder, rel, name=None):
             r = requests.head(f"{url}?v={int(time.time())}", timeout=30)
             if (r.status_code == 200 and r.headers.get("content-type", "").startswith(want)
                     and int(r.headers.get("content-length", -1)) == size):
+                # 인스타는 ?v= 없는 주소를 가져가니, 그 주소도 내용이 같은지 본다 (배포 중이거나 옛 캐시면 다름)
+                if want.startswith("image/"):
+                    import hashlib
+                    g = requests.get(url, timeout=60)
+                    if g.status_code != 200 or hashlib.sha256(g.content).digest() != hashlib.sha256((folder / rel).read_bytes()).digest():
+                        time.sleep(15)
+                        continue
                 return url
         except requests.RequestException:
             pass
@@ -226,6 +236,37 @@ def publish_reel(ig_id, folder, post):
     return call("POST", f"{ig_id}/media_publish", creation_id=c["id"])["id"]
 
 
+def check_published_media(media_id):
+    """게시 뒤 인스타가 가진 장(children)마다 사진을 받아 열어 본다. 회색·빈 장이면 경고 목록 (게시는 그대로)."""
+    if DRY:
+        return []
+    warns = []
+    try:
+        kids = call("GET", f"{media_id}/children", fields="media_url,media_type").get("data") or []
+        if not kids:
+            kids = [call("GET", media_id, fields="media_url,media_type")]
+        from io import BytesIO
+        from PIL import Image, ImageStat
+        for i, k in enumerate(kids, 1):
+            if k.get("media_type") == "VIDEO" or not k.get("media_url"):
+                continue
+            r = requests.get(k["media_url"], timeout=60)
+            try:
+                im = Image.open(BytesIO(r.content))
+                im.load()
+                sd = ImageStat.Stat(im.convert("L")).stddev[0]
+            except Exception as e:  # noqa: BLE001
+                warns.append(f"{i}번 장 사진을 열 수 없음: {e}")
+                continue
+            if sd < 4:
+                warns.append(f"{i}번 장이 거의 한 색(표준편차 {sd:.1f}): 인스타에서 회색으로 보일 수 있음")
+    except (PublishError, requests.RequestException) as e:
+        warns.append(f"게시 뒤 사진 확인 실패: {e}")
+    for w in warns:
+        print(f"  경고: {w}")
+    return warns
+
+
 def due(post, now):
     at = datetime.fromisoformat(post["publish_at"])
     return at <= now
@@ -240,6 +281,24 @@ def read_json(path):
 
 def save_state(folder, state):
     (folder / "published.json").write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def recent_published(now):
+    """게시한 지 MEDIA_KEEP_MIN분이 안 된 게시물 [(폴더, post)]. 이 미디어는 Pages에서 내리지 않는다."""
+    out = []
+    if not DONE.exists():
+        return out
+    for f in sorted(p for p in DONE.iterdir() if p.is_dir()):
+        post, state = read_json(f / "post.json"), read_json(f / "published.json")
+        if not post or not state:
+            continue
+        try:
+            at = datetime.fromisoformat(state["published_at"])
+        except (KeyError, ValueError):
+            continue
+        if now - at < timedelta(minutes=MEDIA_KEEP_MIN):
+            out.append((f, post))
+    return out
 
 
 def threads_pending(now):
@@ -292,8 +351,9 @@ def publish_threads(folder, post, state):
 
 
 def keep_threads_media(now):
-    """실행 끝: 아직 스레드에 안 올린 게시물의 스레드 이미지만 docs/media에 남긴다 (커밋은 워크플로 마지막 단계)."""
-    write_stage(wanted([], [(f, p) for f, p, _, _ in threads_pending(now)]))
+    """실행 끝: 최근 게시물(MEDIA_KEEP_MIN분 안)의 미디어와 아직 스레드에 안 올린 이미지만 docs/media에 남긴다
+    (커밋은 워크플로 마지막 단계)."""
+    write_stage(wanted(recent_published(now), [(f, p) for f, p, _, _ in threads_pending(now)]))
 
 
 def main():
@@ -320,13 +380,13 @@ def main():
     if not todo and not th_due:
         print("올릴 시각이 된 게시물 없음.")
         if not DRY:
-            keep_threads_media(now)  # 지난 실행이 남긴 미디어는 치우고, 스레드를 기다리는 이미지만 남긴다
+            keep_threads_media(now)  # 오래된 미디어는 치우고, 최근 게시물·스레드를 기다리는 이미지만 남긴다
         return
     # 스레드 이미지는 인스타 게시 때 같이 올려 두면, 40분 뒤 스레드 차례에 Pages 배포를 기다리지 않는다.
     th_posts = [(f, p) for f, p in todo if p.get("threads") and threads.enabled()]
     th_posts += [(f, p) for f, p, _, _ in pending]
     try:
-        stage(wanted(todo, th_posts))
+        stage(wanted(todo + recent_published(now), th_posts))
     except (PublishError, subprocess.CalledProcessError) as e:
         print(f"미디어 올리기 실패: {e}")
         sys.exit(1)
@@ -350,6 +410,11 @@ def main():
             link = "" if DRY else call("GET", media_id, fields="permalink").get("permalink", "")
             result = {"media_id": media_id, "permalink": link,
                       "published_at": datetime.now(timezone.utc).isoformat()}
+            if post["type"] == "carousel":
+                time.sleep(20)  # 인스타가 장마다 처리를 마칠 시간
+                mw = check_published_media(media_id)
+                if mw:
+                    result["media_warnings"] = mw
             (folder / "published.json").write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
             if not DRY:
                 # 렌더링 원본 구간(clips/source.mp4)은 게시 뒤엔 필요 없다. 저장소가 커지지 않게 지운다.
@@ -370,7 +435,7 @@ def main():
         publish_threads(folder, post, state)
 
     if not DRY:
-        keep_threads_media(now)  # 끝난 미디어는 Pages에서 내리고 스레드를 기다리는 이미지만 남긴다 (워크플로 마지막 단계가 커밋)
+        keep_threads_media(now)  # 오래된 미디어는 내리고 최근 게시물·스레드 이미지만 남긴다 (워크플로 마지막 단계가 커밋)
     if failed:
         sys.exit(1)
 
