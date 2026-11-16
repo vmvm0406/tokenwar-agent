@@ -1170,7 +1170,27 @@
    "tries": 0,
    "breaking": true,
    "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMikAFBVV95cUxOOXlROTNsa1ZlaGlSSkd1UFkzQ3RxaXhCcy1QS1BNV01nSDhtaFN4WHptaGFUYTRsYldRaU5lUFZlUmZwVzlHRm5BMTZ6Z0FHaXI3MUo1ZjNzZ29Damlqc0NHS3ktMm5CSlAtOTZNWkdHc25DRTZIVlJHbVJ0c0JhTVZrNFlKT2w1SF9YWV96enU?oc=5": {
+   "source": "news",
+   "company": "엔비디아",
+   "entities": [
+    "머스크(xAI·테슬라)",
+    "엔비디아"
+   ],
+   "tok": [
+    "back",
+    "bring",
+    "campaign"
+   ],
+   "title": "[업계 속보: 주요 매체 2곳(CNBC, WSJ) · 인사] The Campaign to Bring Back Jensen Huang as Nvidia CEO",
+   "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxOOXlROTNsa1ZlaGlSSkd1UFkzQ3RxaXhCcy1QS1BNV01nSDhtaFN4WHptaGFUYTRsYldRaU5lUFZlUmZwVzlHRm5BMTZ6Z0FHaXI3MUo1ZjNzZ29Damlqc0NHS3ktMm5CSlAtOTZNWkdHc25DRTZIVlJHbVJ0c0JhTVZrNFlKT2w1SF9YWV96enU?oc=5",
+   "first_seen": "2026-11-16T17:19:19+09:00",
+   "why": "48시간 안에 같은 회사·인물 게시물 있음: 2026-11-16-carousel-huang-return (엔비디아)",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
   }
  },
- "updated": "2026-11-16T17:04:17+09:00"
+ "updated": "2026-11-16T17:19:19+09:00"
 }
