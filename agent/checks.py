@@ -620,6 +620,107 @@ def check_reach(post):
     return errors, warnings
 
 
+# ---- 스레드 글 (post.json 선택 필드 threads, STYLE_GUIDE 7-2, TEMPLATES.md "스레드 글") ----
+THREADS_MAX = 500               # 스레드 글 한도. 이모지는 UTF-8 바이트 수로 센다 (Meta Threads API 문서)
+THREADS_MAX_IMAGES = 10         # 스레드 캐러셀은 20장까지 되지만 우리는 10장 안
+THREADS_MAX_LINKS = 5           # 글 하나에 서로 다른 링크 5개까지 (Threads API)
+THREADS_DEFAULT_TOPIC = "AI Threads"
+URL_RE = re.compile(r"(?i)https?://\S+|www\.\S+|\b[a-z0-9][a-z0-9-]*\.(?:com|net|org|io|ai|kr|co|ly|gg|app|dev|me|tv|news|link)\b(?:/\S*)?")
+_EMOJI_EXTRA = {"‍", "️", "⃣"}
+
+
+def threads_len(text):
+    """스레드 글자 수: 보통 글자는 1, 이모지(와 이어 붙이는 문자)는 UTF-8 바이트 수 (😀 = 4)."""
+    n = 0
+    for ch in str(text):
+        n += len(ch.encode("utf-8")) if (EMOJI_RE.match(ch) or ch in _EMOJI_EXTRA) else 1
+    return n
+
+
+def _sentences(text):
+    out = []
+    for s in re.split(r"(?<=[.!?])\s+|\n+", EMOJI_RE.sub("", str(text))):
+        n = _norm(s).strip(".!?…\"'“”‘’")
+        if len(n) >= 12:
+            out.append(n)
+    return out
+
+
+def check_threads(post):
+    """스레드 글 검사. threads가 없으면 검사하지 않는다 (스레드에 안 올림). (errors, warnings)"""
+    th = post.get("threads")
+    if th is None:
+        return [], []
+    errors, warnings = [], []
+    if not isinstance(th, dict) or not str(th.get("text", "")).strip():
+        return ["threads는 {text, images, topic, replies} 객체, text 필요 (TEMPLATES.md '스레드 글')"], warnings
+    text = str(th["text"]).strip()
+    n = threads_len(text)
+    if n > THREADS_MAX:
+        errors.append(f"스레드 글이 {n}자 (이모지는 바이트로 셈): {THREADS_MAX}자 이하")
+    if URL_RE.search(text):
+        errors.append(f"스레드 본문에 링크 '{URL_RE.search(text).group(0)[:40]}': 링크는 replies(내 답글)에만 (STYLE_GUIDE 7-2)")
+    topic = th.get("topic", THREADS_DEFAULT_TOPIC)
+    if not isinstance(topic, str) or not topic.strip():
+        errors.append(f"threads.topic은 주제 태그 1개 (문자열, 기본 '{THREADS_DEFAULT_TOPIC}'): {topic!r}")
+    elif len(topic) > 50 or "." in topic or "&" in topic or topic.startswith("#"):
+        errors.append(f"threads.topic은 50자 안, '.'·'&'·'#' 없이: '{topic}'")
+    if HASHTAG_RE.search(text):
+        errors.append("스레드 본문에 해시태그: 주제 태그는 글당 1개라 threads.topic에만 쓴다")
+    # 이미지: 장 번호(카드뉴스) 또는 "cover"
+    imgs = th.get("images") or []
+    if not isinstance(imgs, list):
+        errors.append("threads.images는 목록: [\"cover\", 2, 3]")
+        imgs = []
+    n_slides = len(post.get("slides") or []) + 1  # 마무리 장 포함
+    for x in imgs:
+        if x == "cover":
+            continue
+        if post.get("type") != "carousel":
+            errors.append(f"threads.images: 릴스는 \"cover\"(썸네일)만 쓸 수 있음: {x!r}")
+        elif not isinstance(x, int) or isinstance(x, bool) or not 1 <= x <= n_slides:
+            errors.append(f"threads.images 장 번호는 1~{n_slides}: {x!r}")
+    if len(imgs) > THREADS_MAX_IMAGES:
+        errors.append(f"threads.images는 {THREADS_MAX_IMAGES}장 이하: {len(imgs)}장")
+    if len(set(map(str, imgs))) != len(imgs) or (post.get("type") == "carousel" and "cover" in imgs and 1 in imgs):
+        errors.append("threads.images에 같은 장이 두 번 들어감")
+    # 답글
+    reps = th.get("replies") or []
+    if not isinstance(reps, list) or not all(isinstance(r, str) for r in reps):
+        errors.append("threads.replies는 글 목록: [\"출처: ... https://...\"]")
+        reps = []
+    for i, r in enumerate(reps, 1):
+        if threads_len(r) > THREADS_MAX:
+            errors.append(f"스레드 답글 {i}이 {threads_len(r)}자: {THREADS_MAX}자 이하")
+        if len(set(URL_RE.findall(r))) > THREADS_MAX_LINKS:
+            errors.append(f"스레드 답글 {i}에 링크가 {THREADS_MAX_LINKS}개 넘음")
+    # 글투 (캡션 검사 재사용)
+    errors += ai_tone(text, "스레드 글")[0]
+    errors += eumseum(text, "스레드 글")
+    every = "\n".join([text] + reps)
+    for w in BANNED:
+        if w in every:
+            errors.append(f"스레드 글 금지 표현: '{w}'")
+    for q in GENERIC_Q:
+        if q in text:
+            errors.append(f"스레드 글에 아무 데나 붙는 질문 '{q}' → 빼거나, 그 소식에 맞는 양자택일로")
+    hit = [w for w in BAIT if w in every]
+    if hit:
+        warnings.append(f"스레드 글 반응 구걸 문구 {hit}: 좋아요·공유·태그를 조르지 않는다 (STYLE_GUIDE 9장)")
+    kw = CONFIG.get("dm", {}).get("keyword", "자료")
+    if re.search(rf"['‘\"“]{re.escape(kw)}['’\"”]", every):
+        warnings.append(f"스레드 글에 댓글 '{kw}' 안내: 자동 DM은 인스타에만 (STYLE_GUIDE 7-2)")
+    lines = [l for l in text.splitlines() if l.strip()]
+    if len(lines) < 2:
+        warnings.append("스레드 글이 한 줄뿐: 첫 줄 결론 → 핵심 2~4줄 → 해석 한 줄 (STYLE_GUIDE 7-2)")
+    # 인스타 캡션 복사 금지: 같은 문장이 있으면 경고
+    cap = set(_sentences(post.get("caption", "")))
+    same = [s for s in _sentences(text) if s in cap]
+    if same:
+        warnings.append(f"스레드 글에 인스타 캡션과 똑같은 문장 {len(same)}개: 캡션 복사가 아니라 글 버전으로 다시 쓴다 (STYLE_GUIDE 7-2)")
+    return errors, warnings
+
+
 NC_RE = re.compile(r"(?i)\bBY[- ]?(SA[- ])?NC\b|\bNC[- ]?(SA|ND)\b|non[- ]?commercial|비상업|비영리\s*(전용|라이선스)|상업\s*(적\s*)?이용\s*(금지|불가)")
 
 
@@ -674,7 +775,8 @@ def awkward_titles(post):
 def check_post(post):
     """(errors, warnings) 반환."""
     e, w = _check_post(post)
-    return e + check_license(post), w + awkward_titles(post)
+    e_t, w_t = check_threads(post)
+    return e + check_license(post) + e_t, w + awkward_titles(post) + w_t
 
 
 def _check_post(post):

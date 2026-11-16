@@ -169,6 +169,13 @@ def render_post(pr, item):
         h.append(f'<div class="label">캡션</div><div class="caption">{text_block(p["caption"].strip())}</div>')
     if p.get("hashtags"):
         h.append(f'<div class="tags">{e(" ".join(p["hashtags"]))}</div>')
+    th = p.get("threads")
+    if isinstance(th, dict) and th.get("text"):
+        imgs = ", ".join("표지" if x == "cover" else f"{x}장" for x in th.get("images") or []) or "없음 (글만)"
+        h.append(f'<div class="label">스레드 글 · 인스타 게시 뒤 자동 · 주제 {e(th.get("topic") or "AI Threads")} · 사진 {e(imgs)}</div>'
+                 f'<div class="caption threads">{text_block(str(th["text"]).strip())}</div>')
+        for i, r in enumerate(th.get("replies") or [], 1):
+            h.append(f'<div class="reply"><span>답글 {i}</span> {text_block(str(r).strip())}</div>')
     links = []
     if p.get("source_url"):
         links.append((p.get("credit") or "원본 영상", p["source_url"]))
@@ -216,6 +223,8 @@ img.cover{display:block;width:62%;border:1px solid var(--line)}
 .label{font-size:12px;color:var(--dim);margin:16px 0 6px;font-weight:700}
 .caption{white-space:normal;font-size:14px;border-left:3px solid var(--g);padding-left:12px}
 .tags{color:var(--g);font-size:14px;margin-top:8px}
+.caption.threads{border-left-color:var(--fg)}
+.reply{font-size:13px;margin:6px 0 0 15px;color:var(--dim);word-break:break-all}.reply span{color:var(--fg);font-weight:700}
 ul.src{margin:0;padding-left:18px;font-size:13px}ul.src li{margin:2px 0;word-break:break-all}
 .note{font-size:13px;color:var(--fg);margin-top:12px}
 .warn{color:#FFD400;font-size:13px}

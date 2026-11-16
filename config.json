@@ -2,6 +2,8 @@
   "mode": "review",
   "timezone": "Asia/Seoul",
   "handle": "@tokenwar_ai",
+  "threads_delay_min": 40,
+  "threads_max_age_hours": 12,
   "slots": {
     "carousel": [
       "10:13",
