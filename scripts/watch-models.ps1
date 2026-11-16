@@ -37,9 +37,24 @@ if ((-not $CheckOnly) -and (Test-Path (Join-Path $Repo ".git"))) {
             $j = (git -C $Repo show "origin/main:$f") -join "`n" | ConvertFrom-Json
             if ($j.publish_at -and [DateTimeOffset]::Parse($j.publish_at) -le $now) { $due += $f }
         }
+        # 스레드 차례가 된 게시물도 깨운다: posts/published 중 threads 필드가 있고, 아직 threads_id가 없고,
+        # 운영자 삭제(status)·건너뜀 표시가 없고, 인스타 게시 + threads_delay_min이 지났고 12시간 안인 것.
+        $cfg = (git -C $Repo show "origin/main:config.json") -join "`n" | ConvertFrom-Json
+        $delay = if ($cfg.threads_delay_min) { [int]$cfg.threads_delay_min } else { 40 }
+        $maxAge = if ($cfg.threads_max_age_hours) { [double]$cfg.threads_max_age_hours } else { 12 }
+        foreach ($f in @(git -C $Repo ls-tree -r --name-only origin/main -- posts/published | Where-Object { $_ -like "*/published.json" })) {
+            try {
+                $st = (git -C $Repo show "origin/main:$f") -join "`n" | ConvertFrom-Json
+                if ($st.status -or $st.threads_id -or $st.threads_skipped -or ([int]$st.threads_tries -ge 3) -or -not $st.published_at) { continue }
+                $at = [DateTimeOffset]::Parse($st.published_at)
+                if ($now -lt $at.AddMinutes($delay) -or $now -gt $at.AddHours($maxAge)) { continue }
+                $pj = (git -C $Repo show ("origin/main:" + ($f -replace 'published\.json$', 'post.json'))) -join "`n"
+                if ($pj -match '"threads"\s*:') { $due += $f }
+            } catch { }
+        }
         if ($due.Count -gt 0) {
             gh workflow run publish.yml -R vmvm0406/tokenwar-agent 2>&1 | Out-Null
-            ("{0} 게시 시각 지난 것 {1}개 → publish.yml 실행 (종료 코드 {2}): {3}" -f (Get-Date -Format "yyyy-MM-dd HH:mm"), $due.Count, $LASTEXITCODE, ($due -join ", ")) |
+            ("{0} 게시·스레드 차례 {1}개 → publish.yml 실행 (종료 코드 {2}): {3}" -f (Get-Date -Format "yyyy-MM-dd HH:mm"), $due.Count, $LASTEXITCODE, ($due -join ", ")) |
                 Out-File -Append -FilePath $plog -Encoding utf8
         }
     } catch {
