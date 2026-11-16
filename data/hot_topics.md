@@ -1,4 +1,4 @@
-# 잘 터진 주제 (2026-11-16 07:20 기준)
+# 잘 터진 주제 (2026-11-16 09:56 기준)
 
 주제를 고를 때 이 표의 위쪽 주제와 **같거나 비슷한 것**을 먼저 고른다 (STYLE_GUIDE 3장). PR 본문에 "참고한 잘 터진 주제: …" 한 줄을 적는다.
 
@@ -10,8 +10,8 @@
 |---|---|---|---|---|---|
 | 1 | AI 영상·영화 만들기 (창작) | @ai.trend.kr: [눈 뭉치 던진 범인이 나라고요? ❄️](https://www.instagram.com/reel/DetX442xkFz/) | 31.7x | 릴스 | 54개 (15) |
 | 2 | 돈·일자리·교육 (생활) | @ai.talk.kr: [“OpenAI와 Anthropic은 AI 버블을 이겨낼 수 있을까?”](https://www.instagram.com/reel/Db2MJLcR-10/) | 307.0x | 릴스 | 66개 (18) |
-| 3 | 챗GPT·제미나이 사진·그림 변환 (창작) | @ai.trend.kr: [평범한 사진 한 장을 간직하고 싶은 그림으로 만들어보세요 🖼️](https://www.instagram.com/p/DckJfiMD83G/) | 40.5x | 카드 | 60개 (23) |
-| 4 | 유명인·CEO 발언 (인용) | @bizucafe: [화폐는 의미 없다 (일론 머스크)](https://www.instagram.com/reel/De8mVBGgBJL/) | 24.2x | 릴스 | 102개 (27) |
+| 3 | 유명인·CEO 발언 (인용) | @bizucafe: [화폐는 의미 없다 (일론 머스크)](https://www.instagram.com/reel/De8mVBGgBJL/) | 24.5x | 릴스 | 102개 (27) |
+| 4 | 챗GPT·제미나이 사진·그림 변환 (창작) | @ai.trend.kr: [평범한 사진 한 장을 간직하고 싶은 그림으로 만들어보세요 🖼️](https://www.instagram.com/p/DckJfiMD83G/) | 40.5x | 카드 | 60개 (23) |
 | 5 | 미중 경쟁·반도체·데이터센터 (산업) | @ai.talk.kr: [“중국이 AI로 미국을 이길 수 있을까요?”](https://www.instagram.com/reel/DbwhvfvvknP/) | 485.3x | 릴스 | 37개 (12) |
 | 6 | 챗GPT 질문·대화 활용법 (따라 하기) | @ai.trend.kr: [GPT로 나도 몰랐던 내 정보 싹 다 지우세요. 🧹](https://www.instagram.com/p/Dc-nN8WjyWt/) | 27.3x | 카드 | 17개 (8) |
 | 7 | MCP·스킬·클로드 코드 자동화 (연결 도구) | @ai.trend.kr: [명령어 한 줄이면 프롬프트 2,000개가 내 AI 에이전트에 통째로 들어옵니다. 🔌](https://www.instagram.com/p/DdTM6hvDw-R/) | 12.1x | 카드 | 109개 (41) |
@@ -36,19 +36,19 @@
 - 21.5x 릴스 @ai.talk.kr: [“AI 시장, 결국 치킨 게임으로 가고 있는 걸까요?”](https://www.instagram.com/reel/DcDWvDKpGBj/)
 - 12.9x 릴스 @ai.talk.kr: [“AI 시대, 지금 IT 직장인들은 어떤 상태일까요?”](https://www.instagram.com/reel/DbhgWt9JVbu/)
 
+### 유명인·CEO 발언 — 순위 점수 19.2, 릴스 92·카드 10, 배수 중간값 1.00x
+- 24.5x 릴스 @bizucafe: [화폐는 의미 없다 (일론 머스크)](https://www.instagram.com/reel/De8mVBGgBJL/)
+- 17.8x 릴스 @ai.talk.kr: [“일론 머스크는 왜 샘 올트먼을 믿지 않는 걸까요?”](https://www.instagram.com/reel/DbzUQ_VvaxQ/)
+- 16.3x 릴스 @bizucafe: [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/)
+
 ### 챗GPT·제미나이 사진·그림 변환 — 순위 점수 17.8, 릴스 5·카드 55, 배수 중간값 1.28x
 - 40.5x 카드 @ai.trend.kr: [평범한 사진 한 장을 간직하고 싶은 그림으로 만들어보세요 🖼️](https://www.instagram.com/p/DckJfiMD83G/)
 - 22.1x 카드 @ai.trend.kr: [핸드폰 배경화면을 바꿨더니, 하루에도 몇 번씩 꺼내 보게 됐어요.🐾](https://www.instagram.com/p/DcdMcZDjzBL/)
 - 8.5x 카드 @ex.treme.ai: [브랜드 URL 하나, 제품 사진 한 장이면](https://www.instagram.com/p/DY35VLhmPJJ/)
 
-### 유명인·CEO 발언 — 순위 점수 17.5, 릴스 92·카드 10, 배수 중간값 1.00x
-- 24.2x 릴스 @bizucafe: [화폐는 의미 없다 (일론 머스크)](https://www.instagram.com/reel/De8mVBGgBJL/)
-- 17.8x 릴스 @ai.talk.kr: [“일론 머스크는 왜 샘 올트먼을 믿지 않는 걸까요?”](https://www.instagram.com/reel/DbzUQ_VvaxQ/)
-- 12.5x 릴스 @bizucafe: [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/)
-
-### 미중 경쟁·반도체·데이터센터 — 순위 점수 15.7, 릴스 31·카드 6, 배수 중간값 1.44x
+### 미중 경쟁·반도체·데이터센터 — 순위 점수 17.1, 릴스 31·카드 6, 배수 중간값 1.44x
 - 485.3x 릴스 @ai.talk.kr: [“중국이 AI로 미국을 이길 수 있을까요?”](https://www.instagram.com/reel/DbwhvfvvknP/)
-- 12.5x 릴스 @bizucafe: [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/)
+- 16.3x 릴스 @bizucafe: [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/)
 - 10.3x 릴스 @ai.talk.kr: [“챗GPT에 질문할 때마다 물이 사용된다는 사실, 알고 계셨나요?”](https://www.instagram.com/reel/DcCmtLip1ZU/)
 
 ### 챗GPT 질문·대화 활용법 — 순위 점수 14.3, 릴스 5·카드 12, 배수 중간값 1.97x
@@ -66,7 +66,7 @@
 - 6.7x 카드 @ai.asap.kr: [OpenDataLoader PDF는 PDF를 마크다운과 JSON, HTML로 바꾸는 파서입니다. 읽기 순서와 표, 제목 구조를 지키고 모든 요소](https://www.instagram.com/p/Dc5wGU0D4Un/)
 - 4.5x 릴스 @ai.talk.kr: [AI가 보이는 사고과정과 실제 추론이 다를 수 있다면, 인간은 무엇으로 AI를 검증할 수 있을까요?](https://www.instagram.com/reel/Dd8BPz-BhvC/)
 
-### 생활 앱·무료 도구 — 순위 점수 8.2, 릴스 1·카드 23, 배수 중간값 1.11x
+### 생활 앱·무료 도구 — 순위 점수 8.2, 릴스 1·카드 23, 배수 중간값 1.12x
 - 15.3x 카드 @ai.asap.kr: [Filee는 Ctrl을 누른 채 파일을 끌면 커서 옆에 변환할 형식이 동그랗게 뜨고, 원하는 형식에 놓으면 바로 바꿔 주는 변환기입니다. 이미지](https://www.instagram.com/p/DeoW-TQj9F5/)
 - 6.6x 카드 @ai.asap.kr: [DockDoor는 맥 독에 윈도우처럼 창 미리보기를 붙여 주는 무료 오픈소스 앱입니다. 독을 바꾸지 않고 메뉴바에서 돌아가며 기존 독에 기능을](https://www.instagram.com/p/DeIvEO_j3xU/)
 - 5.4x 카드 @ai.asap.kr: [Plexo는 윈도우·맥·리눅스용 다운로드 앱입니다. 파일을 조각으로 나눠 와이파이, 유선, USB로 연결한 휴대폰, 셀룰러 같은 여러 네트워크에](https://www.instagram.com/p/Dd_Kxs4jy4j/)
@@ -103,8 +103,8 @@
 
 ## 분류 안 된 2배 이상 게시물 (키워드 보강 대상)
 
-- 49.1x 카드 @bizucafe: 광고(廣告). 한문으로 널리 알린다는 뜻이다.. 많은 사람들에게 무언가 정보를 알리는 것..
-- 6.8x 릴스 @bizucafe: 우린 이미 너무 늦었다 (유발 하라리)
+- 49.2x 카드 @bizucafe: 광고(廣告). 한문으로 널리 알린다는 뜻이다.. 많은 사람들에게 무언가 정보를 알리는 것..
+- 6.9x 릴스 @bizucafe: 우린 이미 너무 늦었다 (유발 하라리)
 - 6.1x 릴스 @bizucafe: 갓 대학 졸업한 '경영 컨설턴트'
 - 6.1x 릴스 @bizucafe: 창업 한번 해보세요 (유튜브 창업자 Steve Chen)
 - 4.9x 릴스 @bizucafe: 우리 아이 첫 남친이 AI가 됩니다 (유발 하라리)
