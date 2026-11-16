@@ -148,6 +148,95 @@ def make_music(out_path, durs, fade=0.3, seed=7, hit_at=None):
     return {"bpm": bpm, "seconds": total, "bounds": bounds, "hits": hits}
 
 
+# ---------- 후킹 비트 (목록형 자료 릴스, 운영자 요청 2026-11-17 "노래도 좀 후킹되게") ----------
+# 0초부터 킥·스네어(클랩)가 바로 시작하고, 2마디짜리 짧은 멜로디 훅이 되풀이된다.
+# 박자는 호출하는 쪽이 정한다 (listreel.py: 항목 길이 = 박자 간격의 정수배라 그림이 바뀌는 순간이 늘 박 위에 온다).
+HOOK = [76, None, 76, 79, 81, None, 79, 76,   # 1마디 (8분음표): E5 . E5 G5 A5 . G5 E5
+        74, None, 72, 74, 76, None, None, None]  # 2마디: D5 . C5 D5 E5 . . .
+HOOK_END = [74, None, 72, 74, 69, None, None, None]  # 4마디째는 A4로 끝맺음
+
+
+def snare(n, rng):
+    t = np.arange(n) / SR
+    body = np.sin(2 * np.pi * 185 * t) * env(n, 0.001, 0.06) * 0.6
+    noise = rng.standard_normal(n) * env(n, 0.001, 0.11)
+    noise = noise - lowpass(noise, 6)  # 고역 위주 (스네어 줄 소리)
+    return (body + noise * 0.9) * 0.9
+
+
+def clap(n, rng):
+    x = np.zeros(n)
+    for k, d in enumerate((0, 0.011, 0.022)):  # 손뼉 세 번 겹치기
+        i = int(d * SR)
+        m = n - i
+        x[i:] += rng.standard_normal(m) * env(m, 0.0005, 0.03 if k < 2 else 0.09)
+    return (x - lowpass(x, 5)) * 0.5
+
+
+def make_hook_music(out_path, bpm, total, accents=(), seed=7):
+    """bpm 고정, 0초가 첫 박. accents: 강한 박자(크래시)를 넣을 시각 목록(초). 끝 1.5초 페이드아웃.
+    반환 {"bpm", "beat", "seconds", "accents"}."""
+    rng = np.random.default_rng(seed)
+    beat = 60.0 / bpm
+    n = int((total + 0.5) * SR)
+    L = np.zeros(n)
+    R = np.zeros(n)
+
+    def add(sig, t0, gl=1.0, gr=1.0):
+        i = int(round(t0 * SR))
+        if i >= n:
+            return
+        m = min(len(sig), n - i)
+        L[i:i + m] += sig[:m] * gl
+        R[i:i + m] += sig[:m] * gr
+
+    nb = int(total / beat) + 1
+    for b in range(nb):
+        t0 = b * beat
+        bar, pos = divmod(b, 4)
+        chord = CHORDS[bar % 4]
+        add(kick(int(0.32 * SR)) * 1.0, t0)                          # 킥: 매 박 (0초부터)
+        if pos in (1, 3):                                             # 스네어 + 클랩: 2·4박
+            add(snare(int(0.25 * SR), rng) * 0.75, t0)
+            add(clap(int(0.2 * SR), rng) * 0.6, t0, 0.9, 1.0)
+        for k in range(4):                                            # 하이햇: 16분, 뒷박 강조
+            add(hat(int(0.04 * SR), rng) * (0.9 if k == 2 else 0.45), t0 + k * beat / 4, 0.8 if k % 2 else 1.0, 1.0 if k % 2 else 0.8)
+        for k in range(2):                                            # 베이스: 근음 8분, 둘째는 옥타브 위
+            m = chord[0] - 24 + (12 if k == 1 else 0)
+            add(lowpass(tone(hz(m), int(beat / 2 * SR), "saw", r=0.1), 16) * 0.42, t0 + k * beat / 2)
+        if pos == 0:                                                  # 패드: 마디 첫 박
+            pad = sum(lowpass(tone(hz(mm), int(4 * beat * SR), "saw", r=2.0, a=0.05), 40) for mm in chord) / 3
+            add(pad * 0.16, t0, 1.0, 0.8)
+            add(pad * 0.16, t0 + 0.012, 0.8, 1.0)
+        # 멜로디 훅: 2마디 모티프, 4마디째는 끝맺음. 첫 박부터 바로
+        motif = HOOK if bar % 4 != 3 else HOOK[:8] + HOOK_END
+        half = (bar % 2) * 8
+        for k in range(2):
+            note = motif[half + pos * 2 + k]
+            if note is None:
+                continue
+            pl = tone(hz(note), int(beat / 2 * SR * 0.95), "square", r=0.16, a=0.004)
+            pl += tone(hz(note + 12), int(beat / 2 * SR * 0.95), "sine", r=0.12, a=0.004) * 0.35
+            add(lowpass(pl, 3) * 0.2, t0 + k * beat / 2, 0.85, 1.0)
+            add(lowpass(pl, 3) * 0.07, t0 + k * beat / 2 + beat * 0.75, 1.0, 0.6)  # 짧은 메아리
+    for t0 in accents:                                                # 크래시: 강한 박
+        x = rng.standard_normal(int(1.2 * SR))
+        x = (x - lowpass(x, 4)) * env(len(x), 0.001, 0.45) * 0.35
+        add(x, t0)
+    st = np.stack([L, R], axis=1)[: int(total * SR)]
+    fo = int(min(1.5, total / 4) * SR)
+    st[-fo:] *= np.linspace(1, 0, fo)[:, None]
+    peak = np.max(np.abs(st)) or 1.0
+    st = np.tanh(st / peak * 2.0) / np.tanh(2.0) * 0.88
+    pcm = (st * 32767).astype(np.int16)
+    with wave.open(str(Path(out_path)), "wb") as w:
+        w.setnchannels(2)
+        w.setsampwidth(2)
+        w.setframerate(SR)
+        w.writeframes(pcm.tobytes())
+    return {"bpm": bpm, "beat": beat, "seconds": total, "accents": list(accents)}
+
+
 if __name__ == "__main__":
     args = sys.argv[1:]
     fade = 0.3

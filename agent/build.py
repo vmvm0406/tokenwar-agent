@@ -52,6 +52,10 @@ def input_hash(folder):
         h.update(src.encode())
         if f.exists():
             h.update(f.read_bytes())
+    # 목록형 릴스 목소리 (voice/*.wav, agent/tts.py). 폴더가 없으면 예전 지문 그대로
+    for f in sorted((folder / "voice").glob("*.wav")) if (folder / "voice").is_dir() else []:
+        h.update(("voice/" + f.name).encode())
+        h.update(f.read_bytes())
     return h.hexdigest()
 
 

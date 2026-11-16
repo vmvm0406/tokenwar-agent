@@ -8,7 +8,7 @@
   "date": "2026-11-17",
   "publish_at": "2026-11-17T11:13:00+09:00",
   "rights": "own",
-  "rights_note": "결과 그림은 토큰전쟁 마스코트 기준 이미지(assets/mascot/slime-base.jpg)를 참고 이미지로 넣어 FLUX.2 [klein] 4B(Cloudflare Workers AI)로 만든 AI 그림. 배경음악은 agent/music_gen.py가 코드로 만든 음악",
+  "rights_note": "결과 그림은 토큰전쟁 마스코트 기준 이미지(assets/mascot/slime-base.jpg)를 참고 이미지로 넣어 FLUX.2 [klein] 4B(Cloudflare Workers AI)로 만든 AI 그림. 배경음악은 agent/music_gen.py가 코드로 만든 음악. 영어 용어 읽기 목소리는 Kokoro-82M(Apache-2.0, hexgrad/Kokoro-82M) af_heart로 이 컴퓨터에서 만든 음성(agent/tts.py)",
   "title": "AI 영상 만드는 사람에게\n꼭 필요한 조명 용어 20가지",
   "highlight": "조명 용어",
   "list": {
@@ -121,7 +121,8 @@
         "src": "img/list/11.jpg",
         "mascot": true,
         "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: candlelight, a few lit candles on a small low table in front of the sofa, warm flickering orange light from below, dark room. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ai_generated": true
+        "ai_generated": true,
+        "center": 0.5
       },
       {
         "name": "창문 자연광",
@@ -214,7 +215,11 @@
         "ai_generated": true
       }
     ],
-    "hook": 10
+    "hook": 10,
+    "voice": {
+      "engine": "Kokoro-82M (Apache-2.0)",
+      "voice": "af_heart"
+    }
   },
   "music": {
     "generate": true

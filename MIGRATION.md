@@ -151,6 +151,7 @@ foreach ($id in "Git.Git", "Python.Python.3.12", "Gyan.FFmpeg", "OpenJS.NodeJS.L
 py -3.12 -m pip install --upgrade pip
 py -3.12 -m pip install requests pillow numpy playwright faster-whisper "yt-dlp[default,curl-cffi]"
 py -3.12 -m playwright install chromium
+py -3.12 -m pip install "kokoro==0.9.4" soundfile   # 목록형 릴스 영어 용어 목소리 (agent/tts.py, Kokoro-82M Apache-2.0, 2026-11-17 설치. 모델은 처음 쓸 때 Hugging Face에서 자동으로 받음, assets/voice/README.md)
 ```
 
 ---
