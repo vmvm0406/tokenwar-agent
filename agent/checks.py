@@ -1100,16 +1100,16 @@ def deixis(post):
             continue
         m = hit(s.get("text"))
         if m:
-            w.append(f"{i}번 자막이 지시어 '{m}'로 시작 → 가리키는 대상을 이름으로 (예: '이 게임' → 'FPS 게임') (STYLE_GUIDE 4장 17)")
+            w.append(f"{i}번 자막이 지시어 '{m}'로 시작 → 습관이면 이름으로 (예: '이 게임' → 'FPS 게임'), 필요해서 쓴 것이면 무시 가능 (STYLE_GUIDE 4장 17)")
     for where, t in (("릴스 제목", post.get("title")), ("썸네일 제목", (post.get("thumb") or {}).get("title"))):
         m = hit(t)
         if m:
-            w.append(f"{where}이 지시어 '{m}'로 시작 → 이름으로 (STYLE_GUIDE 4장 17)")
+            w.append(f"{where}이 지시어 '{m}'로 시작 → 습관이면 이름으로, 필요하면 무시 가능 (STYLE_GUIDE 4장 17)")
     for i, s in enumerate(post.get("slides") or [], 1):
         for k in ("title", "heading"):
             m = hit(s.get(k))
             if m:
-                w.append(f"{i}번째 장 {k}이 지시어 '{m}'로 시작 → 이름으로 (STYLE_GUIDE 4장 17)")
+                w.append(f"{i}번째 장 {k}이 지시어 '{m}'로 시작 → 습관이면 이름으로, 필요하면 무시 가능 (STYLE_GUIDE 4장 17)")
     return w
 
 
