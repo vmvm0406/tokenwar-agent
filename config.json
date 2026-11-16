@@ -91,9 +91,9 @@
   },
   "dm": {
     "tool": "Zorcha",
-    "keyword": "받기",
+    "keyword": "자료",
     "pages_base": "https://vmvm0406.github.io/tokenwar-agent",
-    "note": "댓글 자동 DM은 외부 도구(Zorcha 무료, Ask for Follow)로. 게시물마다 dm.md 설정 메모를 운영자가 도구에 붙여 넣는다. 안내 페이지는 GitHub Pages(main /docs). 직접 만들기는 계정이 커지면 다시 검토 (NEXT.md)"
+    "note": "댓글 자동 DM은 외부 도구(Zorcha 무료, Ask for Follow)로. 게시물마다 dm.md 설정 메모를 운영자가 도구에 붙여 넣는다. 안내 페이지는 GitHub Pages(main /docs). 직접 만들기는 계정이 커지면 다시 검토 (NEXT.md) 키워드 '자료', 팔로우 안 한 사람에게는 팔로우하고 다시 댓글 달라는 확인 DM (운영자 결정 2026-11-16)."
   },
   "model_watch": {
     "auto_publish": false,

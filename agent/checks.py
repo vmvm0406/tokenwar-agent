@@ -328,13 +328,13 @@ def check_video(post):
     e_b, w_b = check_buzz(post)
     errors += e_b
     warnings += w_b
-    # 따라 하기 영상 릴스(format howto + dm)도 카드형처럼 DM 자료를 검사하고 '받기' 안내를 허용한다
+    # 따라 하기 영상 릴스(format howto + dm)도 카드형처럼 DM 자료를 검사하고 '자료' 안내를 허용한다
     kw = None
     if post.get("dm"):
         e_d, w_d = check_dm(post)
         errors += e_d
         warnings += w_d
-        kw = post["dm"].get("keyword") or CONFIG.get("dm", {}).get("keyword", "받기")
+        kw = post["dm"].get("keyword") or CONFIG.get("dm", {}).get("keyword", "자료")
     e_c, w_c = check_caption_hooks(post["caption"], kw)
     errors += e_c
     warnings += w_c
@@ -439,7 +439,7 @@ def check_dm(post):
         if f in ("howto", "ask") and post.get("type") in ("carousel", "reel"):
             warnings.append("따라 하기·질문 게시물에 dm(댓글 자동 DM 자료)이 없음 → STYLE_GUIDE 7-1")
         return errors, warnings
-    kw = d.get("keyword") or CONFIG.get("dm", {}).get("keyword", "받기")
+    kw = d.get("keyword") or CONFIG.get("dm", {}).get("keyword", "자료")
     msg = (d.get("message") or "").strip()
     if not msg:
         errors.append("dm.message(보낼 DM 문구) 필요")
@@ -485,7 +485,7 @@ def eumseum(text, where):
 
 def check_caption_hooks(caption, dm_keyword=None):
     """캡션 첫 줄은 '얻는 것'으로 (STYLE_GUIDE 3-1, 경고). 캡션 끝 질문은 필수가 아니다 (7장).
-    (errors, warnings) 반환: 뻔한 질문은 오류, dm이 없는데 '받기' 안내가 있으면 오류."""
+    (errors, warnings) 반환: 뻔한 질문은 오류, dm이 없는데 '자료' 안내가 있으면 오류."""
     errors, warnings = [], []
     lines = [l.strip() for l in caption.split("영상:")[0].splitlines() if l.strip()]
     if lines:
@@ -498,7 +498,7 @@ def check_caption_hooks(caption, dm_keyword=None):
         if q in caption:
             errors.append(f"캡션에 아무 데나 붙는 질문 '{q}' → 빼거나, 의견이 갈리는 소식이면 그 소식에 맞는 양자택일로 "
                           "(예: 'AI 안경 65만 원, 사시겠어요?')")
-    kw = CONFIG.get("dm", {}).get("keyword", "받기")
+    kw = CONFIG.get("dm", {}).get("keyword", "자료")
     if not dm_keyword and re.search(rf"['‘\"“]{re.escape(kw)}['’\"”]", caption):
         errors.append(f"dm이 없는 게시물 캡션에 '{kw}' 안내가 있음 → 자동 DM은 따라 하기·질문 게시물(dm 있음)에만")
     return errors, warnings
@@ -805,7 +805,7 @@ def _check_post(post):
     e_d, w_d = check_dm(post)
     errors += e_d
     warnings += w_d
-    kw = ((post.get("dm") or {}).get("keyword") or CONFIG.get("dm", {}).get("keyword", "받기")) if post.get("dm") else None
+    kw = ((post.get("dm") or {}).get("keyword") or CONFIG.get("dm", {}).get("keyword", "자료")) if post.get("dm") else None
     e_c, w_c = check_caption_hooks(post["caption"], kw)
     errors += e_c
     warnings += w_c

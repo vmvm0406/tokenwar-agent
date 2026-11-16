@@ -180,7 +180,7 @@ def render_post(pr, item):
         h += [f'<li><a href="{e(u)}" target="_blank" rel="noopener">{e(t)}</a></li>' for t, u in links]
         h.append("</ul>")
     if item["dm"] or p.get("dm"):
-        kw = (p.get("dm") or {}).get("keyword", "받기")
+        kw = (p.get("dm") or {}).get("keyword", "자료")
         h.append(f'<p class="note">따라 하기: 댓글 \'{e(kw)}\' 자동 DM 설정 메모 '
                  f'<a href="https://github.com/{REPO}/blob/{sha}/posts/queue/{e(folder)}/dm.md" '
                  f'target="_blank" rel="noopener">dm.md</a> (merge 뒤 Zorcha에 넣기)</p>')

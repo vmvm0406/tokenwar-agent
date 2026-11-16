@@ -20,9 +20,9 @@ DMC = CONFIG.get("dm", {})
 B = CONFIG["brand"]
 
 DEFAULTS = {
-    "keyword": DMC.get("keyword", "받기"),
+    "keyword": DMC.get("keyword", "자료"),
     "comment_reply": "DM으로 보내 드렸어요. 안 보이면 메시지 요청함을 확인해 주세요.",
-    "follow_text": "팔로우한 분께 자료를 보내 드려요. 팔로우한 뒤 아래 '팔로우했어요'를 눌러 주세요.",
+    "follow_text": "팔로우한 분께만 자료를 보내 드려요. 팔로우하신 뒤 이 게시물에 다시 '{kw}'라고 댓글을 남겨 주시면 바로 보내 드릴게요.",
 }
 
 
@@ -41,6 +41,7 @@ def is_sample(folder):
 def dm_conf(post):
     d = dict(DEFAULTS)
     d.update({k: v for k, v in (post.get("dm") or {}).items() if v not in (None, "")})
+    d["follow_text"] = d["follow_text"].replace("{kw}", d["keyword"])
     return d
 
 
@@ -84,8 +85,8 @@ def memo_md(post):
         f"| 키워드 (댓글에 이 말이 들어가면) | `{d['keyword']}` |",
         f"| 댓글 공개 답글 | {d['comment_reply']} |",
         "| Ask for Follow | 켬 |",
-        f"| 팔로우 요청 문구 | {d['follow_text']} |",
-        "| 팔로우 요청 버튼 | 프로필 보기 / 팔로우했어요 |",
+        f"| 팔로우 안 한 사람에게 보낼 확인 DM | {d['follow_text']} |",
+        "| 팔로우 요청 버튼 | 프로필 보기 |",
         "| 보낼 DM 문구 | 아래 \"DM 문구\" 전체 |",
         f"| 링크 버튼 이름 | {d.get('button', '자료 보기')} |",
         f"| 링크 주소 | {url} |",
@@ -99,7 +100,7 @@ def memo_md(post):
         "## 확인",
         "",
         f"- 링크가 열리는지: {url} (게시물이 main에 합쳐지고 GitHub Pages가 갱신된 뒤 1~2분)",
-        "- 다른 계정(팔로우 안 한 계정)으로 댓글을 달아, 팔로우 요청이 먼저 오는지와 팔로우 뒤에만 자료가 오는지 본다.",
+        "- 다른 계정(팔로우 안 한 계정)으로 댓글을 달아, 확인 DM(팔로우하고 다시 댓글)이 오는지, 팔로우 뒤 다시 댓글을 달면 자료가 오는지 본다.",
         "- DM 끝에 도구 홍보 문구가 붙는지 본다 (붙으면 NEXT.md에 적는다).",
         "",
     ]

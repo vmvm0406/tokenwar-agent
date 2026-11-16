@@ -71,14 +71,14 @@
 
 ### 댓글 자동 DM (`dm`, 따라 하기·질문 게시물)
 
-댓글 키워드 '받기' → 팔로우한 사람에게 안내 페이지 링크 DM (STYLE_GUIDE 7-1). 렌더링할 때 `agent/dm.py`가 게시물 폴더에 `dm.md`(Zorcha에 붙여 넣을 설정 메모)와 `docs/p/<id>/index.html`(GitHub Pages 안내 페이지)을 만든다. 예시 폴더에서는 `page.html`로만 만든다 (`samples/s12-howto-ai-mode`).
+댓글 키워드 '자료' → 팔로우한 사람에게 안내 페이지 링크 DM, 안 한 사람에게는 팔로우하고 다시 댓글 달라는 확인 DM (STYLE_GUIDE 7-1). 렌더링할 때 `agent/dm.py`가 게시물 폴더에 `dm.md`(Zorcha에 붙여 넣을 설정 메모)와 `docs/p/<id>/index.html`(GitHub Pages 안내 페이지)을 만든다. 예시 폴더에서는 `page.html`로만 만든다 (`samples/s12-howto-ai-mode`).
 
 ```json
 "dm": {
-  "keyword": "받기",
+  "keyword": "자료",
   "message": "DM 문구 3줄 (주소 없이)",
   "comment_reply": "(선택) 댓글 공개 답글. 기본: DM으로 보내 드렸어요. 안 보이면 메시지 요청함을 확인해 주세요.",
-  "follow_text": "(선택) 팔로우 요청 문구. 기본값이 있음",
+  "follow_text": "(선택) 팔로우 안 한 사람에게 보낼 확인 DM. 기본: 팔로우하고 다시 '자료'라고 댓글 달면 보내 드린다는 문구",
   "button": "(선택) 링크 버튼 이름. 기본: 자료 보기",
   "page": {
     "intro": "안내 페이지 첫 문단",
