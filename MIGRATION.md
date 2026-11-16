@@ -255,7 +255,7 @@ setup-local.ps1이 이미 했다면 건너뛴다 (확인만: 5-3). 새 감시 �
 
 | 이름 | 언제 | 무엇을 |
 |---|---|---|
-| `TokenwarAgent` | 로그인 3분 뒤, 매일 9:30·12:30·15:30 | `tokenwar-daily\scripts\run-local.ps1`: 최신 main 받기 → 오늘 빈 칸만큼 `claude -p "Follow LOCAL.md for today..."` → 월요일 첫 실행이면 주간 분석(`weekly-analysis.ps1`) → 하루 한 번 C 드라이브 정리(`cleanup.ps1`) |
+| `TokenwarAgent` | 로그인 3분 뒤, 매일 9:30·12:30·15:30 | `tokenwar-daily\scripts\run-local.ps1`: 최신 main 받기 → 오늘 빈 칸만큼 `claude -p "Follow LOCAL.md for today..."` → 월요일 첫 실행이면 주간 분석(`weekly-analysis.ps1`) → C 드라이브 정리(`cleanup.ps1`, 3시간에 한 번. `TokenwarModelWatch`도 15분마다 부름) |
 | `TokenwarModelWatch` | 15분마다 (끝없이 반복) | `tokenwar-daily\scripts\watch-models.ps1`: 게시 시각 지난 큐가 있으면 `gh workflow run publish.yml` → 공식 블로그 새 모델 감시 → 새 발표면 `claude -p "LOCAL.md 6장"`으로 바로 올리기 PR |
 
 공통 설정: 로그인한 사용자로만 실행(Interactive, 보통 권한), 놓친 시각은 켜지면 바로 실행(StartWhenAvailable), 배터리에서도 실행, 최대 2시간, 이미 돌고 있으면 새로 안 띄움. **노트북이 켜져 있고 로그인돼 있어야 돈다.** 두 작업은 `%TEMP%\tokenwar.lock`으로 서로 겹치지 않는다.

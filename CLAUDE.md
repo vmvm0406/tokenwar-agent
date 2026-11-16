@@ -143,7 +143,7 @@ powershell -ExecutionPolicy Bypass -File $env:USERPROFILE\tokenwar-daily\scripts
 powershell -ExecutionPolicy Bypass -File $env:USERPROFILE\tokenwar-daily\scripts\make-posts.ps1 -Reels 3 -Cards 2   # 원할 때 더 만들기 (-Now: 바로 올리기, -Date 2026-11-17: 그날에 몰아 넣기)
 py -3.12 agent/model_watch.py --dry-run -v            # 새 모델 감시 확인 (기록 안 바꿈, 출처별 읽은 수)
 py -3.12 agent/slots.py status                        # 며칠 치 게시 칸 상황
-powershell -ExecutionPolicy Bypass -File $env:USERPROFILE\tokenwar-daily\scripts\cleanup.ps1 -Force   # C 드라이브 정리 바로 (하루 한 번 조건 무시, -WhatIf: 지울 목록만)
+powershell -ExecutionPolicy Bypass -File $env:USERPROFILE\tokenwar-daily\scripts\cleanup.ps1 -Force   # C 드라이브 정리 바로 (3시간 조건 무시, -WhatIf: 지울 목록만)
 Get-ScheduledTask TokenwarAgent                       # 작업 스케줄러 상태
 Get-Content (Get-ChildItem $env:USERPROFILE\tokenwar-daily\logs | Sort LastWriteTime | Select -Last 1).FullName   # 최근 기록
 ```

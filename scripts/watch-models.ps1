@@ -23,6 +23,9 @@ foreach ($d in @("$env:LOCALAPPDATA\Microsoft\WinGet\Links", "$env:LOCALAPPDATA\
 }
 $Repo = Join-Path $env:USERPROFILE "tokenwar-daily"   # 매일 작업 전용 (tokenwar-agent는 건드리지 않는다)
 $RepoUrl = "https://github.com/vmvm0406/tokenwar-agent"
+# C 드라이브 정리: cleanup.ps1이 3시간 안에 돌았으면 바로 끝난다 (운영자 2026-11-17 "수시로 정리")
+$cleanupPs = Join-Path $Repo "scripts\cleanup.ps1"
+if (Test-Path $cleanupPs) { try { & $cleanupPs | Out-Null } catch { } }
 $LogDir = Join-Path $Repo "logs"
 $Lock = Join-Path $env:TEMP "tokenwar.lock"
 

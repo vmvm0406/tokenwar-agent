@@ -1,7 +1,7 @@
-﻿# C 드라이브 자동 정리. run-local.ps1이 매번 부르지만 실제 정리는 하루 한 번만 한다
-# (마지막 실행 시각 %TEMP%\tokenwar\.last_cleanup, 20시간 안이면 바로 끝).
+﻿# C 드라이브 자동 정리. run-local.ps1과 watch-models.ps1(15분마다)이 부르고, 실제 정리는 3시간에 한 번
+# (마지막 실행 시각 %TEMP%\tokenwar\.last_cleanup, 3시간 안이면 바로 끝. 운영자 2026-11-17 "수시로 정리").
 #   powershell -ExecutionPolicy Bypass -File scripts\cleanup.ps1            보통 실행
-#   ... -Force                                                              하루 한 번 조건 무시
+#   ... -Force                                                              3시간 조건 무시
 #   ... -WhatIf                                                             지울 목록만 출력 (아무것도 안 지움, 기록 안 남김)
 # 할 일:
 #   - %TEMP%\tokenwar 아래(dl, subs 등) 24시간 넘은 파일과 빈 폴더
@@ -24,9 +24,9 @@ $Stamp     = Join-Path $TempRoot ".last_cleanup"
 $LogDir    = Join-Path $DailyRepo "logs"
 $Allowed   = @($AgentRepo, $DailyRepo, $TempRoot)
 
-# 하루 한 번
+# 3시간에 한 번
 if (-not $Force -and -not $WhatIf -and (Test-Path -LiteralPath $Stamp)) {
-    if ((Get-Item -LiteralPath $Stamp).LastWriteTime -gt (Get-Date).AddHours(-20)) { exit 0 }
+    if ((Get-Item -LiteralPath $Stamp).LastWriteTime -gt (Get-Date).AddHours(-3)) { exit 0 }
 }
 
 function Get-FullPath([string]$p) {

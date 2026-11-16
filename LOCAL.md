@@ -113,7 +113,7 @@ Code 탭에서 할 때: 운영자의 `tokenwar-agent` 폴더 브랜치를 바꾸
 
 손으로 확인: `py -3.12 agent/model_watch.py --dry-run -v` (기록 안 바꿈, 출처별 읽은 수와 거른 이유, 업계 속보 후보·건너뛴 이유). 처음 보는 속보만: `--dry-run --breaking-only`. 기록을 처음부터 다시: `py -3.12 agent/model_watch.py --init`.
 
-**자동 정리:** `run-local.ps1`이 끝날 때 `scripts/cleanup.ps1`을 부른다(하루 한 번). `%TEMP%\tokenwar`의 24시간 지난 파일, `logs/`의 30일 지난 기록, 7일 넘게 안 쓴 `%TEMP%` 아래 worktree, 게시된 릴스의 남은 `clips/source.mp4`를 지우고 `logs/cleanup.log`에 한 줄 남긴다. 두 저장소 폴더와 `%TEMP%\tokenwar` 밖은 건드리지 않는다.
+**자동 정리:** `run-local.ps1`이 끝날 때와 `watch-models.ps1`(15분마다)이 `scripts/cleanup.ps1`을 부른다(실제 정리는 3시간에 한 번). `%TEMP%\tokenwar`의 24시간 지난 파일, `logs/`의 30일 지난 기록, 7일 넘게 안 쓴 `%TEMP%` 아래 worktree, 게시된 릴스의 남은 `clips/source.mp4`를 지우고 `logs/cleanup.log`에 한 줄 남긴다. 두 저장소 폴더와 `%TEMP%\tokenwar` 밖은 건드리지 않는다.
 
 ## 하지 말 것
 
