@@ -6,6 +6,7 @@
 - `data/benchmark_patterns.md` 처음 25줄 + '계정별 형식'·'빠르게 크는 계정' 표
 - `data/followers.csv`(우리 팔로워), `data/performance.json`(우리 게시물 조회·공유·저장), `data/trends.md` 첫 3줄(목표 진행)
 - `config.json` `benchmarks.accounts`, `data/benchmark_changes.md`(지난 변경), 지난 `data/weekly_insights.md`
+- `data/case_studies.md`(사람이 직접 연구한 사례 메모, 덮어쓰지 않음): 주간 '적용할 3가지'를 고를 때 함께 본다
 
 ## 2. 새 계정 찾기 (웹 검색 10회 이내)
 - 조건: 한국어, AI·테크 정보, 팔로워 1만 이상, 최근 30일 안에 게시, 남의 영상을 그대로 퍼 오는 계정이 아님(직접 만든 카드·영상·직접 해 본 결과).
