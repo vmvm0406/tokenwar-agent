@@ -1,0 +1,99 @@
+{
+  "id": "2026-11-16-reel-first-followers",
+  "type": "reel",
+  "format": "news",
+  "series": "전황",
+  "date": "2026-11-16",
+  "publish_at": "2026-12-31T23:59:00+09:00",
+  "slides": [
+    {
+      "kind": "cover",
+      "layout": "image",
+      "visual": {
+        "type": "image",
+        "src": "img/headlines.jpg",
+        "position": "left top"
+      },
+      "title": "AI 소식은 하루에도\n수십 개 쏟아집니다",
+      "highlight": "수십 개",
+      "sub": "다 따라가기는 어렵습니다"
+    },
+    {
+      "kind": "body",
+      "visual": {
+        "type": "image",
+        "src": "img/news.jpg",
+        "position": "center center",
+        "credit": "토큰전쟁 게시물"
+      },
+      "heading": "그중 중요한 것만 골라\n1분 안에 정리합니다",
+      "highlight": "중요한 것만"
+    },
+    {
+      "kind": "clip",
+      "src": "clips/proof.mp4",
+      "start": 0,
+      "end": 3.9,
+      "source": "토큰전쟁이 직접 만든 화풍 영상·FPS 게임 화면",
+      "source_url": "https://www.instagram.com/tokenwar_ai/",
+      "heading": "말로만 전하지 않고\n직접 해 보고 보여 드립니다",
+      "highlight": "직접 해 보고"
+    },
+    {
+      "kind": "clip",
+      "src": "clips/counter.mp4",
+      "start": 0,
+      "end": 4.5,
+      "source": "토큰전쟁이 코드로 만든 화면",
+      "source_url": "https://www.instagram.com/tokenwar_ai/"
+    },
+    {
+      "kind": "body",
+      "heading": "오늘 시작한 계정입니다\n첫 팔로워가 되어 주세요",
+      "highlight": "첫 팔로워"
+    }
+  ],
+  "sources": [
+    {
+      "name": "토큰전쟁 인스타그램 게시물 (11월 16일)",
+      "url": "https://www.instagram.com/tokenwar_ai/"
+    },
+    {
+      "name": "토큰전쟁 게시물 저장소",
+      "url": "https://github.com/vmvm0406/tokenwar-agent"
+    }
+  ],
+  "caption": "AI 소식, 중요한 것만 1분에 챙겨 보세요. 토큰전쟁은 오늘 시작한 계정이에요.\n\n📍 AI 소식은 하루에도 수십 개 쏟아져서 다 따라가기 어렵습니다. 그래서 꼭 알아야 할 것만 골라 인용 릴스와 카드로 짧게 전해요. 나델라, 머스크, 힌턴의 발언도 그렇게 골랐고요.\n\n🔫 말로만 전하지 않습니다. 화풍 스킬로 영상을 만들고 프롬프트로 FPS 게임을 만들어, 결과 화면을 그대로 보여 드려요.\n\n📊 끝은 정해 두지 않았습니다.\n\n👉 첫 팔로워가 되어 주세요. AI 소식을 같이 챙겨 볼 친구에게도 보내 주세요.",
+  "threads": {
+    "text": "토큰전쟁은 AI 소식 중 중요한 것만 골라 1분 안에 정리하는 계정입니다. 오늘 시작했습니다.\n\nAI 소식은 하루에도 수십 개 나옵니다. 그중 꼭 알아야 할 것만 고르고, 화풍 영상·FPS 게임처럼 직접 만들어 본 결과도 보여 드립니다.\n\n끝은 정해 두지 않았습니다.",
+    "images": [
+      "cover"
+    ],
+    "replies": []
+  },
+  "thumb": {
+    "title": "AI 소식,\n중요한 것만 1분에",
+    "highlight": "중요한 것만",
+    "image": {
+      "type": "image",
+      "src": "img/cover.jpg",
+      "position": "center center"
+    }
+  },
+  "music": {
+    "generate": true,
+    "credit": "배경음악: 토큰전쟁이 코드로 직접 만든 음악 (외부 음원 없음)"
+  },
+  "rights": "own",
+  "rights_note": "화면은 모두 토큰전쟁 게시물에서 가져옴(각 게시물의 출처·라이선스 그대로): 오늘 게시물 표지·제목, 화풍 스킬 릴스에서 우리가 만든 Red Paper-cut 장면 전환 1.1초, 우리가 프롬프트로 만든 FPS 게임 플레이 녹화 3초. 헤드라인 벽과 숫자 카운터는 코드로 만든 화면. 음악은 코드로 생성.",
+  "hashtags": [
+    "#AI뉴스",
+    "#인공지능",
+    "#AI소식",
+    "#토큰전쟁"
+  ],
+  "topic": [
+    "토큰전쟁",
+    "계정 소개"
+  ]
+}
