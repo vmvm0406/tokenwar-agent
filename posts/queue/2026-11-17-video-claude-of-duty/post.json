@@ -127,7 +127,7 @@
       "items": [
         {
           "title": "콜 오브 듀티 수준은 아닙니다",
-          "text": "만든 사람도 진짜 게임이 더 낫다고 밝혔습니다"
+          "text": "제작자도 진짜 게임이 더 낫다고 밝혔습니다"
         },
         {
           "title": "클로드 코드에서 쓰는 프롬프트입니다",
@@ -154,27 +154,270 @@
       "url": "https://www.digitaltoday.co.kr/en/view/86733/three-paragraph-prompt-enough-claude-opus-5-builds-fps-game-two-days-after-launch"
     }
   ],
-  "caption": "클로드 Opus 5로 브라우저 슈팅 게임을 만든 프롬프트 3문단, 우리말 번역과 직접 실행해 보는 법을 정리했습니다.\n\n🗞️ Matt Shumer가 7월 25일 X에 올린 Claude-of-Duty. 클로드 코드가 여러 시간 스스로 작업해 만들었고, 코드와 프롬프트는 MIT 라이선스로 공개했습니다.\n📍 그림·소리 파일 없이 Three.js 코드만으로 벽 무늬와 총, 소리까지 만들어 내는 게임. 영상 속 플레이 화면은 그 코드를 저희 컴퓨터에서 실행해 녹화했어요.\n📊 AI 에이전트들이 쓴 코드는 약 5만 5천 줄, 외부 그림·소리 파일은 0개입니다.\n🔫 다만 실제 콜 오브 듀티 수준은 아닙니다. 만든 사람도 진짜 게임이 더 낫다고 직접 밝혔어요.\n👉 출처: GitHub mshumer/Claude-of-Duty(README·prompt.md, MIT), Matt Shumer X 원본 영상, 디지털투데이 (7월 25~29일)\n\n게임 만들어 보고 싶다던 친구에게 보내 주세요.\n\n팔로우하고 댓글에 '자료'라고 남기면 3문단 프롬프트 전체 번역과 실행 방법을 DM으로 보내 드려요. (팔로우한 분께 보내집니다)",
+  "caption": "클로드 Opus 5로 브라우저 슈팅 게임을 만든 프롬프트와 사용법을 정리했습니다.\n\n🗞️ Matt Shumer가 7월 25일 X에 올린 Claude-of-Duty. 클로드 코드가 여러 시간 스스로 작업해 만들었고, 코드와 프롬프트는 오픈소스(MIT 라이선스)로 공개돼 있습니다.\n📍 그림·소리 파일 없이 Three.js 코드만으로 벽 무늬와 총, 엔티티, 소리까지 만들어 내는 게임. 영상 속 플레이 화면은 그 코드를 저희 컴퓨터에서 실행해 녹화했어요.\n📊 AI 에이전트들이 쓴 코드는 약 5만 5천 줄, 외부 그림·소리 파일은 0개입니다.\n🔫 다만 실제 콜 오브 듀티 수준은 아닙니다. 제작자도 진짜 게임이 더 낫다고 직접 밝혔어요.\n👉 출처: GitHub mshumer/Claude-of-Duty(README·prompt.md, MIT), Matt Shumer X 원본 영상, 디지털투데이 (7월 25~29일)\n\n게임 만들어 보고 싶다던 친구에게 보내 주세요.\n\n팔로우하고 댓글에 '자료'라고 남기면 프롬프트와 사용법을 DM으로 보내 드려요. (팔로우한 분께 보내집니다)",
   "dm": {
     "keyword": "자료",
-    "message": "Claude-of-Duty를 만든 3문단 프롬프트 번역과 실행 방법이에요.\n아래 '자료 보기'를 누르면 원문·번역과 복사 버튼이 있는 페이지가 열립니다.\n프롬프트는 클로드 코드에서 오래 돌아가니 사용량을 먼저 확인하세요.",
+    "message": "Claude-of-Duty를 만든 프롬프트와 사용법입니다.\n아래 '자료 보기'를 누르면 번역 프롬프트와 클로드 코드 설치, 프롬프트 넣는 곳, 브라우저에서 여는 법까지 정리한 페이지가 열립니다.\n클로드 코드가 여러 시간 작업하는 프롬프트라 사용량을 먼저 확인하십시오.",
     "page": {
-      "intro": "Matt Shumer가 클로드 Opus 5와 클로드 코드로 만든 브라우저 1인칭 슈팅 게임 Claude-of-Duty의 프롬프트와 실행 방법입니다. 코드와 프롬프트는 MIT 라이선스로 공개돼 있습니다(Copyright (c) 2026 mshumer). 아래 번역은 원문 prompt.md를 토큰전쟁이 우리말로 옮긴 것입니다. /loop와 ultracode는 클로드 코드에서 쓰는 명령이라 영어 그대로 두었습니다. 클로드 앱 대화창이 아니라 클로드 코드에 넣는 프롬프트입니다.",
-      "result": "11월 16일 공개 코드를 이 컴퓨터(윈도우)에서 받아 npm install, npm run dev로 실행했고, 저장소에 들어 있는 녹화 도구(tools/demo.mjs, 봇이 플레이)로 화면을 녹화했습니다. 그림·소리 파일 없이 시작할 때 코드로 벽 무늬와 총, 적, 소리를 만들어 냅니다. 같은 프롬프트로 게임을 처음부터 다시 만들어 보지는 않았습니다.",
-      "extra": [
+      "intro": "Matt Shumer가 클로드 Opus 5와 클로드 코드로 만든 브라우저 1인칭 슈팅 게임 Claude-of-Duty의 프롬프트와 사용법입니다. 코드와 프롬프트는 오픈소스(MIT 라이선스, Copyright (c) 2026 mshumer)로 공개되어 있습니다. 아래 번역은 원문 prompt.md를 토큰전쟁이 우리말로 옮긴 것입니다. /loop와 ultracode는 클로드 코드에서 쓰는 명령이라 영어 그대로 두었습니다. 클로드 앱 대화창이 아니라 클로드 코드에 넣는 프롬프트입니다.",
+      "result": [
         {
-          "title": "공개 코드 실행 방법 (Node.js 설치 후 터미널에서)",
-          "prompt": "git clone https://github.com/mshumer/Claude-of-Duty\ncd Claude-of-Duty\nnpm install\nnpm run dev",
-          "note": "크롬에서 http://127.0.0.1:5173 을 열고 화면을 누르면 시작합니다. WASD 이동, 마우스 조준, 왼쪽 클릭 사격, 오른쪽 클릭 조준경, R 재장전입니다. 저희 컴퓨터에서는 처음 불러오는 데 1분 넘게 걸렸습니다."
+          "k": "테스트 일자:",
+          "v": "2026년 11월 16일"
+        },
+        {
+          "k": "테스트 환경:",
+          "v": "Windows 11, Node.js, 크롬"
+        },
+        {
+          "k": "실행:",
+          "v": "공개 코드를 받아 npm install, npm run dev로 실행했습니다. 저장소에 포함된 녹화 도구(tools/demo.mjs, 봇 플레이)로 화면을 녹화했습니다."
+        },
+        {
+          "k": "확인 내용:",
+          "v": "그림·소리 파일 없이 시작할 때 코드로 벽 무늬와 총, 엔티티, 소리를 만들어 냅니다."
+        },
+        {
+          "k": "미확인 범위:",
+          "v": "같은 프롬프트로 게임을 처음부터 다시 만들어 보지는 않았습니다."
         }
       ],
+      "extra": [],
       "caution": [
-        "README의 '솔직한 평가'에 따르면 목표였던 최신 콜 오브 듀티 수준에는 못 미칩니다. AI 비평가 11명이 매긴 점수는 10점 만점에 5.05점이 최고였고, 어느 쪽인지 가리고 비교하면 매번 진짜 콜 오브 듀티가 더 낫다고 나왔습니다.",
-        "게임이 무겁습니다. README 기준 애플 노트북에서 초당 28~30프레임입니다. 그래픽 카드가 약한 컴퓨터에서는 느릴 수 있습니다.",
-        "같은 프롬프트를 넣어도 같은 게임이 나오지 않습니다. 클로드 코드가 여러 시간 스스로 작업하므로 클로드 코드 사용량이 많이 듭니다."
+        "README의 '솔직한 평가'에 따르면 목표였던 최신 콜 오브 듀티 수준에는 미치지 못합니다. AI 비평가 11명이 매긴 점수는 10점 만점에 5.05점이 최고였고, 어느 쪽인지 가리고 비교하면 매번 실제 콜 오브 듀티가 더 낫다는 결과가 나왔습니다.",
+        "이 게임은 클로드 코드가 일을 나눠 맡는 보조 AI(서브 에이전트) 여러 개를 띄우고, 같은 작업을 반복하는 /loop 명령으로 여러 시간 스스로 작업해 만들었습니다. 그만큼 사용량이 매우 큽니다. 시작 전에 요금제의 사용 한도를 확인하십시오.",
+        "같은 프롬프트를 넣어도 같은 게임이 나오지 않습니다. 결과는 실행할 때마다 달라집니다.",
+        "게임이 무겁습니다. README 기준 애플 노트북에서 초당 28~30프레임이며, 그래픽 카드가 약한 컴퓨터에서는 느릴 수 있습니다."
+      ],
+      "style": "formal",
+      "setup": [
+        {
+          "before": 1,
+          "steps": [
+            {
+              "label": "사전 준비",
+              "title": "터미널부터 엽니다",
+              "text": "터미널은 마우스 대신 글자로 컴퓨터에 일을 시키는 창입니다. 커서만 깜빡이는 빈 창이 뜨면 맞게 연 것입니다. 이 페이지의 명령은 복사 버튼으로 복사해 그 창에 붙여 넣고 Enter를 누르면 됩니다.",
+              "groups": [
+                {
+                  "name": "윈도우",
+                  "text": "시작 메뉴에서 PowerShell을 검색해 열거나, Win + X를 누르고 Windows PowerShell(또는 터미널)을 고릅니다. 줄 앞에 PS가 붙어 있으면 PowerShell입니다. 붙여 넣기는 Ctrl + V 또는 마우스 오른쪽 클릭입니다.",
+                  "src": {
+                    "name": "Claude Code 공식 문서: 처음 쓰는 사람을 위한 터미널 안내",
+                    "url": "https://code.claude.com/docs/en/terminal-guide"
+                  }
+                },
+                {
+                  "name": "맥",
+                  "text": "Cmd + Space로 Spotlight 검색을 열고 '터미널'(Terminal)을 입력한 뒤 Enter를 누릅니다. 붙여 넣기는 Cmd + V입니다.",
+                  "src": {
+                    "name": "Claude Code 공식 문서: 터미널 안내",
+                    "url": "https://code.claude.com/docs/en/terminal-guide"
+                  }
+                },
+                {
+                  "name": "리눅스",
+                  "text": "대부분의 배포판에서 Ctrl + Alt + T를 누르거나, 앱 메뉴에서 '터미널'을 찾습니다. 붙여 넣기는 Ctrl + Shift + V입니다.",
+                  "src": {
+                    "name": "Claude Code 공식 문서: 터미널 안내",
+                    "url": "https://code.claude.com/docs/en/terminal-guide"
+                  }
+                }
+              ]
+            },
+            {
+              "label": "사전 준비",
+              "title": "클로드 코드를 설치합니다",
+              "text": "공식 문서에 있는 설치 명령 그대로입니다. 받는 동안 진행 표시가 없으니 창을 닫지 말고 기다립니다. 끝나면 터미널을 새로 열고 확인 명령을 넣어 버전 숫자가 나오면 성공입니다. 처음 claude를 실행하면 브라우저가 열려 로그인합니다. 무료 요금제로는 쓸 수 없고 Pro 이상 요금제가 필요합니다.",
+              "groups": [
+                {
+                  "name": "윈도우 (PowerShell)",
+                  "prompts": [
+                    "irm https://claude.ai/install.ps1 | iex"
+                  ],
+                  "src": {
+                    "name": "Claude Code 공식 문서: 설치",
+                    "url": "https://code.claude.com/docs/en/setup"
+                  }
+                },
+                {
+                  "name": "윈도우 (CMD, 줄 앞에 PS가 없는 창)",
+                  "prompts": [
+                    "curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd"
+                  ],
+                  "src": {
+                    "name": "Claude Code 공식 문서: 설치",
+                    "url": "https://code.claude.com/docs/en/setup"
+                  }
+                },
+                {
+                  "name": "맥 · 리눅스",
+                  "prompts": [
+                    "curl -fsSL https://claude.ai/install.sh | bash"
+                  ],
+                  "src": {
+                    "name": "Claude Code 공식 문서: 설치",
+                    "url": "https://code.claude.com/docs/en/setup"
+                  }
+                },
+                {
+                  "name": "설치 확인 (공통)",
+                  "text": "2.1.281 (Claude Code)처럼 버전이 표시되면 정상입니다. claude를 찾을 수 없다고 나오면 터미널을 닫았다 다시 열어 확인합니다.",
+                  "prompts": [
+                    "claude --version"
+                  ],
+                  "src": {
+                    "name": "Claude Code 공식 문서: 설치 확인",
+                    "url": "https://code.claude.com/docs/en/setup"
+                  }
+                }
+              ]
+            },
+            {
+              "label": "클로드 켜기",
+              "title": "빈 폴더를 만들고 그 안에서 클로드를 켭니다",
+              "text": "클로드는 켠 폴더 안에 파일을 만듭니다. 게임 파일이 다른 파일과 섞이지 않도록 빈 폴더를 하나 만들어 그 안에서 켭니다. 터미널을 새로 열고 아래 세 줄을 한 줄씩 넣고 Enter를 누릅니다. 첫 줄은 fps-game이라는 빈 폴더를 만들고, 둘째 줄(cd)은 그 폴더로 들어가고, 셋째 줄이 클로드를 켭니다. 켜진 창이 다음 단계의 프롬프트를 붙여 넣을 곳입니다. 파일을 만들거나 바꾸기 전에 허락을 물으면 내용을 확인한 뒤 Enter로 승인합니다.",
+              "groups": [
+                {
+                  "name": "윈도우 (PowerShell)",
+                  "text": "터미널은 C:\\Users\\내 이름 폴더에서 시작하므로, 새 폴더는 C:\\Users\\내 이름\\fps-game에 생깁니다.",
+                  "prompts": [
+                    "mkdir fps-game\ncd fps-game\nclaude"
+                  ],
+                  "src": {
+                    "name": "Claude Code 공식 문서: 작업할 폴더에서 claude 실행",
+                    "url": "https://code.claude.com/docs/en/setup"
+                  }
+                },
+                {
+                  "name": "맥 · 리눅스",
+                  "text": "터미널은 내 홈 폴더(맥은 /Users/내 이름, 리눅스는 /home/내 이름)에서 시작하므로, 새 폴더는 그 안에 fps-game으로 생깁니다.",
+                  "prompts": [
+                    "mkdir fps-game\ncd fps-game\nclaude"
+                  ],
+                  "src": {
+                    "name": "Claude Code 공식 문서: 작업할 폴더에서 claude 실행",
+                    "url": "https://code.claude.com/docs/en/setup"
+                  }
+                },
+                {
+                  "name": "다음에 다시 켤 때",
+                  "text": "터미널을 열고 cd fps-game을 넣은 뒤 claude를 넣으면 같은 폴더에서 다시 켜집니다. 끌 때는 exit를 넣습니다."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "before": 2,
+          "steps": [
+            {
+              "label": "결과 확인",
+              "title": "만든 게임을 브라우저에서 엽니다",
+              "text": "게임 파일은 클로드를 켠 fps-game 폴더 안에 생깁니다. 여는 방법은 클로드가 고른 구성에 따라 다르므로, 작업이 끝나면 같은 창에 아래 문장을 넣어 실행 방법을 확인하십시오. 원본 Claude-of-Duty는 Three.js로 만든 웹 게임이라 터미널에서 개발 서버를 켜고 브라우저 주소창에 주소를 넣어 엽니다(다음 단계 참고). 서버를 켠 터미널 창은 게임을 하는 동안 닫지 마십시오.",
+              "groups": [
+                {
+                  "name": "클로드 창에 넣을 문장",
+                  "prompts": [
+                    "만든 게임을 브라우저에서 여는 방법을 알려 주고, 필요하면 실행까지 해 줘."
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "append": [
+        {
+          "num": 1,
+          "text": "앞 단계에서 fps-game 폴더 안에 켠 클로드 창에 세 문단을 한 번에 붙여 넣고 Enter를 누릅니다. 원문(영어)을 넣으려면 저장소의 prompt.md를 복사하십시오. 작업은 여러 시간 이어지며, 중간에 멈추려면 Esc를 누릅니다.",
+          "groups": [
+            {
+              "src": [
+                {
+                  "name": "원문 prompt.md",
+                  "url": "https://github.com/mshumer/Claude-of-Duty/blob/main/prompt.md"
+                },
+                {
+                  "name": "Claude Code 공식 문서: 터미널 안내(Esc로 멈추기)",
+                  "url": "https://code.claude.com/docs/en/terminal-guide"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "num": 2,
+          "text": "새로 만들지 않고 제작자가 공개한 원본 게임만 실행해 볼 수도 있습니다. Node.js를 설치한 뒤 아래 명령을 한 줄씩 넣습니다. 끝나면 크롬 주소창에 http://127.0.0.1:5173 을 넣고 화면을 클릭하면 시작합니다. 저희 컴퓨터에서는 처음 불러오는 데 1분 넘게 걸렸습니다. 조작은 WASD 이동, 마우스 조준, 왼쪽 클릭 사격, 오른쪽 클릭 조준경, R 재장전, Esc 마우스 풀기입니다.",
+          "groups": [
+            {
+              "name": "권장 방법: 클로드에게 맡기기",
+              "text": "클로드 창에 아래 문장을 붙여 넣고 Enter를 누릅니다. 명령을 실행하기 전마다 허락을 요청하므로 내용을 확인한 뒤 승인합니다. 끝나면 exit로 클로드를 끄고 터미널을 새로 엽니다.",
+              "prompts": [
+                "Node.js LTS 버전을 이 컴퓨터에 설치해 줘. 이미 깔려 있으면 버전만 확인해 줘."
+              ]
+            },
+            {
+              "name": "직접 설치하는 경우: 윈도우",
+              "prompts": [
+                "winget install --id OpenJS.NodeJS.LTS -e"
+              ],
+              "src": {
+                "name": "Node.js 공식 다운로드",
+                "url": "https://nodejs.org/en/download"
+              }
+            },
+            {
+              "name": "직접 설치하는 경우: 맥",
+              "text": "Homebrew가 설치되어 있다면 아래 명령을 넣습니다. 없다면 nodejs.org에서 macOS 설치 파일(.pkg)을 받습니다.",
+              "prompts": [
+                "brew install node"
+              ],
+              "src": {
+                "name": "Homebrew: node",
+                "url": "https://formulae.brew.sh/formula/node"
+              }
+            },
+            {
+              "name": "직접 설치하는 경우: 리눅스",
+              "text": "우분투 24.04 기본 저장소의 Node.js는 18로 오래된 판입니다. nodejs.org 다운로드 페이지에서 Linux용을 받거나 클로드에게 맡기는 방법을 권장합니다.",
+              "src": {
+                "name": "Node.js 공식 다운로드",
+                "url": "https://nodejs.org/en/download"
+              }
+            },
+            {
+              "name": "원본 게임 실행 (Git이 있는 경우)",
+              "prompts": [
+                "git clone https://github.com/mshumer/Claude-of-Duty\ncd Claude-of-Duty\nnpm install\nnpm run dev"
+              ],
+              "src": {
+                "name": "Claude-of-Duty README",
+                "url": "https://github.com/mshumer/Claude-of-Duty"
+              }
+            },
+            {
+              "name": "원본 게임 실행 (Git이 없는 경우)",
+              "text": "저장소 첫 화면의 Code 버튼 → Download ZIP으로 받아 압축을 풉니다. 터미널에서 cd로 압축을 푼 폴더에 들어간 뒤 아래 두 줄을 넣습니다.",
+              "prompts": [
+                "npm install\nnpm run dev"
+              ],
+              "src": [
+                {
+                  "name": "Claude-of-Duty README",
+                  "url": "https://github.com/mshumer/Claude-of-Duty"
+                },
+                {
+                  "name": "깃허브 공식 문서: 소스 코드 압축 파일 받기",
+                  "url": "https://docs.github.com/en/repositories/working-with-files/using-files/downloading-source-code-archives"
+                }
+              ]
+            }
+          ]
+        }
       ]
     },
-    "cta": "팔로우하고 댓글에 '자료' 남기면\n3문단 프롬프트 번역 보내 드립니다"
+    "cta": "팔로우하고\n댓글에 '자료' 남기면\n프롬프트와 사용법\n보내 드립니다"
   },
   "thumb": {
     "title": "프롬프트 3문단으로\n슈팅 게임 만든다",
