@@ -840,10 +840,14 @@ OUR_STORY_RE = re.compile(r"저희 컴퓨터|저희가 직접 돌려|직접 돌�
 
 
 def check_length_field(post):
+    e = []
     v = post.get("length")
     if v is not None and v not in ("short", "long"):
-        return [f"length는 'short' 또는 'long': {v!r}"]
-    return []
+        e.append(f"length는 'short' 또는 'long': {v!r}")
+    o = post.get("origin")
+    if o is not None and o not in ("own", "quote"):
+        e.append(f"origin은 'own' 또는 'quote': {o!r}")
+    return e
 
 
 def writing_rules(post):

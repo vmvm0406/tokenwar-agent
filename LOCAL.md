@@ -14,7 +14,8 @@
 1. `git pull`, 그리고 `git fetch origin "+refs/heads/post/*:refs/remotes/origin/post/*"` (검토 중인 게시물과 겹치지 않게)
 2. `py -3.12 agent/hot.py`로 지금 관심 주제를 새로 모은 뒤, `AGENT.md`, `STYLE_GUIDE.md`, `TEMPLATES.md`, `config.json`, `data/hot.md`, `data/trends.md`, `data/hot_topics.md`를 읽는다. **지금 관심도가 높은 주제부터** 고른다 (STYLE_GUIDE 6-1장 점수표). 릴스·카드뉴스 모두 `data/hot_topics.md`(잘 터진 주제 묶음) 위쪽 주제와 같거나 비슷한 것을 먼저 고르고, PR 본문에 게시물마다 "참고한 잘 터진 주제: <묶음> (대표 게시물 첫 줄, 배수)" 한 줄을 적는다 (STYLE_GUIDE 3장). 주제·형식을 고르기 전에 data/benchmark_patterns.md 위쪽과 data/weekly_insights.md를 본다.
    - **이번 주 한정(2026-11-16~22, data/weekly_insights.md 운영자 승인):** 릴스 주제는 'AI 영상·영화 만들기'(1.27x)와 '미중 경쟁·반도체'(1.29x)를 먼저, 하루 릴스 5개 중 2개 이상. '사진 변환'(0.86x)·'AI 게임 만들기'(0.75x)는 이번 주 릴스에서 줄이고, 다룬다면 카드·자료 묶음으로. 가장 기대되는 릴스는 18~21시 칸(18:13·19:43). 다음 주에는 새 weekly_insights.md를 따른다.
-3. 만들 개수는 실행할 때 받은 지시("Make N carousel(s) and M reel(s)")대로. `run-local.ps1`이 `py -3.12 agent/slots.py need`로 오늘 몫(`config.json` `slots.daily_target`)에서 이미 예약된 것을 뺀 수를 넘긴다. 둘 다 0이면 부르지 않는다. 손으로 돌릴 때는 직접 `need`를 본다.
+3. **알고리즘 대응 (STYLE_GUIDE 9-0):** 하루 릴스 5개 중 2개는 직접 만든 결과물 릴스(`origin: own`), 나머지 인용 릴스(`origin: quote`)엔 해설(숫자·비교 모션, 맥락 한 줄)을 얹는다. 2~3개는 짧게(`length: short`), 첫 3초는 결과·숫자, 제목·캡션은 보낼 사람이 떠오르게.
+   만들 개수는 실행할 때 받은 지시("Make N carousel(s) and M reel(s)")대로. `run-local.ps1`이 `py -3.12 agent/slots.py need`로 오늘 몫(`config.json` `slots.daily_target`)에서 이미 예약된 것을 뺀 수를 넘긴다. 둘 다 0이면 부르지 않는다. 손으로 돌릴 때는 직접 `need`를 본다.
 4. 만들기 전에 **STYLE_GUIDE 9장 '인스타 추천 체크리스트'**를 본다: 원본으로 보이게(번역 자막·위 제목으로 실질 편집, 영상 아래 해설 추가는 안 함), 캡션 첫 줄에 주제 이름, 보낼 이유 한 줄(구걸 금지), 해시태그 5개 이하, 같은 주제는 이어지는 칸에 두지 않기.
 5. 게시 시각은 칸 배정으로 정한다 (5장). `py -3.12 agent/slots.py status`로 며칠 치 칸 상황을 본다.
 
