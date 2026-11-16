@@ -24,9 +24,17 @@ B = CONFIG["brand"]
 
 DEFAULTS = {
     "keyword": DMC.get("keyword", "자료"),
-    "comment_reply": "DM으로 보내 드렸어요. 안 보이면 메시지 요청함을 확인해 주세요.",
-    "follow_text": "팔로우한 분께만 자료를 보내 드려요. 팔로우하신 뒤 이 게시물에 다시 '{kw}'라고 댓글을 남겨 주시면 바로 보내 드릴게요.",
+    # 공개 답글은 여러 개를 돌려 쓴다 (같은 말만 반복하면 스팸처럼 보임, 운영자 결정 2026-11-16)
+    "comment_reply": [
+        "DM으로 보내 드렸어요. 안 보이면 메시지 요청함을 확인해 주세요.",
+        "자료 보내 드렸어요! DM 확인해 주세요.",
+        "방금 DM 드렸습니다. 요청함도 한 번 봐 주세요.",
+        "보내 드렸어요. 만들어 보시고 결과도 알려 주세요.",
+    ],
+    # 반응 조건이 '아무 댓글'이라 키워드를 다시 쓰라고 하지 않는다 (운영자 결정 2026-11-16)
+    "follow_text": "팔로우한 분께만 자료를 보내 드려요. 팔로우하신 뒤 이 게시물에 다시 댓글을 남겨 주시면 바로 보내 드릴게요.",
 }
+REPLIES_MAX = 4
 
 
 def esc(s):
@@ -45,7 +53,20 @@ def dm_conf(post):
     d = dict(DEFAULTS)
     d.update({k: v for k, v in (post.get("dm") or {}).items() if v not in (None, "")})
     d["follow_text"] = d["follow_text"].replace("{kw}", d["keyword"])
+    # 예전 게시물의 "다시 '자료'라고 댓글을" → "다시 댓글을" (이제 아무 댓글에나 반응)
+    d["follow_text"] = re.sub(r"다시\s*['‘\"“]" + re.escape(d["keyword"]) + r"['’\"”]\s*(?:이?라고\s*)?댓글", "다시 댓글", d["follow_text"])
+    d["comment_replies"] = replies_of(d.get("comment_reply"))
     return d
+
+
+def replies_of(v):
+    """공개 답글 문구 목록. 게시물에 한두 개만 있으면 기본 문구로 채워 3~4개를 돌려 쓰게 한다."""
+    mine = [v] if isinstance(v, str) else list(v or [])
+    out = []
+    for x in [str(x).strip() for x in mine] + DEFAULTS["comment_reply"]:
+        if x and x not in out:
+            out.append(x)
+    return out[:max(REPLIES_MAX, len([x for x in mine if x]))]
 
 
 def cover_of(post):
@@ -104,12 +125,16 @@ def checklist_from_slides(post):
 
 # ---------- 1. 도구에 붙여 넣을 설정 메모 ----------
 
-def memo_md(post):
+def memo_md(post, permalink=""):
+    """도구에 붙여 넣을 설정 메모 (dm.md). 게시 직후 알림(이슈 본문)에도 그대로 쓴다: permalink가 있으면 넣는다."""
     d = dm_conf(post)
     url = page_url(post)
     cover = cover_of(post)
     title = cover.get("title", "").replace("\n", " ")
     tool = DMC.get("tool", "Zorcha")
+    when = post.get("publish_at", "")[:16].replace("T", " ")
+    target = f"{when} 게시물 「{title}」" + (f" {permalink}" if permalink else "")
+    replies = d["comment_replies"]
     lines = [
         f"# DM 설정 메모 — {post['id']}",
         "",
@@ -117,15 +142,20 @@ def memo_md(post):
         "",
         f"| {tool} 칸 | 넣을 값 |",
         "|---|---|",
-        f"| 게시물 | {post.get('publish_at', '')[:16].replace('T', ' ')} 게시물 「{title}」 |",
-        f"| 키워드 (댓글에 이 말이 들어가면) | `{d['keyword']}` |",
-        f"| 댓글 공개 답글 | {d['comment_reply']} |",
+        f"| 게시물 | {target} |",
+        "| 반응 조건 | 아무 댓글(Any comment). 키워드를 맞추지 않아도 된다 |",
+        f"| (참고) 화면·캡션 안내 키워드 | `{d['keyword']}` (다른 말을 써도 받는다) |",
         "| Ask for Follow | 켬 |",
         f"| 팔로우 안 한 사람에게 보낼 확인 DM | {d['follow_text']} |",
         "| 팔로우 요청 버튼 | 프로필 보기 |",
+        "| 댓글 공개 답글 | 켬. 아래 \"공개 답글 문구\"를 모두 넣어 돌려 쓴다 (같은 말만 반복하면 스팸처럼 보임) |",
         "| 보낼 DM 문구 | 아래 \"DM 문구\" 전체 |",
         f"| 링크 버튼 이름 | {d.get('button', '자료 보기')} |",
-        f"| 링크 주소 | {url} |",
+        f"| 링크 주소 (자료 페이지) | {url} |",
+        "",
+        "## 공개 답글 문구 (돌려 쓰기)",
+        "",
+        *[f"{'①②③④⑤⑥⑦⑧'[i] if i < 8 else str(i + 1) + '.'} {r}" for i, r in enumerate(replies)],
         "",
         "## DM 문구",
         "",
@@ -136,11 +166,23 @@ def memo_md(post):
         "## 확인",
         "",
         f"- 링크가 열리는지: {url} (게시물이 main에 합쳐지고 GitHub Pages가 갱신된 뒤 1~2분)",
-        "- 다른 계정(팔로우 안 한 계정)으로 댓글을 달아, 확인 DM(팔로우하고 다시 댓글)이 오는지, 팔로우 뒤 다시 댓글을 달면 자료가 오는지 본다.",
+        "- 다른 계정(팔로우 안 한 계정)으로 아무 댓글이나 달아, 확인 DM(팔로우하고 다시 댓글)이 오는지, 팔로우 뒤 다시 댓글을 달면 자료가 오는지 본다.",
+        "- 공개 답글이 달리는지, 문구가 돌아가며 바뀌는지 본다.",
         "- DM 끝에 도구 홍보 문구가 붙는지 본다 (붙으면 NEXT.md에 적는다).",
         "",
     ]
     return "\n".join(lines)
+
+
+def notice(post, permalink="", memo_path=""):
+    """게시 직후 운영자 알림 (publish.py가 GitHub 이슈·data/zorcha_todo.md로 보낸다). (제목, 본문) 반환."""
+    title = cover_of(post).get("title", "").replace("\n", " ").strip() or post["id"]
+    head = [f"인스타에 올라갔습니다: {permalink or '(주소 확인 실패, 계정에서 확인)'}", "",
+            f"지금 {DMC.get('tool', 'Zorcha')}에서 이 게시물용 자동화를 만들어 주세요. 그 전에 달린 댓글에는 DM이 가지 않습니다.",
+            "다 만들면 이 이슈를 닫아 주세요 (닫으면 이 컴퓨터의 알림 목록에서도 빠집니다)."]
+    if memo_path:
+        head.append(f"설정 메모 파일: `{memo_path}`")
+    return f"Zorcha 설정 필요: {title}", "\n".join(head) + "\n\n" + memo_md(post, permalink)
 
 
 # ---------- 2. 자료 안내 페이지 ----------

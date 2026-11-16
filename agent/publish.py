@@ -8,6 +8,12 @@ GitHub Actions에서 실행된다 (.github/workflows/publish.yml).
     THREADS_ACCESS_TOKEN 스레드 장기 토큰 (없으면 스레드는 건너뜀, agent/threads.py)
     MEDIA_BASE        미디어 공개 주소 앞부분. 기본은 GitHub Pages의 docs/media
     DRY_RUN=1         실제로 올리지 않고 할 일만 출력 (docs/media에 복사만 하고 push하지 않음)
+    GITHUB_TOKEN      Actions 기본 토큰. dm 게시물이 올라가면 "Zorcha 설정 필요" 이슈를 연다 (없으면 이슈만 건너뜀)
+
+Zorcha 알림 (STYLE_GUIDE 7-1): post.json에 dm이 있는 게시물이 올라가면 바로
+  1. GitHub 이슈 "Zorcha 설정 필요: <제목>" (라벨 zorcha, 본문 = 인스타 링크 + dm.md 설정 메모) → 운영자에게 메일
+  2. data/zorcha_todo.md에 한 줄 (워크플로 마지막 단계가 커밋. 이 컴퓨터의 watch-models.ps1이 읽어 data/zorcha_alerts.md로)
+DRY_RUN에서는 이슈를 열지 않고 파일도 안 바꾸고 내용만 출력한다. 알림이 실패해도 게시는 성공으로 둔다.
 
 승인 관문 (config.json require_approval, agent/approve.py): 켜져 있으면 post.json에 "approved": true가 있는
 게시물만 올린다. 승인 없는 게시물은 게시 시각이 지나도 "승인 대기"로 건너뛴다 (error.log·실패로 치지 않음).
@@ -60,6 +66,9 @@ THREADS_MAX_AGE_H = float(CONFIG.get("threads_max_age_hours", 12))
 # 게시 직후 docs/media를 바로 비우면 인스타가 뒤늦게 사진을 다시 가져갈 때 파일이 없어 회색 장이 생긴다
 # (2026-11-16 사이버캡 카드 4번 장). 게시 뒤 이 시간 동안은 미디어를 Pages에 남긴다.
 MEDIA_KEEP_MIN = int(CONFIG.get("media_keep_min", 120))  # 이보다 늦어진 스레드 글은 올리지 않는다 (지난 소식)
+GH_TOKEN = os.environ.get("GITHUB_TOKEN", "")
+ZORCHA_TODO = ROOT / "data" / "zorcha_todo.md"
+ZORCHA_LABEL = "zorcha"
 
 
 class PublishError(Exception):
@@ -301,6 +310,63 @@ def check_published_media(media_id):
     return warns
 
 
+def open_issue(title, body):
+    """GitHub 이슈를 연다 (GITHUB_TOKEN). (번호, 주소) 또는 실패하면 (None, 이유). 토큰은 출력하지 않는다."""
+    if not GH_TOKEN:
+        return None, "GITHUB_TOKEN 없음"
+    api = f"https://api.github.com/repos/{REPO}"
+    h = {"Authorization": f"Bearer {GH_TOKEN}", "Accept": "application/vnd.github+json",
+         "X-GitHub-Api-Version": "2022-11-28"}
+    try:
+        # 라벨이 없으면 만든다 (있으면 422, 무시)
+        requests.post(f"{api}/labels", headers=h, timeout=30,
+                      json={"name": ZORCHA_LABEL, "color": "00FF66", "description": "게시 뒤 Zorcha 자동 DM 설정 필요"})
+        r = requests.post(f"{api}/issues", headers=h, timeout=30,
+                          json={"title": title, "body": body, "labels": [ZORCHA_LABEL]})
+        if r.status_code >= 300:
+            return None, f"이슈 만들기 실패 ({r.status_code}): {r.text[:200]}"
+        j = r.json()
+        return j.get("number"), j.get("html_url", "")
+    except requests.RequestException as e:
+        return None, f"이슈 만들기 실패: {e}"
+
+
+def notify_zorcha(folder, post, permalink):
+    """dm 게시물이 올라가면 운영자에게 Zorcha 설정을 알린다 (이슈 + data/zorcha_todo.md). 예외를 밖으로 내지 않는다."""
+    if not post.get("dm"):
+        return
+    try:
+        import dm
+        memo = f"posts/published/{folder.name}/dm.md"
+        title, body = dm.notice(post, permalink, memo)
+        when = datetime.now(timezone(timedelta(hours=9))).strftime("%Y-%m-%d %H:%M")
+        NL = chr(10)
+        line = f"- [ ] {when} | {title} | {permalink or '(주소 확인 실패)'} | ISSUE | {memo}"
+        if DRY:
+            print(f"  [DRY] Zorcha 알림 (이슈 안 엶, {ZORCHA_TODO.name} 안 바꿈)")
+            print(f"  이슈 제목: {title}")
+            print(NL.join("    " + l for l in body.splitlines()))
+            print(f"  [DRY] {ZORCHA_TODO.name}에 쌓을 줄: " + line.replace("ISSUE", "이슈 #?"))
+            return
+        num, info = open_issue(title, body)
+        if num:
+            print(f"  Zorcha 알림 이슈 #{num}: {info}")
+        else:
+            print(f"  Zorcha 알림 이슈를 열지 못함 (게시는 그대로 성공, {ZORCHA_TODO.name}에는 남김): {info}")
+        head = ["# Zorcha 설정할 게시물", "",
+                "publish.py가 dm 게시물을 올릴 때마다 한 줄씩 쌓는다 (손으로 고치지 않는다). 설정이 끝나면 운영자가 GitHub 이슈를 닫는다. "
+                "이 컴퓨터의 scripts/watch-models.ps1이 열린 이슈의 줄만 tokenwar-daily/data/zorcha_alerts.md에 남긴다.", "",
+                "게시 시각(한국) | 제목 | 인스타 | 이슈 | 설정 메모", "", ""]
+        new = not ZORCHA_TODO.exists()
+        ZORCHA_TODO.parent.mkdir(parents=True, exist_ok=True)
+        with open(ZORCHA_TODO, "a", encoding="utf-8", newline=NL) as fh:
+            if new:
+                fh.write(NL.join(head))
+            fh.write(line.replace("ISSUE", f"이슈 #{num}" if num else "이슈 없음") + NL)
+    except Exception as e:  # noqa: BLE001  알림 실패로 게시 기록이 틀어지면 안 된다
+        print(f"  Zorcha 알림 실패 (게시는 그대로 성공): {e}")
+
+
 def due(post, now):
     at = datetime.fromisoformat(post["publish_at"])
     return at <= now
@@ -460,6 +526,7 @@ def main():
                 DONE.mkdir(parents=True, exist_ok=True)
                 shutil.move(str(folder), str(DONE / folder.name))
             print(f"  완료: {link or media_id}")
+            notify_zorcha(folder, post, link)
             if post.get("threads"):
                 print(f"  스레드는 {THREADS_DELAY_MIN}분 뒤 실행에서 올림" if threads.enabled()
                       else "  스레드 건너뜀 (THREADS_ACCESS_TOKEN 없음)")

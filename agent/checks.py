@@ -614,10 +614,12 @@ def check_dm(post):
         warnings.append(f"dm.cta는 48자 안으로 짧게: '{cta}'")
     if cta and "팔로우" not in cta:
         warnings.append("dm.cta에 팔로우 조건이 없음: '팔로우하고 댓글에 ...' (STYLE_GUIDE 7-1)")
-    for key, mx in (("follow_text", 300), ("comment_reply", 150)):
-        if d.get(key) and _len(d[key]) > mx:
+    replies = d.get("comment_reply") or []
+    replies = [replies] if isinstance(replies, str) else list(replies)  # 공개 답글은 한 문구 또는 돌려 쓸 목록
+    for key, mx, vals in (("follow_text", 300, [d.get("follow_text") or ""]), ("comment_reply", 150, replies)):
+        if any(v and _len(str(v)) > mx for v in vals):
             errors.append(f"dm.{key}는 {mx}자 이하")
-    for x in [msg, d.get("follow_text", ""), d.get("comment_reply", "")]:
+    for x in [msg, d.get("follow_text", "")] + replies:
         if EMOJI_RE.search(str(x)) and len(EMOJI_RE.findall(str(x))) > 1:
             warnings.append("DM 문구 이모지는 1개 이하")
     if "http" in msg:

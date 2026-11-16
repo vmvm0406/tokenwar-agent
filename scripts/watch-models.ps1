@@ -3,6 +3,7 @@
 # 매번 먼저 게시 시각이 지난 게시물(승인 관문을 통과한 것만)이 있으면 publish.yml을 직접 실행한다 (GitHub cron 지연 대비)
 # 그리고 승인 안 된 게시물 중 게시 시각이 3시간 안이거나 지난 것을 data/approval_alerts.md(덮어쓰기)와 기록에 남긴다
 # (agent/approve.py --pending. 지휘 세션이 이 파일을 읽어 운영자에게 알린다. 이 파일은 git에 올리지 않는다)
+# 또 게시됐는데 Zorcha 자동 DM 설정이 아직인 게시물(data/zorcha_todo.md 중 이슈가 열린 줄)을 data/zorcha_alerts.md(덮어쓰기)에 남긴다
 #   powershell -ExecutionPolicy Bypass -File scripts\watch-models.ps1            보통 실행
 #   ... -CheckOnly                                                               감시만 (Claude를 부르지 않음, 기록도 안 바꿈)
 # 매일 작업과 같은 전용 저장소 %USERPROFILE%\tokenwar-daily 에서 돈다. 같은 잠금 파일(%TEMP%\tokenwar.lock)을 쓰므로
@@ -91,6 +92,41 @@ if ((-not $CheckOnly) -and (Test-Path (Join-Path $Repo ".git"))) {
         } catch {
             ("{0} 승인 대기 확인 실패: {1}" -f (Get-Date -Format "yyyy-MM-dd HH:mm"), $_) | Out-File -Append -FilePath $plog -Encoding utf8
         }
+    }
+    # Zorcha 설정 알림: publish.py가 dm 게시물을 올릴 때마다 origin/main의 data/zorcha_todo.md에 한 줄을 쌓고 이슈(라벨 zorcha)를 연다.
+    # 이슈가 아직 열려 있는 줄(= 운영자가 Zorcha 설정을 안 끝냄)만 data/zorcha_alerts.md에 남긴다 (매번 덮어씀, approval_alerts.md와 같은 방식).
+    # 처음 보는 줄은 '새로'로 표시하고 기록에도 남긴다. 본 줄은 data/zorcha_seen.txt (둘 다 .gitignore, git에 안 올림)
+    try {
+        $todo = @((git -C $Repo show "origin/main:data/zorcha_todo.md" 2>$null) | Where-Object { "$_" -like "- *" } | ForEach-Object { "$_".Trim() })
+        $open = $null
+        $oi = @(gh issue list -R vmvm0406/tokenwar-agent --label zorcha --state open --limit 100 --json number -q ".[].number" 2>$null)
+        if ($LASTEXITCODE -eq 0) { $open = @($oi | ForEach-Object { "$_".Trim() } | Where-Object { $_ }) }
+        $limit = (Get-Date).AddDays(-3)
+        $pend = @($todo | Where-Object {
+            if ($_ -match "이슈 #(\d+)") { return ($null -eq $open) -or ($open -contains $Matches[1]) }
+            # 이슈를 못 연 줄(또는 gh 확인 실패): 게시 뒤 3일까지만 알린다
+            if ($_ -match "(\d{4}-\d{2}-\d{2} \d{2}:\d{2})") { return ([datetime]::ParseExact($Matches[1], "yyyy-MM-dd HH:mm", $null) -gt $limit) }
+            return $false
+        })
+        $seenFile = Join-Path $Repo "data\zorcha_seen.txt"
+        $seen = if (Test-Path $seenFile) { @(Get-Content $seenFile -Encoding utf8) } else { @() }
+        $new = @($pend | Where-Object { $seen -notcontains $_ })
+        $stamp = Get-Date -Format "yyyy-MM-dd HH:mm"
+        $zb = @("# Zorcha 설정 알림", "", "확인 시각: $stamp (scripts/watch-models.ps1, 15분마다 덮어씀)", "")
+        if ($pend.Count) {
+            $zb += "인스타에 올라갔는데 Zorcha 자동 DM 설정이 아직인 게시물 $($pend.Count)개 (GitHub 이슈가 열려 있음). 설정 값은 각 줄의 dm.md, 다 만들면 운영자가 이슈를 닫는다:"
+            $zb += ""
+            $zb += ($pend | ForEach-Object { if ($new -contains $_) { "$_ (새로)" } else { $_ } })
+            if ($new.Count) {
+                ("{0} Zorcha 설정 필요 새로 {1}개: {2}" -f $stamp, $new.Count, ($new -join " / ")) | Out-File -Append -FilePath $plog -Encoding utf8
+                [IO.File]::AppendAllText($seenFile, (($new -join "`n") + "`n"), (New-Object System.Text.UTF8Encoding $false))
+            }
+        } else { $zb += "없음" }
+        if ($null -eq $open) { $zb += ""; $zb += "(gh로 이슈 상태를 확인하지 못해 모든 줄을 남김. gh 로그인 확인)" }
+        New-Item -ItemType Directory -Force -Path (Join-Path $Repo "data") | Out-Null
+        [IO.File]::WriteAllText((Join-Path $Repo "data\zorcha_alerts.md"), (($zb -join "`n") + "`n"), (New-Object System.Text.UTF8Encoding $false))
+    } catch {
+        ("{0} Zorcha 알림 확인 실패: {1}" -f (Get-Date -Format "yyyy-MM-dd HH:mm"), $_) | Out-File -Append -FilePath $plog -Encoding utf8
     }
 }
 

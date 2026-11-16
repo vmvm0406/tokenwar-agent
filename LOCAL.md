@@ -29,7 +29,7 @@
 - **그림 프롬프트는 공식 예시나 실제로 만든 결과만** 보여 준다. 못 만들어 봤으면 결과 장을 만들지 않는다. 결과를 지어내지 않는다.
 - 프롬프트 전문은 캡션에도 그대로 적는다 (복사하기 쉽게). 캡션 첫 줄은 얻는 것. 캡션 끝은 STYLE_GUIDE 7장 "캡션 끝": 일반 뉴스는 질문 없이 사실과 출처로, 의견이 갈리는 소식만 그 소식에 맞는 양자택일 질문, 따라 하기·질문은 '자료' 안내.
 - **해시태그 3~5개** (STYLE_GUIDE 7장 "해시태그"): 주제 이름 1~2 + 한국어 분야 1~2 + #토큰전쟁. 분야 태그는 `data/trends.md` "많이 쓰는 해시태그" 표에서 여러 계정이 쓰고 반응 배수가 높은 것을 고른다. 릴스도 같다.
-- **따라 하기·질문 게시물에는 댓글 자동 DM 자료(`dm`)를 같이 만든다** (STYLE_GUIDE 7-1, TEMPLATES "댓글 자동 DM"). DM 문구 3줄, 안내 페이지의 `intro`·`result`(직접 돌려 본 결과)·`extra`(카드에 없는 추가 문장도 돌려 본 것만)를 쓴다. 캡션 끝은 "댓글에 '자료'를 남기면 ... DM으로 보내 드려요. (팔로우한 분께 보내집니다)". 렌더링하면 게시물 폴더에 `dm.md`, `docs/p/<id>/index.html`이 생긴다. 둘 다 같은 브랜치에 커밋하고, PR 본문 끝에 "DM 설정: 게시 후 `dm.md`대로 Zorcha에 자동화를 만들어 주세요"를 적는다. 릴스도 같다.
+- **따라 하기·질문 게시물에는 댓글 자동 DM 자료(`dm`)를 같이 만든다** (STYLE_GUIDE 7-1, TEMPLATES "댓글 자동 DM"). DM 문구 3줄, 안내 페이지의 `intro`·`result`(직접 돌려 본 결과)·`extra`(카드에 없는 추가 문장도 돌려 본 것만)를 쓴다. 캡션 끝은 "댓글에 '자료'를 남기면 ... DM으로 보내 드려요. (팔로우한 분께 보내집니다)". 렌더링하면 게시물 폴더에 `dm.md`, `docs/p/<id>/index.html`이 생긴다. 둘 다 같은 브랜치에 커밋하고, PR 본문 끝에 "DM 설정: 게시 후 `dm.md`대로 Zorcha에 자동화를 만들어 주세요"를 적는다. 릴스도 같다. 게시되면 publish.py가 "Zorcha 설정 필요" 이슈와 `data/zorcha_todo.md` 한 줄로 따로 알린다 (STYLE_GUIDE 7-1).
 - `publish_at`: `py -3.12 agent/slots.py next carousel --count <개수>`가 준 시각 (5장 칸 배정). 빠르게 퍼지는 속보면 `--asap`.
 - AI 이미지(`prompt`)와 실물 이미지(`url`)는 여기서 바로 처리해도 되지만, Cloudflare 키가 이 컴퓨터에는 없으므로 `prompt` 그림은 GitHub Actions(`render.yml`)에 맡긴다 (AGENT.md 3장).
 
@@ -67,6 +67,7 @@
 - **기록 `data/approvals.csv`** (approve.py가 한 줄씩 붙임): `date`(승인한 날, 한국), `post_id`(게시물 폴더 이름), `edits_before_approval`, `approved_at`.
 - **자동 전환 기준:** 최근 2주 동안 승인한 게시물 중 **수정 없이(`edits_before_approval` 0) 승인된 비율이 80% 이상**이면 지휘 세션이 운영자에게 "자동 게시로 돌릴까요(`require_approval: false`)"를 제안한다. 운영자가 정하기 전에는 바꾸지 않는다.
 - **승인 대기 알림:** `scripts/watch-models.ps1`(15분마다)이 `py -3.12 agent/approve.py --pending --hours 3 --ref origin/main --branches`로 승인 안 된 게시물 중 게시 시각이 3시간 안이거나 지난 것(main 대기열 + 열린 `post/*` 브랜치)을 찾아 `%USERPROFILE%\tokenwar-daily\data\approval_alerts.md`(확인 시각 + 목록, 없으면 '없음', 매번 덮어씀, git에 안 올림)와 `logs/<월>-watch.log`에 남긴다. 지휘 세션이 이 파일을 읽어 최상위 세션에 알린다. publish.yml을 깨우는 '게시 시각 지남'은 승인된 것(또는 관문 밖)만 센다.
+- **Zorcha 설정 알림:** 같은 스크립트가 origin/main의 `data/zorcha_todo.md`(publish.py가 dm 게시물을 올릴 때마다 한 줄) 중 GitHub 이슈(라벨 zorcha)가 아직 열린 줄을 `%USERPROFILE%\tokenwar-daily\data\zorcha_alerts.md`(확인 시각 + 목록, 처음 본 줄은 '(새로)', 없으면 '없음', 매번 덮어씀, git에 안 올림)와 `logs/<월>-watch.log`에 남긴다. 이미 본 줄은 `data/zorcha_seen.txt`. 지휘 세션이 이 파일을 읽어 최상위 세션에 "Zorcha 설정 필요: <제목> + 인스타 링크 + dm.md"로 알린다. 운영자가 설정을 끝내고 이슈를 닫으면 목록에서 빠진다.
 - 손으로 보기: `py -3.12 agent/approve.py --pending --hours 24` (작업 폴더 posts/queue).
 
 ## 4. 끝

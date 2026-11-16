@@ -4,3 +4,5 @@ _render.html
 _analysis/
 logs/
 data/approval_alerts.md
+data/zorcha_alerts.md
+data/zorcha_seen.txt
