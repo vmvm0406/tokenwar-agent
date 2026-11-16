@@ -2,6 +2,9 @@
 
 주간 계정 분석(ANALYSIS.md)이 `config.json` `benchmarks.accounts`를 바꿀 때마다 맨 위에 남긴다. "+ 추가 / - 제외: 이유".
 
+## 2026-11-16 확인
+- - @jay.pm.ai: 첫 조회 실패(Invalid user id, 비즈니스·크리에이터 계정 아님 또는 이름 바뀜) → 뺌. @yangyum.zip는 게시물 166개 받음(run 43832596893).
+
 ## 2026-11-16 적용 (운영자 승인 2026-11-16)
 - + @jay.pm.ai, + @yangyum.zip / - @aitimes_news, - @ex.treme.ai, - @choi.openai (아래 제안 그대로). 새 두 계정은 다음 benchmarks 실행에서 데이터가 오는지 확인, 안 오면 뺀다.
 
