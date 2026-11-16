@@ -1,22 +1,39 @@
 {
  "days": {
   "2026-11-16": {
+   "18112593002190549": {
+    "timestamp": "2026-11-16T11:51:33+0000",
+    "permalink": "https://www.instagram.com/reel/DfzSd6Qlck9/",
+    "folder": "2026-11-16-video-alphagenome-epilepsy",
+    "title": "아기 뇌전증 원인, AI가 찾았습니다",
+    "duration": 62.7,
+    "views": 77,
+    "reach": 0,
+    "saved": 1,
+    "shares": 0,
+    "total_interactions": 2,
+    "likes": 1,
+    "comments": 0,
+    "ig_reels_avg_watch_time": 146,
+    "ig_reels_video_view_total_time": 146,
+    "reels_skip_rate": 0
+   },
    "18029250590705353": {
     "timestamp": "2026-11-16T11:13:04+0000",
     "permalink": "https://www.instagram.com/reel/DfzOGe_iqPS/",
     "folder": "2026-11-16-howto-claude-style-skill-v3",
     "title": "클로드도 그림 그릴 수 있어!",
     "duration": 21.3,
-    "views": 0,
-    "reach": 0,
+    "views": 165,
+    "reach": 89,
     "saved": 0,
     "shares": 0,
     "total_interactions": 0,
     "likes": 0,
     "comments": 0,
-    "ig_reels_avg_watch_time": 2489,
-    "ig_reels_video_view_total_time": 2489,
-    "reels_skip_rate": 0
+    "ig_reels_avg_watch_time": 5188,
+    "ig_reels_video_view_total_time": 472177,
+    "reels_skip_rate": 41.1
    },
    "17902612866655526": {
     "timestamp": "2026-11-16T08:22:59+0000",
@@ -31,8 +48,8 @@
     "total_interactions": 0,
     "likes": 0,
     "comments": 0,
-    "ig_reels_avg_watch_time": 13387,
-    "ig_reels_video_view_total_time": 1874307,
+    "ig_reels_avg_watch_time": 13304,
+    "ig_reels_video_view_total_time": 1875891,
     "reels_skip_rate": 55.1
    },
    "18114177902183166": {
@@ -82,8 +99,8 @@
     "total_interactions": 0,
     "likes": 0,
     "comments": 0,
-    "ig_reels_avg_watch_time": 15137,
-    "ig_reels_video_view_total_time": 2437146,
+    "ig_reels_avg_watch_time": 15048,
+    "ig_reels_video_view_total_time": 2437837,
     "reels_skip_rate": 25.2
    },
    "17958768750292888": {
@@ -93,15 +110,15 @@
     "title": "MS CEO \"개발자는 더 중요해졌다\"",
     "duration": 67.9,
     "views": 312,
-    "reach": 269,
+    "reach": 271,
     "saved": 1,
     "shares": 2,
     "total_interactions": 4,
     "likes": 1,
     "comments": 0,
-    "ig_reels_avg_watch_time": 8987,
-    "ig_reels_video_view_total_time": 2534588,
-    "reels_skip_rate": 60.1
+    "ig_reels_avg_watch_time": 8934,
+    "ig_reels_video_view_total_time": 2537297,
+    "reels_skip_rate": 60.9
    }
   }
  },
@@ -111,7 +128,8 @@
   "18114177902183166": 53.6,
   "18108996644269058": 69.8,
   "18163250107546991": 56.9,
-  "17958768750292888": 67.9
+  "17958768750292888": 67.9,
+  "18112593002190549": 62.7
  },
  "unsupported": {},
  "metrics_returned": [
@@ -126,5 +144,5 @@
   "total_interactions",
   "views"
  ],
- "updated": "2026-11-16T20:36+09:00"
+ "updated": "2026-11-16T21:24+09:00"
 }
