@@ -1,0 +1,151 @@
+{
+  "id": "2026-11-17-reel-claude-of-duty",
+  "type": "reel",
+  "format": "howto",
+  "series": "생존 가이드",
+  "date": "2026-11-17",
+  "publish_at": "2026-11-17T15:43:00+09:00",
+  "rights_note": "게임 코드·prompt.md: mshumer/Claude-of-Duty, MIT License (Copyright (c) 2026 mshumer). 플레이 화면은 그 코드를 토큰전쟁이 직접 실행해 녹화(저장소의 tools/demo.mjs 봇 플레이, 소리는 tools/demo-audio.mjs가 코드로 합성). 원본 X 영상(Matt Shumer, 7월 25일, 55.9초) 중 5초만 인용.",
+  "slides": [
+    {
+      "kind": "cover",
+      "layout": "image",
+      "visual": {
+        "type": "image",
+        "src": "img/cover.jpg",
+        "position": "center center"
+      },
+      "title": "프롬프트 3문단으로\n슈팅 게임이 나왔습니다",
+      "highlight": "프롬프트 3문단",
+      "sub": "Matt Shumer가 7월 공개한 게임"
+    },
+    {
+      "kind": "clip",
+      "src": "clips/gameplay.mp4",
+      "start": 0.0,
+      "end": 8.0,
+      "source": "토큰전쟁 직접 실행 녹화 (11월 16일, MIT 공개 코드)",
+      "source_url": "https://github.com/mshumer/Claude-of-Duty",
+      "heading": "이 게임, 그림 파일이\n하나도 없습니다",
+      "highlight": "하나도 없습니다"
+    },
+    {
+      "kind": "clip",
+      "src": "clips/x_shumer.mp4",
+      "start": 0.5,
+      "end": 5.5,
+      "source": "Matt Shumer X (@mattshumer_, 7월 25일)",
+      "source_url": "https://x.com/mattshumer_/status/2081054356405731740",
+      "heading": "클로드 Opus 5에\n3문단을 넣었습니다",
+      "highlight": "3문단"
+    },
+    {
+      "kind": "prompt",
+      "num": 1,
+      "num_note": "prompt.md 일부 번역 · 전문은 DM 자료로",
+      "heading": "프롬프트 첫 줄과\n끝 줄입니다",
+      "highlight": "첫 줄",
+      "prompt": "최신 콜 오브 듀티 수준의 1인칭 슈팅 게임을 만들어 줘.\n(… 2문단 생략 …)\nThree.js로 만들어. 완벽해질 때까지 /loop."
+    },
+    {
+      "kind": "body",
+      "num": 2,
+      "num_note": "내 컴퓨터에서 실행하기",
+      "visual": {
+        "type": "image",
+        "src": "img/02-run.jpg",
+        "position": "center center",
+        "credit": "화면: 토큰전쟁이 직접 실행한 Claude-of-Duty (MIT)"
+      },
+      "heading": "공개된 코드를 받아\n직접 돌려 봤습니다",
+      "highlight": "직접 돌려",
+      "body": "Node.js를 깔고 명령 두 줄이면 크롬에서 열립니다."
+    },
+    {
+      "kind": "steps",
+      "num": 3,
+      "num_note": "주의할 점",
+      "heading": "해 보기 전에\n알아 둘 점",
+      "items": [
+        {
+          "title": "콜 오브 듀티 수준은 아닙니다",
+          "text": "만든 사람도 블라인드 비교에서 진짜 게임이 이겼다고 적었습니다"
+        },
+        {
+          "title": "클로드 코드용 프롬프트입니다",
+          "text": "서브 에이전트와 /loop를 쓰고 오래 돌아갑니다"
+        },
+        {
+          "title": "저희는 공개 코드를 실행했습니다",
+          "text": "같은 프롬프트로 처음부터 다시 만들지는 않았습니다"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "mshumer/Claude-of-Duty GitHub (README·prompt.md, MIT License)",
+      "url": "https://github.com/mshumer/Claude-of-Duty"
+    },
+    {
+      "name": "Matt Shumer X 원본 영상 (7월 25일)",
+      "url": "https://x.com/mattshumer_/status/2081054356405731740"
+    },
+    {
+      "name": "디지털투데이 (7월 29일)",
+      "url": "https://www.digitaltoday.co.kr/en/view/86733/three-paragraph-prompt-enough-claude-opus-5-builds-fps-game-two-days-after-launch"
+    }
+  ],
+  "caption": "클로드 Opus 5로 브라우저 슈팅 게임을 만든 프롬프트 3문단, 우리말 번역과 직접 실행해 보는 법을 정리했습니다.\n\n🗞️ Matt Shumer가 7월 25일 X에 올린 Claude-of-Duty. 클로드 코드의 서브 에이전트와 /loop로 만들었고, 코드와 프롬프트는 MIT 라이선스로 공개했습니다.\n📍 그림·소리 파일 없이 Three.js 코드만으로 벽 무늬와 총, 소리까지 만들어 내는 게임. 영상 속 플레이 화면은 그 코드를 저희 컴퓨터에서 실행해 녹화했어요.\n📊 AI 에이전트들이 쓴 코드는 약 5만 5천 줄, 외부 그림·소리 파일은 0개입니다.\n🔫 다만 실제 콜 오브 듀티 수준은 아닙니다. AI 비평가들의 블라인드 비교에서 매번 진짜 게임이 골라졌다고 만든 사람이 README에 직접 적었어요.\n👉 출처: GitHub mshumer/Claude-of-Duty(README·prompt.md, MIT), Matt Shumer X 원본 영상, 디지털투데이 (7월 25~29일)\n\n게임 만들어 보고 싶다던 친구에게 보내 주세요.\n\n팔로우하고 댓글에 '자료'라고 남기면 3문단 프롬프트 전체 번역과 실행 방법을 DM으로 보내 드려요. (팔로우한 분께 보내집니다)",
+  "dm": {
+    "keyword": "자료",
+    "message": "Claude-of-Duty를 만든 3문단 프롬프트 번역과 실행 방법이에요.\n아래 '자료 보기'를 누르면 원문·번역과 복사 버튼이 있는 페이지가 열립니다.\n프롬프트는 클로드 코드에서 오래 돌아가니 사용량을 먼저 확인하세요.",
+    "page": {
+      "intro": "Matt Shumer가 클로드 Opus 5와 클로드 코드로 만든 브라우저 1인칭 슈팅 게임 Claude-of-Duty의 프롬프트와 실행 방법입니다. 코드와 프롬프트는 MIT 라이선스로 공개돼 있습니다(Copyright (c) 2026 mshumer). 아래 번역은 원문 prompt.md를 토큰전쟁이 우리말로 옮긴 것입니다.",
+      "result": "11월 16일 공개 코드를 이 컴퓨터(윈도우)에서 받아 npm install, npm run dev로 실행했고, 저장소에 들어 있는 녹화 도구(tools/demo.mjs, 봇이 플레이)로 화면을 녹화했습니다. 그림·소리 파일 없이 시작할 때 코드로 벽 무늬와 총, 적, 소리를 만들어 냅니다. 같은 프롬프트로 게임을 처음부터 다시 만들어 보지는 않았습니다.",
+      "extra": [
+        {
+          "title": "prompt.md 전체 번역",
+          "prompt": "최신 콜 오브 듀티 게임 수준의 1인칭 슈팅 게임을 만들어 줘. 텍스처부터 물리까지 생각할 수 있는 모든 것을 AAA급 품질로, 흠잡을 데 없이 완벽하고 눈부시게 아름답게 만들어야 해.\n\n서브 에이전트들을 펼쳐서 항목을 하나씩 따로 맡겨 게임이 완벽해지게 해. 항목마다 /loop를 돌리고, 별도의 서브 에이전트가 화면을 직접 보고 AAA급으로 보이는지 확인하게 해. 그 서브 에이전트는 아주 깐깐한 비평가여야 하고, AAA급으로 보이지 않으면 계속 고치게 해.\n\n모든 서브 에이전트가 실제 콜 오브 듀티와 비교해 품질에 완전히 감탄할 때까지 멈추지 마. 둘을 나란히 놓고 어느 쪽인지 모르는 상태(블라인드)로 비교해서 어느 쪽이 더 나은지 말하게 해. Three.js로 만들어. 완벽해질 때까지 /loop. 서브 에이전트를 펼치고 ultracode.",
+          "note": "원문은 영어 3문단입니다. /loop와 ultracode는 클로드 코드에서 쓰는 명령이라 영어 그대로 두었습니다. 클로드 앱 대화창이 아니라 클로드 코드에 넣는 프롬프트입니다."
+        },
+        {
+          "title": "공개 코드 실행 방법 (Node.js 설치 후 터미널에서)",
+          "prompt": "git clone https://github.com/mshumer/Claude-of-Duty\ncd Claude-of-Duty\nnpm install\nnpm run dev",
+          "note": "크롬에서 http://127.0.0.1:5173 을 열고 화면을 누르면 시작합니다. WASD 이동, 마우스 조준, 왼쪽 클릭 사격, 오른쪽 클릭 조준경, R 재장전입니다. 저희 컴퓨터에서는 처음 불러오는 데 1분 넘게 걸렸습니다."
+        }
+      ],
+      "caution": [
+        "README의 '솔직한 평가'에 따르면 목표였던 최신 콜 오브 듀티 수준에는 못 미칩니다. AI 비평가 11명이 매긴 점수는 10점 만점에 5.05점이 최고였고, 블라인드 비교에서는 매번 진짜 콜 오브 듀티 화면이 골라졌습니다.",
+        "게임이 무겁습니다. README 기준 애플 노트북에서 초당 28~30프레임입니다. 그래픽 카드가 약한 컴퓨터에서는 느릴 수 있습니다.",
+        "같은 프롬프트를 넣어도 같은 게임이 나오지 않습니다. 서브 에이전트를 여러 개 띄워 오래 돌리므로 클로드 코드 사용량이 많이 듭니다."
+      ]
+    },
+    "cta": "팔로우하고 댓글에 '자료' 남기면\n3문단 프롬프트 번역 보내 드립니다"
+  },
+  "thumb": {
+    "title": "프롬프트 3문단으로\n슈팅 게임 만든다",
+    "highlight": "프롬프트 3문단",
+    "image": {
+      "type": "image",
+      "src": "img/thumb.jpg",
+      "url": "https://github.com/mshumer/Claude-of-Duty",
+      "position": "center center"
+    }
+  },
+  "hashtags": [
+    "#클로드",
+    "#AI게임",
+    "#AI활용법",
+    "#토큰전쟁"
+  ],
+  "topic": [
+    "클로드",
+    "Claude-of-Duty",
+    "FPS 게임"
+  ],
+  "music": {
+    "generate": true,
+    "credit": "배경음악: 토큰전쟁이 코드로 직접 만든 음악 (외부 음원 없음). 게임 소리: Claude-of-Duty tools/demo-audio.mjs 코드 합성 (MIT)"
+  }
+}
