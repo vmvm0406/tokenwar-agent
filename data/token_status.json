@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-16T04:38:52.565679+00:00",
+  "checked_at": "2026-11-16T05:02:29.745399+00:00",
   "problems": [],
   "type": "PAGE",
   "valid": true,
@@ -20,6 +20,16 @@
     "media_count": 6
   },
   "threads": {
-    "skipped": "THREADS_ACCESS_TOKEN 없음"
+    "valid": true,
+    "expires_at": "2027-01-15T04:57:55+00:00",
+    "data_access_expires_at": "2027-02-14T04:57:49+00:00",
+    "scopes": [
+      "threads_basic",
+      "threads_content_publish",
+      "threads_manage_replies",
+      "threads_manage_insights",
+      "threads_read_replies"
+    ],
+    "username": "tokenwar_ai"
   }
 }
