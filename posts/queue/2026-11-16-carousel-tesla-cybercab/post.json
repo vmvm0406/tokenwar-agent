@@ -4,7 +4,7 @@
   "format": "news",
   "series": "전황",
   "date": "2026-11-16",
-  "publish_at": "2026-11-16T14:00:00+09:00",
+  "publish_at": "2026-11-16T14:35:00+09:00",
   "rights_note": "사진 4장 모두 위키미디어 공용의 상업 이용 가능 라이선스: 표지 Daniel Lu(User:dllu) CC BY-SA 4.0, 실내 Dllu CC BY-SA 4.0, 샌프란시스코 거리 9yz CC BY 4.0, 전시장 JustAnotherCarDesigner CC0. 테슬라 공식 갤러리 이미지는 이용 조건이 '표지·광고·상업 목적 사용 불가'라서 쓰지 않음. 머스크 사진·언론사 사진 없음. 1600px로 줄여 씀(변경 표시).",
   "slides": [
     {
@@ -19,7 +19,7 @@
         "license": "CC BY-SA 4.0",
         "hook": "운전대 없는 금빛 사이버캡이 고속도로를 혼자 달리는 장면이라 정말 사람이 안 모는지 들여다보게 된다"
       },
-      "title": "AI야, 부산 가 줘\n운전대 없는 차가 팔립니다",
+      "title": "AI야, 부산 가 줘\n운전대 없는 차가 달립니다",
       "highlight": "AI야, 부산 가 줘",
       "sub": "테슬라 사이버캡 · 미국 시장 기준 약 4,000만 원"
     },
@@ -131,7 +131,7 @@
       "url": "https://commons.wikimedia.org/wiki/File:Tesla_Cybercab_001.jpg"
     }
   ],
-  "caption": "테슬라가 운전대 없는 자율주행차 사이버캡을 개인에게도 팔기 시작했습니다. 미국 시장 기준 가격은 2만 9,990달러, 약 4,010만 원.\n\n🗞️ 11월 13일 테슬라 로보택시 공식 X 계정이 일부 초대 고객에게 개인 구매 주문을 열었다고 알렸습니다.\n📍 운전대와 페달이 없어 사람은 몰 수 없고, 테슬라 자율주행 AI가 카메라로 길을 보며 운전합니다.\n📊 차를 움직이려면 월 299달러(약 40만 원) 자율주행 구독이 필요하고, 보증금 1,000달러는 환불 불가.\n🔫 달릴 수 있는 곳은 테슬라 로보택시 서비스 구역 안뿐이고, 첫 인도는 12월 텍사스 오스틴으로 잡혀 있습니다.\n💡 국내 출시 일정은 미정이며, 원화 금액은 11월 13일 유럽중앙은행 기준 환율(1달러 1,337원)로 환산한 값.\n\n👉 출처: 테슬라 로보택시 공식 X, Electrek, InsideEVs (11월 13일)\n카메라로 보고 운전한다는 설명: 사이버캡은 레이더·라이다 없이 카메라만 쓴다는 보도 기준 (Cryptonomist, 9월 2일)\n사진: Daniel Lu·Dllu (CC BY-SA 4.0), 9yz (CC BY 4.0), JustAnotherCarDesigner (CC0), 위키미디어 공용\n\n자율주행차가 나오면 바로 사겠다던 친구에게 보내 주세요.",
+  "caption": "테슬라가 운전대 없는 자율주행차 사이버캡을 개인도 주문할 수 있게 했습니다. 미국 시장 기준 가격은 2만 9,990달러, 약 4,010만 원.\n\n🗞️ 11월 13일 테슬라 로보택시 공식 X 계정이 일부 초대 고객에게 개인 구매 주문을 열었다고 알렸습니다.\n📍 운전대와 페달이 없어 사람은 몰 수 없고, 테슬라 자율주행 AI가 카메라로 길을 보며 운전합니다.\n📊 차를 움직이려면 월 299달러(약 40만 원) 자율주행 구독이 필요하고, 보증금 1,000달러는 환불 불가.\n🔫 달릴 수 있는 곳은 테슬라 로보택시 서비스 구역 안뿐이고, 첫 인도는 12월 텍사스 오스틴으로 잡혀 있습니다.\n💡 국내 출시 일정은 미정이며, 원화 금액은 11월 13일 유럽중앙은행 기준 환율(1달러 1,337원)로 환산한 값.\n\n👉 출처: 테슬라 로보택시 공식 X, Electrek, InsideEVs (11월 13일)\n카메라로 보고 운전한다는 설명: 사이버캡은 레이더·라이다 없이 카메라만 쓴다는 보도 기준 (Cryptonomist, 9월 2일)\n사진: Daniel Lu·Dllu (CC BY-SA 4.0), 9yz (CC BY 4.0), JustAnotherCarDesigner (CC0), 위키미디어 공용\n\n자율주행차가 나오면 바로 사겠다던 친구에게 보내 주세요.",
   "hashtags": [
     "#테슬라",
     "#사이버캡",
@@ -153,7 +153,7 @@
     "topic": "AI Threads",
     "replies": [
       "출처: 테슬라 로보택시 공식 X (11월 13일), Electrek, InsideEVs\nhttps://x.com/robotaxi/status/2121384435241402737\nhttps://electrek.co/2026/11/13/tesla-cybercab-personal-use-orders-299-subscription-geofence/\nhttps://insideevs.com/news/815473/tesla-cybercab-pricing-sales-announced/",
-      "카드뉴스 전체는 인스타 @tokenwar_ai에 있습니다.\nhttps://www.instagram.com/p/DfykMUek3Bd/"
+      "카드뉴스 전체는 인스타 @tokenwar_ai에 있습니다.\nhttps://www.instagram.com/tokenwar_ai/"
     ]
   }
 }
