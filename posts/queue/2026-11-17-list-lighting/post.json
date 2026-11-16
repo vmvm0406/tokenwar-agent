@@ -60,7 +60,8 @@
         "type": "image",
         "src": "img/list/05.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: Rembrandt lighting in a dark room. All room lights are off, the window is dark, the walls and sofa fall into near-black shadow. One strong warm key light from the upper left at 45 degrees lights the slime. The right side of the slime is in deep shadow except one small bright triangle of light on the right cheek. Very strong contrast, painterly portrait mood. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: Rembrandt lighting in a dark room. All room lights are off, the window is dark, the walls and sofa fall into near-black shadow. One strong warm key light from the upper left at 45 degrees lights the slime. The right side of the slime is in deep shadow except one small bright triangle of light on the right cheek. Very strong contrast, painterly portrait mood. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "버터플라이 조명",
@@ -69,7 +70,8 @@
         "type": "image",
         "src": "img/list/06.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: butterfly beauty lighting in a dark studio mood. The room and the walls are dark grey. One strong bright beauty light is placed directly in front of the slime and high above it, pointing down, so a clear small shadow appears directly under the slime on the cushion. The top and front of the slime shine brightly with a big glossy highlight, glamorous fashion photo look. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: butterfly beauty lighting in a dark studio mood. The room and the walls are dark grey. One strong bright beauty light is placed directly in front of the slime and high above it, pointing down, so a clear small shadow appears directly under the slime on the cushion. The top and front of the slime shine brightly with a big glossy highlight, glamorous fashion photo look. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "스플릿 조명",
@@ -78,7 +80,8 @@
         "type": "image",
         "src": "img/list/07.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: split lighting in a dark room. The room is almost black. One hard white light comes from exactly 90 degrees on the left side. The left half of the slime is brightly lit and the right half is completely black, with a sharp vertical line between light and dark running down the middle of the face. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: split lighting in a dark room. The room is almost black. One hard white light comes from exactly 90 degrees on the left side. The left half of the slime is brightly lit and the right half is completely black, with a sharp vertical line between light and dark running down the middle of the face. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "림 라이트",
@@ -97,7 +100,8 @@
         "type": "image",
         "src": "img/list/09.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: strong backlight. A very bright window directly behind the sofa is blown out to pure white. The front of the slime and the sofa are dark, almost a silhouette, and a bright glowing halo outlines the edges of the slime and its ears. Light flares toward the camera. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: strong backlight. A very bright window directly behind the sofa is blown out to pure white. The front of the slime and the sofa are dark, almost a silhouette, and a bright glowing halo outlines the edges of the slime and its ears. Light flares toward the camera. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "네온 조명",
@@ -126,7 +130,8 @@
         "type": "image",
         "src": "img/list/12.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: window light. A large bright window right beside the sofa on the right side is now visible at the right edge of the frame. Strong soft daylight pours in from the right, the right side of the slime is bright and the left side falls into soft shadow, the left half of the room is clearly darker. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: window light. A large bright window right beside the sofa on the right side is now visible at the right edge of the frame. Strong soft daylight pours in from the right, the right side of the slime is bright and the left side falls into soft shadow, the left half of the room is clearly darker. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "소프트박스",
@@ -135,7 +140,8 @@
         "type": "image",
         "src": "img/list/13.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: studio softbox lighting. The room lights are off and the room is dim. A large rectangular white softbox on a light stand is visible at the left edge of the frame, very close to the slime. Soft even white light on the slime, a clear rectangular softbox reflection on the glossy slime body, the background falls off into darkness, clean studio photo look. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: studio softbox lighting. The room lights are off and the room is dim. A large rectangular white softbox on a light stand is visible at the left edge of the frame, very close to the slime. Soft even white light on the slime, a clear rectangular softbox reflection on the glossy slime body, the background falls off into darkness, clean studio photo look. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "하드 라이트",
@@ -144,7 +150,8 @@
         "type": "image",
         "src": "img/list/14.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: hard light. A single small bare spotlight from the upper right, no fill light. Very crisp, hard-edged black shadows of the slime and the sofa are cast clearly on the white wall behind, deep black shadows with sharp outlines, high contrast. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: hard light. A single small bare spotlight from the upper right, no fill light. Very crisp, hard-edged black shadows of the slime and the sofa are cast clearly on the white wall behind, deep black shadows with sharp outlines, high contrast. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "빛줄기(볼류메트릭)",
@@ -203,7 +210,8 @@
         "type": "image",
         "src": "img/list/20.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: overcast day. Flat soft grey light from a cloudy sky through the window, no direct sunlight at all, almost no shadows anywhere. Desaturated muted grey and pale colors over the whole room and the slime, slightly dim, calm quiet rainy-day mood. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: overcast day. Flat soft grey light from a cloudy sky through the window, no direct sunlight at all, almost no shadows anywhere. Desaturated muted grey and pale colors over the whole room and the slime, slightly dim, calm quiet rainy-day mood. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       }
     ],
     "hook": 10
@@ -296,7 +304,8 @@
           "type": "image",
           "src": "img/more/ring-light.jpg",
           "mascot": true,
-          "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: ring light, a large circular ring light placed directly in front of the slime, a clear bright ring-shaped reflection on the glossy slime and in its eyes, even shadowless front light, the room dim. Photorealistic 3D render, vertical 4:5, no text, no letters."
+          "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: ring light, a large circular ring light placed directly in front of the slime, a clear bright ring-shaped reflection on the glossy slime and in its eyes, even shadowless front light, the room dim. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+          "ai_generated": true
         },
         {
           "name": "뷰티 디시",
@@ -335,7 +344,8 @@
           "type": "image",
           "src": "img/more/film-noir-lighting.jpg",
           "mascot": true,
-          "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: film noir lighting, black and white image, dark room, hard light through venetian blinds making striped shadows, deep black shadows, 1940s crime movie mood. Photorealistic 3D render, vertical 4:5, no text, no letters."
+          "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: film noir lighting, black and white image, dark room, hard light through venetian blinds making striped shadows, deep black shadows, 1940s crime movie mood. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+          "ai_generated": true
         },
         {
           "name": "실용 조명",
@@ -369,7 +379,8 @@
           "type": "image",
           "src": "img/more/underlighting.jpg",
           "mascot": true,
-          "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: underlighting, the room is dark and a single light comes from below the slime, pointing up, casting tall eerie shadows upward on the wall, spooky mood. Photorealistic 3D render, vertical 4:5, no text, no letters."
+          "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: underlighting, the room is dark and a single light comes from below the slime, pointing up, casting tall eerie shadows upward on the wall, spooky mood. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+          "ai_generated": true
         },
         {
           "name": "탑 라이트",
@@ -398,7 +409,8 @@
           "type": "image",
           "src": "img/more/gobo-lighting.jpg",
           "mascot": true,
-          "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: gobo lighting, a hard light shining through a window blind pattern, sharp striped shadow pattern falling across the slime, the sofa and the wall, the rest of the room dim. Photorealistic 3D render, vertical 4:5, no text, no letters."
+          "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: gobo lighting, a hard light shining through a window blind pattern, sharp striped shadow pattern falling across the slime, the sofa and the wall, the rest of the room dim. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+          "ai_generated": true
         },
         {
           "name": "그늘 빛",
@@ -417,7 +429,8 @@
           "type": "image",
           "src": "img/more/firelight.jpg",
           "mascot": true,
-          "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: firelight, a fireplace with burning flames just out of frame on the left, flickering warm orange and red light on the slime and the sofa, the rest of the room dark. Photorealistic 3D render, vertical 4:5, no text, no letters."
+          "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: firelight, a fireplace with burning flames just out of frame on the left, flickering warm orange and red light on the slime and the sofa, the rest of the room dark. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+          "ai_generated": true
         }
       ],
       "more_title": "추가 조명 용어 30개",
