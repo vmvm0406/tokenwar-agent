@@ -219,7 +219,157 @@
         "라이선스: 코드는 MIT, 예시 영상·그림은 CC BY 4.0, 화풍 설명서(STYLE.md 등)는 CC BY-NC 4.0입니다. 설명서로 내 영상을 만드는 것은 상업용까지 된다고 제작자가 따로 허락했지만, 설명서를 다시 나눠 주거나 파는 것은 따로 허락이 필요합니다. 자세한 것은 저장소의 LICENSE 파일을 보세요.",
         "클로드 앱 등록 순서는 Claude 공식 도움말(11월 16일 확인)을 옮긴 것입니다. 제작자는 클로드 코드 설치를 권장하고, 이 스킬은 내 컴퓨터의 Node·ffmpeg로 영상을 그립니다.",
         "클로드가 명령을 실행하고 파일을 만드니, 작업 중 묻는 허락을 확인하고 눌러 주세요. 빈 폴더에서 시작하세요."
-      ]
+      ],
+      "setup": {
+        "before": 2,
+        "steps": [
+          {
+            "label": "처음이라면",
+            "title": "터미널부터 엽니다",
+            "text": "터미널은 마우스 대신 글자로 컴퓨터에 일을 시키는 창입니다. 커서만 깜빡이는 빈 창이 뜨면 맞게 연 것입니다. 이 페이지의 명령은 복사 버튼으로 복사해 그 창에 붙여 넣고 Enter를 누르면 됩니다.",
+            "groups": [
+              {
+                "name": "윈도우",
+                "text": "시작 메뉴에서 PowerShell을 검색해 열거나, Win + X를 누르고 Windows PowerShell(또는 터미널)을 고릅니다. 줄 앞에 PS가 붙어 있으면 PowerShell입니다. 붙여 넣기는 Ctrl + V 또는 마우스 오른쪽 클릭.",
+                "src": {
+                  "name": "Claude Code 공식 문서: 처음 쓰는 사람을 위한 터미널 안내",
+                  "url": "https://code.claude.com/docs/en/terminal-guide"
+                }
+              },
+              {
+                "name": "맥",
+                "text": "Cmd + Space로 Spotlight 검색을 열고 '터미널'(Terminal)을 입력한 뒤 Enter. 붙여 넣기는 Cmd + V.",
+                "src": {
+                  "name": "Claude Code 공식 문서: 터미널 안내",
+                  "url": "https://code.claude.com/docs/en/terminal-guide"
+                }
+              },
+              {
+                "name": "리눅스",
+                "text": "대부분의 배포판에서 Ctrl + Alt + T를 누르거나, 앱 메뉴에서 '터미널'을 찾습니다. 붙여 넣기는 Ctrl + Shift + V.",
+                "src": {
+                  "name": "Claude Code 공식 문서: 터미널 안내",
+                  "url": "https://code.claude.com/docs/en/terminal-guide"
+                }
+              }
+            ]
+          },
+          {
+            "label": "처음이라면",
+            "title": "클로드 코드를 설치합니다",
+            "text": "공식 문서에 있는 설치 명령 그대로입니다. 받는 동안 진행 표시가 없으니 창을 닫지 말고 기다립니다. 끝나면 터미널을 새로 열고 확인 명령을 넣어 버전 숫자가 나오면 성공입니다. 처음 claude를 실행하면 브라우저가 열려 로그인합니다. 무료 요금제로는 쓸 수 없고 Pro 이상 요금제가 필요합니다.",
+            "groups": [
+              {
+                "name": "윈도우 (PowerShell)",
+                "prompts": [
+                  "irm https://claude.ai/install.ps1 | iex"
+                ],
+                "src": {
+                  "name": "Claude Code 공식 문서: 설치",
+                  "url": "https://code.claude.com/docs/en/setup"
+                }
+              },
+              {
+                "name": "윈도우 (CMD, 줄 앞에 PS가 없는 창)",
+                "prompts": [
+                  "curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd"
+                ],
+                "src": {
+                  "name": "Claude Code 공식 문서: 설치",
+                  "url": "https://code.claude.com/docs/en/setup"
+                }
+              },
+              {
+                "name": "맥 · 리눅스",
+                "prompts": [
+                  "curl -fsSL https://claude.ai/install.sh | bash"
+                ],
+                "src": {
+                  "name": "Claude Code 공식 문서: 설치",
+                  "url": "https://code.claude.com/docs/en/setup"
+                }
+              },
+              {
+                "name": "설치 확인 (공통)",
+                "text": "2.1.281 (Claude Code)처럼 버전이 나오면 됩니다. claude를 찾을 수 없다고 나오면 터미널을 닫았다 다시 열어 봅니다.",
+                "prompts": [
+                  "claude --version"
+                ],
+                "src": {
+                  "name": "Claude Code 공식 문서: 설치 확인",
+                  "url": "https://code.claude.com/docs/en/setup"
+                }
+              }
+            ]
+          },
+          {
+            "label": "처음이라면",
+            "title": "Node.js·ffmpeg·Python을 깝니다",
+            "text": "화풍 스킬이 영상을 만들 때 쓰는 도구입니다. 제작자 안내 기준 Node 20 이상, ffmpeg 7 이상, Python 3.11 이상이 필요합니다. 다 깔았으면 터미널을 새로 열고 맨 아래 확인 명령으로 버전을 봅니다.",
+            "groups": [
+              {
+                "name": "윈도우",
+                "text": "윈도우에 들어 있는 앱 설치 도구 winget으로 깝니다. 첫 줄은 Node.js, 둘째 줄은 ffmpeg(공식 사이트가 안내하는 gyan.dev 빌드), 셋째 줄은 Python 설치 관리자입니다. Python은 설치 관리자를 깐 뒤 처음 python을 실행할 때 최신판이 저절로 깔립니다.",
+                "prompts": [
+                  "winget install --id OpenJS.NodeJS.LTS -e\nwinget install --id Gyan.FFmpeg -e\nwinget install 9NQ7512CXL7T -e --accept-package-agreements --disable-interactivity"
+                ],
+                "src": [
+                  {
+                    "name": "Python 공식 문서: 윈도우에서 쓰기",
+                    "url": "https://docs.python.org/3/using/windows.html"
+                  },
+                  {
+                    "name": "gyan.dev ffmpeg 빌드",
+                    "url": "https://www.gyan.dev/ffmpeg/builds/"
+                  }
+                ]
+              },
+              {
+                "name": "맥",
+                "text": "앱 설치 도구 Homebrew가 없으면 첫 줄로 먼저 깔고, 둘째 줄로 Node.js와 ffmpeg를 깝니다. Python은 python.org 다운로드 페이지의 macOS 설치 파일(.pkg)을 받아 엽니다.",
+                "prompts": [
+                  "/bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\"",
+                  "brew install node ffmpeg"
+                ],
+                "src": [
+                  {
+                    "name": "Homebrew 공식 사이트",
+                    "url": "https://brew.sh/"
+                  },
+                  {
+                    "name": "Python 공식 다운로드",
+                    "url": "https://www.python.org/downloads/"
+                  }
+                ]
+              },
+              {
+                "name": "리눅스 (우분투·데비안)",
+                "text": "Python은 배포판 것으로 충분합니다(우분투 24.04는 3.12). Node.js와 ffmpeg는 우분투 24.04 기본 저장소 판이 Node 18, ffmpeg 6.1로 낮습니다. Node.js는 nodejs.org 다운로드 페이지에서 Linux용을 받고, ffmpeg는 ffmpeg.org 다운로드 페이지가 안내하는 Linux 정적 빌드를 받습니다. 다른 배포판도 버전부터 확인합니다.",
+                "prompts": [
+                  "sudo apt install python3"
+                ],
+                "src": [
+                  {
+                    "name": "Node.js 공식 다운로드",
+                    "url": "https://nodejs.org/en/download"
+                  },
+                  {
+                    "name": "FFmpeg 공식 다운로드",
+                    "url": "https://ffmpeg.org/download.html"
+                  }
+                ]
+              },
+              {
+                "name": "버전 확인 (공통)",
+                "text": "윈도우는 python, 맥·리눅스는 python3를 넣습니다. 숫자가 위 기준보다 낮으면 새로 깝니다.",
+                "prompts": [
+                  "node --version\nffmpeg -version\npython --version"
+                ]
+              }
+            ]
+          }
+        ]
+      }
     },
     "cta": "팔로우하고 댓글에\n'자료' 남기면\n화풍 스킬 적용법\n보내 드립니다"
   },

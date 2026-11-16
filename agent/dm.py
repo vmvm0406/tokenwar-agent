@@ -55,10 +55,23 @@ def steps_from_slides(post):
         if s.get("kind") not in ("body", "prompt") or not (s.get("num") or s.get("kind") == "prompt"):
             continue
         prompts = [p for p in (s.get("prompts") or [s.get("prompt")]) if p]
-        out.append({"label": s.get("prompt_label") or s.get("num_note") or "",
+        out.append({"num": s.get("num"), "label": s.get("prompt_label") or s.get("num_note") or "",
                     "title": (s.get("heading") or "").replace("\n", " "),
                     "text": s.get("body", ""), "prompts": prompts})
     return out
+
+
+def page_steps(post):
+    """카드 순서 장 + dm.page.setup(선택)의 처음 하는 사람용 단계를 합친다.
+    setup: {"before": <카드 장 num>, "steps": [{label, title, text, prompts, groups: [{name, text, prompts, src: {name, url} 또는 그 목록}]}]}
+    before가 없거나 맞는 장이 없으면 맨 앞에 넣는다."""
+    steps = steps_from_slides(post)
+    setup = (dm_conf(post).get("page") or {}).get("setup") or {}
+    extra = setup.get("steps") or []
+    if not extra:
+        return steps
+    at = next((i for i, st in enumerate(steps) if st.get("num") == setup.get("before")), 0)
+    return steps[:at] + extra + steps[at:]
 
 
 def checklist_from_slides(post):
@@ -138,6 +151,10 @@ p{margin:6px 0;color:#CFD6D2}
 ul{padding-left:20px;color:#CFD6D2}
 .src{color:var(--mu);font-size:14px;border-top:2px solid #2A3530;padding-top:16px;margin-top:32px}
 .src a{color:var(--mu)}
+.grp{margin:18px 0 0}
+.grp h4{margin:0 0 2px;font-size:17px;font-weight:700;color:var(--ac)}
+.grp .gs{font-size:13px;color:var(--mu);margin:2px 0 0}
+.grp .gs a{color:var(--mu)}
 .foot{margin-top:28px;font-weight:700}
 .foot a{color:var(--ac)}
 """
@@ -159,12 +176,24 @@ def page_html(post):
         return (f'<div class="pr"><pre>{esc(p)}</pre>'
                 '<button type="button" onclick="cp(this)">복사</button></div>')
 
+    def group(g):
+        txt = f'<p>{esc(g["text"])}</p>' if g.get("text") else ""
+        srcs = g.get("src") or []
+        srcs = [x for x in ([srcs] if isinstance(srcs, dict) else srcs) if x.get("url")]
+        gs = ('<p class="gs">출처: ' + " · ".join(
+            f'<a href="{esc(x["url"])}" rel="noopener">{esc(x.get("name") or x["url"])}</a>' for x in srcs) + '</p>'
+              if srcs else "")
+        return (f'<div class="grp"><h4>{esc(g.get("name", ""))}</h4>{txt}'
+                f'{"".join(prompt_box(p) for p in g.get("prompts") or [])}{gs}</div>')
+
     parts = []
-    for i, st in enumerate(steps_from_slides(post), 1):
-        lb = f'<span class="lb">{esc(st["label"])}</span>' if st["label"] else ""
-        boxes = "".join(prompt_box(p) for p in st["prompts"])
+    for i, st in enumerate(page_steps(post), 1):
+        lb = f'<span class="lb">{esc(st["label"])}</span>' if st.get("label") else ""
+        boxes = "".join(prompt_box(p) for p in st.get("prompts") or [])
+        text = f'<p>{esc(st["text"])}</p>' if st.get("text") else ""
+        groups = "".join(group(g) for g in st.get("groups") or [])
         parts.append(f'<section class="step"><span class="k">{i:02d}</span>{lb}<h2>{esc(st["title"])}</h2>'
-                     f'{boxes}<p>{esc(st["text"])}</p></section>')
+                     f'{boxes}{text}{groups}</section>')
     extra = ""
     if pg.get("extra"):
         rows = "".join(
