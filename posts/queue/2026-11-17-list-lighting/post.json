@@ -19,7 +19,8 @@
         "type": "image",
         "src": "img/list/01.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: high-key lighting, very bright and airy, soft white light everywhere, almost no shadows. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: high-key lighting, very bright and airy, soft white light everywhere, almost no shadows. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "로우키",
@@ -27,7 +28,8 @@
         "type": "image",
         "src": "img/list/02.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: low-key lighting, dark moody room, a single soft light from the side on the slime, most of the frame in deep shadow. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: low-key lighting, dark moody room, a single soft light from the side on the slime, most of the frame in deep shadow. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "골든아워",
@@ -35,7 +37,8 @@
         "type": "image",
         "src": "img/list/03.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: warm golden hour sunlight streaming low through a window from the left, long soft orange shadows, warm amber glow on the slime and sofa. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: warm golden hour sunlight streaming low through a window from the left, long soft orange shadows, warm amber glow on the slime and sofa. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "블루아워",
@@ -43,7 +46,8 @@
         "type": "image",
         "src": "img/list/04.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: blue hour twilight, cool deep blue light from the window, calm dim blue tones across the whole room. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: blue hour twilight, cool deep blue light from the window, calm dim blue tones across the whole room. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "렘브란트 조명",
@@ -51,7 +55,8 @@
         "type": "image",
         "src": "img/list/05.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: Rembrandt lighting, one soft key light from high on the left at 45 degrees, the right side of the slime in shadow with a small triangle of light on that side, dark background. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: Rembrandt lighting, one soft key light from high on the left at 45 degrees, the right side of the slime in shadow with a small triangle of light on that side, dark background. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "버터플라이 조명",
@@ -59,7 +64,8 @@
         "type": "image",
         "src": "img/list/06.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: butterfly lighting, a soft key light directly in front of and above the slime, a small shadow right under it, even glamorous front light. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: butterfly lighting, a soft key light directly in front of and above the slime, a small shadow right under it, even glamorous front light. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "스플릿 조명",
@@ -67,7 +73,8 @@
         "type": "image",
         "src": "img/list/07.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: split lighting, a hard light from exactly the left side, the left half of the slime brightly lit and the right half in deep shadow. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: split lighting, a hard light from exactly the left side, the left half of the slime brightly lit and the right half in deep shadow. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "림 라이트",
@@ -75,7 +82,8 @@
         "type": "image",
         "src": "img/list/08.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: rim lighting, a strong white light from behind outlining the edge of the slime with a bright glowing rim, the front mostly dark. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: rim lighting, a strong white light from behind outlining the edge of the slime with a bright glowing rim, the front mostly dark. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "역광",
@@ -83,7 +91,8 @@
         "type": "image",
         "src": "img/list/09.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: strong backlight, a bright window directly behind the sofa, the slime glowing through its translucent body, slight light haze. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: strong backlight, a bright window directly behind the sofa, the slime glowing through its translucent body, slight light haze. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "네온 조명",
@@ -91,7 +100,8 @@
         "type": "image",
         "src": "img/list/10.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: neon lighting, strong hot pink neon light from the left and electric blue neon light from the right, colored reflections on the glossy slime, dim room otherwise. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: neon lighting, strong hot pink neon light from the left and electric blue neon light from the right, colored reflections on the glossy slime, dim room otherwise. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "촛불 조명",
@@ -99,7 +109,8 @@
         "type": "image",
         "src": "img/list/11.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: candlelight, a few lit candles on a small low table in front of the sofa, warm flickering orange light from below, dark room. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: candlelight, a few lit candles on a small low table in front of the sofa, warm flickering orange light from below, dark room. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "창문 자연광",
@@ -107,7 +118,8 @@
         "type": "image",
         "src": "img/list/12.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: soft natural window light from a large window on the right, gentle soft shadows, calm morning mood. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: soft natural window light from a large window on the right, gentle soft shadows, calm morning mood. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "소프트박스",
@@ -115,7 +127,8 @@
         "type": "image",
         "src": "img/list/13.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: studio softbox lighting, a large soft white light from the front left, clean even studio light, smooth soft shadows. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: studio softbox lighting, a large soft white light from the front left, clean even studio light, smooth soft shadows. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "하드 라이트",
@@ -123,7 +136,8 @@
         "type": "image",
         "src": "img/list/14.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: hard direct light from a single bare bulb, crisp sharp-edged shadows on the sofa and the wall, high contrast. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: hard direct light from a single bare bulb, crisp sharp-edged shadows on the sofa and the wall, high contrast. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "빛줄기(볼류메트릭)",
@@ -131,7 +145,8 @@
         "type": "image",
         "src": "img/list/15.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: volumetric light, visible beams of sunlight streaming through window blinds, dust particles in the air, light rays crossing the room. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: volumetric light, visible beams of sunlight streaming through window blinds, dust particles in the air, light rays crossing the room. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "컬러 젤",
@@ -139,7 +154,8 @@
         "type": "image",
         "src": "img/list/16.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: colored gel lighting, an orange gel light from the left and a teal gel light from the right, two-color mood. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: colored gel lighting, an orange gel light from the left and a teal gel light from the right, two-color mood. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "형광등",
@@ -147,7 +163,8 @@
         "type": "image",
         "src": "img/list/17.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: cold fluorescent tube lighting from the ceiling, slightly greenish white light, flat cold office mood. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: cold fluorescent tube lighting from the ceiling, slightly greenish white light, flat cold office mood. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "달빛",
@@ -155,7 +172,8 @@
         "type": "image",
         "src": "img/list/18.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: moonlight at night, cool pale blue light from the window, dark room, quiet night mood. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: moonlight at night, cool pale blue light from the window, dark room, quiet night mood. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "스포트라이트",
@@ -163,7 +181,8 @@
         "type": "image",
         "src": "img/list/19.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: a single theatrical spotlight from above on the slime, a bright circle of light on the sofa, everything else dark. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: a single theatrical spotlight from above on the slime, a bright circle of light on the sofa, everything else dark. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "흐린 날 확산광",
@@ -171,7 +190,8 @@
         "type": "image",
         "src": "img/list/20.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: overcast diffused daylight, soft grey light from the window on a cloudy day, very soft shadows, muted colors. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: overcast diffused daylight, soft grey light from the window on a cloudy day, very soft shadows, muted colors. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       }
     ],
     "hook": 10
@@ -222,5 +242,6 @@
     "images": [
       "cover"
     ]
-  }
+  },
+  "ai_image": true
 }
