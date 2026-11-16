@@ -99,8 +99,8 @@
     }
   ],
   "thumb": {
-    "title": "월급 2배 빨리 올라도\nAI 부자 못 따라잡거든",
-    "highlight": "못 따라잡거든",
+    "title": "월급 2배 올라도\nAI 부자 따라잡기\n어려운 이유",
+    "highlight": "AI 부자",
     "person": {
       "name": "알렉스 카프",
       "desc": "팔란티어 CEO"
@@ -110,7 +110,8 @@
       "src": "img/thumb.jpg",
       "url": "https://www.youtube.com/watch?v=m4mV4IClDlM",
       "position": "center 30%"
-    }
+    },
+    "max_lines": 3
   },
   "sources": [
     {

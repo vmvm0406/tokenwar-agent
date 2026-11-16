@@ -173,6 +173,14 @@ def is_real_question(text):
     return False
 
 
+def clause_noun_end(text):
+    """"AI 부자 따라잡기 어려운 이유", "말 한마디로 게임 만들 수 있는 시대"처럼 꾸미는 말(~ㄴ/~는/~ㄹ)이 붙은
+    이유·시대·방법·순간으로 끝나면 서술어가 들어 있는 것으로 본다 (운영자 결정 2026-11-16). "밀레니엄 난제"처럼 명사만은 막는다."""
+    w = re.sub(_TAIL, "", str(text).strip())
+    m = re.search(r"(\S)\s+(이유|시대|방법|순간|까닭)$", w)
+    return bool(m and _jong(m.group(1)) in (4, 8))
+
+
 def title_sentence(title, where, no_question=True):
     """제목이 서술어로 끝나는지. 따옴표 인용("~했다")도 서술어로 본다.
     구어체 반박("안 죽었다니까?", "아니거든", "끝났다고?")은 통과, 진짜 질문("~일까요?", "~할까?")은 막는다."""
@@ -182,7 +190,7 @@ def title_sentence(title, where, no_question=True):
     if no_question and is_real_question(one):   # 카드 표지("토큰, 정확히 뭘까")는 설명형 질문을 허용
         return [f"{where}이 질문형: '{one}' → 답을 미루는 질문 대신 단정이나 구어체 반박으로 "
                 "(예: '컴공은 끝났을까요?' 대신 '아니 컴공 안 죽었다니까?', STYLE_GUIDE 3-3)"]
-    if not (PREDICATE_RE.search(one) or COLLOQUIAL_RE.search(one)):
+    if not (PREDICATE_RE.search(one) or COLLOQUIAL_RE.search(one) or clause_noun_end(one)):
         return [f"{where}이 서술어 없이 끝남: '{one}' → 누가·무엇이 어떻게 했는지 끝까지 쓴다 "
                 "(예: '3년 만에 밀레니엄 난제' 대신 'AI가 3년 만에 수학 최대 난제를 풀었다')"]
     return []
