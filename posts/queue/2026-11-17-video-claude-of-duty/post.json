@@ -1,11 +1,77 @@
 {
   "id": "2026-11-17-reel-claude-of-duty",
-  "type": "reel",
+  "type": "video",
   "format": "howto",
   "series": "생존 가이드",
   "date": "2026-11-17",
   "publish_at": "2026-11-17T18:13:00+09:00",
-  "rights_note": "게임 코드·prompt.md: mshumer/Claude-of-Duty, MIT License (Copyright (c) 2026 mshumer). 플레이 화면은 그 코드를 토큰전쟁이 직접 실행해 녹화(저장소의 tools/demo.mjs 봇 플레이, 소리는 tools/demo-audio.mjs가 코드로 합성). 원본 X 영상(Matt Shumer, 7월 25일, 55.9초) 중 5초만 인용.",
+  "rights": "license",
+  "credit": "Matt Shumer",
+  "rights_note": "게임 코드·prompt.md: mshumer/Claude-of-Duty, MIT License (Copyright (c) 2026 mshumer). 플레이 화면은 그 코드를 토큰전쟁이 직접 실행해 녹화(저장소의 tools/demo.mjs 봇 플레이, 소리는 tools/demo-audio.mjs가 코드로 합성). 원본 X 영상(Matt Shumer, 7월 25일, 55.9초) 중 5초만 인용. 영상은 우리 녹화 두 구간(12초, 14초) 사이에 X 원본 5초(원본 3.5~8.5초)를 넣어 이어 붙임(1.6:1로 가운데를 잘라 확대). X 부분은 인용이며 자막으로 원본임을 밝힘.",
+  "video": {
+    "src": "clips/source.mp4",
+    "start": 0,
+    "end": 31.0,
+    "avoid_edge_check": false,
+    "avoid_burned": false,
+    "sub_motion": "rise"
+  },
+  "title": "프롬프트 3문단으로\n슈팅 게임이 나왔습니다",
+  "highlight": "프롬프트 3문단",
+  "subtitles": [
+    {
+      "start": 0.0,
+      "end": 2.9,
+      "text": "이 게임, 그림 파일이\n하나도 없습니다",
+      "highlight": "하나도 없습니다"
+    },
+    {
+      "start": 3.0,
+      "end": 5.9,
+      "text": "벽 무늬부터 총소리까지\n전부 코드로 만듭니다",
+      "highlight": "전부 코드로"
+    },
+    {
+      "start": 6.0,
+      "end": 8.9,
+      "text": "클로드 Opus 5에\n프롬프트 3문단을 넣었고",
+      "highlight": "프롬프트 3문단"
+    },
+    {
+      "start": 9.0,
+      "end": 11.9,
+      "text": "클로드 코드가 여러 시간\n스스로 작업해 만들었습니다"
+    },
+    {
+      "start": 12.0,
+      "end": 16.9,
+      "text": "만든 사람이 7월 25일\nX에 올린 원본 영상입니다",
+      "highlight": "원본 영상"
+    },
+    {
+      "start": 17.0,
+      "end": 19.9,
+      "text": "코드가 공개돼 있어서",
+      "highlight": "공개"
+    },
+    {
+      "start": 20.0,
+      "end": 22.9,
+      "text": "저희 컴퓨터에서\n직접 돌려 봤습니다",
+      "highlight": "직접"
+    },
+    {
+      "start": 23.0,
+      "end": 25.9,
+      "text": "콜 오브 듀티 수준은 아니고\n만든 사람도 그렇게 밝혔습니다"
+    },
+    {
+      "start": 26.0,
+      "end": 31.0,
+      "text": "게임 만들기, 아직도\n어렵다고 생각하세요?",
+      "highlight": "게임 만들기"
+    }
+  ],
   "slides": [
     {
       "kind": "cover",
@@ -20,32 +86,16 @@
       "sub": "Matt Shumer가 7월 공개한 게임"
     },
     {
-      "kind": "clip",
-      "src": "clips/gameplay.mp4",
-      "start": 0.0,
-      "end": 8.0,
-      "source": "토큰전쟁 직접 실행 녹화 (11월 16일, MIT 공개 코드)",
-      "source_url": "https://github.com/mshumer/Claude-of-Duty",
-      "heading": "이 게임, 그림 파일이\n하나도 없습니다",
-      "highlight": "하나도 없습니다"
-    },
-    {
-      "kind": "clip",
-      "src": "clips/x_shumer.mp4",
-      "start": 0.5,
-      "end": 5.5,
-      "source": "Matt Shumer X (@mattshumer_, 7월 25일)",
-      "source_url": "https://x.com/mattshumer_/status/2081054356405731740",
-      "heading": "클로드 Opus 5에\n3문단을 넣었습니다",
-      "highlight": "3문단"
-    },
-    {
       "kind": "prompt",
       "num": 1,
-      "num_note": "prompt.md 일부 번역 · 전문은 DM 자료로",
-      "heading": "프롬프트 첫 줄과\n끝 줄입니다",
-      "highlight": "첫 줄",
-      "prompt": "최신 콜 오브 듀티 수준의 1인칭 슈팅 게임을 만들어 줘.\n(… 2문단 생략 …)\nThree.js로 만들어. 완벽해질 때까지 /loop."
+      "num_note": "prompt.md 전체 번역",
+      "heading": "클로드 코드에\n이 3문단을 넣었습니다",
+      "highlight": "3문단",
+      "prompts": [
+        "최신 콜 오브 듀티 게임 수준의 1인칭 슈팅 게임을 만들어 줘. 텍스처부터 물리까지 생각할 수 있는 모든 것을 AAA급 품질로, 흠잡을 데 없이 완벽하고 눈부시게 아름답게 만들어야 해.",
+        "서브 에이전트들을 펼쳐서 항목을 하나씩 따로 맡겨 게임이 완벽해지게 해. 항목마다 /loop를 돌리고, 별도의 서브 에이전트가 화면을 직접 보고 AAA급으로 보이는지 확인하게 해. 그 서브 에이전트는 아주 깐깐한 비평가여야 하고, AAA급으로 보이지 않으면 계속 고치게 해.",
+        "모든 서브 에이전트가 실제 콜 오브 듀티와 비교해 품질에 완전히 감탄할 때까지 멈추지 마. 둘을 나란히 놓고 어느 쪽인지 모르는 상태(블라인드)로 비교해서 어느 쪽이 더 나은지 말하게 해. Three.js로 만들어. 완벽해질 때까지 /loop. 서브 에이전트를 펼치고 ultracode."
+      ]
     },
     {
       "kind": "body",
@@ -101,14 +151,9 @@
     "keyword": "자료",
     "message": "Claude-of-Duty를 만든 3문단 프롬프트 번역과 실행 방법이에요.\n아래 '자료 보기'를 누르면 원문·번역과 복사 버튼이 있는 페이지가 열립니다.\n프롬프트는 클로드 코드에서 오래 돌아가니 사용량을 먼저 확인하세요.",
     "page": {
-      "intro": "Matt Shumer가 클로드 Opus 5와 클로드 코드로 만든 브라우저 1인칭 슈팅 게임 Claude-of-Duty의 프롬프트와 실행 방법입니다. 코드와 프롬프트는 MIT 라이선스로 공개돼 있습니다(Copyright (c) 2026 mshumer). 아래 번역은 원문 prompt.md를 토큰전쟁이 우리말로 옮긴 것입니다.",
+      "intro": "Matt Shumer가 클로드 Opus 5와 클로드 코드로 만든 브라우저 1인칭 슈팅 게임 Claude-of-Duty의 프롬프트와 실행 방법입니다. 코드와 프롬프트는 MIT 라이선스로 공개돼 있습니다(Copyright (c) 2026 mshumer). 아래 번역은 원문 prompt.md를 토큰전쟁이 우리말로 옮긴 것입니다. /loop와 ultracode는 클로드 코드에서 쓰는 명령이라 영어 그대로 두었습니다. 클로드 앱 대화창이 아니라 클로드 코드에 넣는 프롬프트입니다.",
       "result": "11월 16일 공개 코드를 이 컴퓨터(윈도우)에서 받아 npm install, npm run dev로 실행했고, 저장소에 들어 있는 녹화 도구(tools/demo.mjs, 봇이 플레이)로 화면을 녹화했습니다. 그림·소리 파일 없이 시작할 때 코드로 벽 무늬와 총, 적, 소리를 만들어 냅니다. 같은 프롬프트로 게임을 처음부터 다시 만들어 보지는 않았습니다.",
       "extra": [
-        {
-          "title": "prompt.md 전체 번역",
-          "prompt": "최신 콜 오브 듀티 게임 수준의 1인칭 슈팅 게임을 만들어 줘. 텍스처부터 물리까지 생각할 수 있는 모든 것을 AAA급 품질로, 흠잡을 데 없이 완벽하고 눈부시게 아름답게 만들어야 해.\n\n서브 에이전트들을 펼쳐서 항목을 하나씩 따로 맡겨 게임이 완벽해지게 해. 항목마다 /loop를 돌리고, 별도의 서브 에이전트가 화면을 직접 보고 AAA급으로 보이는지 확인하게 해. 그 서브 에이전트는 아주 깐깐한 비평가여야 하고, AAA급으로 보이지 않으면 계속 고치게 해.\n\n모든 서브 에이전트가 실제 콜 오브 듀티와 비교해 품질에 완전히 감탄할 때까지 멈추지 마. 둘을 나란히 놓고 어느 쪽인지 모르는 상태(블라인드)로 비교해서 어느 쪽이 더 나은지 말하게 해. Three.js로 만들어. 완벽해질 때까지 /loop. 서브 에이전트를 펼치고 ultracode.",
-          "note": "원문은 영어 3문단입니다. /loop와 ultracode는 클로드 코드에서 쓰는 명령이라 영어 그대로 두었습니다. 클로드 앱 대화창이 아니라 클로드 코드에 넣는 프롬프트입니다."
-        },
         {
           "title": "공개 코드 실행 방법 (Node.js 설치 후 터미널에서)",
           "prompt": "git clone https://github.com/mshumer/Claude-of-Duty\ncd Claude-of-Duty\nnpm install\nnpm run dev",
@@ -143,9 +188,5 @@
     "클로드",
     "Claude-of-Duty",
     "FPS 게임"
-  ],
-  "music": {
-    "generate": true,
-    "credit": "배경음악: 토큰전쟁이 코드로 직접 만든 음악 (외부 음원 없음). 게임 소리: Claude-of-Duty tools/demo-audio.mjs 코드 합성 (MIT)"
-  }
+  ]
 }

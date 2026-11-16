@@ -609,9 +609,12 @@ def make_video_reel(post, folder, cfg, soft_edges=False):
     fc = [f"[1:v]{crop}{fit},setsar=1,fps={FPS}[vid]",
           f"[0:v][vid]overlay=26:{top + 6}[b0]", "[b0][2:v]overlay=0:0[b1]"]
     last = "[b1]"
+    # 선택: video.sub_motion "rise" → 자막이 나올 때 0.3초 동안 아래에서 22px 올라오며 자리 잡는다 (정적인 글 띄우기 대신)
+    rise = (v.get("sub_motion") == "rise")
     for i, (_, a, z, dy) in enumerate(subs):
         a, z = a - start, z - start
-        fc.append(f"{last}[{3 + i}:v]overlay=0:{dy}:enable='between(t,{a:.3f},{z:.3f})'[s{i}]")
+        y = (f"'{dy}+22*pow(max(0,1-(t-{a:.3f})/0.3),2)':eval=frame" if rise else f"{dy}")
+        fc.append(f"{last}[{3 + i}:v]overlay=0:{y}:enable='between(t,{a:.3f},{z:.3f})'[s{i}]")
         last = f"[s{i}]"
     fc.append(f"{last}format=yuv420p[vout]")
     if has_audio(src):
