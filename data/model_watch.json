@@ -990,7 +990,29 @@
    "tries": 0,
    "breaking": true,
    "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMiW0FVX3lxTE0zWGxfbHlRQlQ1dlJjQTlhOGQ5LU14WGlxSV9mN1d0TE5YVFNYcU50dE1nYmM5b2lfcmRJdHk1cVZ3SHhjSDk3VWtpUVBVcDZpRGRtd2V4OFZLb0XSAWBBVV95cUxNNG5Ra1ZvUC1VSTJVQWJfb2ZlNFZKZ2lBYVdsNDJrdEs5RzVPZVI5ejNXbDdycXhQQTlDeE9MQkRGclNULWF4QVNNT08wQlJ6aGpDT0VVb2hFVF9PUW9xTzg?oc=5": {
+   "source": "news",
+   "company": "엔비디아",
+   "entities": [
+    "엔비디아"
+   ],
+   "tok": [
+    "논의",
+    "백악",
+    "복귀",
+    "설득",
+    "시도",
+    "악관"
+   ],
+   "title": "[업계 속보: 주요 매체 9곳(AI타임스, MBC, 경향신문, 매일경제) · 인사] \"젠슨 황, 엔비디아 CEO 복귀 논의 중…백악관 설득 시도\"",
+   "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE0zWGxfbHlRQlQ1dlJjQTlhOGQ5LU14WGlxSV9mN1d0TE5YVFNYcU50dE1nYmM5b2lfcmRJdHk1cVZ3SHhjSDk3VWtpUVBVcDZpRGRtd2V4OFZLb0XSAWBBVV95cUxNNG5Ra1ZvUC1VSTJVQWJfb2ZlNFZKZ2lBYVdsNDJrdEs5RzVPZVI5ejNXbDdycXhQQTlDeE9MQkRGclNULWF4QVNNT08wQlJ6aGpDT0VVb2hFVF9PUW9xTzg?oc=5",
+   "first_seen": "2026-11-16T09:04:20+09:00",
+   "why": "48시간 안에 같은 회사·인물 게시물 있음: 2026-11-16-carousel-huang-return (엔비디아)",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
   }
  },
- "updated": "2026-11-16T08:49:18+09:00"
+ "updated": "2026-11-16T09:04:20+09:00"
 }
