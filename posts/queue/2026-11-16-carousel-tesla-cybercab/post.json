@@ -1,0 +1,147 @@
+{
+  "id": "2026-11-16-carousel-tesla-cybercab",
+  "type": "carousel",
+  "format": "news",
+  "series": "전황",
+  "date": "2026-11-16",
+  "publish_at": "2026-11-16T14:00:00+09:00",
+  "rights_note": "사진 4장 모두 위키미디어 공용의 상업 이용 가능 라이선스: 표지 Daniel Lu(User:dllu) CC BY-SA 4.0, 실내 Dllu CC BY-SA 4.0, 샌프란시스코 거리 9yz CC BY 4.0, 전시장 JustAnotherCarDesigner CC0. 테슬라 공식 갤러리 이미지는 이용 조건이 '표지·광고·상업 목적 사용 불가'라서 쓰지 않음. 머스크 사진·언론사 사진 없음. 1600px로 줄여 씀(변경 표시).",
+  "slides": [
+    {
+      "kind": "cover",
+      "layout": "image",
+      "visual": {
+        "type": "image",
+        "src": "img/cover-highway.jpg",
+        "url": "https://commons.wikimedia.org/wiki/File:Tesla_Cybercab_on_Interstate_280_near_Palo_Alto_dllu.jpg",
+        "position": "35% center",
+        "credit": "사진: Daniel Lu (User:dllu), CC BY-SA 4.0, 위키미디어 공용",
+        "license": "CC BY-SA 4.0",
+        "hook": "운전대 없는 금빛 사이버캡이 고속도로를 혼자 달리는 장면이라 정말 사람이 안 모는지 들여다보게 된다"
+      },
+      "title": "AI야, 부산 가 줘\n운전대 없는 차가 팔립니다",
+      "highlight": "AI야, 부산 가 줘",
+      "sub": "테슬라 사이버캡 · 미국 시장 기준 약 4,000만 원"
+    },
+    {
+      "kind": "body",
+      "visual": {
+        "type": "image",
+        "src": "img/interior.jpg",
+        "url": "https://commons.wikimedia.org/wiki/File:Tesla_Cybercab_at_Santana_Row_interior_dllu.jpg",
+        "position": "center center",
+        "credit": "사진: Dllu, CC BY-SA 4.0, 위키미디어 공용",
+        "license": "CC BY-SA 4.0"
+      },
+      "heading": "말만 하면 AI가\n운전해 데려다줍니다",
+      "highlight": "AI가",
+      "body": "운전대도 페달도 없습니다. 테슬라 자율주행 AI가 카메라로 길을 보고 스스로 판단해 달립니다."
+    },
+    {
+      "kind": "stat",
+      "value": "29,990",
+      "unit": "달러",
+      "label": "11월 13일 환율로 약 4,010만 원입니다",
+      "heading": "미국 시장 기준\n세금 전 가격입니다",
+      "body": "테슬라가 11월 13일 일부 고객에게 개인 구매 주문을 열었습니다. 보증금 1,000달러는 돌려받지 못합니다."
+    },
+    {
+      "kind": "body",
+      "visual": {
+        "type": "image",
+        "src": "img/sf-street.jpg",
+        "url": "https://commons.wikimedia.org/wiki/File:Tesla_Cybercab_-_San_Francisco_-_June_2026.jpg",
+        "position": "center center",
+        "credit": "사진: 9yz, CC BY 4.0, 위키미디어 공용",
+        "license": "CC BY 4.0"
+      },
+      "heading": "달리려면 매달\n299달러를 더 냅니다",
+      "highlight": "299달러",
+      "body": "자율주행 구독이 있어야 차가 움직입니다. 원화로 한 달 약 40만 원이고, 첫 달 요금은 차값에 들어 있습니다."
+    },
+    {
+      "kind": "body",
+      "visual": {
+        "type": "image",
+        "src": "img/display.jpg",
+        "url": "https://commons.wikimedia.org/wiki/File:Tesla_Cybercab_001.jpg",
+        "position": "center center",
+        "credit": "사진: JustAnotherCarDesigner, CC0, 위키미디어 공용",
+        "license": "CC0"
+      },
+      "heading": "초대받은 고객만\n주문할 수 있습니다",
+      "highlight": "초대받은 고객",
+      "body": "테슬라가 고른 사람에게만 주문을 받습니다. 차는 테슬라 로보택시가 다니는 서비스 구역 안에서만 달립니다."
+    },
+    {
+      "kind": "steps",
+      "heading": "인도는 12월,\n국내 출시 일정은 미정입니다",
+      "highlight": "국내 출시 일정은 미정",
+      "items": [
+        {
+          "title": "첫 인도는 미국 텍사스 오스틴",
+          "text": "테슬라가 공개한 주문 화면에 12월 인도 예정으로 적혀 있습니다"
+        },
+        {
+          "title": "2인승",
+          "text": "좌석 두 개와 큰 화면 하나가 실내의 전부입니다"
+        },
+        {
+          "title": "한국 판매 계획은 발표되지 않았습니다",
+          "text": "이 게시물의 가격과 조건은 모두 테슬라 공식 발표 기준입니다"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "name": "테슬라 로보택시 공식 X 계정, 사이버캡 개인 구매 주문 안내 (11월 13일)",
+      "url": "https://x.com/robotaxi/status/2121384435241402737"
+    },
+    {
+      "name": "Electrek, Tesla Cybercab orders open at $29,990 + $299/mo (11월 13일)",
+      "url": "https://electrek.co/2026/11/13/tesla-cybercab-personal-use-orders-299-subscription-geofence/"
+    },
+    {
+      "name": "InsideEVs, Tesla Opens Self-Driving Cybercab Orders To Select Customers (11월 13일)",
+      "url": "https://insideevs.com/news/815473/tesla-cybercab-pricing-sales-announced/"
+    },
+    {
+      "name": "Cryptonomist, Tesla Cybercab launch (9월 2일, 카메라만 쓰는 자율주행 설명 근거)",
+      "url": "https://en.cryptonomist.ch/2026/09/02/tesla-cybercab-launch/"
+    },
+    {
+      "name": "환율: 유럽중앙은행 기준 환율 11월 13일, 1달러 1,337.13원 (Frankfurter)",
+      "url": "https://api.frankfurter.dev/v1/2026-11-13?base=USD&symbols=KRW"
+    },
+    {
+      "name": "사진: Daniel Lu, Tesla Cybercab on Interstate 280, CC BY-SA 4.0, 위키미디어 공용",
+      "url": "https://commons.wikimedia.org/wiki/File:Tesla_Cybercab_on_Interstate_280_near_Palo_Alto_dllu.jpg"
+    },
+    {
+      "name": "사진: Dllu, Tesla Cybercab at Santana Row interior, CC BY-SA 4.0, 위키미디어 공용",
+      "url": "https://commons.wikimedia.org/wiki/File:Tesla_Cybercab_at_Santana_Row_interior_dllu.jpg"
+    },
+    {
+      "name": "사진: 9yz, Tesla Cybercab San Francisco, CC BY 4.0, 위키미디어 공용",
+      "url": "https://commons.wikimedia.org/wiki/File:Tesla_Cybercab_-_San_Francisco_-_June_2026.jpg"
+    },
+    {
+      "name": "사진: JustAnotherCarDesigner, Tesla Cybercab 001, CC0, 위키미디어 공용",
+      "url": "https://commons.wikimedia.org/wiki/File:Tesla_Cybercab_001.jpg"
+    }
+  ],
+  "caption": "테슬라가 운전대 없는 자율주행차 사이버캡을 개인에게도 팔기 시작했습니다. 미국 시장 기준 가격은 2만 9,990달러, 약 4,010만 원.\n\n🗞️ 11월 13일 테슬라 로보택시 공식 X 계정이 일부 초대 고객에게 개인 구매 주문을 열었다고 알렸습니다.\n📍 운전대와 페달이 없어 사람은 몰 수 없고, 테슬라 자율주행 AI가 카메라로 길을 보며 운전합니다.\n📊 차를 움직이려면 월 299달러(약 40만 원) 자율주행 구독이 필요하고, 보증금 1,000달러는 환불 불가.\n🔫 달릴 수 있는 곳은 테슬라 로보택시 서비스 구역 안뿐이고, 첫 인도는 12월 텍사스 오스틴으로 잡혀 있습니다.\n💡 국내 출시 일정은 미정이며, 원화 금액은 11월 13일 유럽중앙은행 기준 환율(1달러 1,337원)로 환산한 값.\n\n👉 출처: 테슬라 로보택시 공식 X, Electrek, InsideEVs (11월 13일)\n카메라로 보고 운전한다는 설명: 사이버캡은 레이더·라이다 없이 카메라만 쓴다는 보도 기준 (Cryptonomist, 9월 2일)\n사진: Daniel Lu·Dllu (CC BY-SA 4.0), 9yz (CC BY 4.0), JustAnotherCarDesigner (CC0), 위키미디어 공용\n\n자율주행차가 나오면 바로 사겠다던 친구에게 보내 주세요.",
+  "hashtags": [
+    "#테슬라",
+    "#사이버캡",
+    "#자율주행",
+    "#AI뉴스",
+    "#토큰전쟁"
+  ],
+  "topic": [
+    "테슬라 사이버캡",
+    "자율주행차",
+    "로보택시"
+  ]
+}
