@@ -1,18 +1,17 @@
 """목록형 자료 릴스 (post type "video" + "list", 운영자 결정 2026-11-16, 참고 형식 '34가지 조명 코드').
 
-한 화면에 큰 제목과 번호 목록이 함께 나오고, 목록이 한 줄씩 형광 초록 면으로 강조될 때마다
-오른쪽 결과 이미지(세로 4:5)가 바뀐다. 길이 20~35초 (끝 화면 포함).
+결과 그림이 화면을 가로 꽉 채우고(1080x1350, 4:5), 항목마다 그림과 '번호 + 이름' 띠가 함께 바뀐다
+(운영자 수정 2026-11-17: "그림은 꽉차게", 화면 속 전체 목록은 뺌). 길이 20~35초 (끝 화면 포함).
 
 레이아웃 (1080x1920, 읽을 것은 모두 안전 영역 config.json reel_safe 안):
-    0~2초   첫 화면: 제목 2줄 + 가장 눈에 띄는 결과 이미지 크게 (list.hook) + 그 이름
-    2초~    목록 화면:  [안내 띠 dm.banner 자리, 3초부터]
-                       제목 2줄
-                       ┌ 번호 목록 ┐ ┌ 결과 이미지 4:5 ┐   ← 왼쪽 목록, 오른쪽 이미지
-                       항목이 많으면 페이지를 나눠(기본 한 화면 11줄까지) 넘긴다
-    끝      dm.cta 끝 화면 2.5초 (video.py append_cta_card)
+    그림        세로 0~1350px, 가로 꽉 (위 285px까지는 인스타 머리말에 덮여도 되는 자리)
+    0~2초       첫 화면: 가장 눈에 띄는 결과 그림(list.hook) + 제목 띠(2줄, 아래쪽)
+    2초~        항목 화면: 그림 + 이름 띠 "07 스플릿 조명" (아래쪽, 오른쪽 아래 버튼 줄 위 1138px에서 끝남)
+    3초~본편 끝 '자료' 안내 띠(dm.banner, 안전 영역 맨 위 285px)
+    끝          dm.cta 끝 화면 2.5초 (video.py append_cta_card)
 
-소리: 코드로 만든 음악(music_gen.py, 첫 화면 → 목록, 페이지 넘김에 강한 박자) → -14 LUFS (loudness.py).
-전체 목록과 영어 단어는 화면에 쓰지 않고 DM 자료 페이지(dm.py)에 둔다.
+소리: 코드로 만든 음악(music_gen.py, 항목 전환에 박자, 목록 시작·11줄마다 강한 박자) → -14 LUFS (loudness.py).
+전체 목록·영어 용어·추가 용어는 화면에 쓰지 않고 DM 자료 페이지(dm.py)에 둔다.
 그림은 마스코트 슬라임 AI 그림 (list.items[].prompt + "mascot": true → render.yml의 gen_images가 만든다).
 그림이 아직 없으면 render.py가 회색 자리표시(번호만)로 틀만 렌더링한다 (with_placeholders, Actions에서는 멈춤).
 """
@@ -39,8 +38,12 @@ BASE_FACTOR = 1.3       # 원본(list.base) 줄은 항목보다 조금 길게
 TARGET_TOTAL = 29.0     # 기본 목표 길이(끝 화면 포함). 항목 시간은 이 값에 맞춰 0.9~1.6초 사이로 정한다
 ITEM_RANGE = (0.9, 1.6)
 LENGTH_RANGE = (20.0, 35.0)   # 끝 화면 포함 (STYLE_GUIDE 6장 "목록형 자료 릴스", checks.py)
-MAX_ROWS = 11           # 한 화면 목록 줄 수 상한. 넘으면 페이지를 나눈다
-IMG_W_MAX = 500         # 목록 화면 이미지 너비 상한 (목록 글씨가 읽히는 너비를 남긴다)
+MAX_ROWS = 11           # 음악 강한 박자 묶음 크기 (예전 한 화면 목록 줄 수). 이 줄 수마다 박자를 세게
+RAIL_TOP = _SAFE.get("rail_top", 1150)   # 오른쪽 아래 버튼 줄 시작. 이름 띠는 이 위에 둔다 (가로 꽉 채워도 안 가려짐)
+IMG_TOP = 0             # 그림(1080x1350) 위 끝. 위 285px는 인스타 머리말에 덮이는 벽 부분이고, 마스코트가 이름 띠(아래쪽) 위에 오게 화면 맨 위부터
+LABEL_FONT = 96         # 번호 + 이름 띠 글씨 (검은고딕)
+LABEL_MIN = 64
+TITLE_FONT = 78         # 첫 화면 제목 띠
 
 
 def esc(s):
@@ -116,20 +119,10 @@ def pages(n, per=None):
 
 
 def layout(post):
-    from banner import banner_text, banner_height, BANNER_GAP
-    bt = banner_text(post)
-    title_top = SAFE_TOP + (banner_height(bt) + BANNER_GAP if bt else 15)
-    title_h = 2 * 69          # 제목 60px, 줄 간격 1.14, 2줄
-    body_top = title_top + title_h + 30
-    body_bottom = SAFE_BOTTOM - 10
-    body_h = body_bottom - body_top
-    img_w = min(IMG_W_MAX, int(body_h * 0.8)) // 2 * 2
-    img_h = int(img_w * 1.25) // 2 * 2
-    img_x = W - SIDE - img_w
-    img_y = body_top + (body_h - img_h) // 2
-    list_w = img_x - 28 - SIDE
-    return {"title_top": title_top, "body_top": body_top, "body_h": body_h,
-            "img": (img_x, img_y, img_w, img_h), "list_w": list_w}
+    """그림을 가로 꽉 차게(1080x1350, 4:5) 두고, 읽을 글(이름 띠·제목 띠)은 안전 영역 아래쪽,
+    오른쪽 아래 버튼 줄(rail_top) 위에 둔다. 위쪽 '자료' 안내 띠(dm.banner)는 그림 위 안전 영역 맨 위."""
+    img_h = int(W * 1.25)
+    return {"img": (0, IMG_TOP, W, img_h), "label_bottom": RAIL_TOP - 12, "label_w": W - 2 * SIDE}
 
 
 def page_html(post, folder, cfg):
@@ -138,98 +131,66 @@ def page_html(post, folder, cfg):
     L = post["list"]
     rows = rows_of(post)
     lo = layout(post)
-    pg = pages(len(rows), L.get("per_page"))
-    per = max(e - s for s, e in pg)
-    row_h = min(96, lo["body_h"] // per)
-    font = max(30, min(48, int(row_h * 0.54)))
-    list_top = lo["body_top"] + (lo["body_h"] - row_h * per) // 2   # 목록 덩어리를 이미지와 같은 높이 가운데에
-    pos = L.get("position", "center 35%")
+    pos = L.get("position", "center 40%")
     imgs = [(Path(folder) / r["src"]).resolve().as_uri() for r in rows]
     ix, iy, iw, ih = lo["img"]
-    # 첫 화면 이미지: 제목 아래 남는 자리를 4:5로 크게
-    hook_top = SAFE_TOP + 15 + 2 * 86 + 34
-    hook_h = (SAFE_BOTTOM - 10 - hook_top) // 2 * 2
-    hook_w = int(hook_h * 0.8) // 2 * 2
-    if hook_w > W - 2 * SIDE:
-        hook_w = (W - 2 * SIDE) // 2 * 2
-        hook_h = int(hook_w * 1.25) // 2 * 2
-    page_divs = []
-    for p, (s, e) in enumerate(pg):
-        lis = "".join(f'<div class="row" data-r="{r}"><span class="n">{esc(rows[r]["num"])}</span>'
-                      f'<span class="t">{esc(rows[r]["name"])}</span></div>' for r in range(s, e))
-        page_divs.append(f'<div class="page" data-p="{p}">{lis}</div>')
-    js_rows = json.dumps([{"name": r["name"], "img": u, "page": next(i for i, (s, e) in enumerate(pg) if s <= k < e)}
-                          for k, (r, u) in enumerate(zip(rows, imgs))], ensure_ascii=False)
+    js_rows = json.dumps([{"num": r["num"], "name": r["name"], "img": u} for r, u in zip(rows, imgs)], ensure_ascii=False)
     return f"""<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>
 @import url('{fonts}/black-han-sans/index.css');
-@font-face{{font-family:'Wanted';src:url('{fonts}/WantedSans-SemiBold.otf');font-weight:600}}
 @font-face{{font-family:'Wanted';src:url('{fonts}/WantedSans-Bold.otf');font-weight:700}}
-@font-face{{font-family:'Wanted';src:url('{fonts}/WantedSans-ExtraBold.otf');font-weight:800}}
 *{{box-sizing:border-box}}html,body{{margin:0;background:{b['bg']}}}
 #f{{width:{W}px;height:{H}px;position:relative;overflow:hidden;background:{b['bg']};color:{b['text']};
   font-family:'Wanted',sans-serif;word-break:keep-all}}
 .hl{{color:{b['accent']}}}
-.title{{position:absolute;left:{SIDE}px;right:{SIDE}px;margin:0;font-family:'Black Han Sans';font-weight:400;letter-spacing:-.02em}}
-#hook .title{{top:{SAFE_TOP + 15}px;font-size:76px;line-height:1.13;text-align:center}}
-#list .title{{top:{lo['title_top']}px;font-size:60px;line-height:1.14}}
-#hook .pic{{position:absolute;left:{(W - hook_w) // 2}px;top:{hook_top}px;width:{hook_w}px;height:{hook_h}px;background:#1d2420}}
-#hook .pic img,#list .pic img{{width:100%;height:100%;object-fit:cover;object-position:{pos};display:block}}
-#hook .name{{position:absolute;left:0;bottom:0;padding:14px 26px 12px 22px;background:{b['bg']};border-top:6px solid {b['accent']};
-  font-family:'Black Han Sans';font-size:52px;line-height:1;color:{b['accent']}}}
-#list .pic{{position:absolute;left:{ix}px;top:{iy}px;width:{iw}px;height:{ih}px;background:#1d2420}}
-#list .rows{{position:absolute;left:{SIDE}px;top:{list_top}px;width:{lo['list_w']}px;height:{row_h * per}px}}
-.page{{position:absolute;left:0;top:0;width:100%;display:none}}
-.row{{height:{row_h}px;display:flex;align-items:center;gap:16px;padding:0 14px 0 10px;border-bottom:2px solid #1d2a22;
-  white-space:nowrap;overflow:hidden}}
-.row .n{{flex:0 0 auto;width:{int(font * 1.25)}px;font-family:'Black Han Sans';font-size:{font}px;color:{b['accent']};line-height:1}}
-.row .t{{flex:0 0 auto;font-weight:700;font-size:{font}px;line-height:1.1;color:{b['text']}}}
-.row.on{{background:{b['accent']};border-bottom-color:{b['accent']}}}
-.row.on .n,.row.on .t{{color:{b['bg']}}}
-.row.on .t{{font-weight:800}}
-.scr{{position:absolute;inset:0;display:none}}
+.pic{{position:absolute;left:{ix}px;top:{iy}px;width:{iw}px;height:{ih}px;background:#1d2420}}
+.pic img{{width:100%;height:100%;object-fit:cover;object-position:{pos};display:block}}
+.band{{position:absolute;left:{SIDE}px;bottom:{H - lo['label_bottom']}px;max-width:{lo['label_w']}px;
+  background:rgba(10,11,10,.88);border-left:10px solid {b['accent']};padding:20px 30px 18px 26px;
+  font-family:'Black Han Sans';font-weight:400;letter-spacing:-.02em;display:none}}
+#label{{white-space:nowrap;font-size:{LABEL_FONT}px;line-height:1}}
+#label .n{{color:{b['accent']};margin-right:24px}}
+#title{{font-size:{TITLE_FONT}px;line-height:1.14}}
 </style></head><body><div id="f">
-<div class="scr" id="hook"><h1 class="title">{hl(post['title'], post.get('highlight'))}</h1>
-  <div class="pic"><img id="hookimg" src=""><div class="name" id="hookname"></div></div></div>
-<div class="scr" id="list"><h1 class="title">{hl(post['title'], post.get('highlight'))}</h1>
-  <div class="rows">{''.join(page_divs)}</div><div class="pic"><img id="listimg" src=""></div></div>
+<div class="pic"><img id="img" src=""></div>
+<div class="band" id="title">{hl(post['title'], post.get('highlight'))}</div>
+<div class="band" id="label"><span class="n" id="ln"></span><span id="lt"></span></div>
 </div><script>
 const ROWS = {js_rows};
-// 긴 이름은 그 줄만 글씨를 줄여 한 줄에 맞춘다 (읽히는 크기 우선, 최소 26px)
-// 글꼴이 다 읽힌 뒤(shoot_states) 목록 화면을 펼친 채로 잰다
 const small = [];
-window.twFit = () => {{
-  const sc = document.getElementById('list'); sc.style.display = 'block';
-  document.querySelectorAll('.page').forEach(p => p.style.display = 'block');
-  document.querySelectorAll('.row').forEach(r => {{
-    const t = r.querySelector('.t'); let fs = parseFloat(getComputedStyle(t).fontSize);
-    const over = () => t.getBoundingClientRect().right > r.getBoundingClientRect().right - 12;
-    while (over() && fs > 26) {{ fs -= 1; t.style.fontSize = fs + 'px'; }}
-    if (over()) small.push(t.textContent);
-  }});
-  document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-  sc.style.display = 'none';
+const lab = document.getElementById('label');
+// 이름 띠는 글씨 하나 크기로 통일하되, 띠 너비를 넘는 이름만 그 장에서 줄인다 (최소 {LABEL_MIN}px)
+window.twFit = () => {{}};
+const fit = (row) => {{
+  lab.style.fontSize = '{LABEL_FONT}px';
+  let fs = {LABEL_FONT};
+  while (lab.scrollWidth > lab.clientWidth + 1 && fs > {LABEL_MIN}) {{ fs -= 2; lab.style.fontSize = fs + 'px'; }}
+  if (lab.scrollWidth > lab.clientWidth + 1) small.push(row.name);
 }};
 window.twProblems = () => {{
-  const out = small.map(s => '목록 이름이 한 줄에 안 들어감: ' + s);
-  for (const id of ['hook', 'list']) {{
-    const sc = document.getElementById(id); sc.style.display = 'block';
-    const h = sc.querySelector('.title'); const lh = parseFloat(getComputedStyle(h).lineHeight);
-    if (Math.round(h.getBoundingClientRect().height / lh) > 2) out.push('제목이 2줄을 넘음 (' + id + ')');
-    sc.style.display = 'none';
-  }}
+  const out = [];
+  lab.style.display = 'block';
+  ROWS.forEach(r => {{ document.getElementById('ln').textContent = r.num; document.getElementById('lt').textContent = r.name; fit(r); }});
+  lab.style.display = 'none';
+  small.forEach(s => out.push('이름이 띠 한 줄에 안 들어감: ' + s));
+  const t = document.getElementById('title'); t.style.display = 'block';
+  // 제목은 2줄 안에 들어갈 때까지 글씨를 줄인다 (최소 56px). 줄 나눔은 post.title 그대로
+  let tfs = {TITLE_FONT};
+  const lines = () => Math.round((t.clientHeight - 38) / parseFloat(getComputedStyle(t).lineHeight));
+  while (lines() > 2 && tfs > 56) {{ tfs -= 2; t.style.fontSize = tfs + 'px'; }}
+  if (lines() > 2) out.push('제목이 2줄을 넘음');
+  if (t.getBoundingClientRect().top < {SAFE_TOP}) out.push('제목 띠가 안전 영역 위로 나감');
+  t.style.display = 'none';
   return out;
 }};
 window.twState = (kind, r) => {{
   const row = ROWS[r];
-  document.getElementById('hook').style.display = kind === 'hook' ? 'block' : 'none';
-  document.getElementById('list').style.display = kind === 'row' ? 'block' : 'none';
-  if (kind === 'hook') {{
-    document.getElementById('hookimg').src = row.img;
-    document.getElementById('hookname').textContent = row.name;
-  }} else {{
-    document.querySelectorAll('.page').forEach(p => p.style.display = (+p.dataset.p === row.page) ? 'block' : 'none');
-    document.querySelectorAll('.row').forEach(x => x.classList.toggle('on', +x.dataset.r === r));
-    document.getElementById('listimg').src = row.img;
+  document.getElementById('img').src = row.img;
+  document.getElementById('title').style.display = kind === 'hook' ? 'block' : 'none';
+  lab.style.display = kind === 'row' ? 'block' : 'none';
+  if (kind === 'row') {{
+    document.getElementById('ln').textContent = row.num;
+    document.getElementById('lt').textContent = row.name;
+    fit(row);
   }}
   return Promise.all([...document.images].filter(i => i.src).map(i => i.decode().catch(() => null)));
 }};

@@ -184,6 +184,7 @@ ul{padding-left:20px;color:#CFD6D2}
 .foot{margin-top:28px;font-weight:700}
 .step.li{padding:14px 0}
 .step.li .lb{color:var(--fg);font-size:18px}
+.step.li .ex{display:block;width:100%;max-width:360px;margin:10px 0 0}
 .step.li .pr pre{padding:12px 96px 12px 16px;font-size:17px}
 .foot a{color:var(--ac)}
 """
@@ -198,7 +199,7 @@ HEADINGS = {
 HEADINGS["formal"] = HEADINGS["default"]  # 예전 dm.page.style = "formal" 게시물 호환
 
 
-def page_html(post):
+def page_html(post, folder=None):
     d = dm_conf(post)
     pg = d.get("page") or {}
     cover = cover_of(post)
@@ -242,19 +243,31 @@ def page_html(post):
         tpl_html = (f'<section class="step"><h2>{esc(pg.get("template_title") or "프롬프트에 넣는 자리")}</h2>'
                     f'{prompt_box(tpl)}{"<p>" + esc(pg["template_note"]) + "</p>" if pg.get("template_note") else ""}</section>'
                     if tpl else "")
-        rows = "".join(
-            f'<section class="step li"><span class="k">{i:02d}</span><span class="lb">{esc(it.get("name", ""))}</span>'
-            f'{prompt_box(it["en"]) if it.get("en") else ""}'
-            f'{"<p>" + esc(it["note"]) + "</p>" if it.get("note") else ""}</section>'
-            for i, it in enumerate(L["items"], 1))
+        def term(i, it):
+            # 번호·한국어 이름·한 줄 설명(사실만)·영어 용어(복사 상자)·직접 만든 예시 그림(있을 때만)
+            img = ""
+            if folder and it.get("src") and (Path(folder) / it["src"]).exists():
+                img = f'<img class="ex" loading="lazy" alt="{esc(it.get("name", ""))} 예시" src="{esc(it["src"])}">'
+            return (f'<section class="step li"><span class="k">{i:02d}</span><span class="lb">{esc(it.get("name", ""))}</span>'
+                    f'{"<p>" + esc(it["desc"]) + "</p>" if it.get("desc") else ""}'
+                    f'{prompt_box(it["en"]) if it.get("en") else ""}{img}'
+                    f'{"<p>" + esc(it["note"]) + "</p>" if it.get("note") else ""}</section>')
+        n = len(L["items"])
+        rows = "".join(term(i, it) for i, it in enumerate(L["items"], 1))
+        more = pg.get("more") or []
+        more_html = ""
+        if more:
+            more_html = (f'<div class="rule"></div><h3>{esc(pg.get("more_title") or "추가 용어")}</h3>'
+                         f'{"<p>" + esc(pg["more_intro"]) + "</p>" if pg.get("more_intro") else ""}'
+                         + "".join(term(n + i, it) for i, it in enumerate(more, 1)))
         lst = (f'<div class="rule"></div><h3>{esc(pg.get("list_title") or "전체 목록")}</h3>'
-               f'{"<p>" + esc(pg["list_intro"]) + "</p>" if pg.get("list_intro") else ""}{tpl_html}{rows}')
+               f'{"<p>" + esc(pg["list_intro"]) + "</p>" if pg.get("list_intro") else ""}{tpl_html}{rows}{more_html}')
     extra = ""
     if pg.get("extra"):
         rows = "".join(
             f'<section class="step"><h2>{esc(x.get("title", ""))}</h2>{prompt_box(x["prompt"])}'
             f'{"<p>" + esc(x["note"]) + "</p>" if x.get("note") else ""}</section>' for x in pg["extra"])
-        extra = f'<div class="rule"></div><h3>{H["extra"]}</h3>{rows}'
+        extra = f'<div class="rule"></div><h3>{esc(pg.get("extra_title") or H["extra"])}</h3>{rows}'
     res = pg.get("result")
     if isinstance(res, list):  # 항목형: [{"k": "테스트 일자", "v": "11월 16일"}, ...]
         res_html = "<ul class=\"kv\">" + "".join(
@@ -305,6 +318,27 @@ function cp(b){{const t=b.previousElementSibling.innerText;
 """
 
 
+def page_images(post):
+    """자료 페이지에 붙는 예시 그림 경로 (목록형 릴스 항목·추가 용어의 src)."""
+    L = post.get("list") or {}
+    items = list(L.get("items") or []) + list(((post.get("dm") or {}).get("page") or {}).get("more") or [])
+    return [it["src"] for it in items if it.get("src")]
+
+
+def copy_page_images(post, folder, out_dir, width=540):
+    """예시 그림을 안내 페이지 폴더(docs/p/<id>/)에 작게(가로 540px JPEG) 복사한다. 없는 그림은 건너뛴다."""
+    from PIL import Image
+    for rel in page_images(post):
+        src = Path(folder) / rel
+        if not src.exists():
+            continue
+        dst = Path(out_dir) / rel
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        im = Image.open(src).convert("RGB")
+        im.thumbnail((width, width * 2))
+        im.save(dst, "JPEG", quality=82, optimize=True)
+
+
 def make_dm(post, folder):
     """dm이 있으면 dm.md와 안내 페이지를 만든다. 만든 파일 경로 목록 반환."""
     if not post.get("dm"):
@@ -317,7 +351,9 @@ def make_dm(post, folder):
     else:
         page = ROOT / "docs" / "p" / post["id"] / "index.html"
         page.parent.mkdir(parents=True, exist_ok=True)
-    page.write_text(page_html(post), encoding="utf-8")
+    page.write_text(page_html(post, folder), encoding="utf-8")
+    if not is_sample(folder):
+        copy_page_images(post, folder, page.parent)
     return [memo, page]
 
 

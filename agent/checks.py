@@ -188,7 +188,8 @@ def clause_noun_end(text):
     m = re.search(r"(?:\d+|[한두세네]|다섯|여섯|일곱|여덟|아홉|열)\s*(가지|개)$", w)
     if m:
         before = w[:m.start()].split()[-4:]
-        return any(t[-1] in "는은던" for t in before if len(t) >= 2)
+        # 꾸미는 말 끝: ~는/~은/~던 + 자주 쓰는 ~한/~된/~인/~운/~할/~될 ("꼭 필요한 조명 용어 20가지", 운영자 결정 2026-11-17)
+        return any(t[-1] in "는은던한된인운할될" for t in before if len(t) >= 2)
     return False
 
 
@@ -417,6 +418,11 @@ def check_list(post):
         errors.append(f"list.hook은 첫 화면에 크게 보여 줄 항목 번호(1~{len(items)}): {h!r}")
     if post.get("rights") != "own":
         errors.append("목록형 자료 릴스는 직접 만든 결과 이미지만: rights는 own")
+    for i, m in enumerate(((post.get("dm") or {}).get("page") or {}).get("more") or [], 1):
+        if not str(m.get("name", "")).strip() or not str(m.get("en", "")).strip():
+            errors.append(f"dm.page.more {i}: name(한국어 이름)과 en(영어 용어) 필요")
+        if m.get("mascot") and (m.get("type") != "image" or not m.get("src") or not str(m.get("prompt", "")).strip()):
+            errors.append(f"dm.page.more {i}: 예시 그림은 type image, src, prompt, mascot 필요")
     if items:
         try:
             from listreel import timeline, LENGTH_RANGE

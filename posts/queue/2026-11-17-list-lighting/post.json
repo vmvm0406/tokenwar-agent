@@ -9,13 +9,14 @@
   "publish_at": "2026-11-17T11:13:00+09:00",
   "rights": "own",
   "rights_note": "결과 그림은 토큰전쟁 마스코트 기준 이미지(assets/mascot/slime-base.jpg)를 참고 이미지로 넣어 FLUX.2 [klein] 4B(Cloudflare Workers AI)로 만든 AI 그림. 배경음악은 agent/music_gen.py가 코드로 만든 음악",
-  "title": "AI 그림 분위기를 바꾸는\n조명 단어 20가지",
-  "highlight": "조명 단어",
+  "title": "AI 영상 만드는 사람에게\n꼭 필요한 조명 용어 20가지",
+  "highlight": "조명 용어",
   "list": {
     "items": [
       {
         "name": "하이키",
         "en": "high-key",
+        "desc": "밝고 그림자가 적은 조명입니다.",
         "type": "image",
         "src": "img/list/01.jpg",
         "mascot": true,
@@ -25,6 +26,7 @@
       {
         "name": "로우키",
         "en": "low-key",
+        "desc": "어둡고 명암 대비가 큰 조명입니다.",
         "type": "image",
         "src": "img/list/02.jpg",
         "mascot": true,
@@ -34,6 +36,7 @@
       {
         "name": "골든아워",
         "en": "golden hour",
+        "desc": "해 뜬 직후나 해 지기 전의 낮고 따뜻한 햇빛입니다.",
         "type": "image",
         "src": "img/list/03.jpg",
         "mascot": true,
@@ -43,6 +46,7 @@
       {
         "name": "블루아워",
         "en": "blue hour",
+        "desc": "해가 진 직후나 뜨기 전의 푸른 하늘빛입니다.",
         "type": "image",
         "src": "img/list/04.jpg",
         "mascot": true,
@@ -52,33 +56,34 @@
       {
         "name": "렘브란트 조명",
         "en": "Rembrandt lighting",
+        "desc": "빛 반대쪽 뺨에 작은 삼각형 빛이 생기는 인물 조명입니다.",
         "type": "image",
         "src": "img/list/05.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: Rembrandt lighting, one soft key light from high on the left at 45 degrees, the right side of the slime in shadow with a small triangle of light on that side, dark background. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ai_generated": true
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: Rembrandt lighting in a dark room. All room lights are off, the window is dark, the walls and sofa fall into near-black shadow. One strong warm key light from the upper left at 45 degrees lights the slime. The right side of the slime is in deep shadow except one small bright triangle of light on the right cheek. Very strong contrast, painterly portrait mood. Photorealistic 3D render, vertical 4:5, no text, no letters."
       },
       {
         "name": "버터플라이 조명",
         "en": "butterfly lighting",
+        "desc": "정면 위에서 비춰 코 아래에 나비 모양 그림자가 생기는 조명입니다.",
         "type": "image",
         "src": "img/list/06.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: butterfly lighting, a soft key light directly in front of and above the slime, a small shadow right under it, even glamorous front light. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ai_generated": true
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: butterfly beauty lighting in a dark studio mood. The room and the walls are dark grey. One strong bright beauty light is placed directly in front of the slime and high above it, pointing down, so a clear small shadow appears directly under the slime on the cushion. The top and front of the slime shine brightly with a big glossy highlight, glamorous fashion photo look. Photorealistic 3D render, vertical 4:5, no text, no letters."
       },
       {
         "name": "스플릿 조명",
         "en": "split lighting",
+        "desc": "옆에서 비춰 얼굴을 밝은 쪽과 어두운 쪽으로 반씩 나누는 조명입니다.",
         "type": "image",
         "src": "img/list/07.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: split lighting, a hard light from exactly the left side, the left half of the slime brightly lit and the right half in deep shadow. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ai_generated": true
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: split lighting in a dark room. The room is almost black. One hard white light comes from exactly 90 degrees on the left side. The left half of the slime is brightly lit and the right half is completely black, with a sharp vertical line between light and dark running down the middle of the face. Photorealistic 3D render, vertical 4:5, no text, no letters."
       },
       {
         "name": "림 라이트",
         "en": "rim light",
+        "desc": "뒤에서 비춰 윤곽선을 밝히는 빛입니다.",
         "type": "image",
         "src": "img/list/08.jpg",
         "mascot": true,
@@ -88,15 +93,16 @@
       {
         "name": "역광",
         "en": "backlight",
+        "desc": "피사체 뒤에서 카메라 쪽으로 오는 빛입니다.",
         "type": "image",
         "src": "img/list/09.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: strong backlight, a bright window directly behind the sofa, the slime glowing through its translucent body, slight light haze. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ai_generated": true
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: strong backlight. A very bright window directly behind the sofa is blown out to pure white. The front of the slime and the sofa are dark, almost a silhouette, and a bright glowing halo outlines the edges of the slime and its ears. Light flares toward the camera. Photorealistic 3D render, vertical 4:5, no text, no letters."
       },
       {
         "name": "네온 조명",
         "en": "neon lighting",
+        "desc": "분홍·파랑 같은 네온사인 색의 빛입니다.",
         "type": "image",
         "src": "img/list/10.jpg",
         "mascot": true,
@@ -106,6 +112,7 @@
       {
         "name": "촛불 조명",
         "en": "candlelight",
+        "desc": "촛불의 낮고 따뜻한 주황빛입니다.",
         "type": "image",
         "src": "img/list/11.jpg",
         "mascot": true,
@@ -115,33 +122,34 @@
       {
         "name": "창문 자연광",
         "en": "window light",
+        "desc": "창으로 들어오는 부드러운 낮 빛입니다.",
         "type": "image",
         "src": "img/list/12.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: soft natural window light from a large window on the right, gentle soft shadows, calm morning mood. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ai_generated": true
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: window light. A large bright window right beside the sofa on the right side is now visible at the right edge of the frame. Strong soft daylight pours in from the right, the right side of the slime is bright and the left side falls into soft shadow, the left half of the room is clearly darker. Photorealistic 3D render, vertical 4:5, no text, no letters."
       },
       {
         "name": "소프트박스",
         "en": "softbox",
+        "desc": "천으로 빛을 넓게 퍼뜨리는 사각형 스튜디오 조명입니다.",
         "type": "image",
         "src": "img/list/13.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: studio softbox lighting, a large soft white light from the front left, clean even studio light, smooth soft shadows. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ai_generated": true
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: studio softbox lighting. The room lights are off and the room is dim. A large rectangular white softbox on a light stand is visible at the left edge of the frame, very close to the slime. Soft even white light on the slime, a clear rectangular softbox reflection on the glossy slime body, the background falls off into darkness, clean studio photo look. Photorealistic 3D render, vertical 4:5, no text, no letters."
       },
       {
         "name": "하드 라이트",
         "en": "hard light",
+        "desc": "그림자 윤곽이 뚜렷하게 생기는 강한 직사광입니다.",
         "type": "image",
         "src": "img/list/14.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: hard direct light from a single bare bulb, crisp sharp-edged shadows on the sofa and the wall, high contrast. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ai_generated": true
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: hard light. A single small bare spotlight from the upper right, no fill light. Very crisp, hard-edged black shadows of the slime and the sofa are cast clearly on the white wall behind, deep black shadows with sharp outlines, high contrast. Photorealistic 3D render, vertical 4:5, no text, no letters."
       },
       {
         "name": "빛줄기(볼류메트릭)",
         "en": "volumetric light",
+        "desc": "공기 속 먼지나 안개에 빛줄기가 보이는 효과입니다.",
         "type": "image",
         "src": "img/list/15.jpg",
         "mascot": true,
@@ -151,6 +159,7 @@
       {
         "name": "컬러 젤",
         "en": "colored gels",
+        "desc": "조명 앞에 색 필름을 대어 색을 입힌 빛입니다.",
         "type": "image",
         "src": "img/list/16.jpg",
         "mascot": true,
@@ -160,6 +169,7 @@
       {
         "name": "형광등",
         "en": "fluorescent light",
+        "desc": "천장 형광등의 차갑고 평평한 빛입니다.",
         "type": "image",
         "src": "img/list/17.jpg",
         "mascot": true,
@@ -169,6 +179,7 @@
       {
         "name": "달빛",
         "en": "moonlight",
+        "desc": "밤의 푸르고 약한 빛입니다.",
         "type": "image",
         "src": "img/list/18.jpg",
         "mascot": true,
@@ -178,6 +189,7 @@
       {
         "name": "스포트라이트",
         "en": "spotlight",
+        "desc": "좁은 범위만 동그랗게 비추는 무대 조명입니다.",
         "type": "image",
         "src": "img/list/19.jpg",
         "mascot": true,
@@ -187,11 +199,11 @@
       {
         "name": "흐린 날 확산광",
         "en": "overcast diffused light",
+        "desc": "구름에 퍼져 그림자가 거의 없는 흐린 날의 빛입니다.",
         "type": "image",
         "src": "img/list/20.jpg",
         "mascot": true,
-        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: overcast diffused daylight, soft grey light from the window on a cloudy day, very soft shadows, muted colors. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ai_generated": true
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: overcast day. Flat soft grey light from a cloudy sky through the window, no direct sunlight at all, almost no shadows anywhere. Desaturated muted grey and pale colors over the whole room and the slime, slightly dim, calm quiet rainy-day mood. Photorealistic 3D render, vertical 4:5, no text, no letters."
       }
     ],
     "hook": 10
@@ -200,17 +212,18 @@
     "generate": true
   },
   "thumb": {
-    "title": "조명 단어 하나로\n분위기가 바뀝니다",
-    "highlight": "분위기",
+    "title": "AI 영상 만드는\n사람에게 꼭 필요한\n조명 용어 20가지",
+    "highlight": "조명 용어",
     "image": {
       "type": "image",
       "src": "img/list/10.jpg",
       "position": "center 40%"
-    }
+    },
+    "max_lines": 3
   },
   "topic": [
-    "조명 프롬프트",
-    "AI 그림 조명"
+    "조명 용어",
+    "AI 영상 조명"
   ],
   "sources": [
     {
@@ -219,26 +232,218 @@
       "kind": "tool"
     }
   ],
-  "caption": "AI 그림을 만들 때 조명 단어 하나만 바꿔 넣으세요. 같은 장면도 분위기가 확 달라집니다.\n댓글에 '자료'라고 남기면 조명 단어 20개를 영어 그대로 DM으로 보내 드려요(팔로우한 분께).\n\n소파에 앉은 같은 슬라임에 조명 단어만 바꿔 20장을 만들었습니다.\n하이키는 밝고 깨끗한 화보처럼, 로우키는 어둡고 묵직한 영화 장면처럼 나와요.\n렘브란트 조명은 한쪽 뺨에 작은 삼각형 빛이 생기는 인물 사진 조명입니다.\n골든아워와 블루아워는 해 질 녘 하늘빛을 그대로 가져옵니다.\n\nAI로 프로필 사진을 만들어 보려는 친구에게 보내 주세요.\n\n팔로우하고 댓글에 '자료'라고 남기면 조명 단어 20개와 영어 표현를 DM으로 보내 드려요. (팔로우한 분께 보내집니다)",
+  "caption": "AI 영상 만드는 사람에게 꼭 필요한 조명 용어 20가지, 프롬프트에 하나만 넣어 보세요. 같은 장면도 분위기가 확 달라집니다.\n댓글에 '자료'라고 남기면 조명 용어 50개를 DM으로 보내 드려요(팔로우한 분께).\n\n소파에 앉은 같은 슬라임에 조명 용어만 바꿔 20장을 만들었습니다.\n하이키는 밝고 그림자가 적은 조명, 로우키는 어둡고 명암 대비가 큰 조명이에요.\n렘브란트 조명은 빛 반대쪽 뺨에 작은 삼각형 빛이 생기는 인물 조명입니다.\n영화 촬영 현장에서 쓰는 이름이라 AI 영상 프롬프트에도 그대로 넣어 쓸 수 있습니다.\n\nAI 영상 만드는 친구에게 보내 주세요.\n\n팔로우하고 댓글에 '자료'라고 남기면 조명 용어 50개와 복사용 프롬프트를 DM으로 보내 드려요. (팔로우한 분께 보내집니다)",
   "hashtags": [
+    "#AI영상",
     "#AI그림",
     "#프롬프트",
-    "#AI이미지",
     "#토큰전쟁"
   ],
   "dm": {
     "keyword": "자료",
-    "message": "조명 단어 20개 자료입니다.\n아래 '자료 보기'를 누르면 영상에 나온 순서대로 한국어 이름과 영어 단어를 복사 버튼과 함께 정리한 페이지가 열립니다.\n그림을 만들 때 쓰는 프롬프트에 영어 단어를 그대로 넣어 쓰십시오.",
-    "cta": "팔로우하고 댓글에 '자료' 남기면\n조명 단어 20개를\n보내 드립니다",
-    "banner": "댓글에 '자료'라고 남기면\n영어 단어 20개를 DM으로 보내 드립니다",
+    "message": "조명 용어 50개 자료입니다.\n아래 '자료 보기'를 누르면 영상에 나온 20개와 추가 30개를 한국어 이름, 한 줄 설명, 영어 용어 복사 버튼과 함께 정리한 페이지가 열립니다.\n프롬프트에 영어 용어를 그대로 넣어 쓰십시오.",
+    "cta": "팔로우하고 댓글에 '자료' 남기면\n조명 용어 50개를\n보내 드립니다",
+    "banner": "댓글에 '자료'라고 남기면\n조명 용어 50개를 DM으로 보내 드립니다",
     "page": {
-      "intro": "영상에 나온 조명 단어 20개의 전체 목록입니다. 단어마다 영어 표현을 복사 버튼과 함께 정리했습니다.",
-      "list_title": "전체 목록",
-      "list_intro": "번호는 영상에 나온 순서와 같습니다. 영어 단어를 복사해 그림을 만들 때 쓰는 프롬프트에 넣으십시오."
+      "intro": "AI 그림과 AI 영상 프롬프트에 넣는 조명 용어 50개입니다. 영화·사진 촬영 현장에서 쓰는 조명 이름이라 AI 영상 프롬프트에도 그대로 넣어 쓸 수 있습니다. 용어마다 한 줄 설명과 영어 표현(복사 버튼)을 정리했습니다.",
+      "list_title": "영상에 나온 조명 용어 20개",
+      "list_intro": "번호는 영상에 나온 순서와 같습니다. 그림은 토큰전쟁 마스코트 슬라임으로 직접 만든 결과입니다. 영어 용어를 복사해 프롬프트에 넣으십시오.",
+      "more": [
+        {
+          "name": "클램셸 조명",
+          "en": "clamshell lighting",
+          "desc": "얼굴 위와 아래에서 빛을 비춰 그림자를 줄이는 인물 조명입니다."
+        },
+        {
+          "name": "루프 조명",
+          "en": "loop lighting",
+          "desc": "코 옆에 작은 고리 모양 그림자가 생기는 인물 조명입니다."
+        },
+        {
+          "name": "브로드 조명",
+          "en": "broad lighting",
+          "desc": "카메라 쪽을 향한 얼굴 면에 빛을 주는 방식입니다."
+        },
+        {
+          "name": "쇼트 조명",
+          "en": "short lighting",
+          "desc": "카메라에서 먼 쪽 얼굴 면에 빛을 주는 방식입니다."
+        },
+        {
+          "name": "3점 조명",
+          "en": "three-point lighting",
+          "desc": "키 라이트·필 라이트·백 라이트 세 개로 비추는 기본 조명입니다."
+        },
+        {
+          "name": "키 라이트",
+          "en": "key light",
+          "desc": "장면을 비추는 가장 센 주된 빛입니다."
+        },
+        {
+          "name": "필 라이트",
+          "en": "fill light",
+          "desc": "키 라이트가 만든 그림자를 덜 어둡게 채우는 보조 빛입니다."
+        },
+        {
+          "name": "헤어 라이트",
+          "en": "hair light",
+          "desc": "머리 위 뒤쪽에서 비춰 머리카락 윤곽을 밝히는 빛입니다."
+        },
+        {
+          "name": "링 라이트",
+          "en": "ring light",
+          "desc": "고리 모양 조명으로, 눈동자에 동그란 반사가 생깁니다.",
+          "type": "image",
+          "src": "img/more/ring-light.jpg",
+          "mascot": true,
+          "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: ring light, a large circular ring light placed directly in front of the slime, a clear bright ring-shaped reflection on the glossy slime and in its eyes, even shadowless front light, the room dim. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        },
+        {
+          "name": "뷰티 디시",
+          "en": "beauty dish",
+          "desc": "접시 모양 반사판이 달린 인물 화보용 조명입니다."
+        },
+        {
+          "name": "카메라 플래시",
+          "en": "on-camera flash",
+          "desc": "카메라 정면에서 터지는 플래시로, 뒤에 진한 그림자가 생깁니다."
+        },
+        {
+          "name": "바운스 조명",
+          "en": "bounce lighting",
+          "desc": "벽이나 천장에 빛을 반사시켜 부드럽게 비추는 방식입니다."
+        },
+        {
+          "name": "실루엣 조명",
+          "en": "silhouette lighting",
+          "desc": "밝은 배경 앞에서 대상이 검은 윤곽으로만 보이게 하는 조명입니다."
+        },
+        {
+          "name": "하이 콘트라스트",
+          "en": "high contrast lighting",
+          "desc": "밝은 곳과 어두운 곳의 차이를 크게 만든 조명입니다."
+        },
+        {
+          "name": "키아로스쿠로",
+          "en": "chiaroscuro",
+          "desc": "명암 대비를 강하게 쓰는 회화 기법에서 온 말입니다."
+        },
+        {
+          "name": "필름 누아르 조명",
+          "en": "film noir lighting",
+          "desc": "옛 흑백 범죄 영화처럼 어둡고 그림자가 짙은 조명입니다.",
+          "type": "image",
+          "src": "img/more/film-noir-lighting.jpg",
+          "mascot": true,
+          "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: film noir lighting, black and white image, dark room, hard light through venetian blinds making striped shadows, deep black shadows, 1940s crime movie mood. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        },
+        {
+          "name": "실용 조명",
+          "en": "practical lighting",
+          "desc": "화면 안에 보이는 전등을 빛으로 쓰는 방식입니다."
+        },
+        {
+          "name": "모티베이티드 조명",
+          "en": "motivated lighting",
+          "desc": "창문·전등처럼 장면 안에 빛이 나올 곳이 있는 것처럼 비추는 방식입니다."
+        },
+        {
+          "name": "텅스텐 조명",
+          "en": "tungsten light",
+          "desc": "백열전구처럼 주황빛이 도는 따뜻한 빛입니다."
+        },
+        {
+          "name": "주광색 조명",
+          "en": "daylight balanced light",
+          "desc": "한낮 햇빛에 가까운 흰빛입니다."
+        },
+        {
+          "name": "LED 패널",
+          "en": "LED panel light",
+          "desc": "넓은 판 모양의 LED 조명입니다."
+        },
+        {
+          "name": "언더 라이팅",
+          "en": "underlighting",
+          "desc": "아래에서 위로 비추는 빛으로, 무서운 분위기에 자주 씁니다.",
+          "type": "image",
+          "src": "img/more/underlighting.jpg",
+          "mascot": true,
+          "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: underlighting, the room is dark and a single light comes from below the slime, pointing up, casting tall eerie shadows upward on the wall, spooky mood. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        },
+        {
+          "name": "탑 라이트",
+          "en": "top light",
+          "desc": "머리 바로 위에서 수직으로 떨어지는 빛입니다."
+        },
+        {
+          "name": "사이드 라이트",
+          "en": "side light",
+          "desc": "옆에서 비춰 표면의 질감과 굴곡을 살리는 빛입니다."
+        },
+        {
+          "name": "반사판",
+          "en": "reflector",
+          "desc": "빛을 되돌려 그림자 쪽을 밝히는 판입니다."
+        },
+        {
+          "name": "디퓨저",
+          "en": "diffuser",
+          "desc": "빛 앞에 대어 빛을 부드럽게 퍼뜨리는 천이나 판입니다."
+        },
+        {
+          "name": "고보 조명",
+          "en": "gobo lighting",
+          "desc": "구멍 뚫린 판을 조명 앞에 대어 무늬 그림자를 만드는 방식입니다.",
+          "type": "image",
+          "src": "img/more/gobo-lighting.jpg",
+          "mascot": true,
+          "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: gobo lighting, a hard light shining through a window blind pattern, sharp striped shadow pattern falling across the slime, the sofa and the wall, the rest of the room dim. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        },
+        {
+          "name": "그늘 빛",
+          "en": "open shade",
+          "desc": "직사광선이 닿지 않는 그늘의 고른 빛입니다."
+        },
+        {
+          "name": "한낮 햇빛",
+          "en": "harsh midday sun",
+          "desc": "머리 위에서 내리쬐는 강한 햇빛으로, 그림자가 짧고 진합니다."
+        },
+        {
+          "name": "불빛",
+          "en": "firelight",
+          "desc": "모닥불이나 벽난로의 흔들리는 주황빛입니다.",
+          "type": "image",
+          "src": "img/more/firelight.jpg",
+          "mascot": true,
+          "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Completely replace the original soft daylight. New lighting: firelight, a fireplace with burning flames just out of frame on the left, flickering warm orange and red light on the slime and the sofa, the rest of the room dark. Photorealistic 3D render, vertical 4:5, no text, no letters."
+        }
+      ],
+      "more_title": "추가 조명 용어 30개",
+      "more_intro": "영상에 나오지 않은 추가 용어입니다. 예시 그림이 붙은 용어만 직접 만들어 본 결과이고, 나머지는 용어와 뜻을 정리한 목록입니다.",
+      "extra_title": "그대로 복사해 쓰는 프롬프트",
+      "extra": [
+        {
+          "title": "10 네온 조명에 쓴 프롬프트",
+          "prompt": "Keep exactly the same character from the reference image: the small translucent lime green jelly slime with two cat ears, two small round black dot eyes, a tiny curved smile, short stubby arms and feet, tiny air bubbles inside, glossy wet surface. Same shape, same proportions, same face, same color. Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: neon lighting, strong hot pink neon light from the left and electric blue neon light from the right, colored reflections on the glossy slime, dim room otherwise. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+          "note": "토큰전쟁 마스코트 기준 그림을 참고 이미지로 함께 넣어 FLUX.2 [klein]로 만들 때 쓴 프롬프트입니다. 다른 그림 AI에서는 참고 이미지를 함께 올리고 쓰십시오."
+        },
+        {
+          "title": "03 골든아워에 쓴 프롬프트",
+          "prompt": "Keep exactly the same character from the reference image: the small translucent lime green jelly slime with two cat ears, two small round black dot eyes, a tiny curved smile, short stubby arms and feet, tiny air bubbles inside, glossy wet surface. Same shape, same proportions, same face, same color. Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: warm golden hour sunlight streaming low through a window from the left, long soft orange shadows, warm amber glow on the slime and sofa. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+          "note": "토큰전쟁 마스코트 기준 그림을 참고 이미지로 함께 넣어 FLUX.2 [klein]로 만들 때 쓴 프롬프트입니다. 다른 그림 AI에서는 참고 이미지를 함께 올리고 쓰십시오."
+        },
+        {
+          "title": "15 빛줄기(볼류메트릭)에 쓴 프롬프트",
+          "prompt": "Keep exactly the same character from the reference image: the small translucent lime green jelly slime with two cat ears, two small round black dot eyes, a tiny curved smile, short stubby arms and feet, tiny air bubbles inside, glossy wet surface. Same shape, same proportions, same face, same color. Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: volumetric light, visible beams of sunlight streaming through window blinds, dust particles in the air, light rays crossing the room. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+          "note": "토큰전쟁 마스코트 기준 그림을 참고 이미지로 함께 넣어 FLUX.2 [klein]로 만들 때 쓴 프롬프트입니다. 다른 그림 AI에서는 참고 이미지를 함께 올리고 쓰십시오."
+        }
+      ]
     }
   },
   "threads": {
-    "text": "AI로 그림을 만들 때 조명 단어 하나만 바꿔도 분위기가 확 달라집니다.\n\n하이키를 넣으면 밝고 깨끗한 화보가, 로우키를 넣으면 어둡고 묵직한 영화 장면이 나오거든요.\n렘브란트 조명, 골든아워, 네온 조명처럼 사진가들이 쓰는 이름을 그대로 넣으면 됩니다.\n\n결국 그림 프롬프트는 긴 설명보다 정확한 조명 이름 하나가 더 잘 통합니다.",
+    "text": "AI 영상이나 그림을 만들 때 조명 용어 하나만 바꿔도 분위기가 확 달라집니다.\n\n하이키는 밝고 그림자가 적고, 로우키는 어둡고 명암 대비가 크거든요.\n렘브란트 조명, 골든아워, 네온 조명처럼 촬영 현장에서 쓰는 이름을 그대로 넣으면 됩니다.\n\n결국 프롬프트는 긴 설명보다 정확한 조명 이름 하나가 더 잘 통합니다.",
     "images": [
       "cover"
     ]
