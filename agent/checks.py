@@ -832,9 +832,55 @@ def awkward_titles(post):
     return out
 
 
+DEV_WORDS_RE = re.compile(r"그림 파일|이미지 파일|코드로 만듭니다|코드로 만들었|소스 코드|에셋")
+OUR_STORY_RE = re.compile(r"저희 컴퓨터|저희가 직접 돌려|직접 돌려 봤|직접 실행해 봤")
+
+
+def writing_rules(post):
+    """자막·끝 화면 글 규칙 (STYLE_GUIDE 4장, 운영자 지적 모음 2026-11-16). 경고 목록."""
+    w = []
+    subs = post.get("subtitles") or []
+    for i, s in enumerate(subs, 1):
+        t = str(s.get("text", "")).replace("\n", " ")
+        if "우리말" in t:
+            w.append(f"{i}번 자막 '우리말' → '한국어' (STYLE_GUIDE 4장)")
+        m = DEV_WORDS_RE.search(t)
+        if m:
+            w.append(f"{i}번 자막에 개발자 시점 말 '{m.group(0)}' → 일반인이 바로 아는 말로 (STYLE_GUIDE 4장)")
+        m = OUR_STORY_RE.search(t)
+        if m:
+            w.append(f"{i}번 자막에 제작 과정 이야기 '{m.group(0)}' → 자막에서 빼고 자료 페이지에만 (STYLE_GUIDE 4장)")
+    if subs:
+        last = str(subs[-1].get("text", ""))
+        if "여러분" in last:
+            w.append("마무리 자막에 '여러분' → 부르는 말 없이 짧은 권유로 (예: '오늘 바로 만들어 보세요')")
+        if "아직도" in last and "?" in last:
+            w.append("마무리 자막이 '아직도 ~?' 질문 → 짧은 권유나 영상에서 이어지는 질문으로")
+        # 빈 구간 (영상 릴스: video.start~end 안에서 자막 사이 2초 넘게)
+        v = post.get("video") or {}
+        try:
+            v0, v1 = float(v.get("start", 0)), float(v.get("end", 0))
+        except (TypeError, ValueError):
+            v0 = v1 = 0
+        ts = sorted((float(s["start"]), float(s["end"])) for s in subs if "start" in s and "end" in s)
+        gaps = [(a[1], b[0]) for a, b in zip(ts, ts[1:]) if b[0] - a[1] > 2.0]
+        if v1 > v0 and ts and v1 - ts[-1][1] > 2.0 and v1 - ts[-1][1] < 30:
+            gaps.append((ts[-1][1], v1))
+        for a, b in gaps:
+            w.append(f"자막 없는 빈 구간 {a:.1f}~{b:.1f}초 ({b - a:.1f}초) → 3초 안팎 자막으로 채운다 (STYLE_GUIDE 6장)")
+    cta = str((post.get("dm") or {}).get("cta") or "")
+    if cta:
+        if "번역" in cta:
+            w.append("끝 화면 '자료' 안내에 '번역' → '프롬프트와 사용법 보내 드립니다'처럼 짧게 (STYLE_GUIDE 4장)")
+        if re.search(r"\n\s*드립니다|\n\s*드려요", cta):
+            w.append("끝 화면 줄바꿈이 '보내 / 드립니다'처럼 갈림 → 의미 단위로")
+    return w
+
+
 def check_post(post):
     """(errors, warnings) 반환."""
     e, w = _check_post(post)
+    w = w + writing_rules(post)
     e_t, w_t = check_threads(post)
     return e + check_license(post) + e_t, w + awkward_titles(post) + w_t
 
