@@ -118,7 +118,10 @@ def collect():
                 post = {"title": f"post.json을 읽지 못함: {ex}"}
             slides = sorted(p[len(base) + 7:] for p in paths
                             if p.startswith(base + "slides/") and p.endswith(".jpg"))
-            posts.append({"folder": folder, "post": post, "slides": slides,
+            # 카드뉴스 첫 장 영상(slides/01.mp4): 같은 이름 jpg는 정지 화면(포스터)으로 쓴다
+            slide_videos = {p[len(base) + 7:-4] for p in paths
+                            if p.startswith(base + "slides/") and p.endswith(".mp4")}
+            posts.append({"folder": folder, "post": post, "slides": slides, "slide_videos": slide_videos,
                           "reel": base + "reel.mp4" in paths,
                           "reel_size": paths.get(base + "reel.mp4") or 0,
                           "cover": base + "cover.jpg" in paths,
@@ -159,6 +162,12 @@ def render_post(pr, item):
             n = len(item["slides"])
             h.append(f'<div class="label">옆으로 넘겨 보기 · {n}장</div><div class="slides">')
             for i, s in enumerate(item["slides"], 1):
+                stem = s[:-4]
+                if stem in item.get("slide_videos", ()):
+                    h.append(f'<figure><video controls playsinline loop preload="metadata" '
+                             f'poster="{cdn(sha, folder, "slides/" + s)}" src="{cdn(sha, folder, "slides/" + stem + ".mp4")}"></video>'
+                             f'<figcaption>{i} / {n} · 영상 장</figcaption></figure>')
+                    continue
                 h.append(f'<figure><img loading="lazy" alt="{i}장" src="{cdn(sha, folder, "slides/" + s)}">'
                          f'<figcaption>{i} / {n}</figcaption></figure>')
             h.append("</div>")
@@ -218,7 +227,7 @@ video.reel{display:block;width:100%;aspect-ratio:9/16;background:#000;border:1px
 img.cover{display:block;width:62%;border:1px solid var(--line)}
 .slides{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;margin:0 -16px;padding:0 16px 6px}
 .slides figure{flex:0 0 88%;margin:0;scroll-snap-align:center}
-.slides img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;background:#000;border:1px solid var(--line)}
+.slides img,.slides video{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;background:#000;border:1px solid var(--line)}
 .slides figcaption{font-size:12px;color:var(--dim);margin-top:4px}
 .label{font-size:12px;color:var(--dim);margin:16px 0 6px;font-weight:700}
 .caption{white-space:normal;font-size:14px;border-left:3px solid var(--g);padding-left:12px}

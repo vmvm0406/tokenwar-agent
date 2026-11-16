@@ -1,7 +1,7 @@
 """대기열 게시물 마무리: AI 그림 만들기 → 렌더링 → .render_hash 남기기.
 
 GitHub Actions(render.yml)가 posts/queue에 바뀐 것이 올라올 때마다 실행한다.
-.render_hash는 post.json과 거기서 쓰는 파일(src)의 지문이다. 지문이 같으면 다시 만들지 않는다.
+.render_hash는 post.json과 거기서 쓰는 파일(src, 표지 영상 motion.src 포함)의 지문이다. 지문이 같으면 다시 만들지 않는다.
 publish.py는 지문이 맞는 게시물만 올린다. (렌더링 전이나 고친 뒤 다시 만들기 전에는 안 올라감)
 
 사용법: python agent/build.py [게시물 폴더 ...]   (폴더를 안 주면 posts/queue 전체)
@@ -52,7 +52,10 @@ def build(folder):
             return False
     mark = folder / ".render_hash"
     now = input_hash(folder)
-    if mark.exists() and mark.read_text().strip() == now:
+    from motion import cover_motion
+    # 카드뉴스 첫 장 영상(표지 motion)은 slides/01.mp4까지 있어야 최신 (ffmpeg 없는 곳에서 렌더링한 것은 다시 만든다)
+    video_ok = cover_motion(json.loads((folder / "post.json").read_text(encoding="utf-8"))) is None         or (folder / "slides" / "01.mp4").exists()
+    if mark.exists() and mark.read_text().strip() == now and video_ok:
         print(f"이미 최신: {folder.name}")
         return True
     r = subprocess.run([sys.executable, str(AGENT / "render.py"), str(folder)])

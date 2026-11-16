@@ -388,6 +388,59 @@ def check_images(slides):
     return errors, warnings
 
 
+COVER_MOTION_FIELDS = {"seconds", "src", "start", "end", "mute", "credit", "source_url", "note"}
+
+
+def check_cover_motion(post):
+    """카드뉴스 첫 장 영상 (표지 motion, TEMPLATES.md "표지 영상"). 없으면 검사하지 않는다 (예전 게시물 그대로).
+    결과 mp4의 크기(1080x1350)·코덱·소리는 render.py가 렌더링 뒤 검사한다."""
+    errors, warnings = [], []
+    slides = post.get("slides") or []
+    for i, s in enumerate(slides, 1):
+        if "motion" in s and (i > 1 or s.get("kind") != "cover"):
+            errors.append(f"{i}번째 장: motion(영상 장)은 카드뉴스 첫 장(표지)에만")
+    if not slides or "motion" not in slides[0]:
+        return errors, warnings
+    m = slides[0]["motion"]
+    if post.get("type") != "carousel":
+        errors.append("표지 motion은 카드뉴스(type: carousel)에서만. 릴스는 이미 영상이다")
+        return errors, warnings
+    if m is True:
+        m = {}
+    if not isinstance(m, dict):
+        errors.append("표지 motion은 객체: {\"seconds\": 6} 또는 {\"src\": \"clips/cover.mp4\", \"start\": 0, \"end\": 8, \"credit\": \"...\"}")
+        return errors, warnings
+    unknown = sorted(set(m) - COVER_MOTION_FIELDS)
+    if unknown:
+        warnings.append(f"표지 motion에 모르는 항목: {unknown}")
+    if slides[0].get("layout") != "image" and m.get("src"):
+        errors.append("표지 motion.src(영상)는 사진 표지(layout: image)의 그림 자리에 들어간다")
+    if m.get("src"):
+        try:
+            start = float(m.get("start", 0))
+            end = float(m["end"])
+        except (KeyError, TypeError, ValueError):
+            errors.append("표지 motion.src를 쓰면 start·end(초)를 숫자로 적는다")
+        else:
+            d = end - start
+            if not 3 <= d <= 60:
+                errors.append(f"표지 영상 길이는 3~60초: {d:.1f}초 (인스타 캐러셀 영상 장)")
+            elif d > 15:
+                warnings.append(f"표지 영상 {d:.1f}초: 첫 장은 3~10초가 좋다 (넘기기 전에 다 보게)")
+        if not str(m.get("credit", "")).strip():
+            errors.append("표지 motion.src(영상)를 쓰면 motion.credit(영상 출처)이 필요 (저작권, STYLE_GUIDE 2-1)")
+        if m.get("source_url") and not str(m["source_url"]).startswith("http"):
+            errors.append(f"표지 motion.source_url이 주소가 아님: {m['source_url']}")
+    else:
+        try:
+            sec = float(m.get("seconds", 6))
+        except (TypeError, ValueError):
+            sec = -1
+        if not 3 <= sec <= 10:
+            errors.append(f"표지 motion.seconds는 3~10초: {m.get('seconds')}")
+    return errors, warnings
+
+
 def _prompts(slides):
     out = []
     for s in slides:
@@ -922,6 +975,9 @@ def _check_post(post):
         if hl and hl not in hl_src:
             errors.append(f"{tag} highlight '{hl}'가 제목/소제목 안에 없음")
 
+    e_m, w_m = check_cover_motion(post)
+    errors += e_m
+    warnings += w_m
     e_f, w_f = check_format(post)
     errors += e_f
     warnings += w_f

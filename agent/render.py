@@ -4,7 +4,7 @@
     python agent/render.py posts/queue/<게시물 폴더>
 
 결과:
-    carousel: slides/01.jpg ... (1080x1350)
+    carousel: slides/01.jpg ... (1080x1350), 표지 motion이 있으면 slides/01.mp4 (첫 장 영상, 01.jpg는 정지 화면)
     reel:     frames/01.jpg ... (1080x1920), reel.mp4, cover.jpg  (카드형 모션 릴스, 선택)
     video:    reel.mp4, cover.jpg  (영상 프레임 릴스, video.py)
 
@@ -481,6 +481,22 @@ def main(folder):
         for p in problems:
             print(" -", p)
         sys.exit(1)
+    from motion import cover_motion
+    if cover_motion(post) is not None:
+        # 카드뉴스 첫 장 영상 (TEMPLATES.md "표지 영상"): slides/01.mp4. 정지 화면 slides/01.jpg는 그대로 둔다
+        m = cover_motion(post)
+        if m.get("src") and not (out_dir / m["src"]).exists():
+            print(f"표지 영상 파일 없음: {m['src']}")
+            sys.exit(1)
+        if not shutil.which("ffmpeg"):
+            print("ffmpeg 없음: 표지 영상(slides/01.mp4)은 건너뜀 (render.yml이 만든다)")
+        else:
+            from motion import make_cover_video
+            mp4 = out_dir / "slides" / "01.mp4"
+            dur = asyncio.run(make_cover_video(page, post, out_dir, CONFIG, mp4))
+            print(f"표지 영상: slides/01.mp4 {dur:.1f}초")
+            check_sound_or_exit(out_dir, mp4)
+            check_cover_video_or_exit(mp4)
     if post["type"] == "reel" and not shutil.which("ffmpeg"):
         # 장면 이미지(frames/)까지만 확인. 영상은 ffmpeg가 있는 곳(GitHub Actions render.yml)에서 만든다
         print("ffmpeg 없음: 장면 이미지(frames/)만 만들고 reel.mp4는 건너뜀 (render.yml이 만든다)")
@@ -509,9 +525,33 @@ def audio_mean_db(mp4):
 SILENT_DB = -50.0
 
 
-def check_sound_or_exit(out_dir):
-    """소리 없는 릴스는 올리지 않는다 (운영자 결정 2026-11-16, STYLE_GUIDE 6장)."""
-    mp4 = Path(out_dir) / "reel.mp4"
+def check_cover_video_or_exit(mp4):
+    """표지 영상이 1080x1350(4:5), 30fps, H.264 + AAC, 길이 3~60초인지 (인스타 캐러셀 영상 장)."""
+    from motion import COVER_VIDEO_RANGE
+    r = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "stream=codec_type,codec_name,width,height,r_frame_rate",
+                        "-show_entries", "format=duration", "-of", "json", str(mp4)], capture_output=True, text=True)
+    info = json.loads(r.stdout or "{}")
+    st = info.get("streams", [])
+    v = next((x for x in st if x.get("codec_type") == "video"), {})
+    a = next((x for x in st if x.get("codec_type") == "audio"), {})
+    dur = float((info.get("format") or {}).get("duration") or 0)
+    bad = []
+    if (v.get("width"), v.get("height")) != (1080, 1350):
+        bad.append(f"크기 {v.get('width')}x{v.get('height')} (1080x1350이어야 함)")
+    if v.get("codec_name") != "h264" or a.get("codec_name") != "aac":
+        bad.append(f"코덱 {v.get('codec_name')}/{a.get('codec_name')} (h264/aac여야 함)")
+    if v.get("r_frame_rate") not in ("30/1", "30000/1000"):
+        bad.append(f"프레임 {v.get('r_frame_rate')} (30fps여야 함)")
+    if not COVER_VIDEO_RANGE[0] <= dur <= COVER_VIDEO_RANGE[1]:
+        bad.append(f"길이 {dur:.1f}초 ({COVER_VIDEO_RANGE[0]:g}~{COVER_VIDEO_RANGE[1]:g}초여야 함)")
+    if bad:
+        print("규칙 위반으로 중단: 표지 영상 " + ", ".join(bad))
+        sys.exit(1)
+
+
+def check_sound_or_exit(out_dir, mp4=None):
+    """소리 없는 릴스(와 카드뉴스 표지 영상)는 올리지 않는다 (운영자 결정 2026-11-16, STYLE_GUIDE 6장)."""
+    mp4 = Path(mp4) if mp4 else Path(out_dir) / "reel.mp4"
     if not mp4.exists() or not shutil.which("ffmpeg"):
         return
     db = audio_mean_db(mp4)

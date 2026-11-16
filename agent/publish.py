@@ -82,9 +82,21 @@ def stage_name(folder):
     return f"{folder.name}-{input_hash(folder)[:8]}"
 
 
+def has_cover_video(post):
+    """카드뉴스 첫 장이 영상인지 (표지 motion, TEMPLATES.md "표지 영상")."""
+    from motion import cover_motion
+    return cover_motion(post) is not None
+
+
 def media_files(folder, post):
     if post["type"] == "carousel":
-        return [f"slides/{p.name}" for p in sorted((folder / "slides").glob("*.jpg"))]
+        files = [f"slides/{p.name}" for p in sorted((folder / "slides").glob("*.jpg"))]
+        if has_cover_video(post) and files:
+            # 첫 장은 영상(slides/01.mp4)으로. 정지 화면 01.jpg는 스레드·검토용이라 인스타에 올리지 않는다
+            if not (folder / "slides" / "01.mp4").exists():
+                raise PublishError("표지 motion이 있는데 slides/01.mp4가 없음 (render.yml 렌더링 확인)")
+            files[0] = "slides/01.mp4"
+        return files
     return ["reel.mp4", "cover.jpg"]
 
 
@@ -208,20 +220,37 @@ def ready(folder, post):
     """렌더링이 끝났는지. build.py가 남긴 .render_hash가 지금 입력과 같아야 한다."""
     from build import input_hash
     h = folder / ".render_hash"
+    if has_cover_video(post) and not (folder / "slides" / "01.mp4").exists():
+        return False  # 첫 장 영상이 아직 없음 (ffmpeg 없는 곳에서 렌더링한 것)
     return h.exists() and h.read_text().strip() == input_hash(folder)
 
 
 def publish_carousel(ig_id, folder, post):
-    images = sorted((folder / "slides").glob("*.jpg"))
-    if not 2 <= len(images) <= 10:
-        raise PublishError(f"캐러셀 이미지는 2~10장이어야 함: {len(images)}장")
-    children = []
-    for img in images:
-        c = call("POST", f"{ig_id}/media", image_url=media_url(folder, f"slides/{img.name}"),
-                 is_carousel_item="true")
+    items = media_files(folder, post)
+    if not 2 <= len(items) <= 20:
+        raise PublishError(f"캐러셀은 2~20장이어야 함: {len(items)}장")
+    children, waits = [], []
+    for rel in items:
+        if rel.endswith(".mp4"):
+            # 영상 장 (사진과 섞기 가능, Meta 문서: 캐러셀 자식 media_type=VIDEO + video_url)
+            url = media_url(folder, rel)
+            from motion import cover_motion
+            # 모션 표지는 첫 0.5초쯤 글이 아직 안 올라와 있어서, 미리보기(격자) 장면을 2초로 잡는다
+            thumb = {} if (cover_motion(post) or {}).get("src") else {"thumb_offset": "2000"}
+            try:
+                c = call("POST", f"{ig_id}/media", media_type="VIDEO", video_url=url, is_carousel_item="true", **thumb)
+            except PublishError as e:
+                if not thumb:
+                    raise
+                print(f"  thumb_offset 없이 다시 시도: {e}")
+                c = call("POST", f"{ig_id}/media", media_type="VIDEO", video_url=url, is_carousel_item="true")
+            waits.append(10)
+        else:
+            c = call("POST", f"{ig_id}/media", image_url=media_url(folder, rel), is_carousel_item="true")
+            waits.append(3)
         children.append(c["id"])
-    for cid in children:
-        wait_ready(cid, 3)
+    for cid, minutes in zip(children, waits):
+        wait_ready(cid, minutes)
     parent = call("POST", f"{ig_id}/media", media_type="CAROUSEL", children=",".join(children),
                   caption=full_caption(post), **extra(post))
     wait_ready(parent["id"], 5)

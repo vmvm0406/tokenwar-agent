@@ -73,7 +73,8 @@ def wait_ready(cid, first_wait, minutes=5):
 
 
 def image_files(folder, post):
-    """threads.images → 게시물 폴더 안 상대 경로 목록. 장 번호는 slides/의 n번째 jpg, "cover"는 표지."""
+    """threads.images → 게시물 폴더 안 상대 경로 목록. 장 번호는 slides/의 n번째 jpg, "cover"는 표지.
+    첫 장이 영상(slides/01.mp4)인 카드뉴스도 스레드에는 그 정지 화면 slides/01.jpg를 쓴다 (jpg만 고름)."""
     th = post.get("threads") or {}
     slides = sorted(p.name for p in (folder / "slides").glob("*.jpg")) if (folder / "slides").exists() else []
     out = []

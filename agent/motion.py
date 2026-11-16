@@ -260,3 +260,145 @@ async def make_motion_reel(page_html, post, folder, config):
         gen.unlink()
     shutil.rmtree(work)
     return total
+
+
+# ---------- 카드뉴스 첫 장 영상 (표지 motion, TEMPLATES.md "표지 영상") ----------
+# 캐러셀 첫 장을 짧은 영상(1080x1350, H.264 + AAC, 30fps)으로. 같은 장의 정지 화면 slides/01.jpg는 그대로 남긴다
+# (스레드·검토 페이지·미리보기용). 인스타 캐러셀 자식에 media_type=VIDEO로 올라간다 (publish.py).
+COVER_SECONDS = 6.0
+COVER_SECONDS_RANGE = (3.0, 10.0)   # 모션만(영상 src 없이)일 때
+COVER_VIDEO_RANGE = (3.0, 60.0)     # 결과 mp4 길이 (인스타 캐러셀 영상 장 기준, checks.py·render.py 검사)
+
+
+def cover_motion(post):
+    """캐러셀 표지의 motion 설정(dict) 또는 None. 예전 게시물은 None (지금과 똑같이 사진만)."""
+    if post.get("type") != "carousel":
+        return None
+    slides = post.get("slides") or []
+    if not slides or slides[0].get("kind") != "cover":
+        return None
+    m = slides[0].get("motion")
+    if m is True:
+        return {}
+    return m if isinstance(m, dict) else None
+
+
+async def _cover_overlay(page, idx, out_png):
+    """표지 틀(그림 자리는 투명, 아래로 어두워지는 그늘은 남김)을 PNG로. 영상 위에 얹는다."""
+    await page.evaluate(f"twSetup({idx}, 1)")
+    await page.evaluate("twSeek(5)")
+    el = (await page.query_selector_all(".slide"))[idx]
+    await page.evaluate("""(i) => { const s = [...document.querySelectorAll('.slide')][i];
+        s.style.background = 'transparent'; document.body.style.background = 'transparent';
+        document.documentElement.style.background = 'transparent';
+        const v = s.querySelector('.vis'); if (v) { v.style.animation = 'none'; v.style.transform = 'none';
+          v.querySelectorAll('img').forEach(x => x.style.visibility = 'hidden'); } }""", idx)
+    await el.screenshot(path=str(out_png), omit_background=True)
+    return await page.evaluate("""(i) => { const s = [...document.querySelectorAll('.slide')][i];
+        const v = s.querySelector('.vis'); const b = s.getBoundingClientRect();
+        if (!v) return [0, 0, Math.round(b.width), Math.round(b.height)];
+        const r = v.getBoundingClientRect();
+        return [Math.round(r.left - b.left), Math.round(r.top - b.top), Math.round(r.width / 2) * 2, Math.round(r.height / 2) * 2]; }""", idx)
+
+
+def _cover_from_src(folder, m, overlay_png, box, size, out_mp4):
+    """motion.src 영상을 표지 그림 자리에 꽉 채워(잘라서) 깔고 틀 PNG를 얹는다. 길이(초) 반환."""
+    w, h = size
+    src = folder / m["src"]
+    start = float(m.get("start", 0))
+    end = float(m["end"]) if m.get("end") is not None else probe_duration(src)
+    dur = end - start
+    bx, by, bw, bh = box
+    vf = (f"[1:v]scale={bw}:{bh}:force_original_aspect_ratio=increase,crop={bw}:{bh},setsar=1,fps={FPS}[clip];"
+          f"[0:v][clip]overlay={bx}:{by}[base];[base][2:v]overlay=0:0,format=yuv420p[v]")
+    keep_sound = has_audio(src) and not m.get("mute") and _clip_has_sound_range(src, start, dur)
+    af = ("[1:a]aresample=48000,aformat=channel_layouts=stereo,apad[a]" if keep_sound
+          else "anullsrc=r=48000:cl=stereo[a]")
+    run(["ffmpeg", "-nostdin", "-y", "-loglevel", "error",
+         "-f", "lavfi", "-t", f"{dur}", "-i", f"color=c=0x0A0B0A:s={w}x{h}:r={FPS}",
+         "-ss", f"{start}", "-t", f"{dur}", "-i", str(src),
+         "-loop", "1", "-t", f"{dur}", "-i", str(overlay_png),
+         "-filter_complex", vf + ";" + af, "-map", "[v]", "-map", "[a]", "-t", f"{dur:.3f}",
+         "-c:v", "libx264", "-preset", "veryfast", "-crf", "19", "-r", str(FPS),
+         "-c:a", "aac", "-b:a", "160k", str(out_mp4)])
+    return dur, keep_sound
+
+
+def _clip_has_sound_range(src, start, dur):
+    import re
+    r = subprocess.run(["ffmpeg", "-hide_banner", "-nostdin", "-ss", f"{start}", "-t", f"{dur}", "-i", str(src),
+                        "-vn", "-af", "volumedetect", "-f", "null", "-"],
+                       capture_output=True, text=True, encoding="utf-8", errors="replace")
+    m = re.search(r"mean_volume:\s*(-?[\d.]+) dB", r.stderr)
+    return bool(m and float(m.group(1)) >= -50)
+
+
+def _add_music(video_mp4, music, dur, volume, out_mp4):
+    """소리 없는 영상에 음악을 깐다 (앞 0.3초 페이드인, 끝 1초 페이드아웃)."""
+    fo = min(1.0, dur / 4)
+    run(["ffmpeg", "-nostdin", "-y", "-loglevel", "error", "-i", str(video_mp4),
+         "-stream_loop", "-1", "-i", str(music),
+         "-filter_complex", f"[1:a]volume={volume},atrim=duration={dur:.3f},aresample=48000,"
+                            f"aformat=channel_layouts=stereo,afade=t=in:d=0.3,afade=t=out:st={dur - fo:.3f}:d={fo:.3f}[a]",
+         "-map", "0:v:0", "-map", "[a]", "-t", f"{dur:.3f}", "-c:v", "copy",
+         "-c:a", "aac", "-b:a", "160k", str(out_mp4)])
+
+
+async def make_cover_video(page_html, post, folder, config, out_mp4):
+    """캐러셀 첫 장 영상. motion.src가 있으면 그 영상을 그림 자리에, 없으면 표지에 모션(그림 천천히 확대, 글 올라오기).
+    원본 소리가 없으면 음악(post.music → assets/music → 코드 생성)을 깔고 -14 LUFS로 맞춘다. 길이(초) 반환."""
+    from playwright.async_api import async_playwright
+
+    m = cover_motion(post)
+    if m is None:
+        raise ValueError("표지 motion 없음")
+    w, h = 1080, 1350
+    folder = Path(folder)
+    work = folder / "_cover"
+    if work.exists():
+        shutil.rmtree(work)
+    work.mkdir()
+    html = page_html.replace("</style>", ANIM_CSS + f":root{{--acc:{config['brand']['accent']}}}</style>", 1)
+    html = html.replace("</body>", f"<script>{ANIM_JS}</script></body>")
+    tmp = work / "_motion.html"
+    tmp.write_text(html, encoding="utf-8")
+    raw = work / "raw.mp4"
+    async with async_playwright() as p:
+        exe = shutil.which("google-chrome") or shutil.which("chromium")
+        browser = await p.chromium.launch(executable_path=exe) if exe else await p.chromium.launch()
+        page = await browser.new_page(viewport={"width": w, "height": h})
+        await page.goto(tmp.as_uri())
+        await page.evaluate("document.fonts.ready")
+        await page.wait_for_timeout(300)
+        if m.get("src"):
+            ov = work / "overlay.png"
+            box = await _cover_overlay(page, 0, ov)
+            dur, has_sound = _cover_from_src(folder, m, ov, box, (w, h), raw)
+        else:
+            dur = float(m.get("seconds", COVER_SECONDS))
+            await render_scene(page, 0, dur, raw)
+            has_sound = False
+        await browser.close()
+    if has_sound:
+        shutil.move(str(raw), str(out_mp4))
+        print(f"표지 영상: 원본 소리 사용 ({dur:.1f}초)")
+    else:
+        # 무음 금지 (STYLE_GUIDE 6장): post.music.src → assets/music → 코드로 만든 음악
+        pm = post.get("music") or {}
+        files = sorted((ROOT / "assets" / "music").glob("*.mp3")) + sorted((ROOT / "assets" / "music").glob("*.m4a"))
+        vol = float(pm.get("volume", 0.8))
+        if pm.get("src") and (folder / pm["src"]).exists():
+            music = folder / pm["src"]
+        elif files and not pm.get("generate"):
+            music = random.choice(files)
+        else:
+            from music_gen import make_music
+            music = work / "music.wav"
+            info = make_music(music, [dur], 0, seed=int(pm.get("seed", 7)))
+            print(f"표지 영상 배경음악: 코드로 생성 (BPM {info['bpm']})")
+        _add_music(raw, music, dur, vol, out_mp4)
+    # 소리 크기 -14 LUFS, 순간 최대 -1.5 dBTP (STYLE_GUIDE 6장 "릴스 소리"). faststart로 다시 묶인다
+    from loudness import normalize
+    normalize(out_mp4)
+    shutil.rmtree(work)
+    return dur
