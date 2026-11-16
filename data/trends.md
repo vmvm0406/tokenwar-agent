@@ -1,4 +1,4 @@
-# 인스타 반응 분석 (2026-11-16 13:39 기준)
+# 인스타 반응 분석 (2026-11-16 14:42 기준)
 
 에이전트는 주제를 고를 때 이 파일을 먼저 읽는다 (STYLE_GUIDE 3장, 6-1장 '인스타 반응').
 배수 = 그 계정의 최근 60일 같은 유형(릴스/피드) 중간값 대비. 2배 이상이면 '먹힌 주제'.
@@ -10,93 +10,100 @@
   - 2,776조회 6.4x: [2027년, AI 거품은 붕괴한다?](https://www.instagram.com/reel/Dd0-1xPBNso/)
 - FEED 중간값 6반응, 게시물 1개
 
-## @ai.trend.kr (팔로워 273081)
+## @ai.trend.kr (팔로워 273153)
 - REELS 중간값 90,537조회, 게시물 35개
-  - 2,865,893조회 31.7x: [눈 뭉치 던진 범인이 나라고요? ❄️](https://www.instagram.com/reel/DetX442xkFz/)
-  - 2,071,690조회 22.9x: [포장해 달라던 선물이 내 거였다고요? 🎁](https://www.instagram.com/reel/DeWZecova75/)
-  - 1,065,522조회 11.8x: [식이 시작도 안 했는데 하객석이 뒤집어졌어요 🎉](https://www.instagram.com/reel/De0VCSbPO_M/)
+  - 2,865,961조회 31.7x: [눈 뭉치 던진 범인이 나라고요? ❄️](https://www.instagram.com/reel/DetX442xkFz/)
+  - 2,071,738조회 22.9x: [포장해 달라던 선물이 내 거였다고요? 🎁](https://www.instagram.com/reel/DeWZecova75/)
+  - 1,065,620조회 11.8x: [식이 시작도 안 했는데 하객석이 뒤집어졌어요 🎉](https://www.instagram.com/reel/De0VCSbPO_M/)
 - FEED 중간값 1,543반응, 게시물 115개
 
-## @ai.asap.kr (팔로워 9707)
-- REELS 중간값 8,298조회, 게시물 4개
-  - 38,232조회 4.6x: [AI가 일자리를 없앨까 묻는 래리 핑크에게 팔란티어 CEO 알렉스 카프가 답했습니다. 먼저 팔기 어려워지는 건 엘리트 학교 철학 전공이고, 고등](https://www.instagram.com/reel/DfwH1hxpWaQ/)
-  - 9,625조회 1.2x: [AI가 소프트웨어를 끝낸다? '정반대' (젠슨 황, 엔비디아)](https://www.instagram.com/reel/DfCV6uPpezi/)
-  - 6,972조회 0.8x: [🦆 에이전트로 에이전트를 만든다 (젠슨 황, 엔비디아)](https://www.instagram.com/reel/De8rXgTJKcV/)
+## @ai.asap.kr (팔로워 9709)
+- REELS 중간값 8,300조회, 게시물 4개
+  - 39,367조회 4.7x: [AI가 일자리를 없앨까 묻는 래리 핑크에게 팔란티어 CEO 알렉스 카프가 답했습니다. 먼저 팔기 어려워지는 건 엘리트 학교 철학 전공이고, 고등](https://www.instagram.com/reel/DfwH1hxpWaQ/)
+  - 9,628조회 1.2x: [AI가 소프트웨어를 끝낸다? '정반대' (젠슨 황, 엔비디아)](https://www.instagram.com/reel/DfCV6uPpezi/)
+  - 6,973조회 0.8x: [🦆 에이전트로 에이전트를 만든다 (젠슨 황, 엔비디아)](https://www.instagram.com/reel/De8rXgTJKcV/)
 - FEED 중간값 81반응, 게시물 133개
 
 ## @choi.openai (팔로워 6239)
 - FEED 중간값 97반응, 게시물 2개
 
-## @ex.treme.ai (팔로워 8287)
+## @ex.treme.ai (팔로워 8286)
 
-## @bizucafe (팔로워 95386)
-- REELS 중간값 23,180조회, 게시물 194개
-  - 576,753조회 24.9x: [화폐는 의미 없다 (일론 머스크)](https://www.instagram.com/reel/De8mVBGgBJL/)
-  - 413,977조회 17.9x: [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/)
-  - 177,833조회 7.7x: [아이들 미국학교 보내는 이유 (유튜브 창업자 Steve Chen)](https://www.instagram.com/reel/DfL0yn5DYXf/)
+## @bizucafe (팔로워 95400)
+- REELS 중간값 23,216조회, 게시물 194개
+  - 579,843조회 25.0x: [화폐는 의미 없다 (일론 머스크)](https://www.instagram.com/reel/De8mVBGgBJL/)
+  - 420,269조회 18.1x: [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/)
+  - 177,915조회 7.7x: [아이들 미국학교 보내는 이유 (유튜브 창업자 Steve Chen)](https://www.instagram.com/reel/DfL0yn5DYXf/)
 - FEED 중간값 21반응, 게시물 11개
+
+## @prompt_what (팔로워 250658)
+- REELS 중간값 34,764조회, 게시물 127개
+  - 4,394,319조회 126.4x: [황궁에서 벌어지는 맞불륜, 전개는 한국 막장 드라마입니다.](https://www.instagram.com/reel/DeSnhNJTiyr/)
+  - 1,358,578조회 39.1x: [바탕화면 정리도 이제 러그로 덮고 모른 척합니다.](https://www.instagram.com/reel/DePBnqgSztY/)
+  - 969,659조회 27.9x: [1화가 333만 번 재생된 K-막장 로판, 이번엔 2화입니다 🎬](https://www.instagram.com/reel/DerFayOyKMm/)
+- FEED 중간값 1,448반응, 게시물 70개
 
 ## 최근 30일 잘 된 게시물 TOP 20
 
 | 배수 | 계정 | 유형 | 날짜 | 수치 | 첫 줄 |
 |---|---|---|---|---|---|
 | 49.2x | @bizucafe | FEED | 11-07 | 1,033 | [광고(廣告). 한문으로 널리 알린다는 뜻이다.. 많은 사람들에게 무언가 정보를 알리는 것..](https://www.instagram.com/p/DfbYTYnmiGm/) |
-| 31.7x | @ai.trend.kr | REELS | 10-20 | 2,865,893 | [눈 뭉치 던진 범인이 나라고요? ❄️](https://www.instagram.com/reel/DetX442xkFz/) |
-| 24.9x | @bizucafe | REELS | 10-26 | 576,753 | [화폐는 의미 없다 (일론 머스크)](https://www.instagram.com/reel/De8mVBGgBJL/) |
-| 17.9x | @bizucafe | REELS | 11-15 | 413,977 | [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/) |
+| 31.7x | @ai.trend.kr | REELS | 10-20 | 2,865,961 | [눈 뭉치 던진 범인이 나라고요? ❄️](https://www.instagram.com/reel/DetX442xkFz/) |
+| 27.9x | @prompt_what | REELS | 10-19 | 969,659 | [1화가 333만 번 재생된 K-막장 로판, 이번엔 2화입니다 🎬](https://www.instagram.com/reel/DerFayOyKMm/) |
+| 25.0x | @bizucafe | REELS | 10-26 | 579,843 | [화폐는 의미 없다 (일론 머스크)](https://www.instagram.com/reel/De8mVBGgBJL/) |
+| 18.1x | @bizucafe | REELS | 11-15 | 420,269 | [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/) |
 | 17.2x | @ai.asap.kr | FEED | 10-18 | 1,394 | [Filee는 Ctrl을 누른 채 파일을 끌면 커서 옆에 변환할 형식이 동그랗게 뜨고, 원하는 형식에 놓으면 바로 바꿔 주는 변환기입니다. 이미지](https://www.instagram.com/p/DeoW-TQj9F5/) |
-| 11.8x | @ai.trend.kr | REELS | 10-23 | 1,065,522 | [식이 시작도 안 했는데 하객석이 뒤집어졌어요 🎉](https://www.instagram.com/reel/De0VCSbPO_M/) |
-| 10.5x | @ai.trend.kr | FEED | 10-27 | 16,200 | [올해가 가기 전에, GPT랑 새해 계획을 세워봤어요. 🗓️](https://www.instagram.com/p/De_YpGSkS7D/) |
-| 7.7x | @bizucafe | REELS | 11-01 | 177,833 | [아이들 미국학교 보내는 이유 (유튜브 창업자 Steve Chen)](https://www.instagram.com/reel/DfL0yn5DYXf/) |
-| 7.6x | @bizucafe | REELS | 10-26 | 175,349 | [AI 미치게 하는 법 (일론 머스크)](https://www.instagram.com/reel/De71wGlinFC/) |
-| 7.5x | @ai.trend.kr | REELS | 11-04 | 677,761 | [AI로 오늘도 감동을 받네요 🥹](https://www.instagram.com/reel/DfUlNHxPiTT/) |
-| 7.2x | @bizucafe | REELS | 11-14 | 167,998 | [대만 뺏기면 답이 없다 (일론 머스크)](https://www.instagram.com/reel/DfuE50ME_qw/) |
-| 7.1x | @ai.trend.kr | FEED | 10-28 | 10,903 | [사진 한 장으로 다섯 시대를 살아 봤어요 📷](https://www.instagram.com/p/DfB9iInE-54/) |
+| 15.0x | @prompt_what | REELS | 11-09 | 523,058 | [댓글에 ‘Elsa’ 남겨주시면 프롬프트 보내드릴게요 ❄️](https://www.instagram.com/reel/DfhJl3-y3Lv/) |
+| 11.8x | @ai.trend.kr | REELS | 10-23 | 1,065,620 | [식이 시작도 안 했는데 하객석이 뒤집어졌어요 🎉](https://www.instagram.com/reel/De0VCSbPO_M/) |
+| 11.7x | @prompt_what | FEED | 10-25 | 17,000 | [학교에 도입이 시급한 3D 교과서가 나왔습니다 📖](https://www.instagram.com/p/De6rZd7lL1e/) |
+| 10.5x | @ai.trend.kr | FEED | 10-27 | 16,203 | [올해가 가기 전에, GPT랑 새해 계획을 세워봤어요. 🗓️](https://www.instagram.com/p/De_YpGSkS7D/) |
+| 8.9x | @prompt_what | REELS | 11-01 | 310,725 | [작은 친절을 베푸는 AI 애니메이션이 8,200만 번 재생됐습니다 ☂️](https://www.instagram.com/reel/DfMkn35Ssmw/) |
+| 8.4x | @prompt_what | REELS | 10-18 | 293,387 | [캡처 한 장으로 끝나는 챗GPT 업무 코드 4개입니다 📎](https://www.instagram.com/reel/DenpnlJyf3l/) |
+| 7.7x | @bizucafe | REELS | 11-01 | 177,915 | [아이들 미국학교 보내는 이유 (유튜브 창업자 Steve Chen)](https://www.instagram.com/reel/DfL0yn5DYXf/) |
+| 7.6x | @bizucafe | REELS | 10-26 | 175,433 | [AI 미치게 하는 법 (일론 머스크)](https://www.instagram.com/reel/De71wGlinFC/) |
+| 7.5x | @ai.trend.kr | REELS | 11-04 | 678,174 | [AI로 오늘도 감동을 받네요 🥹](https://www.instagram.com/reel/DfUlNHxPiTT/) |
+| 7.3x | @bizucafe | REELS | 11-14 | 168,659 | [대만 뺏기면 답이 없다 (일론 머스크)](https://www.instagram.com/reel/DfuE50ME_qw/) |
+| 7.1x | @ai.trend.kr | FEED | 10-28 | 10,906 | [사진 한 장으로 다섯 시대를 살아 봤어요 📷](https://www.instagram.com/p/DfB9iInE-54/) |
 | 6.9x | @ai.talk.kr | REELS | 10-23 | 3,009 | [AI가 발전하면 내 노트북은 더 좋아질까, 더 비싸질까?](https://www.instagram.com/reel/De0PR-Qj5n2/) |
-| 6.9x | @bizucafe | REELS | 10-23 | 159,326 | [우린 이미 너무 늦었다 (유발 하라리)](https://www.instagram.com/reel/De1azrfipMC/) |
-| 6.8x | @ai.asap.kr | FEED | 10-28 | 554 | [Oh-My-Hermes는 Nous Research의 오픈소스 에이전트 Hermes Agent에 쓸 세팅을 묶은 올인원 패키지입니다. 설치하고 o](https://www.instagram.com/p/DfA7xqjE1nL/) |
-| 6.7x | @ai.asap.kr | FEED | 10-17 | 546 | [Happy는 Claude·Codex·Grok을 한 앱에서 골라 쓰게 해 주는 MIT 오픈소스입니다. 새 구독이 아니라 이미 내고 있는 각 회사 ](https://www.instagram.com/p/Del2nkwj2Xu/) |
-| 6.1x | @bizucafe | REELS | 11-05 | 140,929 | [갓 대학 졸업한 '경영 컨설턴트'](https://www.instagram.com/reel/DfV6WSTDWqK/) |
-| 6.0x | @bizucafe | REELS | 10-29 | 140,218 | [창업 한번 해보세요 (유튜브 창업자 Steve Chen)](https://www.instagram.com/reel/DfD4p6-DCWO/) |
-| 5.9x | @bizucafe | REELS | 10-28 | 137,487 | [성공한 사람은 똑똑한 걸 숨긴다 (팔란티어 알렉스 카프)](https://www.instagram.com/reel/DfCEAL7jE23/) |
-| 5.6x | @ai.asap.kr | FEED | 10-23 | 453 | [앤트로픽 Applied AI 팀이 기업용 에이전트를 만들 때 서브에이전트를 메인 루프로 접어야 할 시점을 정리한 글을 공개했습니다. ](https://www.instagram.com/p/De1Tvw5D-Ug/) |
+| 6.9x | @bizucafe | REELS | 10-23 | 159,505 | [우린 이미 너무 늦었다 (유발 하라리)](https://www.instagram.com/reel/De1azrfipMC/) |
+| 6.9x | @prompt_what | REELS | 11-10 | 238,446 | [조명 이름 34개만 알아도 AI 영상의 분위기가 달라집니다 💡](https://www.instagram.com/reel/DfjwADdyH7a/) |
 
 ## 잘 안 된 게시물 (하위 10)
 
 | 배수 | 계정 | 첫 줄 |
 |---|---|---|
-| 0.1x | @ai.trend.kr | 유튜브에서 뭘 볼지 고르는 데 지치셨나요? 📺 |
-| 0.0x | @ai.asap.kr | 세무사 시험 수석 합격자가 AI 부정행위를 털어놓고 경찰에 자수했습니다. |
-| 0.0x | @ai.asap.kr | OpenAI가 사업체가 ChatGPT 속 자기 가게 정보를 직접 관리하는 Businesses in ChatGPT를 베타로 공개했습니다. 주간 사 |
-| 0.0x | @ai.asap.kr | 앤트로픽이 AI 답변이 정말 약속한 모델에서 나왔는지 수학으로 증명하는 FlashProve를 공개했습니다. |
-| 0.0x | @ai.asap.kr | OpenAI가 사내 모노레포를 받치는 새 Git 백엔드 Pando를 공개했습니다. Codex로 엔지니어 한 명이 여러 변경을 동시에 올리면서 p |
-| 0.0x | @ai.asap.kr | 앤트로픽이 AI 에이전트가 전문가의 판단에 미치는 영향을 연구했습니다. 분석가 50명이 Claude Opus 4.8 기반 Claude Code로 |
-| 0.0x | @ai.asap.kr | 앤트로픽이 10월 26일 미국 증권거래위원회에 상장 신청서(S-1)를 공개하고, 나스닥에 티커 ANT로 상장을 신청했습니다. |
-| 0.0x | @ai.asap.kr | kensaku는 파일 이름과 PDF·워드 본문, 스크린샷 속 글자까지 한 번에 찾아 주는 무료 오픈소스 검색 앱입니다. |
+| 0.0x | @prompt_what | 효과 하나에 키프레임 찍던 분들 위한 클로드 편집 코드 9개입니다 🎬 |
+| 0.0x | @prompt_what | 내 새끼가 주인공인 영상 만드는 법, 사진 한 장씩이면 됩니다 🐾 |
+| 0.0x | @prompt_what | 편집 외주로 맡기던 모션그래픽, 이제 프롬프트 한 줄로 만듭니다 🎬 |
 | 0.0x | @ai.trend.kr | ‘전과자’에서 꺼낸 아이디어가 진짜 캠퍼스가 됐어요. 🎓 |
+| 0.0x | @prompt_what | 영상 고칠 곳을 말로 설명하다 보면 저도 클로드도 헷갈립니다 📍 |
+| 0.0x | @prompt_what | 이 영상 속 효과 9개, 타임라인을 한 번도 안 열고 만들었어요 🎬 |
+| 0.0x | @prompt_what | 댓글 남겨주시면 만드는 법 보내드릴게요! 🎬 |
 | 0.0x | @ai.trend.kr | 이 밴드 뭐야? AI로 탄생한 신인 밴드 🎸 |
+| 0.0x | @prompt_what | In one month🎄 |
+| 0.0x | @prompt_what | 씨댄스 2.5, 아직도 비싼 돈 주고 쓰세요? 🎬 |
 
 ## 언제 올린 게시물이 잘 됐나 (한국 시간, 평소 대비 배수 중간값 · 게시물 수)
 
 | 시간대 | 릴스 | 카드뉴스(피드) |
 |---|---|---|
-| 00-06시 | 0.74x · 1 | 0.75x · 6 |
-| 06-09시 | 2.62x · 12 | 1.06x · 45 |
-| 09-12시 | 0.93x · 92 | 1.24x · 84 |
-| 12-15시 | 1.16x · 52 | 0.93x · 49 |
-| 15-18시 | 0.92x · 84 | 0.96x · 108 |
-| 18-21시 | 1.07x · 69 | 0.95x · 77 |
-| 21-24시 | 0.99x · 36 | 0.84x · 15 |
+| 00-06시 | 0.82x · 3 | 0.29x · 7 |
+| 06-09시 | 0.82x · 28 | 1.07x · 60 |
+| 09-12시 | 0.93x · 114 | 1.24x · 92 |
+| 12-15시 | 1.11x · 75 | 0.86x · 59 |
+| 15-18시 | 0.97x · 110 | 1.00x · 122 |
+| 18-21시 | 1.02x · 97 | 0.95x · 93 |
+| 21-24시 | 1.09x · 48 | 0.82x · 22 |
 
 | 요일 | 배수 · 수 |
 |---|---|
-| 월 | 0.97x · 106 |
-| 화 | 1.00x · 104 |
-| 수 | 1.05x · 102 |
-| 목 | 0.89x · 122 |
-| 금 | 0.90x · 104 |
-| 토 | 0.98x · 98 |
-| 일 | 1.07x · 94 |
+| 월 | 0.96x · 130 |
+| 화 | 1.02x · 141 |
+| 수 | 1.06x · 137 |
+| 목 | 0.92x · 162 |
+| 금 | 0.92x · 131 |
+| 토 | 0.98x · 112 |
+| 일 | 1.05x · 117 |
 
 게시물 수가 10개 미만인 칸은 우연일 수 있다. 우리 계정 팔로워가 100명을 넘으면 아래 '우리 팔로워 접속 시간'을 더 믿는다.
 
@@ -106,12 +113,12 @@
 
 | 태그 | 쓴 게시물 | 계정 수 | 반응 배수 중간값 | 비고 |
 |---|---|---|---|---|
-| #광고 | 51 | 1 | 0.71x | 광고 표시, 쓰지 않음 |
+| #광고 | 66 | 2 | 0.69x | 광고 표시, 쓰지 않음 |
 | #해외ai소식 | 46 | 1 | 1.66x | 한 계정만 |
 | #ai | 32 | 3 | 0.61x |  |
 | #인공지능 | 27 | 1 | 0.91x | 한 계정만 |
-| #higgsfield | 24 | 1 | 0.83x | 한 계정만 |
-| #higgsfieldcreator | 24 | 1 | 0.83x | 한 계정만 |
+| #higgsfield | 24 | 1 | 0.82x | 한 계정만 |
+| #higgsfieldcreator | 24 | 1 | 0.82x | 한 계정만 |
 | #테크트렌드 | 22 | 1 | 0.52x | 한 계정만 |
 | #생성형ai | 18 | 1 | 0.95x | 한 계정만 |
 | #ai일자리 | 13 | 1 | 0.88x | 한 계정만 |
@@ -121,24 +128,25 @@
 | #챗gpt | 10 | 2 | 0.62x |  |
 | #사이버보안 | 9 | 1 | 0.74x | 한 계정만 |
 | #ai에이전트 | 8 | 1 | 0.57x | 한 계정만 |
+| #dreamina | 8 | 1 | 0.81x | 한 계정만 |
+| #dreaminapartner | 8 | 1 | 0.81x | 한 계정만 |
 | #ai뉴스 | 7 | 1 | 0.74x | 한 계정만 |
 | #ai투자 | 7 | 1 | 1.26x | 한 계정만 |
 | #광고자동화 | 7 | 1 | 3.35x | 한 계정만 |
+| #제작지원 | 7 | 1 | 0.91x | 한 계정만 |
 | #ai버블 | 6 | 1 | 2.13x | 한 계정만 |
 | #ai산업 | 6 | 1 | 1.66x | 한 계정만 |
 | #ai연구 | 6 | 1 | 0.55x | 한 계정만 |
 | #ai트렌드 | 6 | 1 | 1.11x | 한 계정만 |
-| #샘올트먼 | 6 | 1 | 4.03x | 한 계정만 |
-| #중국ai | 6 | 1 | 2.02x | 한 계정만 |
-| #ai인프라 | 5 | 1 | 2.23x | 한 계정만 |
 
 ## 우리 계정 성과
 
 | 날짜 | 유형 | 조회 | 도달 | 저장 | 공유 | 첫 줄 |
 |---|---|---|---|---|---|---|
+| 2026-11-16 | FEED | 0 | 0 | 0 | 0 | 테슬라가 운전대 없는 자율주행차 사이버캡을 개인도 주문할 수 있게 했습니다. 미국 시장 기준 가격은 2만 9,990달러, 약 4,010만 원. |
 | 2026-11-16 | FEED | 0 | 0 | 0 | 0 | ChatGPT가 내 카드로 물건값을 대신 내는 'ChatGPT Wallet', 결제 순서와 안전장치부터 확인해 보세요. |
 | 2026-11-16 | FEED | 1 | 1 | 0 | 0 | 세무사 시험 수석 합격자가 초소형 카메라와 AI로 답을 봤다고 자수한 사건과, 19일 수능에서 걸리면 안 되는 전자기기 규칙을 함께 정리했습니다 |
-| 2026-11-16 | REELS | 163 | 152 | 0 | 0 | 'AI 대부' 제프리 힌턴이 "AI 에이전트들이 시험 환경을 빠져나가 서로 짜고, 자기 채점 코드를 고치려 다른 회사에 침입하려 했다"고 경고한 |
+| 2026-11-16 | REELS | 164 | 152 | 0 | 0 | 'AI 대부' 제프리 힌턴이 "AI 에이전트들이 시험 환경을 빠져나가 서로 짜고, 자기 채점 코드를 고치려 다른 회사에 침입하려 했다"고 경고한 |
 | 2026-11-16 | REELS | 174 | 157 | 0 | 0 | 일론 머스크가 "삼성이 텍사스에 테슬라 전용 칩 공장을 지었다"고 말하며 꺼낸 미국 칩 생산 계산을 정리했습니다. |
-| 2026-11-15 | REELS | 278 | 244 | 1 | 2 | 마이크로소프트 CEO 사티아 나델라가 "AI 때문에 개발은 오히려 더 중요해졌다"고 말한 이유를 정리했습니다. |
+| 2026-11-15 | REELS | 280 | 245 | 1 | 2 | 마이크로소프트 CEO 사티아 나델라가 "AI 때문에 개발은 오히려 더 중요해졌다"고 말한 이유를 정리했습니다. |
 | 2026-11-15 | FEED | 0 | 0 | 0 | 0 | 젠슨 황이 엔비디아 CEO에서 물러난 지 나흘 만에 복귀를 논의하고 있다는 FT 보도, 무엇이 걸림돌인지까지 정리했습니다. |
