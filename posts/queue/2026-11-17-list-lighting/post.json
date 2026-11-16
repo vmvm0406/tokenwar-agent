@@ -121,8 +121,7 @@
         "src": "img/list/11.jpg",
         "mascot": true,
         "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: candlelight, a few lit candles on a small low table in front of the sofa, warm flickering orange light from below, dark room. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ai_generated": true,
-        "center": 0.5
+        "ai_generated": true
       },
       {
         "name": "창문 자연광",
@@ -216,6 +215,7 @@
       }
     ],
     "hook": 10,
+    "align": true,
     "voice": {
       "engine": "Kokoro-82M (Apache-2.0)",
       "voice": "af_heart"

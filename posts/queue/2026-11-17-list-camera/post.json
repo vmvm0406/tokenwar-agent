@@ -171,6 +171,7 @@
       }
     ],
     "hook": 11,
+    "align": false,
     "voice": {
       "engine": "Kokoro-82M (Apache-2.0)",
       "voice": "af_heart",

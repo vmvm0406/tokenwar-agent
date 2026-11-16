@@ -418,6 +418,8 @@ def check_list(post):
         errors.append(f"list.hook은 첫 화면에 크게 보여 줄 항목 번호(1~{len(items)}): {h!r}")
     if post.get("rights") != "own":
         errors.append("목록형 자료 릴스는 직접 만든 결과 이미지만: rights는 own")
+    if L.get("align") not in (None, True, False):
+        errors.append(f"list.align은 true/false: {L.get('align')!r}")
     if L.get("label") not in (None, "en", "ko", "both"):
         errors.append(f"list.label은 en(영어 이름만, 기본)·ko·both: {L.get('label')!r}")
     for i, m in enumerate(((post.get("dm") or {}).get("page") or {}).get("more") or [], 1):

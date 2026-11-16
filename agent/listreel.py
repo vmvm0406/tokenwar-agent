@@ -187,16 +187,194 @@ def fill_frame(src, out, x_center=None):
     return cx, H / h
 
 
+# ---------- 대상 위치·크기 고정 (list.align, 운영자 결정 2026-11-17 "캐릭터 위치는 동일해야지") ----------
+# 같은 대상에 조명·그림체·질감만 바꾼 비교 목록은 대상이 모든 장에서 같은 자리, 같은 크기여야 바뀐 것만 보인다.
+# 기준 장(원본 줄이 있으면 원본, 없으면 첫 항목)에서 마스코트 영역을 찾고, 그 영역의 윤곽(밝기 변화) 무늬를
+# 다른 장에서 배율 0.85~1.15로 바꿔 가며 찾아(정규화 상호상관) 장마다 위치·크기를 잰다. 조명이 바뀌어도 윤곽은 남는다.
+# 그 값으로 장마다 배율과 자르는 자리를 정해 9:16 화면에서 마스코트가 정확히 같은 자리·같은 크기에 오게 한다.
+REG_W = 272                      # 정렬 계산용 축소 너비
+REG_SCALES = [round(0.85 + 0.01 * i, 2) for i in range(31)]
+REG_MIN_SCORE = 0.30             # 이보다 낮게 맞으면 정렬을 믿지 않고 기준 자리 그대로
+ALIGN_MARGIN = 1.05              # 기준 장도 조금 더 확대해 둔다 (다른 장을 옮기거나 키울 때 가장자리 빈칸이 안 생기게)
+MAX_SCALE = 1.75                 # 이보다 크게 확대하면 화질 경고
+DET_W, DET_H = 136, 170
+
+
+def detect_subject(img):
+    """마스코트 영역(연두~초록 색 덩어리 중 가장 큰 것)의 상자 (x0, y0, x1, y1 비율, 면적비) 또는 None."""
+    import numpy as np
+    a = np.asarray(img.convert("HSV").resize((DET_W, DET_H))).astype(float)
+    h, s, v = a[..., 0] * 360 / 255, a[..., 1] / 255, a[..., 2] / 255
+    m = (h >= 45) & (h <= 160) & (s >= 0.22) & (v >= 0.12)
+    lab = np.zeros(m.shape, np.int32)
+    best, bl, cur = 0, 0, 0
+    for y0 in range(DET_H):
+        for x0 in range(DET_W):
+            if not m[y0, x0] or lab[y0, x0]:
+                continue
+            cur += 1
+            lab[y0, x0] = cur
+            st, n = [(y0, x0)], 0
+            while st:
+                y, x = st.pop()
+                n += 1
+                for ny, nx in ((y + 1, x), (y - 1, x), (y, x + 1), (y, x - 1)):
+                    if 0 <= ny < DET_H and 0 <= nx < DET_W and m[ny, nx] and not lab[ny, nx]:
+                        lab[ny, nx] = cur
+                        st.append((ny, nx))
+            if n > best:
+                best, bl = n, cur
+    if best < DET_W * DET_H * 0.01:
+        return None
+    ys, xs = np.where(lab == bl)
+    return (xs.min() / DET_W, ys.min() / DET_H, (xs.max() + 1) / DET_W, (ys.max() + 1) / DET_H, best / (DET_W * DET_H))
+
+
+def _edges(img, w):
+    """밝기 윤곽 지도(축소). 조명 색·밝기가 달라도 모양이 남게 장마다 밝기 분포를 고르게 편다."""
+    import numpy as np
+    from PIL import ImageOps
+    h = int(round(img.size[1] * w / img.size[0]))
+    g = ImageOps.equalize(img.convert("L").resize((w, h)))
+    a = np.asarray(g).astype(float)
+    gy, gx = np.gradient(a)
+    e = np.sqrt(gx * gx + gy * gy)
+    return e / (e.std() + 1e-6)
+
+
+def _ncc_map(img, tpl):
+    """tpl(작은 판)이 img 어디에 가장 잘 맞는지: 정규화 상호상관 지도 (FFT)."""
+    import numpy as np
+    th, tw = tpl.shape
+    H_, W_ = img.shape
+    t = tpl - tpl.mean()
+    tn = np.sqrt((t * t).sum()) + 1e-9
+    fs = (H_ + th, W_ + tw)
+    F = np.fft.rfft2(img, fs)
+    corr = np.fft.irfft2(F * np.conj(np.fft.rfft2(t, fs)), fs)[:H_ - th + 1, :W_ - tw + 1]
+    c1 = np.cumsum(np.cumsum(np.pad(img, ((1, 0), (1, 0))), 0), 1)
+    c2 = np.cumsum(np.cumsum(np.pad(img * img, ((1, 0), (1, 0))), 0), 1)
+
+    def box(c):
+        return c[th:, tw:] - c[:-th, tw:] - c[th:, :-tw] + c[:-th, :-tw]
+    s1, s2 = box(c1), box(c2)
+    var = np.maximum(s2 - s1 * s1 / (th * tw), 1e-9)
+    return corr / (np.sqrt(var) * tn)
+
+
+def _peak(m):
+    """최댓값 자리 (포물선 보간으로 소수점까지)."""
+    import numpy as np
+    y, x = np.unravel_index(int(np.argmax(m)), m.shape)
+
+    def sub(a, b, c):
+        d = a - 2 * b + c
+        return 0.0 if abs(d) < 1e-12 else 0.5 * (a - c) / d
+    dy = sub(m[y - 1, x], m[y, x], m[y + 1, x]) if 0 < y < m.shape[0] - 1 else 0.0
+    dx = sub(m[y, x - 1], m[y, x], m[y, x + 1]) if 0 < x < m.shape[1] - 1 else 0.0
+    return float(m[y, x]), x + dx, y + dy
+
+
+def register(ref_img, box, img):
+    """기준 그림의 마스코트 영역(box 비율)을 img에서 찾는다. 반환 (일치 점수, 중심 x, 중심 y, 높이 — 모두 img 비율)."""
+    R = _edges(ref_img, REG_W)
+    rh, rw = R.shape
+    pad = 0.08
+    bw, bh = box[2] - box[0], box[3] - box[1]
+    x0 = max(0, int((box[0] - pad * bw) * rw))
+    x1 = min(rw, int((box[2] + pad * bw) * rw))
+    y0 = max(0, int((box[1] - pad * bh) * rh))
+    y1 = min(rh, int((box[3] + pad * bh) * rh))
+    tpl = R[y0:y1, x0:x1]
+    best = None
+    for s in REG_SCALES:
+        T = _edges(img, int(round(REG_W * s)))
+        if T.shape[0] < tpl.shape[0] or T.shape[1] < tpl.shape[1]:
+            continue
+        sc, px, py = _peak(_ncc_map(T, tpl))
+        if best is None or sc > best[0]:
+            best = (sc, s, px, py, T.shape)
+    sc, s, px, py, (th_, tw_) = best
+    # 판 왼쪽 위 → 마스코트 중심 (기준 상자 중심이 판 안에서 놓인 자리 그대로)
+    cx = (px + ((box[0] + box[2]) / 2 * rw - x0)) / tw_
+    cy = (py + ((box[1] + box[3]) / 2 * rh - y0)) / th_
+    return sc, cx, cy, bh / s
+
+
+def plan_align(paths, ref_index=0):
+    """기준 장의 마스코트 상자를 찾고, 장마다 같은 마스코트가 어디에 어떤 크기로 있는지 잰다.
+    반환: (기준 (cx, cy, h), [{"use": (cx, cy, h), "score", "how"}])."""
+    from PIL import Image
+    imgs = [Image.open(p).convert("RGB") for p in paths]
+    box = detect_subject(imgs[ref_index])
+    if not box:
+        return None, []
+    ref = ((box[0] + box[2]) / 2, (box[1] + box[3]) / 2, box[3] - box[1])
+    plans = []
+    for i, im in enumerate(imgs):
+        if i == ref_index:
+            plans.append({"use": ref, "score": 1.0, "how": "기준 장"})
+            continue
+        sc, cx, cy, hh = register(imgs[ref_index], box, im)
+        if sc < REG_MIN_SCORE:
+            plans.append({"use": ref, "score": sc, "how": f"정렬 불확실(일치 {sc:.2f}) → 기준 자리"})
+        else:
+            plans.append({"use": (cx, cy, hh), "score": sc, "how": f"정렬(일치 {sc:.2f})"})
+    return ref, plans
+
+
+def fill_aligned(src, out, use, ref, base_scale):
+    """대상 중심(use)을 기준 장의 화면 자리에, 높이를 기준 높이에 맞춰 1080x1920으로 자르고 확대(Lanczos).
+    base_scale: 기준 장의 확대 배율. 반환: (이 장 배율, 가장자리 빈칸 여부)."""
+    from PIL import Image
+    im = Image.open(src).convert("RGB")
+    w, h = im.size
+    s = base_scale * ref[2] / use[2]
+    tx = W / 2                                       # 기준 장: 대상 가로 중심을 화면 가운데
+    ty = H / 2 + (ref[1] - 0.5) * h * base_scale     # 기준 장: 원본 세로 가운데를 화면 가운데
+    left = use[0] * w - tx / s
+    top = use[1] * h - ty / s
+    cw, ch = W / s, H / s
+    blank = left < -0.5 or top < -0.5 or left + cw > w + 0.5 or top + ch > h + 0.5
+    # 그림 밖으로 나가는 자리는 검정으로 채우고(빈칸 경고), 소수점 자리까지 Lanczos로 잘라 키운다
+    pad = int(max(0, -left, -top, left + cw - w, top + ch - h)) + 2
+    src_img = im
+    if pad > 2:
+        src_img = Image.new("RGB", (w + 2 * pad, h + 2 * pad), (10, 11, 10))
+        src_img.paste(im, (pad, pad))
+    else:
+        pad = 0
+    sub = src_img.resize((W, H), Image.Resampling.LANCZOS, box=(left + pad, top + pad, left + pad + cw, top + pad + ch))
+    sub.save(out, "JPEG", quality=94)
+    return s, blank
+
+
 def prepare_images(post, folder, work):
-    """줄마다 세로 꽉 찬 그림 파일. list.items[].center(선택, 0~1)로 가로 기준을 손으로 정할 수 있다.
-    반환: [(경로, 중심, 배율)]."""
+    """줄마다 세로 꽉 찬 그림 파일과 보고용 정보.
+    list.align true(조명·그림체·고급 사진처럼 같은 대상에 한 가지만 바꾼 결과 비교 목록): 대상 위치·크기를 모든 장에서 같게.
+    false(카메라 용어처럼 구도 자체가 결과인 목록): 장마다 대상 가로 중심만 맞춰 자른다 (list.items[].center로 손으로 정할 수 있다).
+    반환: [{"path", "cx", "scale", "how", "blank"}]."""
     L = post.get("list") or {}
+    rows = rows_of(post)
     centers = ([L["base"].get("center")] if L.get("base") else []) + [it.get("center") for it in L.get("items") or []]
+    paths = [Path(folder) / r["src"] for r in rows]
     out = []
-    for i, (row, c) in enumerate(zip(rows_of(post), centers)):
+    if L.get("align"):
+        from PIL import Image
+        ref, plans = plan_align(paths, 0)
+        if ref:
+            h0 = Image.open(paths[0]).size[1]
+            base_scale = H / h0 * ALIGN_MARGIN
+            for i, (p, pl) in enumerate(zip(paths, plans)):
+                dst = work / f"img{i:02d}.jpg"
+                s, blank = fill_aligned(p, dst, pl["use"], ref, base_scale)
+                out.append({"path": dst, "cx": pl["use"][0], "scale": s, "how": pl["how"], "blank": blank,
+                            "use": pl["use"], "ref": ref, "score": pl["score"]})
+            return out
+    for i, (p, c) in enumerate(zip(paths, centers)):
         dst = work / f"img{i:02d}.jpg"
-        cx, scale = fill_frame(Path(folder) / row["src"], dst, c)
-        out.append((dst, cx, scale))
+        cx, scale = fill_frame(p, dst, c)
+        out.append({"path": dst, "cx": cx, "scale": scale, "how": "가로 중심만", "blank": False})
     return out
 
 
@@ -209,7 +387,7 @@ def page_html(post, imgs, cfg):
     ko_big = mode == "ko"
     cls = {"ko": "big-ko", "both": ""}.get(mode, "en-only")
     js_rows = json.dumps([{"num": r["num"], "name": r["name"], "en": (r["en"] or "").upper(), "img": p.resolve().as_uri()}
-                          for r, (p, _, _) in zip(rows, imgs)], ensure_ascii=False)
+                          for r, p in zip(rows, [x["path"] for x in imgs])], ensure_ascii=False)
     from banner import banner_text, banner_height
     bt = banner_text(post)
     label_top = SAFE_TOP + (banner_height(bt) + 16 if bt else 15)   # 이름 띠: '자료' 안내 띠 바로 아래
@@ -492,8 +670,9 @@ def make_list_reel(post, folder, cfg):
         shutil.rmtree(work)
     work.mkdir()
     imgs = prepare_images(post, folder, work)
-    for (p_, cx, sc), row in zip(imgs, rows_of(post)):
-        print(f"  그림 {row['num']}: 가로 중심 {cx:.2f}, 확대 {sc:.2f}배")
+    for im, row in zip(imgs, rows_of(post)):
+        warn = (" ← 확대가 커서 화질 확인" if im["scale"] > MAX_SCALE else "") + (" ← 가장자리 빈칸" if im["blank"] else "")
+        print(f"  그림 {row['num']}: {im['how']}, 중심 {im['cx']:.3f}, 확대 {im['scale']:.2f}배{warn}")
     shots, problems, tl = asyncio.run(shoot_states(post, imgs, cfg, work))
     if problems:
         shutil.rmtree(work)
