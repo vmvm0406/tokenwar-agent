@@ -1307,7 +1307,30 @@
    "why": "개발자·기업 쪽 기능",
    "tries": 0,
    "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMivgFBVV95cUxQVlducFY3ZzRXY3A5UnJ4dkhnWnpudXB4dVFnY0xEczczYmFMaTFmRUR4REQwRGNCbV9jQnkzLVB6aHpRVFpSYm1WUHF6LW90TkhENFEzMF9vN1ZiV1hFT180aUdDaWhfTzdHVWI2ZVpVaGxpeU9uRE9FNEQwajdLZ2g5MlJIY1pQZDdROVlBS3ZwcjBkd0VFV1RLQWdnRjc1MTZLY1hmVTB4U19DdWNFalNoOXR6Y2h5SnIzNXpB?oc=5": {
+   "source": "news",
+   "company": "엔비디아",
+   "entities": [
+    "엔비디아"
+   ],
+   "tok": [
+    "mind",
+    "not",
+    "potential",
+    "president",
+    "return",
+    "trump",
+    "would"
+   ],
+   "title": "[업계 속보: 주요 매체 2곳(CNBC, Washington Post) · 인사] President Trump on Jensen Huang's potential return as CEO: 'I would not mind that'",
+   "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxQVlducFY3ZzRXY3A5UnJ4dkhnWnpudXB4dVFnY0xEczczYmFMaTFmRUR4REQwRGNCbV9jQnkzLVB6aHpRVFpSYm1WUHF6LW90TkhENFEzMF9vN1ZiV1hFT180aUdDaWhfTzdHVWI2ZVpVaGxpeU9uRE9FNEQwajdLZ2g5MlJIY1pQZDdROVlBS3ZwcjBkd0VFV1RLQWdnRjc1MTZLY1hmVTB4U19DdWNFalNoOXR6Y2h5SnIzNXpB?oc=5",
+   "first_seen": "2026-11-17T01:04:21+09:00",
+   "why": "48시간 안에 같은 회사·인물 게시물 있음: 2026-11-17-video-amodei-chips-north-korea (엔비디아)",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
   }
  },
- "updated": "2026-11-17T00:49:20+09:00"
+ "updated": "2026-11-17T01:04:21+09:00"
 }
