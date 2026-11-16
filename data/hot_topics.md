@@ -1,4 +1,4 @@
-# 잘 터진 주제 (2026-11-16 21:23 기준)
+# 잘 터진 주제 (2026-11-16 21:26 기준)
 
 주제를 고를 때 이 표의 위쪽 주제와 **같거나 비슷한 것**을 먼저 고른다 (STYLE_GUIDE 3장). PR 본문에 "참고한 잘 터진 주제: …" 한 줄을 적는다.
 
@@ -46,7 +46,7 @@
 - 22.1x 카드 @ai.trend.kr: [핸드폰 배경화면을 바꿨더니, 하루에도 몇 번씩 꺼내 보게 됐어요.🐾](https://www.instagram.com/p/DcdMcZDjzBL/)
 - 11.4x 릴스 @ai_dori_: [클로드 Sonnet 5 모델 출시! 힉스필드 MCP ai 연결해서 손그림으로 목업포스터 만드는 법😉 ( 제작지원 higgsfield.ai )](https://www.instagram.com/reel/Dah7Vb6zCtT/)
 
-### 미중 경쟁·반도체·데이터센터 — 순위 점수 18.3, 릴스 34·카드 8, 배수 중간값 1.28x
+### 미중 경쟁·반도체·데이터센터 — 순위 점수 18.4, 릴스 34·카드 8, 배수 중간값 1.28x
 - 488.9x 릴스 @ai.talk.kr: [“중국이 AI로 미국을 이길 수 있을까요?”](https://www.instagram.com/reel/DbwhvfvvknP/)
 - 19.9x 릴스 @bizucafe: [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/)
 - 10.3x 릴스 @ai.talk.kr: [“챗GPT에 질문할 때마다 물이 사용된다는 사실, 알고 계셨나요?”](https://www.instagram.com/reel/DcCmtLip1ZU/)
@@ -105,7 +105,7 @@
 
 - 144.3x 릴스 @soheejeon_: 이 입체적인 서양놈들아 좋겠다
 - 124.0x 릴스 @prompt_what: 황궁에서 벌어지는 맞불륜, 전개는 한국 막장 드라마입니다.
-- 81.7x 릴스 @yangyum.zip: 타이핑하면 한 코씩 채워지는 타이포 웹! 팔로우하고 직접 해보세요!
+- 81.8x 릴스 @yangyum.zip: 타이핑하면 한 코씩 채워지는 타이포 웹! 팔로우하고 직접 해보세요!
 - 74.9x 릴스 @soheejeon_: 내가 공황올때 들으려고 만든 거
 - 49.2x 카드 @bizucafe: 광고(廣告). 한문으로 널리 알린다는 뜻이다.. 많은 사람들에게 무언가 정보를 알리는 것..
 - 41.9x 릴스 @soheejeon_: (캡션 없음)

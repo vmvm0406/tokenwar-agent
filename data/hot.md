@@ -1,4 +1,4 @@
-# 지금 관심 주제 (2026-11-16 21:23 기준)
+# 지금 관심 주제 (2026-11-16 21:26 기준)
 
 주제를 고를 때 가장 먼저 본다 (STYLE_GUIDE 3장, 6-1장 '지금 관심도'). 여러 곳에 동시에 뜬 주제가 가장 뜨겁다.
 
@@ -17,7 +17,7 @@
 - [속보 기준] 앤트로픽 · 매체 8곳(주요 2: Financial Times, WSJ) · 상장·투자 — Anthropic’s IPO is the next big test for AI (https://news.google.com/rss/articles/CBMihAFBVV95cUxOelhLb2QtNy1faTdqOEwwQVNzSk5IX25mc0VOQjQzVTdPc3pZdUMyOE9EWkxVd1pJX0huTDZMMTBNR0ZLV0E2WHVkb1Vuam1vMjJ3TUptVGloS2VhWFlmYW1ITGJvVjJpNzNCdkYyQ3hTdXIzUlhaUElJN01UQzVWc2NfSjE?oc=5)
 
 ## 구글 트렌드 한국 급상승 (AI·테크만)
-- 간호 (500+) — 작은 산부인과에서 AI 첨단병원까지, 70년 역사의 병원이 미래 의료를 여는 법 / 을지국제간호학술대회 서울서 개최…간호 실무 미래 방향 논의
+- 간호 (1000+) — 작은 산부인과에서 AI 첨단병원까지, 70년 역사의 병원이 미래 의료를 여는 법 / 을지국제간호학술대회 서울서 개최…간호 실무 미래 방향 논의
 
 ## 유튜브 이번 주 AI 영상 (시간당 조회수 순)
 (수집 못 함: yt-dlp 없음 (회원님 컴퓨터에서만 수집))
