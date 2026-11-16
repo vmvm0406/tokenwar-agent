@@ -973,7 +973,41 @@ def awkward_titles(post):
 
 
 DEV_WORDS_RE = re.compile(r"그림 파일|이미지 파일|코드로 만듭니다|코드로 만들었|소스 코드|에셋")
-OUR_STORY_RE = re.compile(r"저희 컴퓨터|저희가 직접 돌려|직접 돌려 봤|직접 실행해 봤")
+# 제작 이야기 표현 (STYLE_GUIDE 4-1, 운영자 결정 2026-11-16 "굳이 싶은 표현이고 AI 티"): 자막·띠·끝 화면·캡션·카드 장 글에 쓰지 않는다
+OUR_STORY_RE = re.compile(r"저희 컴퓨터|직접 (?:돌려|해|넣어|실행해|써|만들어|사용해) ?봤|(?:돌려|실행해|넣어) ?봤")
+WE_STORY_RE = re.compile(r"저희(?:가|는|도|\s)")  # '저희가 ~했다'. 번역 자막(speech)에서는 인물의 말이라 검사하지 않음
+
+
+def our_story(post):
+    """제작 이야기 표현 경고. 프롬프트 상자(kind: prompt의 prompts)와 자료 페이지(dm.page)는 검사하지 않는다."""
+    w = []
+
+    def hit(t, speech=False):
+        t = str(t or "").replace("\n", " ")
+        if speech:  # 인물 발언 번역은 그 사람의 말
+            return None
+        m = OUR_STORY_RE.search(t) or WE_STORY_RE.search(t)
+        return m.group(0).strip() if m else None
+
+    for i, s in enumerate(post.get("subtitles") or [], 1):
+        m = hit(s.get("text"), bool(s.get("speech", post.get("speech", False))))
+        if m:
+            w.append(f"{i}번 자막에 제작 이야기 '{m}' → 빼고 결과·장면 묘사로 (STYLE_GUIDE 4-1)")
+    for i, s in enumerate(post.get("slides") or [], 1):
+        texts = [s.get(k) for k in ("heading", "title", "text", "body", "sub")]
+        texts += [x for it in (s.get("items") or []) if isinstance(it, dict) for x in (it.get("title"), it.get("text"))]
+        for t in texts:
+            m = hit(t)
+            if m:
+                w.append(f"{i}번째 장 글에 제작 이야기 '{m}' → 빼고 결과로 (STYLE_GUIDE 4-1)")
+                break
+    dm = post.get("dm") or {}
+    for where, t in (("캡션", post.get("caption")), ("끝 화면(dm.cta)", dm.get("cta")),
+                     ("안내 띠(dm.banner)", dm.get("banner")), ("제목", post.get("title"))):
+        m = hit(t)
+        if m:
+            w.append(f"{where}에 제작 이야기 '{m}' → 빼고 결과로 (STYLE_GUIDE 4-1)")
+    return w
 
 
 def check_length_field(post):
@@ -998,9 +1032,6 @@ def writing_rules(post):
         m = DEV_WORDS_RE.search(t)
         if m:
             w.append(f"{i}번 자막에 개발자 시점 말 '{m.group(0)}' → 일반인이 바로 아는 말로 (STYLE_GUIDE 4장)")
-        m = OUR_STORY_RE.search(t)
-        if m:
-            w.append(f"{i}번 자막에 제작 과정 이야기 '{m.group(0)}' → 자막에서 빼고 자료 페이지에만 (STYLE_GUIDE 4장)")
     CONT_RE = re.compile(r"(하고|되고|했고|있고|고|는데|했는데|인데|해서)$")
     for i, s in enumerate(subs, 1):
         t = str(s.get("text", "")).replace("\n", " ").strip()
@@ -1046,7 +1077,7 @@ def writing_rules(post):
 def check_post(post):
     """(errors, warnings) 반환."""
     e, w = _check_post(post)
-    w = w + writing_rules(post)
+    w = w + writing_rules(post) + our_story(post)
     e = e + check_length_field(post)
     e_t, w_t = check_threads(post)
     return e + check_license(post) + e_t, w + awkward_titles(post) + w_t
