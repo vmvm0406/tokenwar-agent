@@ -7,11 +7,11 @@
   "publish_at": "2026-11-17T18:13:00+09:00",
   "rights": "license",
   "credit": "Matt Shumer",
-  "rights_note": "게임 코드·prompt.md: mshumer/Claude-of-Duty, MIT License (Copyright (c) 2026 mshumer). 플레이 화면은 그 코드를 토큰전쟁이 실행해 녹화(저장소의 tools/demo.mjs 봇 플레이, 소리는 tools/demo-audio.mjs가 코드로 합성). 녹화 두 구간(12초, 5초)을 0.3초 디졸브로 이어 붙임(1.6:1로 가운데를 잘라 확대). X 원본 영상 인용은 뺐음(2026-11-17 운영자 결정). 배경 음악은 agent/music_gen.py로 만든 코드 음악(외부 음원 없음).",
+  "rights_note": "게임 코드·prompt.md: mshumer/Claude-of-Duty, MIT License (Copyright (c) 2026 mshumer). 플레이 화면은 그 코드를 토큰전쟁이 실행해 녹화(저장소의 tools/demo.mjs 봇 플레이, 소리는 tools/demo-audio.mjs가 코드로 합성). 녹화 세 구간(12초, 5초, 2.6초)을 0.3초 디졸브로 이어 붙임(1.6:1로 가운데를 잘라 확대). X 원본 영상 인용은 뺐음(2026-11-17 운영자 결정). 배경 음악은 agent/music_gen.py로 만든 코드 음악(외부 음원 없음).",
   "video": {
     "src": "clips/source.mp4",
     "start": 0,
-    "end": 16.7,
+    "end": 19.0,
     "avoid_edge_check": false,
     "avoid_burned": false,
     "sub_motion": "rise",
@@ -49,6 +49,12 @@
       "end": 16.6,
       "text": "세 문단이면\n누구나 만들 수 있습니다",
       "highlight": "누구나"
+    },
+    {
+      "start": 16.7,
+      "end": 18.9,
+      "text": "프롬프트가\n궁금하신가요?",
+      "highlight": "프롬프트"
     }
   ],
   "slides": [
@@ -399,6 +405,6 @@
     "generate": true,
     "mixed_into": "clips/source.mp4",
     "credit": "토큰전쟁 코드 음악 (agent/music_gen.py make_light_music, 외부 음원 없음)",
-    "note": "106.5 BPM 밝은 장조 비트(Cmaj7-G-Am7-Fmaj7). 게임 소리: '띠링' 노치(786·1180·1572·1766·2099·2401·3198·4102·4802Hz), 5kHz -4.5dB·2.75kHz -3.5dB(날카로운 부분만), 약한 컴프레서(어택 30ms, 1.5:1)·리미터(-6dBFS)로 총소리 어택을 살림. 게임 소리와 음악은 같은 크기(통합 LUFS)로 섞어 총소리 순간이 직전 음악보다 중앙값 +5.7dB 솟음 (운영자 2026-11-17 '거의 안들리는데 총소리')"
+    "note": "101.5 BPM(장면 이음새 11.85·16.55초가 박 위) 밝은 장조 비트(Cmaj7-G-Am7-Fmaj7). 게임 소리: '띠링' 노치(786·1180·1572·1766·2099·2401·3198·4102·4802Hz), 5kHz -4.5dB·2.75kHz -3.5dB(날카로운 부분만), 약한 컴프레서(어택 30ms, 1.5:1)·리미터(-6dBFS)로 총소리 어택을 살림. 게임 소리와 음악은 같은 크기(통합 LUFS)로 섞어 총소리 순간이 직전 음악보다 중앙값 +5.7dB 솟음 (운영자 2026-11-17 '거의 안들리는데 총소리')"
   }
 }
