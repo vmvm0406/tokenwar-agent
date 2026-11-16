@@ -1,4 +1,6 @@
-# 인스타 반응 분석 (2026-11-16 15:30 기준)
+# 인스타 반응 분석 (2026-11-16 15:36 기준)
+
+**목표 진행** (2026-11-16): 현재 0명 / 목표 10,000명 (2026-12-16까지), 남은 30일, 필요한 하루 증가 333명, 최근 7일 평균 기록 2일 미만
 
 에이전트는 주제를 고를 때 이 파일을 먼저 읽는다 (STYLE_GUIDE 3장, 6-1장 '인스타 반응').
 배수 = 그 계정의 최근 60일 같은 유형(릴스/피드) 중간값 대비. 2배 이상이면 '먹힌 주제'.
@@ -10,7 +12,7 @@
   - 2,776조회 6.4x: [2027년, AI 거품은 붕괴한다?](https://www.instagram.com/reel/Dd0-1xPBNso/)
 - FEED 중간값 6반응, 게시물 1개
 
-## @ai.trend.kr (팔로워 273199)
+## @ai.trend.kr (팔로워 273203)
 - REELS 중간값 90,538조회, 게시물 35개
   - 2,866,014조회 31.7x: [눈 뭉치 던진 범인이 나라고요? ❄️](https://www.instagram.com/reel/DetX442xkFz/)
   - 2,071,787조회 22.9x: [포장해 달라던 선물이 내 거였다고요? 🎁](https://www.instagram.com/reel/DeWZecova75/)
@@ -61,7 +63,7 @@
 | 8.4x | @prompt_what | REELS | 10-18 | 293,408 | [캡처 한 장으로 끝나는 챗GPT 업무 코드 4개입니다 📎](https://www.instagram.com/reel/DenpnlJyf3l/) |
 | 7.8x | @bizucafe | REELS | 11-01 | 177,955 | [아이들 미국학교 보내는 이유 (유튜브 창업자 Steve Chen)](https://www.instagram.com/reel/DfL0yn5DYXf/) |
 | 7.6x | @bizucafe | REELS | 10-26 | 175,490 | [AI 미치게 하는 법 (일론 머스크)](https://www.instagram.com/reel/De71wGlinFC/) |
-| 7.5x | @ai.trend.kr | REELS | 11-04 | 678,461 | [AI로 오늘도 감동을 받네요 🥹](https://www.instagram.com/reel/DfUlNHxPiTT/) |
+| 7.5x | @ai.trend.kr | REELS | 11-04 | 678,492 | [AI로 오늘도 감동을 받네요 🥹](https://www.instagram.com/reel/DfUlNHxPiTT/) |
 | 7.4x | @bizucafe | REELS | 11-14 | 169,181 | [대만 뺏기면 답이 없다 (일론 머스크)](https://www.instagram.com/reel/DfuE50ME_qw/) |
 | 7.1x | @ai.trend.kr | FEED | 10-28 | 10,906 | [사진 한 장으로 다섯 시대를 살아 봤어요 📷](https://www.instagram.com/p/DfB9iInE-54/) |
 | 7.0x | @bizucafe | REELS | 10-23 | 159,633 | [우린 이미 너무 늦었다 (유발 하라리)](https://www.instagram.com/reel/De1azrfipMC/) |
