@@ -651,6 +651,27 @@ def check_dm(post):
             warnings.append(f"dm.banner에 기호(→)를 쓰지 않는다. '어디에 무엇을 쓰면 무엇을 어떻게 받는지' 완전한 문장으로: '{b}' (STYLE_GUIDE 7-1)")
         if not re.search(r"(보내|드려|드립니다|드릴|받을 수|받아 가)", b):
             warnings.append(f"dm.banner가 문장이 아님: 받는 방법(예: 'DM으로 보내 드려요')까지 쓴다: '{b}' (STYLE_GUIDE 7-1)")
+    # 자료 페이지·DM 문구에 날짜·제작 과정·테스트 환경을 쓰지 않는다 (운영자 지적 2026-11-16, STYLE_GUIDE 7-1).
+    # 프롬프트·명령 상자(prompt, prompts, en, template)와 주소는 보지 않는다. dm.py가 페이지에서는 그런 문장을 빼지만 고쳐 쓰는 게 맞다.
+    import sys as _sys
+    if str(Path(__file__).resolve().parent) not in _sys.path:
+        _sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from dm import process_phrases
+
+    def _texts(n, path):
+        if isinstance(n, dict):
+            for k, v in n.items():
+                if k not in ("prompt", "prompts", "en", "template", "url", "src", "keyword"):
+                    yield from _texts(v, f"{path}.{k}")
+        elif isinstance(n, list):
+            for i, v in enumerate(n):
+                yield from _texts(v, f"{path}[{i}]")
+        elif isinstance(n, str):
+            yield path, n
+    for path, t in _texts(d, "dm"):
+        hits = process_phrases(t)
+        if hits:
+            warnings.append(f"{path}에 날짜·제작 과정·테스트 환경 표현 {sorted(set(hits))}: 자료 페이지·DM에는 따라 할 문장, 준비물, 단계, 결과 예시만 (STYLE_GUIDE 7-1)")
     for t in [msg, d.get("follow_text", "")] + [x.get("note", "") for x in pg.get("extra") or []] + [pg.get("result", ""), pg.get("intro", "")]:
         if t:
             e_t, _ = ai_tone(t, "DM 자료")

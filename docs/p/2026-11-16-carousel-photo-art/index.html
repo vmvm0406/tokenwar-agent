@@ -2,7 +2,7 @@
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>사진을 그림으로 바꾸는 앱, 클로드가 직접 만들어 줍니다 · 토큰전쟁</title>
-<meta name="description" content="AI에게 그림을 한 장씩 그려 달라고 하는 대신, 사진을 그림으로 바꿔 주는 앱을 만들어 달라고 했습니다. 11월 16일에 클로드에 직접 넣어 본 프롬프트와 결과입니다.">
+<meta name="description" content="AI에게 그림을 한 장씩 그려 달라고 하는 대신, 사진을 그림으로 바꿔 주는 앱을 만들어 달라고 하는 프롬프트와 결과입니다.">
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
@@ -32,16 +32,32 @@ p{margin:6px 0;color:#CFD6D2}
 ul{padding-left:20px;color:#CFD6D2}
 .src{color:var(--mu);font-size:14px;border-top:2px solid #2A3530;padding-top:16px;margin-top:32px}
 .src a{color:var(--mu)}
+.kv{list-style:none;padding:0;margin:6px 0}
+.kv li{margin:4px 0}
+.kv b{color:var(--fg);margin-right:6px}
+.notice{border-left:4px solid var(--ac);padding:4px 0 4px 14px;margin:0 0 28px}
+.notice ul{margin:6px 0}
+.notice a{color:var(--ac)}
+.grp{margin:18px 0 0}
+.grp h4{margin:0 0 2px;font-size:17px;font-weight:700;color:var(--ac)}
+.grp .gs{font-size:13px;color:var(--mu);margin:2px 0 0}
+.grp .gs a{color:var(--mu)}
 .foot{margin-top:28px;font-weight:700}
+.step.li{padding:14px 0}
+.step.li .lb{color:var(--fg);font-size:18px}
+.step.li .ex{display:block;width:100%;max-width:360px;margin:10px 0 0}
+.step.li .pr pre{padding:12px 96px 12px 16px;font-size:17px}
 .foot a{color:var(--ac)}
 </style></head>
 <body><main>
 <div class="brand">TOKEN WAR</div>
 <h1>사진을 그림으로 바꾸는 앱,<br>클로드가 <span class="hl">직접 만들어</span> 줍니다</h1>
-<p class="intro">AI에게 그림을 한 장씩 그려 달라고 하는 대신, 사진을 그림으로 바꿔 주는 앱을 만들어 달라고 했습니다. 11월 16일에 클로드에 직접 넣어 본 프롬프트와 결과입니다.</p>
-<section class="step"><span class="k">01</span><span class="lb">프롬프트</span><h2>그려 달라 말고 ‘앱을 만들어 줘’라고 적습니다</h2><div class="pr"><pre>사진을 올리면 그림으로 바꿔 주는 웹 앱을 HTML 파일 하나로 만들어 줘. 스타일은 팝아트 망점, 연필 스케치, 모자이크 세 가지. 사진은 서버로 보내지 말고 브라우저 안에서만 처리하고, 결과를 PNG로 저장하는 버튼도 넣어 줘.</pre><button type="button" onclick="cp(this)">복사</button></div><p>그림을 한 장씩 그려 받는 대신 바꿔 주는 도구를 받으면 횟수 걱정 없이 계속 씁니다.</p></section><section class="step"><span class="k">02</span><span class="lb">앱 열기</span><h2>받은 코드를 저장하면 앱이 열립니다</h2><p>답으로 온 코드를 .html 파일로 저장해 브라우저로 열었습니다. 스타일은 왼쪽에서 고릅니다.</p></section><section class="step"><span class="k">03</span><span class="lb">모자이크</span><h2>모자이크는 칸마다 평균 색으로 칠합니다</h2><p>타일 크기를 막대로 고르고, 타일 사이 줄눈도 켜고 끌 수 있습니다.</p></section><section class="step"><span class="k">04</span><span class="lb">주의할 점</span><h2>팝아트는 색이 얼룩덜룩하게 뭉쳤습니다</h2><p>얼굴 쪽 망점은 살았지만, 꽃밭 배경은 보라색과 검은색 덩어리로 뭉개졌습니다.</p></section>
-<div class="rule"></div><h3>직접 해 본 결과</h3><p>HTML 파일 하나짜리 사진 변환기가 나왔습니다. 파일로 저장해 브라우저로 열고 사진을 끌어다 놓으면 연필 스케치, 모자이크, 팝아트 망점 세 가지로 바뀌고 PNG로 저장됩니다. 실행해 보니 외부로 보내는 요청은 없었습니다. 연필 스케치는 강아지 털 결까지 잘 살았지만, 팝아트는 꽃밭 배경이 보라색과 검은색 덩어리로 뭉개졌습니다.</p><div class="rule"></div><h3>주의할 점</h3><ul><li>사진이 밖으로 나가지 않습니다: 만든 앱을 돌려 보니 외부로 보내는 요청이 하나도 없었습니다</li><li>큰 사진은 줄여서 바꿉니다: 긴 변을 1,800픽셀로 줄여 처리하도록 짜여 있습니다</li><li>아이폰 HEIC 사진은 바꿔서 올립니다: 열리지 않으면 JPG나 PNG로 바꿔 올리라는 안내가 뜹니다</li></ul>
-<div class="src">출처<ul><li><a href="https://claude.ai" rel="noopener">클로드에 프롬프트를 넣고 받은 앱 직접 실행 (11월 16일)</a></li><li><a href="https://commons.wikimedia.org/wiki/File:Smiling_girl.jpg" rel="noopener">사진: Eric McGregor, Smiling girl, CC BY 2.0, 위키미디어 공용</a></li><li><a href="https://commons.wikimedia.org/wiki/File:Cute_dog.jpg" rel="noopener">사진: leisergu, Cute dog, CC BY 2.0, 위키미디어 공용</a></li></ul>2026.11.16 기준. 결과는 직접 해 본 것이고, AI 답은 그때그때 달라질 수 있습니다.</div>
+<p class="intro">AI에게 그림을 한 장씩 그려 달라고 하는 대신, 사진을 그림으로 바꿔 주는 앱을 만들어 달라고 하는 프롬프트와 결과입니다.</p>
+
+<div class="rule"></div><h3>준비물</h3><ul><li>아이폰 HEIC 사진은 JPG나 PNG로 바꿔 올립니다.</li></ul>
+<section class="step"><span class="k">01</span><span class="lb">프롬프트</span><h2>그려 달라 말고 ‘앱을 만들어 줘’라고 적습니다</h2><div class="pr"><pre>사진을 올리면 그림으로 바꿔 주는 웹 앱을 HTML 파일 하나로 만들어 줘. 스타일은 팝아트 망점, 연필 스케치, 모자이크 세 가지. 사진은 서버로 보내지 말고 브라우저 안에서만 처리하고, 결과를 PNG로 저장하는 버튼도 넣어 줘.</pre><button type="button" onclick="cp(this)">복사</button></div><p>그림을 한 장씩 그려 받는 대신 바꿔 주는 도구를 받으면 횟수 걱정 없이 계속 씁니다.</p></section><section class="step"><span class="k">02</span><span class="lb">앱 열기</span><h2>받은 코드를 저장하면 앱이 열립니다</h2><p>답으로 온 코드를 .html 파일로 저장해 브라우저로 열었습니다. 스타일은 왼쪽에서 고릅니다.</p></section><section class="step"><span class="k">03</span><span class="lb">모자이크</span><h2>모자이크는 칸마다 평균 색으로 칠합니다</h2><p>타일 크기를 막대로 고르고, 타일 사이 줄눈도 켜고 끌 수 있습니다.</p></section>
+<div class="rule"></div><h3>결과 예시</h3><p>HTML 파일 하나짜리 사진 변환기가 나옵니다. 파일로 저장해 브라우저로 열고 사진을 끌어다 놓으면 연필 스케치, 모자이크, 팝아트 망점 세 가지로 바뀌고 PNG로 저장됩니다.</p>
+<div class="src">출처<ul><li><a href="https://commons.wikimedia.org/wiki/File:Smiling_girl.jpg" rel="noopener">사진: Eric McGregor, Smiling girl, CC BY 2.0, 위키미디어 공용</a></li><li><a href="https://commons.wikimedia.org/wiki/File:Cute_dog.jpg" rel="noopener">사진: leisergu, Cute dog, CC BY 2.0, 위키미디어 공용</a></li></ul></div>
 <p class="foot">매일 AI 소식은 <a href="https://www.instagram.com/tokenwar_ai/">@tokenwar_ai</a></p>
 </main>
 <script>

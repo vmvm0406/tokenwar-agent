@@ -36,6 +36,37 @@ DEFAULTS = {
 }
 REPLIES_MAX = 4
 
+# 자료 페이지에 쓰지 않는 말 (운영자 지적 2026-11-16, STYLE_GUIDE 7-1): 날짜·제작 과정·테스트 환경.
+# 페이지에는 따라 할 문장, 준비물, 단계, 결과 예시만. 이런 문장이 post.json에 남아 있어도 페이지에서는 문장째 뺀다
+# (프롬프트·명령 상자는 건드리지 않는다). checks.py도 같은 표현을 경고한다.
+PROCESS_RE = re.compile(
+    r"\d+\s*월\s*\d+\s*일\s*(?:에|기준|확인|테스트|현재)"
+    r"|직접\s*(?:넣어|돌려|실행해|만들어|해|써|플레이해)\s*(?:본|봤|보았)"
+    r"|(?:넣어|돌려|실행해)\s*봤"
+    r"|저희"
+    r"|테스트\s*(?:환경|일자|결과)|테스트(?:했|하지|에서|에\s*사용|한\s*결과)"
+    r"|확인\s*(?:일자|환경)|미확인\s*범위|확인하지\s*않았|해\s*보지\s*않았"
+    r"|걸렸습니다|작성\s*시점")
+# 출처 목록에서 빼는 우리 제작 기록, 이름에서 지우는 확인 날짜
+OWN_SRC_RE = re.compile(r"직접\s*(?:실행|사용|제작)|로\s*실행\s*\(|제작\s*기록")
+OWN_DATE_RE = re.compile(r"\s*\(\d+\s*월\s*\d+\s*일\s*확인\)")
+# 예전 항목형 결과([{"k": "테스트 일자:", "v": ...}])에서 통째로 빼는 항목 이름
+META_KEY_RE = re.compile(r"일자|날짜|환경|미확인|범위|버전|실행|등록|제작")
+
+
+def process_phrases(text):
+    """글 안의 날짜·제작 과정·테스트 환경 표현 목록 (checks.py 경고용)."""
+    return [m.group(0) for m in PROCESS_RE.finditer(str(text or ""))]
+
+
+def clean(text):
+    """자료 페이지 글에서 날짜·제작 과정·테스트 환경이 든 문장을 뺀다. 문장은 . ! ? 뒤에서 나눈다."""
+    t = str(text or "").strip()
+    if not t:
+        return ""
+    parts = re.split(r"(?<=[.!?])\s+", t)
+    return " ".join(x for x in parts if x and not PROCESS_RE.search(x)).strip()
+
 
 def esc(s):
     return html.escape(str(s or ""))
@@ -113,14 +144,6 @@ def page_steps(post):
         at = next((i for i, st in enumerate(steps) if st.get("num") == blk.get("before")), 0)
         steps = steps[:at] + extra + steps[at:]
     return steps
-
-
-def checklist_from_slides(post):
-    items = []
-    for s in post.get("slides") or []:
-        if s.get("kind") == "steps":
-            items += [f'{it["title"]}: {it.get("text", "")}'.rstrip(": ") for it in s["items"]]
-    return items
 
 
 # ---------- 1. 도구에 붙여 넣을 설정 메모 ----------
@@ -232,11 +255,11 @@ ul{padding-left:20px;color:#CFD6D2}
 """
 
 
+# 섹션 이름. 날짜·테스트 환경·제작 과정 섹션은 두지 않는다 (운영자 지적 2026-11-16):
+# 결과는 '결과 예시', 꼭 필요한 조건(운영체제·요금제·프로그램)은 '준비물'.
 HEADINGS = {
-    "casual": {"result": "직접 해 본 결과", "extra": "더 써 볼 문장", "caution": "주의할 점",
-                "note": "결과는 직접 해 본 것이고, AI 답은 그때그때 달라질 수 있습니다."},
-    "default": {"result": "테스트 환경 및 결과", "extra": "추가 명령어", "caution": "유의 사항",
-               "note": "테스트 결과는 작성 시점 기준이며, AI의 응답은 실행할 때마다 달라질 수 있습니다."},
+    "casual": {"result": "결과 예시", "extra": "더 써 볼 문장", "prep": "준비물", "caution": "참고"},
+    "default": {"result": "결과 예시", "extra": "추가 명령어", "prep": "준비물", "caution": "참고"},
 }
 HEADINGS["formal"] = HEADINGS["default"]  # 예전 dm.page.style = "formal" 게시물 호환
 
@@ -250,6 +273,7 @@ def page_html(post, folder=None):
         h = esc(cover["highlight"])
         title = title.replace(h, f'<span class="hl">{h}</span>', 1)
     # 섹션 이름: 기본은 회사 안내서 말투(운영자 결정 2026-11-16), 예전 말투는 dm.page.style = "casual"
+    # 글(소개·설명·결과·준비물)은 clean()으로 날짜·제작 과정 문장을 뺀다. 프롬프트 상자는 그대로.
     H = HEADINGS.get(pg.get("style") or "default", HEADINGS["default"])
     css = PAGE_CSS
     for k in ("ACCENT", "MUTED", "TEXT", "BG"):
@@ -260,7 +284,7 @@ def page_html(post, folder=None):
                 '<button type="button" onclick="cp(this)">복사</button></div>')
 
     def group(g):
-        txt = f'<p>{esc(g["text"])}</p>' if g.get("text") else ""
+        txt = f'<p>{esc(clean(g["text"]))}</p>' if clean(g.get("text")) else ""
         srcs = g.get("src") or []
         srcs = [x for x in ([srcs] if isinstance(srcs, dict) else srcs) if x.get("url")]
         gs = ('<p class="gs">출처: ' + " · ".join(
@@ -271,9 +295,12 @@ def page_html(post, folder=None):
 
     parts = []
     for i, st in enumerate(page_steps(post), 1):
+        # 카드 장 제목이 제작 이야기("직접 돌려 봤습니다")면 페이지에서는 단계 이름(label)을 제목으로 쓴다
+        if PROCESS_RE.search(st.get("title", "")) and st.get("label"):
+            st = dict(st, title=st["label"], label="")
         lb = f'<span class="lb">{esc(st["label"])}</span>' if st.get("label") else ""
         boxes = "".join(prompt_box(p) for p in st.get("prompts") or [])
-        text = "".join(f'<p>{esc(st[k])}</p>' for k in ("text", "more") if st.get(k))
+        text = "".join(f'<p>{esc(clean(st[k]))}</p>' for k in ("text", "more") if clean(st.get(k)))
         groups = "".join(group(g) for g in st.get("groups") or [])
         parts.append(f'<section class="step"><span class="k">{i:02d}</span>{lb}<h2>{esc(st["title"])}</h2>'
                      f'{boxes}{text}{groups}</section>')
@@ -283,7 +310,7 @@ def page_html(post, folder=None):
     if L.get("items"):
         tpl = pg.get("template")
         tpl_html = (f'<section class="step"><h2>{esc(pg.get("template_title") or "프롬프트에 넣는 자리")}</h2>'
-                    f'{prompt_box(tpl)}{"<p>" + esc(pg["template_note"]) + "</p>" if pg.get("template_note") else ""}</section>'
+                    f'{prompt_box(tpl)}{"<p>" + esc(clean(pg["template_note"])) + "</p>" if clean(pg.get("template_note")) else ""}</section>'
                     if tpl else "")
         def term(i, it):
             # 번호·한국어 이름·한 줄 설명(사실만)·영어 용어(복사 상자)·직접 만든 예시 그림(있을 때만)
@@ -291,47 +318,63 @@ def page_html(post, folder=None):
             if folder and it.get("src") and (Path(folder) / it["src"]).exists():
                 img = f'<img class="ex" loading="lazy" alt="{esc(it.get("name", ""))} 예시" src="{esc(it["src"])}">'
             return (f'<section class="step li"><span class="k">{i:02d}</span><span class="lb">{esc(it.get("name", ""))}</span>'
-                    f'{"<p>" + esc(it["desc"]) + "</p>" if it.get("desc") else ""}'
+                    f'{"<p>" + esc(clean(it["desc"])) + "</p>" if clean(it.get("desc")) else ""}'
                     f'{prompt_box(it["en"]) if it.get("en") else ""}{img}'
-                    f'{"<p>" + esc(it["note"]) + "</p>" if it.get("note") else ""}</section>')
+                    f'{"<p>" + esc(clean(it["note"])) + "</p>" if clean(it.get("note")) else ""}</section>')
         n = len(L["items"])
         rows = "".join(term(i, it) for i, it in enumerate(L["items"], 1))
         more = pg.get("more") or []
         more_html = ""
         if more:
             more_html = (f'<div class="rule"></div><h3>{esc(pg.get("more_title") or "추가 용어")}</h3>'
-                         f'{"<p>" + esc(pg["more_intro"]) + "</p>" if pg.get("more_intro") else ""}'
+                         f'{"<p>" + esc(clean(pg["more_intro"])) + "</p>" if clean(pg.get("more_intro")) else ""}'
                          + "".join(term(n + i, it) for i, it in enumerate(more, 1)))
         lst = (f'<div class="rule"></div><h3>{esc(pg.get("list_title") or "전체 목록")}</h3>'
-               f'{"<p>" + esc(pg["list_intro"]) + "</p>" if pg.get("list_intro") else ""}{tpl_html}{rows}{more_html}')
+               f'{"<p>" + esc(clean(pg["list_intro"])) + "</p>" if clean(pg.get("list_intro")) else ""}{tpl_html}{rows}{more_html}')
     extra = ""
     if pg.get("extra"):
         rows = "".join(
             f'<section class="step"><h2>{esc(x.get("title", ""))}</h2>{prompt_box(x["prompt"])}'
-            f'{"<p>" + esc(x["note"]) + "</p>" if x.get("note") else ""}</section>' for x in pg["extra"])
+            f'{"<p>" + esc(clean(x["note"])) + "</p>" if clean(x.get("note")) else ""}</section>' for x in pg["extra"])
         extra = f'<div class="rule"></div><h3>{esc(pg.get("extra_title") or H["extra"])}</h3>{rows}'
+    # 결과 예시: 문장 하나(권장) 또는 예전 항목형 [{"k", "v"}] (테스트 일자·환경·미확인 범위 같은 항목은 뺀다)
     res = pg.get("result")
-    if isinstance(res, list):  # 항목형: [{"k": "테스트 일자", "v": "11월 16일"}, ...]
-        res_html = "<ul class=\"kv\">" + "".join(
-            f'<li><b>{esc(x.get("k", ""))}</b> {esc(x.get("v", ""))}</li>' for x in res) + "</ul>"
+    if isinstance(res, list):
+        kv = [(str(x.get("k", "")).strip().rstrip(":").strip(), clean(x.get("v", ""))) for x in res
+              if not META_KEY_RE.search(str(x.get("k", "")))]
+        kv = [(k, v) for k, v in kv if v]
+        if len(kv) == 1:
+            res_html = f'<p>{esc(kv[0][1])}</p>'
+        else:
+            res_html = ("<ul class=\"kv\">" + "".join(f'<li><b>{esc(k)}</b> {esc(v)}</li>' for k, v in kv) + "</ul>"
+                        if kv else "")
     else:
-        res_html = f'<p>{esc(res)}</p>' if res else ""
-    result = f'<div class="rule"></div><h3>{H["result"]}</h3>{res_html}' if res else ""
-    cautions = list(pg.get("caution") or []) + checklist_from_slides(post)
-    caut = ("<div class=\"rule\"></div><h3>" + H["caution"] + "</h3><ul>" + "".join(f"<li>{esc(c)}</li>" for c in cautions) + "</ul>"
-            if cautions else "")
-    srcs = "".join(f'<li><a href="{esc(s["url"])}" rel="noopener">{esc(s["name"])}</a></li>' for s in post["sources"])
+        res_html = f'<p>{esc(clean(res))}</p>' if clean(res) else ""
+    result = f'<div class="rule"></div><h3>{H["result"]}</h3>{res_html}' if res_html else ""
+    # 준비물(dm.page.prep): 따라 하는 데 꼭 필요한 조건(운영체제·요금제·프로그램·라이선스)만. 흠·주의할 점은 쓰지 않는다.
+    # 예전 dm.page.caution(흠·주의할 점)은 페이지에 싣지 않는다 (운영자 결정 2026-11-16: 흠·주의할 점은 어디에도 넣지 않음).
+    # 필드가 있어도 오류 없이 넘긴다. 꼭 필요한 조건은 prep으로.
+    def bullets(items, head):
+        items = [c for c in (clean(x) for x in items or []) if c]
+        return ("<div class=\"rule\"></div><h3>" + head + "</h3><ul>" + "".join(f"<li>{esc(c)}</li>" for c in items) + "</ul>"
+                if items else "")
+    prep_html = bullets(pg.get("prep"), H["prep"])
+    caut = ""
+    # 출처: 우리가 직접 돌려 본 기록(예: "클로드 코드 직접 사용 (11월 16일)")은 제작 이야기라 빼고, "(11월 16일 확인)"도 뺀다.
+    # 기사·발표의 날짜는 출처 정보라 그대로 둔다.
+    srcs = "".join(f'<li><a href="{esc(s["url"])}" rel="noopener">{esc(OWN_DATE_RE.sub("", s["name"]))}</a></li>'
+                   for s in post["sources"] if not OWN_SRC_RE.search(s.get("name", "")))
     handle = CONFIG["handle"]
-    intro = esc(pg.get("intro") or cover.get("sub", ""))
+    intro = esc(clean(pg.get("intro") or cover.get("sub", "")))
     nt = pg.get("notice") or {}
     notice = ""
     if nt:
         links = "".join(f'<li><a href="{esc(x["url"])}" rel="noopener">{esc(x.get("name") or x["url"])}</a>'
-                        f'{" · " + esc(x["note"]) if x.get("note") else ""}</li>' for x in nt.get("links") or [])
+                        f'{" · " + esc(clean(x["note"])) if clean(x.get("note")) else ""}</li>' for x in nt.get("links") or [])
         notice = (f'<div class="notice">{"<h3>" + esc(nt["title"]) + "</h3>" if nt.get("title") else ""}'
-                  f'{"<p>" + esc(nt["text"]) + "</p>" if nt.get("text") else ""}'
+                  f'{"<p>" + esc(clean(nt["text"])) + "</p>" if clean(nt.get("text")) else ""}'
                   f'{"<ul>" + links + "</ul>" if links else ""}</div>')
-    desc = esc((pg.get("intro") or cover.get("sub", ""))[:120])
+    desc = esc(clean(pg.get("intro") or cover.get("sub", ""))[:120])
     return f"""<!doctype html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -346,9 +389,10 @@ def page_html(post, folder=None):
 <h1>{title}</h1>
 <p class="intro">{intro}</p>
 {notice}
+{prep_html}
 {"".join(parts)}
 {lst}{result}{extra}{caut}
-<div class="src">출처<ul>{srcs}</ul>{esc(post["date"].replace("-", "."))} 기준. {H["note"]}</div>
+<div class="src">출처<ul>{srcs}</ul></div>
 <p class="foot">매일 AI 소식은 <a href="https://www.instagram.com/{esc(handle.lstrip("@"))}/">{esc(handle)}</a></p>
 </main>
 <script>

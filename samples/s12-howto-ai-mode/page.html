@@ -2,7 +2,7 @@
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>구글 검색에 물으면 여행 일정표가 나옵니다 · 토큰전쟁</title>
-<meta name="description" content="구글 검색의 AI 모드에 조건을 한 문장으로 모두 넣으면 시간대별 일정표로 답합니다. 11월 15일에 직접 넣어 본 질문과 결과입니다.">
+<meta name="description" content="구글 검색의 AI 모드에 조건을 한 문장으로 모두 넣으면 시간대별 일정표로 답합니다.">
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
@@ -32,17 +32,33 @@ p{margin:6px 0;color:#CFD6D2}
 ul{padding-left:20px;color:#CFD6D2}
 .src{color:var(--mu);font-size:14px;border-top:2px solid #2A3530;padding-top:16px;margin-top:32px}
 .src a{color:var(--mu)}
+.kv{list-style:none;padding:0;margin:6px 0}
+.kv li{margin:4px 0}
+.kv b{color:var(--fg);margin-right:6px}
+.notice{border-left:4px solid var(--ac);padding:4px 0 4px 14px;margin:0 0 28px}
+.notice ul{margin:6px 0}
+.notice a{color:var(--ac)}
+.grp{margin:18px 0 0}
+.grp h4{margin:0 0 2px;font-size:17px;font-weight:700;color:var(--ac)}
+.grp .gs{font-size:13px;color:var(--mu);margin:2px 0 0}
+.grp .gs a{color:var(--mu)}
 .foot{margin-top:28px;font-weight:700}
+.step.li{padding:14px 0}
+.step.li .lb{color:var(--fg);font-size:18px}
+.step.li .ex{display:block;width:100%;max-width:360px;margin:10px 0 0}
+.step.li .pr pre{padding:12px 96px 12px 16px;font-size:17px}
 .foot a{color:var(--ac)}
 </style></head>
 <body><main>
 <div class="brand">TOKEN WAR</div>
 <h1>구글 검색에 물으면<br><span class="hl">여행 일정표</span>가 나옵니다</h1>
-<p class="intro">구글 검색의 AI 모드에 조건을 한 문장으로 모두 넣으면 시간대별 일정표로 답합니다. 11월 15일에 직접 넣어 본 질문과 결과입니다.</p>
+<p class="intro">구글 검색의 AI 모드에 조건을 한 문장으로 모두 넣으면 시간대별 일정표로 답합니다.</p>
+
+
 <section class="step"><span class="k">01</span><span class="lb">구글 첫 화면</span><h2>검색창 오른쪽 &#x27;AI 모드&#x27;를 누릅니다</h2><p>로그인하지 않아도 열렸습니다. 11월 12일부터 새 제미나이 모델이 답을 만듭니다.</p></section><section class="step"><span class="k">02</span><span class="lb">질문 넣기</span><h2>조건을 한 문장에 모두 넣습니다</h2><div class="pr"><pre>12월 주말 부산 1박 2일, 초등학생 아이 둘과 가요. 비 오면 실내 위주로, 이동은 지하철로만. 시간대별 일정을 표로 짜 줘</pre><button type="button" onclick="cp(this)">복사</button></div><p>날짜, 같이 갈 사람, 날씨, 이동 수단을 적고 표로 짜 달라고 했습니다.</p></section><section class="step"><span class="k">03</span><span class="lb">실제 결과</span><h2>시간대별 표로 일정을 짜 줬습니다</h2><p>1일 차는 키자니아와 아쿠아리움, 2일 차는 박물관과 과학관입니다. 장소마다 내릴 역이 적혀 있습니다.</p></section><section class="step"><span class="k">04</span><span class="lb">일정 속 장소</span><h2>비가 와도 괜찮은 실내 코스로 골랐습니다</h2><p>1일 차 오후에는 해운대 아쿠아리움에 갑니다. 해운대역에서 걸어서 10분쯤이라고 적혀 있습니다.</p></section><section class="step"><span class="k">05</span><span class="lb">주의할 점</span><h2>조건을 다 지키지는 않았습니다</h2><p>지하철로만 다닌다고 했는데, 국립부산과학관은 역에서 버스나 택시를 타라고 했습니다.</p></section>
-<div class="rule"></div><h3>직접 해 본 결과</h3><p>1일 차는 키자니아와 아쿠아리움, 2일 차는 박물관과 과학관으로 시간대별 표가 나왔고, 장소마다 내릴 역이 적혀 있었습니다. 다만 &#x27;지하철로만&#x27;이라고 적었는데도 국립부산과학관은 역에서 버스나 택시를 타라고 했습니다.</p><div class="rule"></div><h3>주의할 점</h3><ul><li>지도 앱으로 동선 다시 보기: 역에서 걷는 시간과 환승 횟수를 확인합니다</li><li>운영 시간과 예약 확인: 체험 시설은 회차와 예약이 필요한지 봅니다</li><li>고칠 점은 이어서 묻기: 같은 대화창에 바꿀 조건만 적어 보냅니다</li></ul>
-<div class="src">출처<ul><li><a href="https://blog.google/products-and-platforms/products/search/gemini-4-hydrogen-search-upgrade/" rel="noopener">구글 블로그: 검색에 새 제미나이 모델 적용 (11월 12일)</a></li><li><a href="https://www.google.com/search?udm=50" rel="noopener">구글 AI 모드 직접 사용 (11월 15일)</a></li><li><a href="https://commons.wikimedia.org/wiki/File:SEA_LIFE_%EB%B6%80%EC%82%B0%EC%95%84%EC%BF%A0%EC%95%84%EB%A6%AC%EC%9B%80_%EA%B0%80%EC%98%A4%EB%A6%AC_%EC%88%98%EC%A1%B0.jpg" rel="noopener">표지 사진: Wmainbrain, CC BY-SA 4.0, 위키미디어 공용</a></li><li><a href="https://commons.wikimedia.org/wiki/File:Sea_Life_Busan_Aquarium_13.jpg" rel="noopener">아쿠아리움 사진: Ryan Bodenstein, CC BY 2.0, 위키미디어 공용</a></li></ul>2026.11.16 기준. 결과는 직접 해 본 것이고, AI 답은 그때그때 달라질 수 있습니다.</div>
-<p class="foot">다른 자료는 <a href="../">자료실</a>에서. 매일 AI 소식은 <a href="https://www.instagram.com/tokenwar_ai/">@tokenwar_ai</a></p>
+<div class="rule"></div><h3>결과 예시</h3><p>1일 차는 키자니아와 아쿠아리움, 2일 차는 박물관과 과학관으로 시간대별 표가 나오고, 장소마다 내릴 역이 적혀 있습니다.</p>
+<div class="src">출처<ul><li><a href="https://blog.google/products-and-platforms/products/search/gemini-4-hydrogen-search-upgrade/" rel="noopener">구글 블로그: 검색에 새 제미나이 모델 적용 (11월 12일)</a></li><li><a href="https://commons.wikimedia.org/wiki/File:SEA_LIFE_%EB%B6%80%EC%82%B0%EC%95%84%EC%BF%A0%EC%95%84%EB%A6%AC%EC%9B%80_%EA%B0%80%EC%98%A4%EB%A6%AC_%EC%88%98%EC%A1%B0.jpg" rel="noopener">표지 사진: Wmainbrain, CC BY-SA 4.0, 위키미디어 공용</a></li><li><a href="https://commons.wikimedia.org/wiki/File:Sea_Life_Busan_Aquarium_13.jpg" rel="noopener">아쿠아리움 사진: Ryan Bodenstein, CC BY 2.0, 위키미디어 공용</a></li></ul></div>
+<p class="foot">매일 AI 소식은 <a href="https://www.instagram.com/tokenwar_ai/">@tokenwar_ai</a></p>
 </main>
 <script>
 function cp(b){const t=b.previousElementSibling.innerText;
