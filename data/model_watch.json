@@ -1353,7 +1353,16 @@
    "tries": 0,
    "breaking": true,
    "status": "skipped"
+  },
+  "https://openai.com/index/our-first-phase-of-embedded-assessments": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Our first phase of embedded assessments",
+   "first_seen": "2026-11-17T02:04:22+09:00",
+   "why": "모델·기능 발표 아님",
+   "tries": 0,
+   "status": "skipped"
   }
  },
- "updated": "2026-11-17T01:49:20+09:00"
+ "updated": "2026-11-17T02:04:22+09:00"
 }
