@@ -1211,7 +1211,16 @@
    "tries": 0,
    "breaking": true,
    "status": "skipped"
+  },
+  "https://openai.com/index/lvmh-media-division-partnership": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "LVMH’s Media Division announces strategic partnership with OpenAI",
+   "first_seen": "2026-11-16T19:04:26+09:00",
+   "why": "고객 사례",
+   "tries": 0,
+   "status": "skipped"
   }
  },
- "updated": "2026-11-16T18:49:34+09:00"
+ "updated": "2026-11-16T19:04:26+09:00"
 }
