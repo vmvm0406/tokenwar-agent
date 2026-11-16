@@ -294,6 +294,81 @@ def make_tension_music(out_path, bpm, total, accents=(), seed=11):
     return {"bpm": bpm, "beat": beat, "seconds": total, "accents": list(accents)}
 
 
+# ---------- 가볍고 밝은 배경음 (운영자 요청 2026-11-17 "배경음악이 너무 긴장감있고") ----------
+# 장조(Cmaj7-G-Am7-Fmaj7) 일렉트릭 피아노 화음, 부드러운 사인 베이스, 살짝 스윙한 하이햇, 작은 킥·클랩, 펜타토닉 플럭.
+LIGHT_CHORDS = [(60, 64, 67, 71), (55, 59, 62, 67), (57, 60, 64, 67), (53, 57, 60, 64)]  # Cmaj7 G Am7 Fmaj7
+LIGHT_PLUCK = [76, 79, 81, 79, 84, 81, 79, 76]  # C장조 펜타토닉 E G A G C A G E
+
+
+def _epiano(freq, n, r=1.2):
+    t = np.arange(n) / SR
+    x = np.sin(2 * np.pi * freq * t) + 0.35 * np.sin(2 * np.pi * 2 * freq * t) * np.exp(-t * 6) \
+        + 0.12 * np.sin(2 * np.pi * 3 * freq * t) * np.exp(-t * 10)
+    return x * env(n, 0.006, r)
+
+
+def make_light_music(out_path, bpm, total, accents=(), seed=5, swing=0.12):
+    """bpm 고정, 0초가 첫 박. accents: 장면 이음새 등에 넣는 부드러운 심벌 스웰 시각. 끝 1.5초 페이드아웃.
+    반환 {"bpm", "beat", "seconds", "accents"}."""
+    rng = np.random.default_rng(seed)
+    beat = 60.0 / bpm
+    n = int((total + 0.5) * SR)
+    L = np.zeros(n)
+    R = np.zeros(n)
+
+    def add(sig, t0, gl=1.0, gr=1.0):
+        i = int(round(t0 * SR))
+        if i >= n:
+            return
+        m = min(len(sig), n - i)
+        L[i:i + m] += sig[:m] * gl
+        R[i:i + m] += sig[:m] * gr
+
+    nb = int(total / beat) + 1
+    for b in range(nb):
+        t0 = b * beat
+        bar, pos = divmod(b, 4)
+        chord = LIGHT_CHORDS[bar % 4]
+        if pos in (0, 2):
+            add(kick(int(0.25 * SR)) * 0.55, t0)
+        if pos in (1, 3):
+            add(clap(int(0.18 * SR), rng) * 0.28, t0, 0.9, 1.0)
+        for k in range(2):  # 8분 하이햇, 뒷박은 살짝 늦게(스윙)
+            add(hat(int(0.035 * SR), rng) * (0.45 if k else 0.25), t0 + k * beat / 2 + (swing * beat / 2 if k else 0), 0.85, 1.0)
+        add(_epiano(hz(chord[0] - 24), int(beat * SR), r=0.5) * 0.5, t0)  # 사인 베이스: 박마다 근음
+        if pos == 0:  # 일렉트릭 피아노 화음: 마디 첫 박 + 셋째 박 뒤에 가볍게 한 번 더
+            for k, m in enumerate(chord):
+                add(_epiano(hz(m), int(3 * beat * SR)) * 0.13, t0 + k * 0.012, 1.0 - 0.1 * k, 0.7 + 0.1 * k)
+        if pos == 2:
+            for m in chord[1:]:
+                add(_epiano(hz(m), int(1.5 * beat * SR), r=0.4) * 0.07, t0 + beat / 2, 0.8, 1.0)
+        if bar % 2 == 1:  # 플럭: 짝수 마디에 8분음표로 가볍게
+            for k in range(2):
+                note = LIGHT_PLUCK[(pos * 2 + k) % len(LIGHT_PLUCK)]
+                pl = tone(hz(note), int(beat / 2 * SR), "sine", r=0.18, a=0.003)
+                add(pl * 0.12, t0 + k * beat / 2, 0.7, 1.0)
+                add(pl * 0.04, t0 + k * beat / 2 + beat * 0.75, 1.0, 0.6)  # 메아리
+    for t0 in accents:  # 부드러운 심벌 스웰(앞으로 커지다 박에서 끝)
+        m = int(beat * SR)
+        x = rng.standard_normal(m)
+        x = (x - lowpass(x, 6)) * np.linspace(0, 1, m) ** 2 * 0.18
+        add(x, max(0.0, t0 - beat))
+    st = np.stack([L, R], axis=1)[: int(total * SR)]
+    fo = int(min(1.5, total / 4) * SR)
+    st[-fo:] *= np.linspace(1, 0, fo)[:, None]
+    fi = int(0.05 * SR)
+    st[:fi] *= np.linspace(0, 1, fi)[:, None]
+    peak = np.max(np.abs(st)) or 1.0
+    st = np.tanh(st / peak * 1.5) / np.tanh(1.5) * 0.85
+    pcm = (st * 32767).astype(np.int16)
+    with wave.open(str(Path(out_path)), "wb") as w:
+        w.setnchannels(2)
+        w.setsampwidth(2)
+        w.setframerate(SR)
+        w.writeframes(pcm.tobytes())
+    return {"bpm": bpm, "beat": beat, "seconds": total, "accents": list(accents)}
+
+
 if __name__ == "__main__":
     args = sys.argv[1:]
     fade = 0.3

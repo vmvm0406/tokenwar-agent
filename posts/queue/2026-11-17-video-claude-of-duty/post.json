@@ -397,7 +397,7 @@
   "music": {
     "generate": true,
     "mixed_into": "clips/source.mp4",
-    "credit": "토큰전쟁 코드 음악 (agent/music_gen.py make_tension_music, 외부 음원 없음)",
-    "note": "121.5 BPM, 장면 이음새 11.85초가 박 위. 음악이 주인공(운영자 2026-11-17 '총소리 많이 줄여도 돼. 불쾌하다', '음악소리는 더 키워'): 게임 소리는 5kHz -10dB·8kHz 위 -6dB로 날카로운 고음을 깎고 acompressor(-28dB, 10:1)+alimiter로 순간 최대를 누른 뒤 음악보다 9dB 작게(통합 LUFS 기준) 섞음"
+    "credit": "토큰전쟁 코드 음악 (agent/music_gen.py make_light_music, 외부 음원 없음)",
+    "note": "106.5 BPM 밝은 장조 비트(Cmaj7-G-Am7-Fmaj7), 운영자 2026-11-17 '배경음악이 너무 긴장감있고'. 음악이 주인공: 게임 소리는 '띠링' 효과음 주파수(786·1180·1572·1766·2099·2401·3198·4102·4802Hz)를 노치로 깎고, 5kHz -10dB·8kHz 위 -6dB, acompressor(-28dB, 10:1)+alimiter로 누른 뒤 음악보다 9dB 작게(통합 LUFS 기준) 섞음"
   }
 }
