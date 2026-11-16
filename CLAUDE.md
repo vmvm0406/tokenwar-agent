@@ -38,7 +38,7 @@
 | `agent/video.py` | 인용 영상 릴스: 제목·초록 테두리 영상 창·출처·자막. 구간 경계를 원본 소리에 맞춤(`fit_edges`: 말 끝 + 0.4초, 다음 말 페이드), 자막은 항상 영상 창 바닥(겹치면 글씨 줄이기 → 원본 글자 띠 위로 조금 → 겹침 감수, `captions_size`), `crop`. `keep`·`captions_at`은 예전 기능 |
 | `agent/slots.py` | 게시 칸 자동 배정 (`next`, `need`, `status`). 예약된 것을 피해 가장 가까운 빈 칸 |
 | `agent/model_watch.py` | 새 모델 감시 (AI 안 씀): OpenAI·구글·앤트로픽 공식 블로그 + data/hot.md 화제 회사 → 새 발표를 "회사, 제목, 주소"로. 본 것은 `data/model_watch.json`. `scripts/watch-models.ps1`이 15분마다 (LOCAL.md 6장) |
-| `agent/dm.py` | 따라 하기 게시물의 댓글 자동 DM 준비물: `dm.md`(Zorcha 설정 메모), `docs/p/<id>/` 안내 페이지(GitHub Pages), `docs/p/index.html` 자료실(프로필 링크, 목록 최신순) |
+| `agent/dm.py` | 따라 하기 게시물의 댓글 자동 DM 준비물: `dm.md`(Zorcha 설정 메모), `docs/p/<id>/` 안내 페이지(GitHub Pages, DM으로만 알리는 주소. 프로필 링크 자료실은 팔로우 안 한 사람도 받게 되어 쓰지 않음, 2026-11-16 운영자 결정) |
 | `agent/shot.py` | 웹페이지 화면 캡처 → 카드뉴스 사진 (`shot` 필드로 자동, 또는 명령줄) |
 | `agent/thumb.py` | 릴스 썸네일 cover.jpg (그림 꽉 차게 + 가운데 제목 2줄) |
 | `agent/tighten.py` | 받아쓰기 단어 시각 → 말 사이 틈을 자른 keep 목록 |
