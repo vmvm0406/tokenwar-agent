@@ -122,5 +122,16 @@
     "#희귀질환",
     "#AI뉴스",
     "#토큰전쟁"
-  ]
+  ],
+  "threads": {
+    "text": "4~5년 동안 원인을 못 찾던 아기의 희귀 뇌전증, 구글 딥마인드의 AI 알파지놈이 원인 변이를 찾아냈습니다.\n\n알파지놈은 DNA 글자 하나가 바뀌면 세포에서 무슨 일이 생기는지 예측하는데, 연구자가 아이의 변이들을 이 점수로 줄 세우자 1위가 바로 원인이었다고 해요. 실험으로 확인한 뒤 진단이 나왔습니다.\n\n아직 병원에서 쓰는 진단 도구가 아니라 연구자용이지만, 진단을 기다리는 시간을 줄일 길이 보이기 시작했습니다.",
+    "images": [
+      "cover"
+    ],
+    "replies": [
+      "출처: Google DeepMind 블로그·팟캐스트 (11월 11일)\nhttps://deepmind.google/blog/alphagenome-2-deciphering-how-cells-read-dna-to-better-understand-disease/",
+      "연구자가 직접 설명한 대목은 우리말 자막 릴스로 인스타 @tokenwar_ai에 있습니다.\nhttps://www.instagram.com/tokenwar_ai/"
+    ],
+    "topic": "AI Threads"
+  }
 }

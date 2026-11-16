@@ -234,5 +234,16 @@
     "Lemo-Opuscar",
     "클로드 스킬",
     "화풍 스킬"
-  ]
+  ],
+  "threads": {
+    "text": "클로드 코드에 화풍 99개를 한 번에 꽂는 스킬이 있습니다. Lemo-Opuscar라는 공개 스킬이에요.\n\n명령어 두 줄로 설치하고 화풍 이름만 말하면 그 화풍으로 짧은 영상을 코드로 만들어 줍니다. 저희가 해 보니 8초짜리 종이 오림 장면이 5분쯤 걸렸어요.\n다만 긴 영상은 30~60분씩 걸리고 PC에 Node·ffmpeg·Python이 있어야 합니다.\n\n그림 실력보다 어떤 화풍을 고를지 아는 눈이 더 중요해지는 중입니다.",
+    "images": [
+      "cover"
+    ],
+    "replies": [
+      "출처: Lemo-Opuscar 공식 저장소 (코드 MIT, 예시 CC BY 4.0, 화풍 설명서 CC BY-NC 4.0. 스킬은 제작자 저장소에서만 받으세요)\nhttps://github.com/lemomo-ai/lemo-opuscar",
+      "설치 화면과 실제로 만든 장면 전환은 인스타 릴스에서 볼 수 있습니다.\nhttps://www.instagram.com/tokenwar_ai/"
+    ],
+    "topic": "AI Threads"
+  }
 }

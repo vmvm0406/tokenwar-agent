@@ -130,5 +130,16 @@
     "#보안",
     "#AI뉴스",
     "#토큰전쟁"
-  ]
+  ],
+  "threads": {
+    "text": "OpenAI 보안 전용 AI가 리눅스에서 관리자 권한을 빼앗을 수 있는 구멍 948개를 찾아 고쳤습니다.\n\n석 달 전 모델보다 5배 넘게 많은 숫자인데, 사람 연구자가 하나하나 확인한 뒤 고친 코드를 리눅스 관리자들에게 넘겼다고 해요.\n리눅스는 안드로이드 폰과 웹사이트 서버 밑에서 도는 운영체제라, 우리 폰과 쓰는 서비스가 그만큼 덜 뚫린다는 얘기입니다.\n\n다만 이렇게 잘 찾는 AI는 공격하는 쪽에도 쓸 수 있어서, OpenAI도 승인받은 보안 기관에만 먼저 열었습니다.",
+    "images": [
+      "cover"
+    ],
+    "replies": [
+      "출처: OpenAI 'A thousand fewer paths to root' (11월 12일), BleepingComputer\nhttps://openai.com/index/a-thousand-fewer-paths-to-root/\nhttps://www.bleepingcomputer.com/news/security/openais-new-gpt-6-cyber-ai-finds-81-firefox-flaws-948-linux-bugs/",
+      "발표 영상을 우리말 자막으로 옮긴 릴스는 인스타 @tokenwar_ai에 있습니다.\nhttps://www.instagram.com/tokenwar_ai/"
+    ],
+    "topic": "AI Threads"
+  }
 }

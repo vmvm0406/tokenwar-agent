@@ -130,5 +130,16 @@
     "#빈부격차",
     "#AI뉴스",
     "#토큰전쟁"
-  ]
+  ],
+  "threads": {
+    "text": "팔란티어 CEO 알렉스 카프는 AI가 일자리는 늘려도 빈부 격차는 더 키운다고 봤습니다.\n\n현장직·기술직에는 더 나은 일자리가 생기겠지만, 월급이 물가보다 두 배 빨리 올라도 AI 업계 사람들의 부는 못 따라간다는 거예요.\n7월에도 \"AI로 내 재산은 20배 늘 수 있지만 중산층은 그만큼 못 번다\"고 했습니다.\n\nAI를 만드는 회사의 CEO가 직접 꺼낸 걱정이라 더 무겁게 들립니다.",
+    "images": [
+      "cover"
+    ],
+    "replies": [
+      "출처: The Builders with Walter Isaacson (11월 10일), Fortune (7월 17일)\nhttps://www.youtube.com/watch?v=m4mV4IClDlM\nhttps://www.fortune.com/2026/07/17/palantir-ceo-alex-karp-artifical-intelligence-wealth-inequality-problem-billionaire-net-worth-surge-but-middle-class-left-behind/",
+      "카프가 말한 대목을 우리말 자막으로 옮긴 릴스는 인스타 @tokenwar_ai에 있습니다.\nhttps://www.instagram.com/tokenwar_ai/"
+    ],
+    "topic": "AI Threads"
+  }
 }
