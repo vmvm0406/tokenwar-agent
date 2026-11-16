@@ -13,7 +13,7 @@
 - 코드(`agent/`), 규칙 문서(CLAUDE.md, STYLE_GUIDE.md, LOCAL.md 등), `posts/`, `data/`, `samples/`, 글꼴(`assets/fonts/`, 검은고딕·원티드 산스가 저장소 안에 있어 따로 설치하지 않음)
 - 하위 에이전트 설정 `.claude/agents/` (make-quote-reel, make-card-news, pick-video-segment, review-post)
 - GitHub Secrets·Variables (토큰들)
-- **GitHub Actions는 노트북과 상관없이 계속 돈다.** 렌더링(render.yml), 인스타 게시(publish.yml, 15분마다), 반응 분석, 토큰 점검, 검토 페이지. 노트북이 꺼져 있어도 이미 큐에 있는 게시물은 제시간에 올라간다.
+- **GitHub Actions는 노트북과 상관없이 계속 돈다.** 렌더링(render.yml), 인스타 게시(publish.yml, 15분마다), 반응 분석, 릴스 시청 지표(reel-insights.yml, 기존 IG Secrets 사용), 토큰 점검, 검토 페이지. 노트북이 꺼져 있어도 이미 큐에 있는 게시물은 제시간에 올라간다.
 
 **노트북에만 있어서 새로 해야 하는 것**
 

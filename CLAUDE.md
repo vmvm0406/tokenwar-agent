@@ -47,6 +47,7 @@
 | `agent/build.py` | 그림 + 렌더링 + `.render_hash`(publish가 렌더링 끝난 것만 올리게) |
 | `agent/publish.py` | 인스타 게시 (Graph API, graph.facebook.com, 페이지 토큰). 미디어는 `docs/media/`에 복사·push해 GitHub Pages 주소로 넘기고, 게시 뒤 비운다. 게시된 폴더의 `clips/source.mp4`는 지운다. `DRY_RUN=1`로 시험 |
 | `agent/benchmarks.py` / `agent/hot.py` | 인스타 반응 분석 / 지금 관심 주제 |
+| `agent/reel_insights.py` | 우리 최근 30일 릴스 시청 지표(조회·평균 시청 시간·시청 비율·3초 건너뛰기·저장·공유) → `data/reel_insights.json`(날짜별), `data/reel_insights.md`(표 + 보이는 것 3줄). `reel-insights.yml`이 매일 반응 분석 뒤에. `--offline`: md만 |
 | `agent/token_check.py` | 토큰 점검 |
 | `agent/review_page.py` | 검토 페이지: 열린 post/* PR의 릴스 영상·카드 장·캡션을 raw.githubusercontent(PR 커밋 고정)로 보여 주는 `docs/review/index.html` |
 | `docs/review/` | 검토 페이지 (GitHub Pages https://vmvm0406.github.io/tokenwar-agent/review/, 봇이 갱신. 손으로 고치지 않는다) |
