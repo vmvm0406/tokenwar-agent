@@ -398,6 +398,6 @@
     "generate": true,
     "mixed_into": "clips/source.mp4",
     "credit": "토큰전쟁 코드 음악 (agent/music_gen.py make_tension_music, 외부 음원 없음)",
-    "note": "121.5 BPM, 장면 이음새 11.85초가 박 위. 게임 소리는 acompressor(-24dB, 6:1)+alimiter로 총소리 순간 최대를 눌렀고(크레스트 14.9→10.0dB), 음악은 게임 소리보다 5dB 낮게(통합 LUFS 기준) 섞음 (운영자 2026-11-17 '총소리가 너무 커. 배경음악이 좀 더 크게')"
+    "note": "121.5 BPM, 장면 이음새 11.85초가 박 위. 음악이 주인공(운영자 2026-11-17 '총소리 많이 줄여도 돼. 불쾌하다', '음악소리는 더 키워'): 게임 소리는 5kHz -10dB·8kHz 위 -6dB로 날카로운 고음을 깎고 acompressor(-28dB, 10:1)+alimiter로 순간 최대를 누른 뒤 음악보다 9dB 작게(통합 LUFS 기준) 섞음"
   }
 }
