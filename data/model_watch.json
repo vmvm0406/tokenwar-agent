@@ -1220,7 +1220,36 @@
    "why": "고객 사례",
    "tries": 0,
    "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMiakFVX3lxTE5pYU9WZzZ3U2ZlWXRfSnk0SjV4OXpXbDhma0lwczljc2xsSzdFQS1ucjRaLWFaaUc1R1k4dVFhemF3WFZYT3dqRkxBWDVDeDNJeFAwZW95eHNtTDl2N1VGQWZCNGY1N0RIQUE?oc=5": {
+   "source": "news",
+   "company": "메타",
+   "entities": [
+    "메타"
+   ],
+   "tok": [
+    "2조",
+    "근으",
+    "리아",
+    "무단",
+    "벌금",
+    "사용",
+    "사진",
+    "아서",
+    "용자",
+    "으로",
+    "이탈",
+    "접근",
+    "탈리"
+   ],
+   "title": "[업계 속보: 주요 매체 3곳(AI타임스, 동아일보, 서울경제) · 규제] 메타, 사용자 사진 무단 접근으로 이탈리아서 1.2조 벌금",
+   "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE5pYU9WZzZ3U2ZlWXRfSnk0SjV4OXpXbDhma0lwczljc2xsSzdFQS1ucjRaLWFaaUc1R1k4dVFhemF3WFZYT3dqRkxBWDVDeDNJeFAwZW95eHNtTDl2N1VGQWZCNGY1N0RIQUE?oc=5",
+   "first_seen": "2026-11-16T20:04:19+09:00",
+   "why": "이미 낸 소식과 같음: [업계 속보: 주요 매체 5곳(AI타임스, SBS, 동아일보, 서울경제) · 규제] 이탈리",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
   }
  },
- "updated": "2026-11-16T19:49:19+09:00"
+ "updated": "2026-11-16T20:04:19+09:00"
 }
