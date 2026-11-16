@@ -54,6 +54,7 @@
 | `samples/` | 예시 게시물 (s1~s3 카드뉴스, s8 젠슨 황 인터뷰, s10 드와케시 팟캐스트, s11 주간 요약, s12 따라 하기 카드뉴스, s13 따라 하기 릴스). 디자인을 바꾸면 이걸로 확인 |
 | `data/` | 분석 결과 (봇이 갱신. 손으로 고치지 않는다) |
 | `data/hot_topics.md` | 잘 터진 주제 묶음: 벤치마크 계정 게시물을 평소 대비 반응 배수로 줄 세워 주제(AI 영상 만들기, 사진 변환, 돈·일자리 등)별로 묶은 표. `agent/benchmarks.py`가 매일(단독: `--hot-topics-only`, 저장된 데이터만) |
+| `data/followers.csv` | 우리 팔로워 수 날짜별 기록 (`agent/benchmarks.py`가 매일). 목표(config.json `goal`: 2026-12-16까지 1만 명) 진행은 `data/trends.md` 맨 위 한 줄 (코드 계산) |
 | `experiments/` | 아직 매일 작업에 안 들어간 시제품 (릴스 CRT 화면 등). README에 렌더링 방법 |
 | `NEXT.md` | 이어서 할 일, 운영자 답을 기다리는 것 |
 

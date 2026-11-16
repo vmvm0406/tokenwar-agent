@@ -9,6 +9,14 @@ Business Discovery는 'Instagram API with Facebook Login'(graph.facebook.com)에
 GitHub Actions(benchmarks.yml)가 매일 아침 실행한다.
 저장된 데이터로 trends.md·hot_topics.md 다시 쓰기: python agent/benchmarks.py --offline
 잘 터진 주제 묶음(data/hot_topics.md)만: python agent/benchmarks.py --hot-topics-only
+
+목표(config.json goal, 팔로워 1만 명): 우리 팔로워를 매일 data/followers.csv(날짜, 팔로워)에 남기고
+trends.md 맨 위에 '목표 진행' 한 줄(현재, 목표, 남은 일수, 필요한 하루 증가, 최근 7일 평균)을 코드로 계산해 쓴다.
+
+API 호출 아끼기 (앱 한도 '시간당 200 × 사용자 수'라 사용자 1명이면 약 200회. Business Discovery도 이 한도에 든다:
+developers.facebook.com/docs/graph-api/overview/rate-limiting. 2026-11-16 하루 세 번 돌리자 (#4) 한도 오류가 났다):
+- 저장된 게시물이 100개 넘는 계정은 최근 50개(1회)만 새로 받는다. 처음 계정만 최대 4회(200개).
+- 한도 오류(4·17·32·613)나 X-App-Usage call_count 85% 이상이면 남은 조회를 멈추고 저장된 데이터로 쓴다.
 """
 import json
 import os
@@ -17,6 +25,8 @@ import sys
 import statistics
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+
+import csv
 
 import requests
 
@@ -30,20 +40,94 @@ KST = timezone(timedelta(hours=9))
 FIELDS = "id,caption,timestamp,media_type,media_product_type,like_count,comments_count,view_count,permalink"
 
 
+GOAL = CONFIG.get("goal", {})
+USAGE = {"calls": 0, "pct": 0}  # 이번 실행 호출 수, X-App-Usage call_count(%) 최대
+USAGE_STOP = 85
+
+
+class RateLimited(RuntimeError):
+    """앱 호출 한도에 닿음. 남은 조회는 건너뛴다 (계정 탓이 아님)."""
+
+
 def get(path, **params):
+    if USAGE["pct"] >= USAGE_STOP:
+        raise RateLimited(f"앱 호출 한도 {USAGE['pct']}% 사용, 남은 조회 건너뜀")
     r = requests.get(f"{API}/{path}", params={**params, "access_token": TOKEN}, timeout=60)
+    USAGE["calls"] += 1
+    try:
+        USAGE["pct"] = max(USAGE["pct"], int(json.loads(r.headers.get("x-app-usage") or "{}").get("call_count") or 0))
+    except (ValueError, TypeError, AttributeError):
+        pass
     body = r.json()
     if "error" in body:
-        raise RuntimeError(body["error"].get("message", str(body)[:200]))
+        err = body["error"]
+        if err.get("code") in (4, 17, 32, 613):
+            USAGE["pct"] = 100
+            raise RateLimited(f"({err.get('code')}) {err.get('message', '')[:120]}")
+        raise RuntimeError(err.get("message", str(body)[:200]))
     return body
 
 
-def fetch_account(username, pages=4):
-    """최근 게시물을 최대 pages×50개까지 가져온다 (표본을 크게)."""
+FOLLOWERS = DATA / "followers.csv"
+
+
+def record_followers(n, day=None):
+    """data/followers.csv에 오늘 팔로워 수 (같은 날은 덮어씀)."""
+    day = day or datetime.now(KST).date().isoformat()
+    rows = dict(read_followers())
+    rows[day] = n
+    with FOLLOWERS.open("w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow(["date", "followers"])
+        w.writerows(sorted(rows.items()))
+
+
+def read_followers():
+    """[(날짜, 팔로워)] 날짜순"""
+    if not FOLLOWERS.exists():
+        return []
+    with FOLLOWERS.open(encoding="utf-8", newline="") as f:
+        return sorted((r[0], int(r[1])) for r in list(csv.reader(f))[1:] if len(r) == 2 and r[1].isdigit())
+
+
+def goal_progress(hist=None, today=None):
+    """목표 진행 숫자 (코드 계산). 필요한 하루 증가 = (목표 - 현재) / 남은 일수.
+    최근 7일 평균 = 오늘부터 7일 안의 첫 기록과 마지막 기록의 차 / 그 사이 일수."""
+    hist = read_followers() if hist is None else hist
+    if not hist or not GOAL:
+        return None
+    today = today or datetime.now(KST).date()
+    cur_d, cur = hist[-1]
+    target = int(GOAL.get("followers", 10000))
+    until = datetime.fromisoformat(GOAL.get("date", "2026-12-16")).date()
+    days = max((until - today).days, 0)
+    need = (target - cur) / days if days else float(target - cur)
+    week = [(d, n) for d, n in hist if datetime.fromisoformat(d).date() >= today - timedelta(days=7)]
+    avg7 = None
+    if len(week) >= 2:
+        span = (datetime.fromisoformat(week[-1][0]) - datetime.fromisoformat(week[0][0])).days
+        avg7 = (week[-1][1] - week[0][1]) / span if span else None
+    return {"date": cur_d, "current": cur, "target": target, "until": until.isoformat(), "days_left": days,
+            "need_per_day": need, "avg7": avg7, "on_track": avg7 is not None and avg7 >= need}
+
+
+def goal_line(g):
+    if not g:
+        return "**목표 진행**: 팔로워 기록 없음 (data/followers.csv가 아직 비어 있음)"
+    a7 = f"{g['avg7']:+,.1f}명/일" if g["avg7"] is not None else "기록 2일 미만"
+    verdict = "" if g["avg7"] is None else (" — 목표 속도 이상" if g["on_track"] else " — 뒤처짐")
+    return (f"**목표 진행** ({g['date']}): 현재 {g['current']:,}명 / 목표 {g['target']:,}명 ({g['until']}까지), "
+            f"남은 {g['days_left']}일, 필요한 하루 증가 {g['need_per_day']:,.0f}명, 최근 7일 평균 {a7}{verdict}")
+
+
+def fetch_account(username, pages=None):
+    """최근 게시물을 가져온다. 처음(저장 100개 미만)은 최대 4×50개, 그 뒤는 최근 50개만 (호출 아끼기)."""
     now = datetime.now(timezone.utc).isoformat()
     path = DATA / "benchmarks" / f"{username}.json"
     old = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"media": {}}
     media = old.get("media", {})
+    if pages is None:
+        pages = 1 if len(media) >= 100 else 4
     after, info = None, {}
     for _ in range(pages):
         edge = f"media.after({after}).limit(50)" if after else "media.limit(50)"
@@ -68,6 +152,15 @@ def fetch_account(username, pages=4):
 
 
 def fetch_own():
+    try:
+        n = get(ME, fields="followers_count").get("followers_count")
+        if n is not None:
+            record_followers(int(n))
+            print(f"우리 팔로워 {n}명 기록")
+    except RateLimited:
+        raise
+    except RuntimeError as e:
+        print("우리 팔로워 수 못 받음:", e)
     items = get(f"{ME}/media", fields="id,caption,timestamp,media_product_type,like_count,comments_count,permalink",
                 limit=50).get("data", [])
     perf = {}
@@ -192,7 +285,7 @@ def hashtag_section(accounts, top=25, min_uses=3):
 
 def write_trends(accounts, own):
     now = datetime.now(timezone.utc)
-    lines = [f"# 인스타 반응 분석 ({datetime.now(KST):%Y-%m-%d %H:%M} 기준)", "",
+    lines = [f"# 인스타 반응 분석 ({datetime.now(KST):%Y-%m-%d %H:%M} 기준)", "", goal_line(goal_progress()), "",
              "에이전트는 주제를 고를 때 이 파일을 먼저 읽는다 (STYLE_GUIDE 3장, 6-1장 '인스타 반응').",
              "배수 = 그 계정의 최근 60일 같은 유형(릴스/피드) 중간값 대비. 2배 이상이면 '먹힌 주제'.", ""]
     hits = []
@@ -390,6 +483,13 @@ def main():
         print("IG_ACCESS_TOKEN / IG_USER_ID가 없어 건너뜀 (README '인스타 연결' 참고)")
         return
     (DATA / "benchmarks").mkdir(parents=True, exist_ok=True)
+    own = {}
+    try:  # 우리 계정 먼저 (팔로워 기록이 목표 진행의 바탕이라 한도에 먼저 닿지 않게)
+        own = fetch_own()
+    except Exception as e:
+        print("우리 계정 성과 가져오기 실패:", e)
+        pf = DATA / "performance.json"
+        own = json.loads(pf.read_text(encoding="utf-8")) if pf.exists() else {}
     accounts = []
     for u in CONFIG.get("benchmarks", {}).get("accounts", []):
         try:
@@ -401,13 +501,7 @@ def main():
             if saved.exists():  # 토큰이 끊겨도 trends.md가 비지 않게 지난번 데이터로
                 accounts.append(json.loads(saved.read_text(encoding="utf-8")))
                 print(f"@{u}: 저장된 데이터로 대신 ({accounts[-1].get('updated_at', '')[:10]})")
-    own = {}
-    try:
-        own = fetch_own()
-    except Exception as e:
-        print("우리 계정 성과 가져오기 실패:", e)
-        pf = DATA / "performance.json"
-        own = json.loads(pf.read_text(encoding="utf-8")) if pf.exists() else {}
+    print(f"API 호출 {USAGE['calls']}회, 앱 한도 사용 최대 {USAGE['pct']}%")
     write_trends(accounts, own)
     write_hot_topics(accounts)
     print("data/trends.md, data/hot_topics.md 작성")

@@ -287,5 +287,10 @@
       "note": "업계 큰 소식 (agent/news.py, LOCAL.md 6장 '업계 속보'). Google News RSS로 주요 매체(site:)와 회사별 검색을 hours시간 안에서 모아 제목 겹침으로 묶는다. 속보 기준: 큰 사건 낱말(인사·인수·규제·상장·감원·모델) + 주요 매체 min_majors곳 이상(또는 매체 min_outlets곳 + 주요 1곳). 하루 max_per_day건, 같은 회사는 company_cooldown_hours시간에 한 번."
     },
     "note": "새 모델 바로 올리기 (LOCAL.md 6장). scripts/watch-models.ps1이 30분마다 agent/model_watch.py를 돌려 새 발표가 있으면 Claude가 게시물 1개를 바로 올리기(--asap)로 만든다. sources = 항상 보는 공식 블로그(RSS 또는 목록 HTML), hot = data/hot.md 여러 섹션(min_sections곳 이상)에 동시에 뜰 때만 보는 회사. auto_publish=false면 PR(운영자 Merge), true면 main에 바로."
+  },
+  "goal": {
+    "followers": 10000,
+    "date": "2026-12-16",
+    "note": "운영자 목표 (2026-11-16): 2026-12-16까지 팔로워 1만 명. agent/benchmarks.py가 매일 data/followers.csv에 기록하고 data/trends.md 맨 위 '목표 진행' 줄을 계산한다."
   }
 }
