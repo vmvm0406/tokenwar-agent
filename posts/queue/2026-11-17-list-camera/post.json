@@ -212,13 +212,13 @@
   ],
   "dm": {
     "keyword": "자료",
-    "message": "카메라 용어 40개 자료입니다.\n아래 '자료 보기'를 누르면 영상에 나온 15개와 추가 25개를 뜻과 쓰는 법으로 정리한 페이지가 열립니다.\n장면 설명 끝에 영어 용어를 붙여 쓰시면 됩니다.",
+    "message": "요청하신 카메라 용어 40개, 뜻과 쓰는 법까지 정리해 뒀어요.\n아래 '자료 보기'를 누르면 용어마다 뜻과 화면 느낌을 예시 그림과 함께 볼 수 있어요.\n장면 설명 끝에 카메라 용어 하나만 붙여 보세요. 같은 장면도 영화처럼 달라져요.",
     "cta": "팔로우하고 댓글에 '자료' 남기면\n카메라 용어 40개를\n보내 드립니다",
     "banner": "댓글에 '자료'라고 남기면\n카메라 용어 40개를 DM으로 보내 드립니다",
     "page": {
-      "intro": "AI 영상과 그림 프롬프트에 넣는 카메라 용어 40개입니다. 촬영 현장에서 쓰는 이름이라 영상 프롬프트에도 그대로 넣어 쓸 수 있습니다. 추가 용어에는 카메라 움직임처럼 영상에서만 보이는 용어도 있습니다.",
+      "intro": "AI 영상과 그림에 쓰는 카메라 용어 40개를 정리했어요. 촬영 현장에서 쓰는 이름이라 AI도 그대로 알아들어요. 카메라 움직임처럼 영상에서만 보이는 용어도 함께 담았어요.",
       "list_title": "영상에 나온 카메라 용어 15개",
-      "list_intro": "번호는 영상에 나온 순서와 같습니다. 그림은 토큰전쟁 마스코트 슬라임으로 만든 예시입니다. 장면 설명 끝에 영어 용어를 붙여 쓰시면 됩니다.",
+      "list_intro": "번호는 영상에 나온 순서와 같아요. 그림은 토큰전쟁 마스코트 슬라임으로 만든 예시예요.",
       "more": [
         {
           "name": "풀 샷",
@@ -367,25 +367,7 @@
         }
       ],
       "more_title": "추가 카메라 용어 25개",
-      "more_intro": "영상에 나오지 않은 추가 용어입니다. 일부 용어에는 예시 그림이 붙어 있습니다.",
-      "extra_title": "그대로 복사해 쓰는 프롬프트",
-      "extra": [
-        {
-          "title": "11 아나모픽 렌즈 플레어에 쓴 프롬프트",
-          "prompt": "Keep exactly the same character from the reference image: the small translucent lime green jelly slime with two cat ears, two small round black dot eyes, a tiny curved smile, short stubby arms and feet, tiny air bubbles inside, glossy wet surface. Same shape, same proportions, same face, same color. Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: shot with an anamorphic lens, long horizontal blue lens flares across the frame from the cafe lights, cinematic look. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-          "note": "토큰전쟁 마스코트 기준 그림으로 만든 골목 장면 그림을 참고 이미지로 함께 넣어 FLUX.2 [klein]로 만들 때 쓴 프롬프트입니다. 다른 그림 AI에서는 참고 이미지를 함께 올리고 쓰십시오."
-        },
-        {
-          "title": "05 로우 앵글에 쓴 프롬프트",
-          "prompt": "Keep exactly the same character from the reference image: the small translucent lime green jelly slime with two cat ears, two small round black dot eyes, a tiny curved smile, short stubby arms and feet, tiny air bubbles inside, glossy wet surface. Same shape, same proportions, same face, same color. Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: low angle shot from near the ground looking up at the slime, the slime looks big and heroic. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-          "note": "토큰전쟁 마스코트 기준 그림으로 만든 골목 장면 그림을 참고 이미지로 함께 넣어 FLUX.2 [klein]로 만들 때 쓴 프롬프트입니다. 다른 그림 AI에서는 참고 이미지를 함께 올리고 쓰십시오."
-        },
-        {
-          "title": "10 얕은 심도(보케)에 쓴 프롬프트",
-          "prompt": "Keep exactly the same character from the reference image: the small translucent lime green jelly slime with two cat ears, two small round black dot eyes, a tiny curved smile, short stubby arms and feet, tiny air bubbles inside, glossy wet surface. Same shape, same proportions, same face, same color. Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: shallow depth of field, the slime in sharp focus, the cafe lights behind turned into large soft bokeh circles. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-          "note": "토큰전쟁 마스코트 기준 그림으로 만든 골목 장면 그림을 참고 이미지로 함께 넣어 FLUX.2 [klein]로 만들 때 쓴 프롬프트입니다. 다른 그림 AI에서는 참고 이미지를 함께 올리고 쓰십시오."
-        }
-      ]
+      "more_intro": "영상에 나오지 않은 용어 25개예요. 일부 용어에는 예시 그림을 붙였어요."
     }
   },
   "threads": {

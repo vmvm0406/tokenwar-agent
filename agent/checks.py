@@ -674,6 +674,14 @@ def check_dm(post):
         hits = process_phrases(t)
         if hits:
             warnings.append(f"{path}에 날짜·제작 과정·테스트 환경 표현 {sorted(set(hits))}: 자료 페이지·DM에는 따라 할 문장, 준비물, 단계, 결과 예시만 (STYLE_GUIDE 7-1)")
+    # DM 문구·자료 페이지는 친근하지만 정돈된 말투: '~해 보세요/~드려요'. '~하십시오/~바랍니다/~하시오' 금지 (운영자 결정 2026-11-17, STYLE_GUIDE 7-1)
+    from dm import stiff_phrases
+    for path, t in _texts(d, "dm"):
+        if not (path.startswith("dm.message") or path.startswith("dm.page") or path.startswith("dm.follow_text")):
+            continue
+        hits = stiff_phrases(t)
+        if hits:
+            warnings.append(f"{path}에 딱딱한 말투 {sorted(set(hits))}: DM·자료 페이지는 '~해 보세요/~드려요'로 (STYLE_GUIDE 7-1)")
     for t in [msg, d.get("follow_text", "")] + [x.get("note", "") for x in pg.get("extra") or []] + [pg.get("result", ""), pg.get("intro", "")]:
         if t:
             e_t, _ = ai_tone(t, "DM 자료")
