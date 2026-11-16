@@ -78,6 +78,7 @@ def taken():
         for pj in (ROOT / d).glob("*/post.json"):
             st = pj.parent / "published.json"
             if d == "posts/published" and st.exists() and '"status"' in st.read_text(encoding="utf-8"):
+                seen.add(pj.parent.name)  # 옛 검토 브랜치에 남은 같은 게시물도 세지 않게
                 continue  # 운영자가 지운 게시물(다시 안 올림 등)은 칸을 차지하지 않는다
             try:
                 add(pj.parent.name, json.loads(pj.read_text(encoding="utf-8")), pj if d == "posts/queue" else None)
