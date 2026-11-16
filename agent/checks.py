@@ -850,6 +850,21 @@ def writing_rules(post):
         m = OUR_STORY_RE.search(t)
         if m:
             w.append(f"{i}번 자막에 제작 과정 이야기 '{m.group(0)}' → 자막에서 빼고 자료 페이지에만 (STYLE_GUIDE 4장)")
+    CONT_RE = re.compile(r"(하고|되고|했고|있고|고|는데|했는데|인데|해서)$")
+    for i, s in enumerate(subs, 1):
+        t = str(s.get("text", "")).replace("\n", " ").strip()
+        try:
+            dur = float(s["end"]) - float(s["start"])
+        except (KeyError, TypeError, ValueError):
+            dur = 0
+        if dur > 5.05 and post.get("format") in ("howto", "ask", "buzz"):  # 인용 릴스는 말 길이를 따르므로 제외
+            w.append(f"{i}번 자막이 {dur:.1f}초로 김 (5초 넘음) → 빈 시간은 자막을 늘리지 말고 영상을 잘라 줄인다 (STYLE_GUIDE 4장)")
+        if re.search(r"['‘]자료['’]|팔로우", t):
+            w.append(f"{i}번 본편 자막에 팔로우·'자료' 안내 → 끝 화면(dm.cta) 하나로만 (STYLE_GUIDE 4장)")
+            if i > 1:
+                prev = str(subs[i - 2].get("text", "")).replace("\n", " ").strip().rstrip(".,")
+                if CONT_RE.search(prev):
+                    w.append(f"{i - 1}번 자막이 '{prev[-6:]}'처럼 이어지는 말로 끝난 바로 뒤에 안내가 붙음 → 앞 문장을 '~합니다'로 끝맺는다")
     if subs:
         last = str(subs[-1].get("text", ""))
         if "여러분" in last:
