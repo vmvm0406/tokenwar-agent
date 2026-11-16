@@ -1012,7 +1012,90 @@
    "tries": 0,
    "breaking": true,
    "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMiW0FVX3lxTE8zT3Q2QXktcWItcG00aTFORzFwMUNvTDZ1NW5mRTlMdENaWGdDaWFlTmlkWmFQSHRvdXRnVFZUMllzQ0xqS3FHZUdmaElkWkc5d2FWNF9GTGJSR0k?oc=5": {
+   "source": "news",
+   "company": "앤트로픽",
+   "entities": [
+    "앤트로픽"
+   ],
+   "tok": [
+    "club",
+    "global",
+    "ipo",
+    "money",
+    "관투",
+    "기관",
+    "배제",
+    "자자",
+    "중국",
+    "청약",
+    "투자",
+    "홍콩"
+   ],
+   "title": "[업계 속보: 주요 매체 3곳(서울경제, 연합뉴스, 중앙일보) · 상장·투자] [단독] 앤트로픽 IPO, 중국·홍콩 기관투자자 청약 배제｜Global Money Club",
+   "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE8zT3Q2QXktcWItcG00aTFORzFwMUNvTDZ1NW5mRTlMdENaWGdDaWFlTmlkWmFQSHRvdXRnVFZUMllzQ0xqS3FHZUdmaElkWkc5d2FWNF9GTGJSR0k?oc=5",
+   "first_seen": "2026-11-16T10:03:07+09:00",
+   "why": "48시간 안에 같은 회사·인물 게시물 있음: 2026-11-16-carousel-claude-ppt (앤트로픽)",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMiVEFVX3lxTE1pa2k1S25VdE1yNWRjdHQ2QzNLRXFLbjJrRDRseXgxWVEwNGwwV3gxQkNqUXpxNEV6WTZVU1VFdkM5UlBidEN5MEdKOUJid2dyQ2p0TA?oc=5": {
+   "source": "news",
+   "company": "엔비디아",
+   "entities": [
+    "머스크(xAI·테슬라)",
+    "엔비디아"
+   ],
+   "tok": [
+    "꾸린",
+    "나흘",
+    "만에",
+    "복귀",
+    "사임",
+    "상황",
+    "움직",
+    "전시",
+    "직임",
+    "황실"
+   ],
+   "title": "[업계 속보: 주요 매체 2곳(JTBC, 중앙일보) · 인사] ‘전시 상황실’ 꾸린 젠슨 황…사임 나흘 만에 복귀 움직임",
+   "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE1pa2k1S25VdE1yNWRjdHQ2QzNLRXFLbjJrRDRseXgxWVEwNGwwV3gxQkNqUXpxNEV6WTZVU1VFdkM5UlBidEN5MEdKOUJid2dyQ2p0TA?oc=5",
+   "first_seen": "2026-11-16T10:03:07+09:00",
+   "why": "48시간 안에 같은 회사·인물 게시물 있음: 2026-11-16-carousel-huang-return (엔비디아)",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMiYEFVX3lxTE9OdEV5LXBlVS14TzNJbzV2WU1IQkxXT29ia29zdU5qSm9wUlNZTy04WFJwbnRlQlJnQWhhTkdfcEstbW1JNzZxYzhvM2xaazVIeE44YVVKdENsdFlFSlY0ZdIBYEFVX3lxTE9OdEV5LXBlVS14TzNJbzV2WU1IQkxXT29ia29zdU5qSm9wUlNZTy04WFJwbnRlQlJnQWhhTkdfcEstbW1JNzZxYzhvM2xaazVIeE44YVVKdENsdFlFSlY0ZQ?oc=5": {
+   "source": "news",
+   "company": "엔비디아",
+   "entities": [
+    "앤트로픽",
+    "엔비디아"
+   ],
+   "tok": [
+    "간전",
+    "뉴욕",
+    "빅위",
+    "상장",
+    "실적",
+    "욕증",
+    "위크",
+    "적에",
+    "전망",
+    "주간",
+    "증시"
+   ],
+   "title": "[업계 속보: 주요 매체 1곳(연합뉴스) · 상장·투자] [뉴욕증시-주간전망] 엔비디아 실적에 앤트로픽 상장…'AI 빅위크'",
+   "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE9OdEV5LXBlVS14TzNJbzV2WU1IQkxXT29ia29zdU5qSm9wUlNZTy04WFJwbnRlQlJnQWhhTkdfcEstbW1JNzZxYzhvM2xaazVIeE44YVVKdENsdFlFSlY0ZdIBYEFVX3lxTE9OdEV5LXBlVS14TzNJbzV2WU1IQkxXT29ia29zdU5qSm9wUlNZTy04WFJwbnRlQlJnQWhhTkdfcEstbW1JNzZxYzhvM2xaazVIeE44YVVKdENsdFlFSlY0ZQ?oc=5",
+   "first_seen": "2026-11-16T10:03:07+09:00",
+   "why": "48시간 안에 같은 회사·인물 게시물 있음: 2026-11-16-carousel-claude-ppt (앤트로픽)",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
   }
  },
- "updated": "2026-11-16T09:34:15+09:00"
+ "updated": "2026-11-16T10:03:07+09:00"
 }
