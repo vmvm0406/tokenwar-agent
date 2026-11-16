@@ -1,0 +1,389 @@
+{
+  "id": "2026-11-17-list-camera",
+  "type": "video",
+  "format": "howto",
+  "origin": "own",
+  "length": "short",
+  "series": "생존 가이드",
+  "date": "2026-11-17",
+  "publish_at": "2026-11-17T12:43:00+09:00",
+  "rights": "own",
+  "rights_note": "결과 그림은 토큰전쟁 마스코트 기준 이미지(assets/mascot/slime-base.jpg)를 참고 이미지로 넣어 FLUX.2 [klein] 4B(Cloudflare Workers AI)로 만든 AI 그림. 배경음악은 agent/music_gen.py가 코드로 만든 음악",
+  "title": "AI 영상이 영화처럼 보이는\n카메라 설정 용어 15가지",
+  "highlight": "영화처럼",
+  "list": {
+    "scene": {
+      "type": "image",
+      "src": "img/list/scene.jpg",
+      "mascot": true,
+      "prompt": "Place the same slime character at night in a narrow alley in Seoul, sitting on the stone step in front of a small cozy cafe, warm light glowing from the cafe window, small hanging shop signs without readable letters, wet pavement reflecting the lights. Eye-level medium shot, the slime in the center. Photorealistic 3D render, vertical 4:5, no text, no letters."
+    },
+    "items": [
+      {
+        "name": "익스트림 클로즈업",
+        "en": "extreme close-up",
+        "desc": "눈이나 입처럼 아주 작은 부분만 가득 담는 화면입니다.",
+        "type": "image",
+        "src": "img/list/01.jpg",
+        "mascot": true,
+        "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: extreme close-up shot, only the slime's face and eyes fill the frame. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ref": "img/list/scene.jpg"
+      },
+      {
+        "name": "클로즈업",
+        "en": "close-up",
+        "desc": "얼굴이 화면을 채우는 화면입니다.",
+        "type": "image",
+        "src": "img/list/02.jpg",
+        "mascot": true,
+        "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: close-up shot, the slime's head and upper body fill the frame. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ref": "img/list/scene.jpg"
+      },
+      {
+        "name": "미디엄 샷",
+        "en": "medium shot",
+        "desc": "허리 위쯤까지 담는 화면입니다.",
+        "type": "image",
+        "src": "img/list/03.jpg",
+        "mascot": true,
+        "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: medium shot, the whole slime and a little of the cafe entrance around it. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ref": "img/list/scene.jpg"
+      },
+      {
+        "name": "와이드 샷",
+        "en": "wide shot",
+        "desc": "인물과 주변 장소를 넓게 담는 화면입니다.",
+        "type": "image",
+        "src": "img/list/04.jpg",
+        "mascot": true,
+        "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: wide shot, the whole narrow alley and the cafe front visible, the slime small in the frame. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ref": "img/list/scene.jpg"
+      },
+      {
+        "name": "로우 앵글",
+        "en": "low angle",
+        "desc": "아래에서 올려다보는 각도입니다.",
+        "type": "image",
+        "src": "img/list/05.jpg",
+        "mascot": true,
+        "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: low angle shot from near the ground looking up at the slime, the slime looks big and heroic. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ref": "img/list/scene.jpg"
+      },
+      {
+        "name": "하이 앵글",
+        "en": "high angle",
+        "desc": "위에서 내려다보는 각도입니다.",
+        "type": "image",
+        "src": "img/list/06.jpg",
+        "mascot": true,
+        "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: high angle shot looking down at the slime from above, the slime looks small. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ref": "img/list/scene.jpg"
+      },
+      {
+        "name": "버즈아이 뷰",
+        "en": "bird's-eye view",
+        "desc": "바로 위에서 수직으로 내려다보는 화면입니다.",
+        "type": "image",
+        "src": "img/list/07.jpg",
+        "mascot": true,
+        "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: bird's-eye view, the camera directly overhead looking straight down at the slime and the alley. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ref": "img/list/scene.jpg"
+      },
+      {
+        "name": "더치 앵글",
+        "en": "Dutch angle",
+        "desc": "카메라를 비스듬히 기울인 화면입니다.",
+        "type": "image",
+        "src": "img/list/08.jpg",
+        "mascot": true,
+        "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: Dutch angle, the camera tilted about 25 degrees, tilted horizon, uneasy mood. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ref": "img/list/scene.jpg"
+      },
+      {
+        "name": "오버 더 숄더",
+        "en": "over-the-shoulder shot",
+        "desc": "한 인물의 어깨 너머로 다른 대상을 보는 화면입니다.",
+        "type": "image",
+        "src": "img/list/09.jpg",
+        "mascot": true,
+        "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: over-the-shoulder shot from behind the blurred shoulder of a person in a dark coat in the foreground, looking at the slime. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ref": "img/list/scene.jpg"
+      },
+      {
+        "name": "얕은 심도(보케)",
+        "en": "shallow depth of field (bokeh)",
+        "desc": "초점이 맞은 곳만 선명하고 배경은 흐린 화면입니다.",
+        "type": "image",
+        "src": "img/list/10.jpg",
+        "mascot": true,
+        "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: shallow depth of field, the slime in sharp focus, the cafe lights behind turned into large soft bokeh circles. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ref": "img/list/scene.jpg"
+      },
+      {
+        "name": "아나모픽 렌즈 플레어",
+        "en": "anamorphic lens flare",
+        "desc": "아나모픽 렌즈에서 생기는 가로로 긴 빛 번짐입니다.",
+        "type": "image",
+        "src": "img/list/11.jpg",
+        "mascot": true,
+        "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: shot with an anamorphic lens, long horizontal blue lens flares across the frame from the cafe lights, cinematic look. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ref": "img/list/scene.jpg"
+      },
+      {
+        "name": "35mm 필름 질감",
+        "en": "35mm film grain",
+        "desc": "필름 카메라의 입자감과 색감입니다.",
+        "type": "image",
+        "src": "img/list/12.jpg",
+        "mascot": true,
+        "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: shot on 35mm film, visible film grain, slightly faded film colors, cinematic. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ref": "img/list/scene.jpg"
+      },
+      {
+        "name": "어안 렌즈",
+        "en": "fisheye lens",
+        "desc": "화면 가장자리가 둥글게 휘는 초광각 렌즈입니다.",
+        "type": "image",
+        "src": "img/list/13.jpg",
+        "mascot": true,
+        "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: fisheye lens, strong barrel distortion, the slime close to the lens in the center, the alley curving around the edges. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ref": "img/list/scene.jpg"
+      },
+      {
+        "name": "틸트시프트",
+        "en": "tilt-shift",
+        "desc": "초점 띠를 좁혀 실제 풍경을 미니어처처럼 보이게 하는 기법입니다.",
+        "type": "image",
+        "src": "img/list/14.jpg",
+        "mascot": true,
+        "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: tilt-shift photography, miniature effect, a narrow band of focus on the slime, top and bottom strongly blurred, seen from slightly above. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ref": "img/list/scene.jpg"
+      },
+      {
+        "name": "실루엣",
+        "en": "silhouette",
+        "desc": "밝은 배경 앞에서 대상이 검은 윤곽으로만 보이는 화면입니다.",
+        "type": "image",
+        "src": "img/list/15.jpg",
+        "mascot": true,
+        "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: silhouette, the slime as a dark silhouette against the bright cafe window behind it. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "ref": "img/list/scene.jpg"
+      }
+    ],
+    "hook": 11
+  },
+  "music": {
+    "generate": true
+  },
+  "thumb": {
+    "title": "카메라 용어 하나로\n영화처럼 바뀝니다",
+    "highlight": "영화처럼",
+    "image": {
+      "type": "image",
+      "src": "img/list/11.jpg",
+      "position": "center 40%"
+    }
+  },
+  "topic": [
+    "카메라 용어",
+    "AI 영상 프롬프트"
+  ],
+  "sources": [
+    {
+      "name": "FLUX.2 [klein] 4B (Cloudflare Workers AI, 결과 그림 제작 도구)",
+      "url": "https://developers.cloudflare.com/workers-ai/models/flux-2-klein-4b/",
+      "kind": "tool"
+    }
+  ],
+  "caption": "AI 영상 프롬프트에 카메라 용어 하나만 넣으세요. 같은 장면도 영화처럼 달라집니다.\n댓글에 '자료'라고 남기면 카메라 용어 40개를 DM으로 보내 드려요(팔로우한 분께).\n\n밤의 서울 골목 카페 앞에 같은 슬라임을 두고 카메라 용어만 바꿔 15장을 뽑았습니다.\n로우 앵글은 주인공을 크고 당당하게, 하이 앵글은 작아 보이게 합니다.\n더치 앵글은 화면을 비스듬히 기울여 불안한 느낌을 줘요.\n얕은 심도는 배경을 흐리게 날리고 주인공만 또렷하게 남깁니다.\n\nAI로 쇼츠 영상을 만드는 친구에게 보내 주세요.\n\n팔로우하고 댓글에 '자료'라고 남기면 카메라 용어 40개와 복사용 프롬프트를 DM으로 보내 드려요. (팔로우한 분께 보내집니다)",
+  "hashtags": [
+    "#AI영상",
+    "#프롬프트",
+    "#카메라앵글",
+    "#토큰전쟁"
+  ],
+  "dm": {
+    "keyword": "자료",
+    "message": "카메라 용어 40개 자료입니다.\n아래 '자료 보기'를 누르면 영상에 나온 15개와 추가 25개를 한국어 이름, 한 줄 설명, 영어 용어 복사 버튼과 함께 정리한 페이지가 열립니다.\n프롬프트에 영어 용어를 그대로 넣어 쓰십시오.",
+    "cta": "팔로우하고 댓글에 '자료' 남기면\n카메라 용어 40개를\n보내 드립니다",
+    "banner": "댓글에 '자료'라고 남기면\n카메라 용어 40개를 DM으로 보내 드립니다",
+    "page": {
+      "intro": "AI 영상과 그림 프롬프트에 넣는 카메라 용어 40개입니다. 촬영 현장에서 쓰는 이름이라 영상 프롬프트에도 그대로 넣어 쓸 수 있습니다. 추가 용어에는 카메라 움직임처럼 영상에서만 보이는 용어도 있습니다.",
+      "list_title": "영상에 나온 카메라 용어 15개",
+      "list_intro": "번호는 영상에 나온 순서와 같습니다. 그림은 토큰전쟁 마스코트 슬라임으로 직접 만든 결과입니다. 영어 용어를 복사해 프롬프트에 넣으십시오.",
+      "more": [
+        {
+          "name": "풀 샷",
+          "en": "full shot",
+          "desc": "대상의 머리부터 발끝까지 담는 화면입니다."
+        },
+        {
+          "name": "익스트림 와이드 샷",
+          "en": "extreme wide shot",
+          "desc": "대상이 아주 작게 보일 만큼 넓은 풍경을 담는 화면입니다."
+        },
+        {
+          "name": "투 샷",
+          "en": "two shot",
+          "desc": "두 인물을 한 화면에 담는 화면입니다."
+        },
+        {
+          "name": "시점 샷(POV)",
+          "en": "point-of-view shot",
+          "desc": "등장인물의 눈으로 보는 것처럼 찍은 화면입니다."
+        },
+        {
+          "name": "아이 레벨",
+          "en": "eye-level shot",
+          "desc": "눈높이에서 찍는 기본 각도입니다."
+        },
+        {
+          "name": "웜즈아이 뷰",
+          "en": "worm's-eye view",
+          "desc": "땅바닥에서 올려다보는 아주 낮은 각도입니다.",
+          "type": "image",
+          "src": "img/more/worms-eye-view.jpg",
+          "mascot": true,
+          "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: worm's-eye view, the camera on the wet pavement looking almost straight up at the slime, the cafe and the night sky towering above. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+          "ref": "img/list/scene.jpg"
+        },
+        {
+          "name": "돌리 인",
+          "en": "dolly in",
+          "desc": "카메라가 대상 쪽으로 다가가는 영상 움직임입니다."
+        },
+        {
+          "name": "돌리 줌",
+          "en": "dolly zoom",
+          "desc": "카메라는 뒤로 물러나며 줌은 당겨 배경이 늘어나 보이게 하는 영상 기법입니다."
+        },
+        {
+          "name": "트래킹 샷",
+          "en": "tracking shot",
+          "desc": "움직이는 대상을 카메라가 따라가는 영상 움직임입니다."
+        },
+        {
+          "name": "패닝",
+          "en": "pan",
+          "desc": "카메라를 제자리에서 좌우로 돌리는 영상 움직임입니다."
+        },
+        {
+          "name": "틸트",
+          "en": "tilt",
+          "desc": "카메라를 제자리에서 위아래로 돌리는 영상 움직임입니다."
+        },
+        {
+          "name": "핸드헬드",
+          "en": "handheld camera",
+          "desc": "손으로 들고 찍어 흔들림이 살아 있는 화면입니다."
+        },
+        {
+          "name": "스테디캠",
+          "en": "steadicam shot",
+          "desc": "흔들림 없이 부드럽게 따라가는 영상 움직임입니다."
+        },
+        {
+          "name": "드론 샷",
+          "en": "drone shot",
+          "desc": "하늘 높이에서 내려다보며 찍은 화면입니다.",
+          "type": "image",
+          "src": "img/more/drone-shot.jpg",
+          "mascot": true,
+          "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: drone shot, aerial view from high above the narrow alley at night, the slime small on the step in front of the glowing cafe, rooftops around. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+          "ref": "img/list/scene.jpg"
+        },
+        {
+          "name": "크레인 샷",
+          "en": "crane shot",
+          "desc": "카메라가 높이 오르거나 내려가며 찍는 영상 움직임입니다."
+        },
+        {
+          "name": "오비트 샷",
+          "en": "orbit shot",
+          "desc": "카메라가 대상 둘레를 돌며 찍는 영상 움직임입니다."
+        },
+        {
+          "name": "슬로 모션",
+          "en": "slow motion",
+          "desc": "움직임을 실제보다 느리게 보여 주는 영상입니다."
+        },
+        {
+          "name": "타임랩스",
+          "en": "timelapse",
+          "desc": "긴 시간을 빠르게 압축해 보여 주는 영상입니다."
+        },
+        {
+          "name": "랙 포커스",
+          "en": "rack focus",
+          "desc": "한 장면 안에서 초점을 앞에서 뒤로 옮기는 영상 기법입니다."
+        },
+        {
+          "name": "딥 포커스",
+          "en": "deep focus",
+          "desc": "앞쪽과 뒤쪽이 모두 선명한 화면입니다."
+        },
+        {
+          "name": "망원 렌즈",
+          "en": "telephoto lens",
+          "desc": "배경이 압축되어 대상 가까이 붙어 보이는 렌즈입니다.",
+          "type": "image",
+          "src": "img/more/telephoto-lens.jpg",
+          "mascot": true,
+          "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: shot with a long telephoto lens from far down the alley, strong background compression, the cafe lights large and close behind the slime. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+          "ref": "img/list/scene.jpg"
+        },
+        {
+          "name": "광각 렌즈",
+          "en": "wide-angle lens",
+          "desc": "넓은 범위를 한 화면에 담는 렌즈입니다."
+        },
+        {
+          "name": "모션 블러",
+          "en": "motion blur",
+          "desc": "움직이는 부분이 흐르듯 번져 보이는 효과입니다."
+        },
+        {
+          "name": "시네마스코프 화면비",
+          "en": "2.39:1 widescreen aspect ratio",
+          "desc": "영화관 화면처럼 가로로 긴 비율입니다."
+        },
+        {
+          "name": "대칭 구도",
+          "en": "symmetrical composition",
+          "desc": "화면 가운데를 기준으로 좌우가 맞는 구도입니다.",
+          "type": "image",
+          "src": "img/more/symmetrical-composition.jpg",
+          "mascot": true,
+          "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: perfectly symmetrical composition, the slime exactly in the center in front of the cafe door, the alley walls mirrored on both sides. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+          "ref": "img/list/scene.jpg"
+        }
+      ],
+      "more_title": "추가 카메라 용어 25개",
+      "more_intro": "영상에 나오지 않은 추가 용어입니다. 예시 그림이 붙은 용어만 직접 만들어 본 결과이고, 나머지는 용어와 뜻을 정리한 목록입니다.",
+      "extra_title": "그대로 복사해 쓰는 프롬프트",
+      "extra": [
+        {
+          "title": "11 아나모픽 렌즈 플레어에 쓴 프롬프트",
+          "prompt": "Keep exactly the same character from the reference image: the small translucent lime green jelly slime with two cat ears, two small round black dot eyes, a tiny curved smile, short stubby arms and feet, tiny air bubbles inside, glossy wet surface. Same shape, same proportions, same face, same color. Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: shot with an anamorphic lens, long horizontal blue lens flares across the frame from the cafe lights, cinematic look. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+          "note": "토큰전쟁 마스코트 기준 그림으로 만든 골목 장면 그림을 참고 이미지로 함께 넣어 FLUX.2 [klein]로 만들 때 쓴 프롬프트입니다. 다른 그림 AI에서는 참고 이미지를 함께 올리고 쓰십시오."
+        },
+        {
+          "title": "05 로우 앵글에 쓴 프롬프트",
+          "prompt": "Keep exactly the same character from the reference image: the small translucent lime green jelly slime with two cat ears, two small round black dot eyes, a tiny curved smile, short stubby arms and feet, tiny air bubbles inside, glossy wet surface. Same shape, same proportions, same face, same color. Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: low angle shot from near the ground looking up at the slime, the slime looks big and heroic. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+          "note": "토큰전쟁 마스코트 기준 그림으로 만든 골목 장면 그림을 참고 이미지로 함께 넣어 FLUX.2 [klein]로 만들 때 쓴 프롬프트입니다. 다른 그림 AI에서는 참고 이미지를 함께 올리고 쓰십시오."
+        },
+        {
+          "title": "10 얕은 심도(보케)에 쓴 프롬프트",
+          "prompt": "Keep exactly the same character from the reference image: the small translucent lime green jelly slime with two cat ears, two small round black dot eyes, a tiny curved smile, short stubby arms and feet, tiny air bubbles inside, glossy wet surface. Same shape, same proportions, same face, same color. Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: shallow depth of field, the slime in sharp focus, the cafe lights behind turned into large soft bokeh circles. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+          "note": "토큰전쟁 마스코트 기준 그림으로 만든 골목 장면 그림을 참고 이미지로 함께 넣어 FLUX.2 [klein]로 만들 때 쓴 프롬프트입니다. 다른 그림 AI에서는 참고 이미지를 함께 올리고 쓰십시오."
+        }
+      ]
+    }
+  },
+  "threads": {
+    "text": "AI 영상이 어설퍼 보이는 이유는 카메라 이야기가 프롬프트에 빠져서인 경우가 많습니다.\n\n로우 앵글을 넣으면 주인공이 크고 당당해 보이고, 더치 앵글을 넣으면 화면이 기울어 긴장감이 생기거든요.\n클로즈업, 와이드 샷, 얕은 심도처럼 촬영 현장에서 쓰는 말을 그대로 넣으면 됩니다.\n\n결국 영화 같은 화면은 장면 설명보다 카메라 위치 한 단어에서 갈립니다.",
+    "images": [
+      "cover"
+    ]
+  }
+}
