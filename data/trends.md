@@ -1,4 +1,4 @@
-# 인스타 반응 분석 (2026-11-16 14:42 기준)
+# 인스타 반응 분석 (2026-11-16 14:52 기준)
 
 에이전트는 주제를 고를 때 이 파일을 먼저 읽는다 (STYLE_GUIDE 3장, 6-1장 '인스타 반응').
 배수 = 그 계정의 최근 60일 같은 유형(릴스/피드) 중간값 대비. 2배 이상이면 '먹힌 주제'.
@@ -10,37 +10,37 @@
   - 2,776조회 6.4x: [2027년, AI 거품은 붕괴한다?](https://www.instagram.com/reel/Dd0-1xPBNso/)
 - FEED 중간값 6반응, 게시물 1개
 
-## @ai.trend.kr (팔로워 273153)
+## @ai.trend.kr (팔로워 273168)
 - REELS 중간값 90,537조회, 게시물 35개
-  - 2,865,961조회 31.7x: [눈 뭉치 던진 범인이 나라고요? ❄️](https://www.instagram.com/reel/DetX442xkFz/)
-  - 2,071,738조회 22.9x: [포장해 달라던 선물이 내 거였다고요? 🎁](https://www.instagram.com/reel/DeWZecova75/)
-  - 1,065,620조회 11.8x: [식이 시작도 안 했는데 하객석이 뒤집어졌어요 🎉](https://www.instagram.com/reel/De0VCSbPO_M/)
+  - 2,865,970조회 31.7x: [눈 뭉치 던진 범인이 나라고요? ❄️](https://www.instagram.com/reel/DetX442xkFz/)
+  - 2,071,755조회 22.9x: [포장해 달라던 선물이 내 거였다고요? 🎁](https://www.instagram.com/reel/DeWZecova75/)
+  - 1,065,640조회 11.8x: [식이 시작도 안 했는데 하객석이 뒤집어졌어요 🎉](https://www.instagram.com/reel/De0VCSbPO_M/)
 - FEED 중간값 1,543반응, 게시물 115개
 
 ## @ai.asap.kr (팔로워 9709)
 - REELS 중간값 8,300조회, 게시물 4개
-  - 39,367조회 4.7x: [AI가 일자리를 없앨까 묻는 래리 핑크에게 팔란티어 CEO 알렉스 카프가 답했습니다. 먼저 팔기 어려워지는 건 엘리트 학교 철학 전공이고, 고등](https://www.instagram.com/reel/DfwH1hxpWaQ/)
+  - 39,507조회 4.8x: [AI가 일자리를 없앨까 묻는 래리 핑크에게 팔란티어 CEO 알렉스 카프가 답했습니다. 먼저 팔기 어려워지는 건 엘리트 학교 철학 전공이고, 고등](https://www.instagram.com/reel/DfwH1hxpWaQ/)
   - 9,628조회 1.2x: [AI가 소프트웨어를 끝낸다? '정반대' (젠슨 황, 엔비디아)](https://www.instagram.com/reel/DfCV6uPpezi/)
   - 6,973조회 0.8x: [🦆 에이전트로 에이전트를 만든다 (젠슨 황, 엔비디아)](https://www.instagram.com/reel/De8rXgTJKcV/)
-- FEED 중간값 81반응, 게시물 133개
+- FEED 중간값 80반응, 게시물 132개
 
 ## @choi.openai (팔로워 6239)
 - FEED 중간값 97반응, 게시물 2개
 
 ## @ex.treme.ai (팔로워 8286)
 
-## @bizucafe (팔로워 95400)
-- REELS 중간값 23,216조회, 게시물 194개
-  - 579,843조회 25.0x: [화폐는 의미 없다 (일론 머스크)](https://www.instagram.com/reel/De8mVBGgBJL/)
-  - 420,269조회 18.1x: [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/)
-  - 177,915조회 7.7x: [아이들 미국학교 보내는 이유 (유튜브 창업자 Steve Chen)](https://www.instagram.com/reel/DfL0yn5DYXf/)
+## @bizucafe (팔로워 95401)
+- REELS 중간값 23,226조회, 게시물 194개
+  - 580,417조회 25.0x: [화폐는 의미 없다 (일론 머스크)](https://www.instagram.com/reel/De8mVBGgBJL/)
+  - 421,171조회 18.1x: [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/)
+  - 177,923조회 7.7x: [아이들 미국학교 보내는 이유 (유튜브 창업자 Steve Chen)](https://www.instagram.com/reel/DfL0yn5DYXf/)
 - FEED 중간값 21반응, 게시물 11개
 
-## @prompt_what (팔로워 250658)
+## @prompt_what (팔로워 250662)
 - REELS 중간값 34,764조회, 게시물 127개
-  - 4,394,319조회 126.4x: [황궁에서 벌어지는 맞불륜, 전개는 한국 막장 드라마입니다.](https://www.instagram.com/reel/DeSnhNJTiyr/)
-  - 1,358,578조회 39.1x: [바탕화면 정리도 이제 러그로 덮고 모른 척합니다.](https://www.instagram.com/reel/DePBnqgSztY/)
-  - 969,659조회 27.9x: [1화가 333만 번 재생된 K-막장 로판, 이번엔 2화입니다 🎬](https://www.instagram.com/reel/DerFayOyKMm/)
+  - 4,394,471조회 126.4x: [황궁에서 벌어지는 맞불륜, 전개는 한국 막장 드라마입니다.](https://www.instagram.com/reel/DeSnhNJTiyr/)
+  - 1,358,613조회 39.1x: [바탕화면 정리도 이제 러그로 덮고 모른 척합니다.](https://www.instagram.com/reel/DePBnqgSztY/)
+  - 969,713조회 27.9x: [1화가 333만 번 재생된 K-막장 로판, 이번엔 2화입니다 🎬](https://www.instagram.com/reel/DerFayOyKMm/)
 - FEED 중간값 1,448반응, 게시물 70개
 
 ## 최근 30일 잘 된 게시물 TOP 20
@@ -48,25 +48,25 @@
 | 배수 | 계정 | 유형 | 날짜 | 수치 | 첫 줄 |
 |---|---|---|---|---|---|
 | 49.2x | @bizucafe | FEED | 11-07 | 1,033 | [광고(廣告). 한문으로 널리 알린다는 뜻이다.. 많은 사람들에게 무언가 정보를 알리는 것..](https://www.instagram.com/p/DfbYTYnmiGm/) |
-| 31.7x | @ai.trend.kr | REELS | 10-20 | 2,865,961 | [눈 뭉치 던진 범인이 나라고요? ❄️](https://www.instagram.com/reel/DetX442xkFz/) |
-| 27.9x | @prompt_what | REELS | 10-19 | 969,659 | [1화가 333만 번 재생된 K-막장 로판, 이번엔 2화입니다 🎬](https://www.instagram.com/reel/DerFayOyKMm/) |
-| 25.0x | @bizucafe | REELS | 10-26 | 579,843 | [화폐는 의미 없다 (일론 머스크)](https://www.instagram.com/reel/De8mVBGgBJL/) |
-| 18.1x | @bizucafe | REELS | 11-15 | 420,269 | [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/) |
-| 17.2x | @ai.asap.kr | FEED | 10-18 | 1,394 | [Filee는 Ctrl을 누른 채 파일을 끌면 커서 옆에 변환할 형식이 동그랗게 뜨고, 원하는 형식에 놓으면 바로 바꿔 주는 변환기입니다. 이미지](https://www.instagram.com/p/DeoW-TQj9F5/) |
-| 15.0x | @prompt_what | REELS | 11-09 | 523,058 | [댓글에 ‘Elsa’ 남겨주시면 프롬프트 보내드릴게요 ❄️](https://www.instagram.com/reel/DfhJl3-y3Lv/) |
-| 11.8x | @ai.trend.kr | REELS | 10-23 | 1,065,620 | [식이 시작도 안 했는데 하객석이 뒤집어졌어요 🎉](https://www.instagram.com/reel/De0VCSbPO_M/) |
+| 31.7x | @ai.trend.kr | REELS | 10-20 | 2,865,970 | [눈 뭉치 던진 범인이 나라고요? ❄️](https://www.instagram.com/reel/DetX442xkFz/) |
+| 27.9x | @prompt_what | REELS | 10-19 | 969,713 | [1화가 333만 번 재생된 K-막장 로판, 이번엔 2화입니다 🎬](https://www.instagram.com/reel/DerFayOyKMm/) |
+| 25.0x | @bizucafe | REELS | 10-26 | 580,417 | [화폐는 의미 없다 (일론 머스크)](https://www.instagram.com/reel/De8mVBGgBJL/) |
+| 18.1x | @bizucafe | REELS | 11-15 | 421,171 | [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/) |
+| 17.4x | @ai.asap.kr | FEED | 10-18 | 1,394 | [Filee는 Ctrl을 누른 채 파일을 끌면 커서 옆에 변환할 형식이 동그랗게 뜨고, 원하는 형식에 놓으면 바로 바꿔 주는 변환기입니다. 이미지](https://www.instagram.com/p/DeoW-TQj9F5/) |
+| 15.1x | @prompt_what | REELS | 11-09 | 523,279 | [댓글에 ‘Elsa’ 남겨주시면 프롬프트 보내드릴게요 ❄️](https://www.instagram.com/reel/DfhJl3-y3Lv/) |
+| 11.8x | @ai.trend.kr | REELS | 10-23 | 1,065,640 | [식이 시작도 안 했는데 하객석이 뒤집어졌어요 🎉](https://www.instagram.com/reel/De0VCSbPO_M/) |
 | 11.7x | @prompt_what | FEED | 10-25 | 17,000 | [학교에 도입이 시급한 3D 교과서가 나왔습니다 📖](https://www.instagram.com/p/De6rZd7lL1e/) |
-| 10.5x | @ai.trend.kr | FEED | 10-27 | 16,203 | [올해가 가기 전에, GPT랑 새해 계획을 세워봤어요. 🗓️](https://www.instagram.com/p/De_YpGSkS7D/) |
-| 8.9x | @prompt_what | REELS | 11-01 | 310,725 | [작은 친절을 베푸는 AI 애니메이션이 8,200만 번 재생됐습니다 ☂️](https://www.instagram.com/reel/DfMkn35Ssmw/) |
-| 8.4x | @prompt_what | REELS | 10-18 | 293,387 | [캡처 한 장으로 끝나는 챗GPT 업무 코드 4개입니다 📎](https://www.instagram.com/reel/DenpnlJyf3l/) |
-| 7.7x | @bizucafe | REELS | 11-01 | 177,915 | [아이들 미국학교 보내는 이유 (유튜브 창업자 Steve Chen)](https://www.instagram.com/reel/DfL0yn5DYXf/) |
-| 7.6x | @bizucafe | REELS | 10-26 | 175,433 | [AI 미치게 하는 법 (일론 머스크)](https://www.instagram.com/reel/De71wGlinFC/) |
-| 7.5x | @ai.trend.kr | REELS | 11-04 | 678,174 | [AI로 오늘도 감동을 받네요 🥹](https://www.instagram.com/reel/DfUlNHxPiTT/) |
-| 7.3x | @bizucafe | REELS | 11-14 | 168,659 | [대만 뺏기면 답이 없다 (일론 머스크)](https://www.instagram.com/reel/DfuE50ME_qw/) |
+| 10.5x | @ai.trend.kr | FEED | 10-27 | 16,209 | [올해가 가기 전에, GPT랑 새해 계획을 세워봤어요. 🗓️](https://www.instagram.com/p/De_YpGSkS7D/) |
+| 8.9x | @prompt_what | REELS | 11-01 | 310,727 | [작은 친절을 베푸는 AI 애니메이션이 8,200만 번 재생됐습니다 ☂️](https://www.instagram.com/reel/DfMkn35Ssmw/) |
+| 8.4x | @prompt_what | REELS | 10-18 | 293,390 | [캡처 한 장으로 끝나는 챗GPT 업무 코드 4개입니다 📎](https://www.instagram.com/reel/DenpnlJyf3l/) |
+| 7.7x | @bizucafe | REELS | 11-01 | 177,923 | [아이들 미국학교 보내는 이유 (유튜브 창업자 Steve Chen)](https://www.instagram.com/reel/DfL0yn5DYXf/) |
+| 7.6x | @bizucafe | REELS | 10-26 | 175,446 | [AI 미치게 하는 법 (일론 머스크)](https://www.instagram.com/reel/De71wGlinFC/) |
+| 7.5x | @ai.trend.kr | REELS | 11-04 | 678,248 | [AI로 오늘도 감동을 받네요 🥹](https://www.instagram.com/reel/DfUlNHxPiTT/) |
+| 7.3x | @bizucafe | REELS | 11-14 | 168,783 | [대만 뺏기면 답이 없다 (일론 머스크)](https://www.instagram.com/reel/DfuE50ME_qw/) |
 | 7.1x | @ai.trend.kr | FEED | 10-28 | 10,906 | [사진 한 장으로 다섯 시대를 살아 봤어요 📷](https://www.instagram.com/p/DfB9iInE-54/) |
 | 6.9x | @ai.talk.kr | REELS | 10-23 | 3,009 | [AI가 발전하면 내 노트북은 더 좋아질까, 더 비싸질까?](https://www.instagram.com/reel/De0PR-Qj5n2/) |
-| 6.9x | @bizucafe | REELS | 10-23 | 159,505 | [우린 이미 너무 늦었다 (유발 하라리)](https://www.instagram.com/reel/De1azrfipMC/) |
-| 6.9x | @prompt_what | REELS | 11-10 | 238,446 | [조명 이름 34개만 알아도 AI 영상의 분위기가 달라집니다 💡](https://www.instagram.com/reel/DfjwADdyH7a/) |
+| 6.9x | @ai.asap.kr | FEED | 10-28 | 554 | [Oh-My-Hermes는 Nous Research의 오픈소스 에이전트 Hermes Agent에 쓸 세팅을 묶은 올인원 패키지입니다. 설치하고 o](https://www.instagram.com/p/DfA7xqjE1nL/) |
+| 6.9x | @bizucafe | REELS | 10-23 | 159,533 | [우린 이미 너무 늦었다 (유발 하라리)](https://www.instagram.com/reel/De1azrfipMC/) |
 
 ## 잘 안 된 게시물 (하위 10)
 

@@ -1,4 +1,4 @@
-# 잘 터진 주제 (2026-11-16 14:42 기준)
+# 잘 터진 주제 (2026-11-16 14:52 기준)
 
 주제를 고를 때 이 표의 위쪽 주제와 **같거나 비슷한 것**을 먼저 고른다 (STYLE_GUIDE 3장). PR 본문에 "참고한 잘 터진 주제: …" 한 줄을 적는다.
 
@@ -48,7 +48,7 @@
 
 ### 챗GPT·제미나이 사진·그림 변환 — 순위 점수 17.8, 릴스 51·카드 64, 배수 중간값 0.98x
 - 40.3x 카드 @ai.trend.kr: [평범한 사진 한 장을 간직하고 싶은 그림으로 만들어보세요 🖼️](https://www.instagram.com/p/DckJfiMD83G/)
-- 21.9x 카드 @ai.trend.kr: [핸드폰 배경화면을 바꿨더니, 하루에도 몇 번씩 꺼내 보게 됐어요.🐾](https://www.instagram.com/p/DcdMcZDjzBL/)
+- 22.0x 카드 @ai.trend.kr: [핸드폰 배경화면을 바꿨더니, 하루에도 몇 번씩 꺼내 보게 됐어요.🐾](https://www.instagram.com/p/DcdMcZDjzBL/)
 - 8.5x 카드 @ex.treme.ai: [브랜드 URL 하나, 제품 사진 한 장이면](https://www.instagram.com/p/DY35VLhmPJJ/)
 
 ### AI 안전·논란 — 순위 점수 15.6, 릴스 17·카드 6, 배수 중간값 0.87x
@@ -76,7 +76,7 @@
 - 6.7x 카드 @ai.asap.kr: [DockDoor는 맥 독에 윈도우처럼 창 미리보기를 붙여 주는 무료 오픈소스 앱입니다. 독을 바꾸지 않고 메뉴바에서 돌아가며 기존 독에 기능을](https://www.instagram.com/p/DeIvEO_j3xU/)
 - 5.4x 카드 @ai.asap.kr: [Plexo는 윈도우·맥·리눅스용 다운로드 앱입니다. 파일을 조각으로 나눠 와이파이, 유선, USB로 연결한 휴대폰, 셀룰러 같은 여러 네트워크에](https://www.instagram.com/p/Dd_Kxs4jy4j/)
 
-### AI로 광고·디자인 만들기 — 순위 점수 7.9, 릴스 5·카드 14, 배수 중간값 2.60x
+### AI로 광고·디자인 만들기 — 순위 점수 7.9, 릴스 5·카드 14, 배수 중간값 2.61x
 - 10.0x 카드 @ex.treme.ai: [광고 올릴 때 제일 막히는 건 디자인이 아니라 ”무슨 말로 팔지“입니다.](https://www.instagram.com/p/DaFI7YXGOjf/)
 - 8.9x 카드 @ai.asap.kr: [M3E Canvas는 앱 화면을 그리는 웹 도구입니다. 화면을 잇고 테마를 정한 뒤 프롬프트를 복사해 클로드 코드나 코덱스에 넣으면 됩니다.](https://www.instagram.com/p/DdsbFjMDz5I/)
 - 5.5x 릴스 @prompt_what: [대충 찍은 사진 한 장이 광고 이미지로 탄생합니다 📸](https://www.instagram.com/reel/De0XfxiyD4L/)
