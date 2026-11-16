@@ -541,7 +541,7 @@ def check_dm(post):
         if not any(f"'{kw}'" in l or f"‘{kw}’" in l for l in head):
             warnings.append(f"캡션 첫 줄이나 둘째 줄에 '{kw}' 안내가 없음 → \"댓글에 '{kw}' 남기면 …을 DM으로 보내 드려요(팔로우한 분께)\" (캡션 끝에만 두지 않기, STYLE_GUIDE 7-1)")
     if post.get("type") in ("reel", "video") and not (d.get("banner") or "").strip():
-        warnings.append(f"참여형 릴스에 dm.banner(앞쪽 안내 띠) 없음 → 예: \"댓글에 '{kw}'라고 남기면\\n프롬프트를 DM으로 보내 드려요\" (3초부터 본편 끝까지, STYLE_GUIDE 7-1)")
+        warnings.append(f"참여형 릴스에 dm.banner(앞쪽 안내 띠) 없음 → 예: \"댓글에 '{kw}'라고 남기면\\n프롬프트를 DM으로 보내 드립니다\" (3초부터 본편 끝까지, STYLE_GUIDE 7-1)")
     elif (d.get("banner") or "").strip():
         b = d["banner"].strip()
         lines = [l for l in b.splitlines() if l.strip()]
