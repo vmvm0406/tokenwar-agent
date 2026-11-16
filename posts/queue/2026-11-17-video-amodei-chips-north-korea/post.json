@@ -1,0 +1,163 @@
+{
+  "id": "2026-11-17-video-amodei-chips-north-korea",
+  "type": "video",
+  "series": "전황",
+  "date": "2026-11-17",
+  "publish_at": "2026-11-17T19:43:00+09:00",
+  "origin": "quote",
+  "length": "long",
+  "topic": [
+    "다리오 아모데이",
+    "앤트로픽",
+    "엔비디아",
+    "중국 칩 수출"
+  ],
+  "rights": "quote",
+  "speech": true,
+  "credit": "Bloomberg Live",
+  "rights_note": "공식 채널(Bloomberg Live) 다보스 대담 중 약 53초 인용, 한국어 번역 자막",
+  "source_url": "https://www.youtube.com/watch?v=Ckt1cj0xjRM&t=369",
+  "video": {
+    "src": "clips/source.mp4",
+    "start": 1.06,
+    "end": 54.3,
+    "source_duration": 1524.6,
+    "avoid_edge_check": false,
+    "fade_out": 50.18
+  },
+  "title": "AI 칩을 중국에 파는 건\n북한에 핵 파는 것과 같다",
+  "highlight": "북한에 핵",
+  "title_en": "Dario Amodei on selling AI chips to China",
+  "subtitles": [
+    {
+      "start": 1.2,
+      "end": 4.62,
+      "text": "우리는 중국보다\n몇 년이나 앞서 있어요"
+    },
+    {
+      "start": 4.62,
+      "end": 7.4,
+      "text": "칩을 만드는\n능력에서 말이죠"
+    },
+    {
+      "start": 7.46,
+      "end": 11.0,
+      "text": "그래서 이 칩을 중국에 보내는 건\n큰 실수라고 생각해요",
+      "highlight": "큰 실수"
+    },
+    {
+      "start": 11.6,
+      "end": 13.96,
+      "text": "제가 떠올린\n비유가 있는데요"
+    },
+    {
+      "start": 13.96,
+      "end": 18.3,
+      "text": "생각해 보세요.\n국가 안보가 크게 걸린 일이에요"
+    },
+    {
+      "start": 18.3,
+      "end": 22.7,
+      "text": "사실상 생각하는 능력을 가진\n모델을 만드는 거잖아요"
+    },
+    {
+      "start": 22.9,
+      "end": 24.6,
+      "text": "사실상 지능 그 자체죠"
+    },
+    {
+      "start": 24.64,
+      "end": 28.6,
+      "text": "제가 '데이터센터 속\n천재들의 나라'라고 부른 거죠"
+    },
+    {
+      "start": 29.2,
+      "end": 31.9,
+      "text": "1억 명을 상상해 보세요"
+    },
+    {
+      "start": 31.9,
+      "end": 34.6,
+      "text": "노벨상 수상자 누구보다도\n똑똑한 1억 명이요",
+      "highlight": "1억 명"
+    },
+    {
+      "start": 34.8,
+      "end": 37.95,
+      "text": "그 힘이 어느 한 나라의\n손에 들어가는 거예요"
+    },
+    {
+      "start": 38.88,
+      "end": 40.96,
+      "text": "그러니 이건\n말도 안 되는 일이에요"
+    },
+    {
+      "start": 40.96,
+      "end": 44.0,
+      "text": "뭐랄까, 이건 좀"
+    },
+    {
+      "start": 44.1,
+      "end": 47.9,
+      "text": "북한에 핵무기를\n파는 것과 비슷해요",
+      "highlight": "북한에 핵무기"
+    },
+    {
+      "start": 47.9,
+      "end": 50.3,
+      "text": "그러면서 '껍데기는 보잉이\n만들었다'고 자랑하는 거죠"
+    },
+    {
+      "start": 50.4,
+      "end": 54.3,
+      "text": "11월 블룸버그 보도: 앤트로픽 상장\n일부 주관사, 중국·홍콩 기관 주문 거절"
+    }
+  ],
+  "thumb": {
+    "title": "칩을 중국에 파는 건\n북한에 핵 파는 격이다",
+    "highlight": "북한에 핵",
+    "person": {
+      "name": "다리오 아모데이",
+      "desc": "앤트로픽 CEO"
+    },
+    "image": {
+      "type": "image",
+      "src": "img/thumb.jpg",
+      "url": "https://www.youtube.com/watch?v=Ckt1cj0xjRM",
+      "position": "center center"
+    }
+  },
+  "sources": [
+    {
+      "name": "Bloomberg Live · 다보스 2026 다리오 아모데이 대담 (1월 20일)",
+      "url": "https://www.youtube.com/watch?v=Ckt1cj0xjRM&t=369"
+    },
+    {
+      "name": "Briefs · 블룸버그 보도 정리, 앤트로픽 상장 중국·홍콩 주문 (11월 13일)",
+      "url": "https://www.briefs.co/news/mainland-china-and-hong-kong-funds-sidelined-from-anthropic/"
+    },
+    {
+      "name": "AI Stock Wire · 앤트로픽 상장 중국·홍콩 주문 거절 (11월 13일)",
+      "url": "https://aistockwire.com/blog/anthropic-ant-ipo-china-hong-kong-orders-rebuffed-itar-november-2026"
+    }
+  ],
+  "caption": "앤트로픽 CEO 다리오 아모데이는 AI 칩을 중국에 파는 일을 북한에 핵무기를 파는 것에 빗댔습니다.\n\n무대는 1월 20일 다보스포럼 블룸버그 대담. 트럼프 행정부가 엔비디아 칩의 중국 판매를 허용한 정책을 두고 나온 말입니다.\n아모데이는 미국이 칩 만드는 능력에서 중국보다 몇 년 앞서 있다며, 최신 바로 전 세대 칩이라도 보내는 건 큰 실수라고 봤습니다.\n그가 그리는 AI는 '노벨상 수상자보다 똑똑한 1억 명'이고, 그 힘이 한 나라 손에 들어갈 수 있다는 이유.\n열 달 뒤인 11월 13일, 블룸버그는 19일 나스닥 상장을 앞둔 앤트로픽의 일부 주관사가 중국·홍콩 기관투자자 청약 주문을 받지 않았다고 전했습니다. 앤트로픽의 공식 발표는 아닙니다.\n\n영상: Bloomberg Live (YouTube) https://www.youtube.com/watch?v=Ckt1cj0xjRM\n출처: Bloomberg Live 다보스 대담(1월 20일), 블룸버그 보도를 정리한 Briefs·AI Stock Wire(11월 13일)\n\n엔비디아·반도체 주식 가진 친구에게 보내 주세요",
+  "hashtags": [
+    "#앤트로픽",
+    "#엔비디아",
+    "#AI뉴스",
+    "#반도체",
+    "#토큰전쟁"
+  ],
+  "threads": {
+    "text": "앤트로픽 CEO 다리오 아모데이가 AI 칩을 중국에 파는 일을 북한에 핵무기를 파는 것에 빗댔습니다.\n\n1월 다보스 블룸버그 대담에서 나온 말인데, 미국이 칩 기술에서 중국보다 몇 년 앞서 있으니 한 세대 전 칩이라도 보내면 안 된다는 주장이었습니다.\n그리고 이달 19일 나스닥 상장을 앞두고, 일부 주관사가 중국·홍콩 기관 주문을 받지 않았다는 블룸버그 보도가 나왔습니다.\n\n엔비디아·반도체 주식을 가진 사람이라면 'AI 칩은 무기'라는 시각이 시장에서도 점점 현실이 되고 있다는 점을 봐 둘 만합니다.",
+    "images": [
+      "cover"
+    ],
+    "topic": "AI Threads",
+    "replies": [
+      "출처: Bloomberg Live 다보스 대담 (1월 20일)\nhttps://www.youtube.com/watch?v=Ckt1cj0xjRM&t=369",
+      "블룸버그 보도 정리: Briefs, AI Stock Wire (11월 13일)\nhttps://www.briefs.co/news/mainland-china-and-hong-kong-funds-sidelined-from-anthropic/\nhttps://aistockwire.com/blog/anthropic-ant-ipo-china-hong-kong-orders-rebuffed-itar-november-2026"
+    ]
+  }
+}
