@@ -1362,7 +1362,34 @@
    "why": "모델·기능 발표 아님",
    "tries": 0,
    "status": "skipped"
+  },
+  "https://openai.com/index/expanding-chatgpt-for-academic-researchers": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Broadening access to AI for scientists",
+   "first_seen": "2026-11-17T02:34:22+09:00",
+   "why": "모델·기능 발표 아님",
+   "tries": 0,
+   "status": "skipped"
+  },
+  "https://openai.com/index/strengthening-online-child-safety": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Strengthening the fight against online child sexual abuse with new tools and support",
+   "first_seen": "2026-11-17T02:34:22+09:00",
+   "why": "모델·기능 발표 아님",
+   "tries": 0,
+   "status": "skipped"
+  },
+  "https://openai.com/index/science-at-the-frontier": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Science at the Frontier: How scientists use ChatGPT",
+   "first_seen": "2026-11-17T02:34:22+09:00",
+   "why": "모델·기능 발표 아님",
+   "tries": 0,
+   "status": "skipped"
   }
  },
- "updated": "2026-11-17T02:19:20+09:00"
+ "updated": "2026-11-17T02:34:22+09:00"
 }
