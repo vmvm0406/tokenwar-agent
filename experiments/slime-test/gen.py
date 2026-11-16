@@ -4,7 +4,8 @@
 2) 1~3: base 그림을 참고 이미지(input_image_0)로 넣고 "조명만 바꿔라"로 만든다 (FLUX.2 편집 기능).
    비교용으로 참고 이미지 없이 같은 seed + 같은 묘사로 만든 것도 seedonly_*.jpg로 남긴다.
 
-GitHub Actions(experiment-images.yml)에서만 돈다 (CF_ACCOUNT_ID, CF_API_TOKEN).
+GitHub Actions(experiment-images.yml, 지금은 지움)에서만 돌았다 (CF_ACCOUNT_ID, CF_API_TOKEN).
+기록용. 0-base.jpg는 마스코트 기준 이미지로 assets/mascot/slime-base.jpg에 옮겼다 (2026-11-16). 새 그림은 agent/gen_images.py의 "mascot": true로 만든다.
     python experiments/slime-test/gen.py           # 그림 만들기
     py -3.12 experiments/slime-test/gen.py --sheet  # 4장 모음(sheet.jpg)만, 이 컴퓨터에서
 """

@@ -19,6 +19,7 @@
 import asyncio
 import html
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -464,6 +465,32 @@ def main(folder):
         from dm import make_dm
         for p in make_dm(post, out_dir):
             print("DM 자료:", p.relative_to(ROOT) if p.is_relative_to(ROOT) else p)
+    if post["type"] == "video" and post.get("list"):
+        # 목록형 자료 릴스 (agent/listreel.py, TEMPLATES.md "목록형 자료 릴스")
+        from listreel import make_list_reel, with_placeholders, clear_placeholders
+        # 그림이 아직 없으면(마스코트 AI 그림은 render.yml의 gen_images가 만든다) 회색 자리표시로 틀만 렌더링
+        rpost, n_ph = with_placeholders(post, out_dir)
+        if n_ph and os.environ.get("GITHUB_ACTIONS"):
+            # Actions(build.py)에서는 그림을 먼저 만든다. 그래도 없으면 자리표시 영상이 게시되지 않게 멈춘다
+            clear_placeholders(out_dir)
+            print(f"규칙 위반으로 렌더링 중단: 목록 그림 {n_ph}장이 없음 (list.items[].prompt·mascot 확인)")
+            sys.exit(1)
+        if n_ph:
+            print(f"경고: 목록 그림 {n_ph}장이 아직 없어 회색 자리표시로 렌더링 (그림은 render.yml이 만든다. 이 결과는 올리지 않는다)")
+        try:
+            dur = make_list_reel(rpost, out_dir, CONFIG)
+            print(f"목록형 릴스 길이: {dur:.1f}초")
+            check_sound_or_exit(out_dir)
+            thumb_or_exit(rpost, out_dir)
+        except (FileNotFoundError, ValueError) as e:
+            print("목록형 릴스 렌더링 중단:")
+            for line in str(e).splitlines():
+                print(" -", line)
+            sys.exit(1)
+        finally:
+            clear_placeholders(out_dir)
+        print("완료:", out_dir)
+        return
     if post["type"] == "video":
         src = out_dir / post["video"]["src"]
         if not src.exists():

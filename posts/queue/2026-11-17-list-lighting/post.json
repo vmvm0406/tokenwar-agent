@@ -1,0 +1,226 @@
+{
+  "id": "2026-11-17-list-lighting",
+  "type": "video",
+  "format": "howto",
+  "origin": "own",
+  "length": "short",
+  "series": "생존 가이드",
+  "date": "2026-11-17",
+  "publish_at": "2026-11-17T11:13:00+09:00",
+  "rights": "own",
+  "rights_note": "결과 그림은 토큰전쟁 마스코트 기준 이미지(assets/mascot/slime-base.jpg)를 참고 이미지로 넣어 FLUX.2 [klein] 4B(Cloudflare Workers AI)로 만든 AI 그림. 배경음악은 agent/music_gen.py가 코드로 만든 음악",
+  "title": "AI 그림 분위기를 바꾸는\n조명 단어 20가지",
+  "highlight": "조명 단어",
+  "list": {
+    "items": [
+      {
+        "name": "하이키",
+        "en": "high-key",
+        "type": "image",
+        "src": "img/list/01.jpg",
+        "mascot": true,
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: high-key lighting, very bright and airy, soft white light everywhere, almost no shadows. Photorealistic 3D render, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "로우키",
+        "en": "low-key",
+        "type": "image",
+        "src": "img/list/02.jpg",
+        "mascot": true,
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: low-key lighting, dark moody room, a single soft light from the side on the slime, most of the frame in deep shadow. Photorealistic 3D render, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "골든아워",
+        "en": "golden hour",
+        "type": "image",
+        "src": "img/list/03.jpg",
+        "mascot": true,
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: warm golden hour sunlight streaming low through a window from the left, long soft orange shadows, warm amber glow on the slime and sofa. Photorealistic 3D render, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "블루아워",
+        "en": "blue hour",
+        "type": "image",
+        "src": "img/list/04.jpg",
+        "mascot": true,
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: blue hour twilight, cool deep blue light from the window, calm dim blue tones across the whole room. Photorealistic 3D render, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "렘브란트 조명",
+        "en": "Rembrandt lighting",
+        "type": "image",
+        "src": "img/list/05.jpg",
+        "mascot": true,
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: Rembrandt lighting, one soft key light from high on the left at 45 degrees, the right side of the slime in shadow with a small triangle of light on that side, dark background. Photorealistic 3D render, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "버터플라이 조명",
+        "en": "butterfly lighting",
+        "type": "image",
+        "src": "img/list/06.jpg",
+        "mascot": true,
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: butterfly lighting, a soft key light directly in front of and above the slime, a small shadow right under it, even glamorous front light. Photorealistic 3D render, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "스플릿 조명",
+        "en": "split lighting",
+        "type": "image",
+        "src": "img/list/07.jpg",
+        "mascot": true,
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: split lighting, a hard light from exactly the left side, the left half of the slime brightly lit and the right half in deep shadow. Photorealistic 3D render, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "림 라이트",
+        "en": "rim light",
+        "type": "image",
+        "src": "img/list/08.jpg",
+        "mascot": true,
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: rim lighting, a strong white light from behind outlining the edge of the slime with a bright glowing rim, the front mostly dark. Photorealistic 3D render, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "역광",
+        "en": "backlight",
+        "type": "image",
+        "src": "img/list/09.jpg",
+        "mascot": true,
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: strong backlight, a bright window directly behind the sofa, the slime glowing through its translucent body, slight light haze. Photorealistic 3D render, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "네온 조명",
+        "en": "neon lighting",
+        "type": "image",
+        "src": "img/list/10.jpg",
+        "mascot": true,
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: neon lighting, strong hot pink neon light from the left and electric blue neon light from the right, colored reflections on the glossy slime, dim room otherwise. Photorealistic 3D render, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "촛불 조명",
+        "en": "candlelight",
+        "type": "image",
+        "src": "img/list/11.jpg",
+        "mascot": true,
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: candlelight, a few lit candles on a small low table in front of the sofa, warm flickering orange light from below, dark room. Photorealistic 3D render, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "창문 자연광",
+        "en": "window light",
+        "type": "image",
+        "src": "img/list/12.jpg",
+        "mascot": true,
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: soft natural window light from a large window on the right, gentle soft shadows, calm morning mood. Photorealistic 3D render, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "소프트박스",
+        "en": "softbox",
+        "type": "image",
+        "src": "img/list/13.jpg",
+        "mascot": true,
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: studio softbox lighting, a large soft white light from the front left, clean even studio light, smooth soft shadows. Photorealistic 3D render, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "하드 라이트",
+        "en": "hard light",
+        "type": "image",
+        "src": "img/list/14.jpg",
+        "mascot": true,
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: hard direct light from a single bare bulb, crisp sharp-edged shadows on the sofa and the wall, high contrast. Photorealistic 3D render, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "빛줄기(볼류메트릭)",
+        "en": "volumetric light",
+        "type": "image",
+        "src": "img/list/15.jpg",
+        "mascot": true,
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: volumetric light, visible beams of sunlight streaming through window blinds, dust particles in the air, light rays crossing the room. Photorealistic 3D render, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "컬러 젤",
+        "en": "colored gels",
+        "type": "image",
+        "src": "img/list/16.jpg",
+        "mascot": true,
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: colored gel lighting, an orange gel light from the left and a teal gel light from the right, two-color mood. Photorealistic 3D render, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "형광등",
+        "en": "fluorescent light",
+        "type": "image",
+        "src": "img/list/17.jpg",
+        "mascot": true,
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: cold fluorescent tube lighting from the ceiling, slightly greenish white light, flat cold office mood. Photorealistic 3D render, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "달빛",
+        "en": "moonlight",
+        "type": "image",
+        "src": "img/list/18.jpg",
+        "mascot": true,
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: moonlight at night, cool pale blue light from the window, dark room, quiet night mood. Photorealistic 3D render, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "스포트라이트",
+        "en": "spotlight",
+        "type": "image",
+        "src": "img/list/19.jpg",
+        "mascot": true,
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: a single theatrical spotlight from above on the slime, a bright circle of light on the sofa, everything else dark. Photorealistic 3D render, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "흐린 날 확산광",
+        "en": "overcast diffused light",
+        "type": "image",
+        "src": "img/list/20.jpg",
+        "mascot": true,
+        "prompt": "Same grey sofa, same living room, same camera angle and framing as the reference image, the slime in the same place. Change ONLY the lighting: overcast diffused daylight, soft grey light from the window on a cloudy day, very soft shadows, muted colors. Photorealistic 3D render, vertical 4:5, no text, no letters."
+      }
+    ],
+    "hook": 10
+  },
+  "music": {
+    "generate": true
+  },
+  "thumb": {
+    "title": "조명 단어 하나로\n분위기가 바뀝니다",
+    "highlight": "분위기",
+    "image": {
+      "type": "image",
+      "src": "img/list/10.jpg",
+      "position": "center 40%"
+    }
+  },
+  "topic": [
+    "조명 프롬프트",
+    "AI 그림 조명"
+  ],
+  "sources": [
+    {
+      "name": "FLUX.2 [klein] 4B (Cloudflare Workers AI, 결과 그림 제작 도구)",
+      "url": "https://developers.cloudflare.com/workers-ai/models/flux-2-klein-4b/",
+      "kind": "tool"
+    }
+  ],
+  "caption": "AI 그림을 만들 때 조명 단어 하나만 바꿔 넣으세요. 같은 장면도 분위기가 확 달라집니다.\n댓글에 '자료'라고 남기면 조명 단어 20개를 영어 그대로 DM으로 보내 드려요(팔로우한 분께).\n\n소파에 앉은 같은 슬라임에 조명 단어만 바꿔 20장을 만들었습니다.\n하이키는 밝고 깨끗한 화보처럼, 로우키는 어둡고 묵직한 영화 장면처럼 나와요.\n렘브란트 조명은 한쪽 뺨에 작은 삼각형 빛이 생기는 인물 사진 조명입니다.\n골든아워와 블루아워는 해 질 녘 하늘빛을 그대로 가져옵니다.\n\nAI로 프로필 사진을 만들어 보려는 친구에게 보내 주세요.\n\n팔로우하고 댓글에 '자료'라고 남기면 조명 단어 20개와 영어 표현를 DM으로 보내 드려요. (팔로우한 분께 보내집니다)",
+  "hashtags": [
+    "#AI그림",
+    "#프롬프트",
+    "#AI이미지",
+    "#토큰전쟁"
+  ],
+  "dm": {
+    "keyword": "자료",
+    "message": "조명 단어 20개 자료입니다.\n아래 '자료 보기'를 누르면 영상에 나온 순서대로 한국어 이름과 영어 단어를 복사 버튼과 함께 정리한 페이지가 열립니다.\n그림을 만들 때 쓰는 프롬프트에 영어 단어를 그대로 넣어 쓰십시오.",
+    "cta": "팔로우하고 댓글에 '자료' 남기면\n조명 단어 20개를\n보내 드립니다",
+    "banner": "댓글에 '자료'라고 남기면\n영어 단어 20개를 DM으로 보내 드립니다",
+    "page": {
+      "intro": "영상에 나온 조명 단어 20개의 전체 목록입니다. 단어마다 영어 표현을 복사 버튼과 함께 정리했습니다.",
+      "list_title": "전체 목록",
+      "list_intro": "번호는 영상에 나온 순서와 같습니다. 영어 단어를 복사해 그림을 만들 때 쓰는 프롬프트에 넣으십시오."
+    }
+  },
+  "threads": {
+    "text": "AI로 그림을 만들 때 조명 단어 하나만 바꿔도 분위기가 확 달라집니다.\n\n하이키를 넣으면 밝고 깨끗한 화보가, 로우키를 넣으면 어둡고 묵직한 영화 장면이 나오거든요.\n렘브란트 조명, 골든아워, 네온 조명처럼 사진가들이 쓰는 이름을 그대로 넣으면 됩니다.\n\n결국 그림 프롬프트는 긴 설명보다 정확한 조명 이름 하나가 더 잘 통합니다.",
+    "images": [
+      "cover"
+    ]
+  }
+}

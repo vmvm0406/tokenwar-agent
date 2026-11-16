@@ -48,10 +48,16 @@ def dm_conf(post):
     return d
 
 
+def cover_of(post):
+    """제목을 가져올 표지. 장이 없는 릴스(목록형 자료 릴스 등)는 post.title로 만든다."""
+    c = next((s for s in post.get("slides") or [] if s.get("kind") == "cover"), None)
+    return c or {"title": post.get("title", ""), "highlight": post.get("highlight"), "sub": ""}
+
+
 def steps_from_slides(post):
     """카드의 순서 장(num이 있는 body·prompt 장)을 안내 페이지 단계로."""
     out = []
-    for s in post["slides"]:
+    for s in post.get("slides") or []:
         if s.get("kind") not in ("body", "prompt") or not (s.get("num") or s.get("kind") == "prompt"):
             continue
         prompts = [p for p in (s.get("prompts") or [s.get("prompt")]) if p]
@@ -90,7 +96,7 @@ def page_steps(post):
 
 def checklist_from_slides(post):
     items = []
-    for s in post["slides"]:
+    for s in post.get("slides") or []:
         if s.get("kind") == "steps":
             items += [f'{it["title"]}: {it.get("text", "")}'.rstrip(": ") for it in s["items"]]
     return items
@@ -101,7 +107,7 @@ def checklist_from_slides(post):
 def memo_md(post):
     d = dm_conf(post)
     url = page_url(post)
-    cover = next(s for s in post["slides"] if s["kind"] == "cover")
+    cover = cover_of(post)
     title = cover.get("title", "").replace("\n", " ")
     tool = DMC.get("tool", "Zorcha")
     lines = [
@@ -176,6 +182,9 @@ ul{padding-left:20px;color:#CFD6D2}
 .grp .gs{font-size:13px;color:var(--mu);margin:2px 0 0}
 .grp .gs a{color:var(--mu)}
 .foot{margin-top:28px;font-weight:700}
+.step.li{padding:14px 0}
+.step.li .lb{color:var(--fg);font-size:18px}
+.step.li .pr pre{padding:12px 96px 12px 16px;font-size:17px}
 .foot a{color:var(--ac)}
 """
 
@@ -192,7 +201,7 @@ HEADINGS["formal"] = HEADINGS["default"]  # 예전 dm.page.style = "formal" 게�
 def page_html(post):
     d = dm_conf(post)
     pg = d.get("page") or {}
-    cover = next(s for s in post["slides"] if s["kind"] == "cover")
+    cover = cover_of(post)
     title = esc(cover.get("title", "")).replace("\n", "<br>")
     if cover.get("highlight"):
         h = esc(cover["highlight"])
@@ -225,6 +234,21 @@ def page_html(post):
         groups = "".join(group(g) for g in st.get("groups") or [])
         parts.append(f'<section class="step"><span class="k">{i:02d}</span>{lb}<h2>{esc(st["title"])}</h2>'
                      f'{boxes}{text}{groups}</section>')
+    # 목록형 자료 릴스(post.list): 전체 목록 + 영어 프롬프트 단어(복사 상자). 화면에는 한국어 이름만 나온다
+    lst = ""
+    L = post.get("list") or {}
+    if L.get("items"):
+        tpl = pg.get("template")
+        tpl_html = (f'<section class="step"><h2>{esc(pg.get("template_title") or "프롬프트에 넣는 자리")}</h2>'
+                    f'{prompt_box(tpl)}{"<p>" + esc(pg["template_note"]) + "</p>" if pg.get("template_note") else ""}</section>'
+                    if tpl else "")
+        rows = "".join(
+            f'<section class="step li"><span class="k">{i:02d}</span><span class="lb">{esc(it.get("name", ""))}</span>'
+            f'{prompt_box(it["en"]) if it.get("en") else ""}'
+            f'{"<p>" + esc(it["note"]) + "</p>" if it.get("note") else ""}</section>'
+            for i, it in enumerate(L["items"], 1))
+        lst = (f'<div class="rule"></div><h3>{esc(pg.get("list_title") or "전체 목록")}</h3>'
+               f'{"<p>" + esc(pg["list_intro"]) + "</p>" if pg.get("list_intro") else ""}{tpl_html}{rows}')
     extra = ""
     if pg.get("extra"):
         rows = "".join(
@@ -268,7 +292,7 @@ def page_html(post):
 <p class="intro">{intro}</p>
 {notice}
 {"".join(parts)}
-{result}{extra}{caut}
+{lst}{result}{extra}{caut}
 <div class="src">출처<ul>{srcs}</ul>{esc(post["date"].replace("-", "."))} 기준. {H["note"]}</div>
 <p class="foot">매일 AI 소식은 <a href="https://www.instagram.com/{esc(handle.lstrip("@"))}/">{esc(handle)}</a></p>
 </main>

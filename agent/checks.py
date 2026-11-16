@@ -181,7 +181,15 @@ def clause_noun_end(text):
     이유·시대·방법·순간으로 끝나면 서술어가 들어 있는 것으로 본다 (운영자 결정 2026-11-16). "밀레니엄 난제"처럼 명사만은 막는다."""
     w = re.sub(_TAIL, "", str(text).strip())
     m = re.search(r"(\S)\s+(이유|시대|방법|순간|까닭)$", w)
-    return bool(m and _jong(m.group(1)) in (4, 8))
+    if m and _jong(m.group(1)) in (4, 8):
+        return True
+    # "분위기를 바꾸는 조명 단어 20가지", "복귀를 막는 세 가지": 꾸미는 말(~는/~은/~던)이 붙은 개수로 끝나는 목록 제목
+    # (STYLE_GUIDE 4장: 독자가 받는 개수는 의미 있는 숫자, 목록형 자료 릴스)
+    m = re.search(r"(?:\d+|[한두세네]|다섯|여섯|일곱|여덟|아홉|열)\s*(가지|개)$", w)
+    if m:
+        before = w[:m.start()].split()[-4:]
+        return any(t[-1] in "는은던" for t in before if len(t) >= 2)
+    return False
 
 
 def title_sentence(title, where, no_question=True):
@@ -218,7 +226,8 @@ def check_thumb(post):
     im = t.get("image") or {}
     if not im.get("src"):
         errs.append("썸네일 image.src 필요")
-    if not (im.get("url") or im.get("prompt")):
+    list_srcs = {x.get("src") for x in ((post.get("list") or {}).get("items") or []) + [(post.get("list") or {}).get("base") or {}]}
+    if not (im.get("url") or im.get("prompt")) and im.get("src") not in list_srcs:
         errs.append("썸네일 image에 url(실물 이미지) 또는 prompt(AI 생성) 중 하나는 있어야 함 (직접 넣은 파일이면 url에 원본 주소)")
     return errs
 
@@ -227,11 +236,16 @@ def check_video(post):
     """영상 프레임 릴스(type=video) 검사."""
     errors, warnings = [], []
     lim = CONFIG["limits"]
-    for key in ["id", "series", "date", "publish_at", "video", "title", "rights", "sources", "caption"]:
+    is_list = bool(post.get("list"))   # 목록형 자료 릴스 (listreel.py): video 대신 list
+    for key in ["id", "series", "date", "publish_at", "list" if is_list else "video", "title", "rights", "sources", "caption"]:
         if key not in post:
             errors.append(f"필수 항목 없음: {key}")
     if errors:
         return errors, warnings
+    if is_list:
+        e_l, w_l = check_list(post)
+        errors += e_l
+        warnings += w_l
     if post["rights"] not in RIGHTS:
         errors.append(f"rights는 {RIGHTS} 중 하나: own(직접 만듦), permission(원작자 허락), license(이용 허락 라이선스)")
     if post["rights"] == "quote":
@@ -285,8 +299,8 @@ def check_video(post):
     if hl and hl not in post["title"]:
         errors.append(f"highlight '{hl}'가 제목 안에 없음")
     errors += check_thumb(post)
-    v = post["video"]
-    if not v.get("src"):
+    v = post.get("video") or {}
+    if not is_list and not v.get("src"):
         errors.append("video.src 필요")
     prev_end = -1
     texts = [post["title"]]
@@ -347,6 +361,77 @@ def check_video(post):
     e_r, w_r = check_reach(post)
     errors += e_r
     warnings += w_r
+    return errors, warnings
+
+
+LIST_COUNT_RE = re.compile(r"(\d+)\s*(가지|개)")
+
+
+def check_list(post):
+    """목록형 자료 릴스 (type video + list, listreel.py, STYLE_GUIDE 6장 "목록형 자료 릴스"). (errors, warnings)
+    - 항목 3개 이상, 이름·이미지(src) 필수, 이미지 경로가 겹치지 않음 (항목 수 = 이미지 수)
+    - 제목·썸네일의 'N가지/N개'가 항목 수와 같음
+    - 길이(끝 화면 포함) 20~35초
+    - 화면에 영어 단어를 쓰지 않으니 영어(en)는 DM 자료 페이지용으로 항목마다"""
+    errors, warnings = [], []
+    L = post.get("list")
+    if not isinstance(L, dict):
+        return ["list는 {items: [{name, en, src}], hook, base, ...} 객체 (TEMPLATES.md '목록형 자료 릴스')"], warnings
+    items = L.get("items") or []
+    if len(items) < 3:
+        errors.append(f"list.items는 3개 이상: 지금 {len(items)}개")
+    srcs = []
+    for i, it in enumerate(items, 1):
+        if not str(it.get("name", "")).strip():
+            errors.append(f"list.items {i}: name(화면에 나오는 이름) 필요")
+        elif _len(it["name"]) > 12:
+            errors.append(f"list.items {i}: 이름은 12자 이하 (한 줄에 읽히게): '{it['name']}'")
+        if EMOJI_RE.search(str(it.get("name", ""))):
+            errors.append(f"list.items {i}: 이름에 이모지를 쓰지 않음")
+        if not it.get("src"):
+            errors.append(f"list.items {i}: src(결과 이미지) 필요")
+        else:
+            srcs.append(it["src"])
+        if it.get("mascot") and not str(it.get("prompt", "")).strip():
+            errors.append(f"list.items {i}: 마스코트 그림(mascot)에 prompt(영어, 바꿀 것만) 필요")
+        if it.get("mascot") and it.get("type") != "image":
+            errors.append(f"list.items {i}: 그림을 만들려면 \"type\": \"image\"도 필요 (gen_images.py가 찾는 표시)")
+        if not str(it.get("en", "")).strip():
+            warnings.append(f"list.items {i}: en(영어 프롬프트 단어) 없음 → DM 자료 페이지에 빠진다")
+    base = L.get("base")
+    if base is not None:
+        if not isinstance(base, dict) or not base.get("src"):
+            errors.append("list.base는 {name, src} (맨 앞 원본 사진)")
+        else:
+            srcs.append(base["src"])
+    if len(set(srcs)) != len(srcs):
+        errors.append("list 이미지(src)가 겹침: 항목마다 다른 이미지 (항목 수 = 이미지 수)")
+    if len(srcs) != len(items) + (1 if isinstance(base, dict) and base.get("src") else 0):
+        errors.append(f"list 항목 수({len(items)})와 이미지 수({len(srcs)})가 다름")
+    for where, t in (("제목", post.get("title", "")), ("썸네일 제목", (post.get("thumb") or {}).get("title", ""))):
+        m = LIST_COUNT_RE.search(str(t))
+        if m and int(m.group(1)) != len(items):
+            errors.append(f"{where}의 '{m.group(0)}'와 목록 항목 수({len(items)}개)가 다름")
+    h = L.get("hook", 1)
+    if not isinstance(h, int) or not 1 <= h <= max(1, len(items)):
+        errors.append(f"list.hook은 첫 화면에 크게 보여 줄 항목 번호(1~{len(items)}): {h!r}")
+    if post.get("rights") != "own":
+        errors.append("목록형 자료 릴스는 직접 만든 결과 이미지만: rights는 own")
+    if items:
+        try:
+            from listreel import timeline, LENGTH_RANGE
+            tl = timeline(post)
+            if not LENGTH_RANGE[0] <= tl["total"] <= LENGTH_RANGE[1]:
+                errors.append(f"목록형 릴스 길이 {tl['total']:.1f}초 (끝 화면 포함 {LENGTH_RANGE[0]:g}~{LENGTH_RANGE[1]:g}초): "
+                              "list.seconds(항목당 초)를 줄이거나 항목을 나눈다")
+            if tl["item"] < 0.85:
+                warnings.append(f"항목당 {tl['item']:.2f}초로 너무 빠름: 항목을 줄이거나 두 편으로 나눈다")
+        except ImportError:
+            pass
+    if post.get("length") not in (None, "short"):
+        warnings.append("목록형 자료 릴스는 20~35초라 length는 'short'")
+    if not post.get("dm"):
+        warnings.append("목록형 자료 릴스에 dm이 없음: 전체 목록과 영어 단어는 DM 자료 페이지에 둔다 (STYLE_GUIDE 6장)")
     return errors, warnings
 
 

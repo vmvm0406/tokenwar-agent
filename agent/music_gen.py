@@ -82,7 +82,9 @@ def pick_bpm(bounds, lo=96, hi=124):
     return best
 
 
-def make_music(out_path, durs, fade=0.3, seed=7):
+def make_music(out_path, durs, fade=0.3, seed=7, hit_at=None):
+    """hit_at(선택): 강한 타격음을 넣을 시각 목록. 없으면 장면 전환마다 (예전과 같음).
+    목록형 릴스(listreel.py)처럼 장면이 1초 남짓으로 잦으면 박자는 전환에 맞추고 타격음은 큰 전환에만 넣는다."""
     rng = np.random.default_rng(seed)
     total = sum(durs) - fade * (len(durs) - 1)
     bounds, acc = [], 0.0
@@ -124,7 +126,8 @@ def make_music(out_path, durs, fade=0.3, seed=7):
         if bar % 2 == 1:
             m = chord[b % 3] + 12
             add(tone(hz(m), int(beat / 2 * SR), "square", r=0.09) * 0.07, t0 + beat / 4, 0.7, 1.0)
-    for t0 in bounds:
+    hits = bounds if hit_at is None else [float(x) for x in hit_at]
+    for t0 in hits:
         add(hit(int(0.9 * SR), rng) * 0.6, max(0.0, t0 - 0.02))
 
     st = np.stack([L, R], axis=1)[: int(total * SR)]
@@ -142,7 +145,7 @@ def make_music(out_path, durs, fade=0.3, seed=7):
         w.setsampwidth(2)
         w.setframerate(SR)
         w.writeframes(pcm.tobytes())
-    return {"bpm": bpm, "seconds": total, "bounds": bounds}
+    return {"bpm": bpm, "seconds": total, "bounds": bounds, "hits": hits}
 
 
 if __name__ == "__main__":

@@ -5,7 +5,7 @@
 
 막는 것 (오류):
 - 같은 원본 영상(유튜브 ID 등) 90일 안에 다시 쓰기
-- 같은 출처 링크를 30일 안에 다시 쓰기 (같은 기사·발표로 또 만들기)
+- 같은 출처 링크를 30일 안에 다시 쓰기 (같은 기사·발표로 또 만들기. sources의 "kind": "tool"(만든 도구 링크)은 빼고)
 - 주제(topic)가 절반 이상 같은 게시물이 14일 안에 있음 (카드뉴스와 릴스 사이도 포함)
 - 같은 인물 영상을 7일 안에 세 번째로 쓰기
 
@@ -87,7 +87,9 @@ def video_id(url):
 
 
 def links(post):
-    out = {(s.get("url") or "").split("#")[0].rstrip("/") for s in post.get("sources", []) if s.get("url")}
+    # "kind": "tool"(직접 만든 결과물에 쓴 도구, 예: ChatGPT 이미지 생성)은 소식 출처가 아니라 겹침 검사에서 뺀다
+    out = {(s.get("url") or "").split("#")[0].rstrip("/") for s in post.get("sources", [])
+           if s.get("url") and s.get("kind") != "tool"}
     return {x for x in out if x}
 
 
