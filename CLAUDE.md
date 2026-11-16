@@ -60,6 +60,7 @@
 | `ANALYSIS.md` / `scripts/weekly-analysis.ps1` | 주간 계정 분석 (월요일 run-local.ps1 첫 실행에서 claude -p): 새 벤치마크 계정 찾기·목록 고치기(`data/benchmark_changes.md`), `data/weekly_insights.md` "이번 주 우리에게 바로 적용할 3가지" |
 | `experiments/` | 아직 매일 작업에 안 들어간 시제품 (릴스 CRT 화면 등). README에 렌더링 방법 |
 | `NEXT.md` | 이어서 할 일, 운영자 답을 기다리는 것 |
+| `MIGRATION.md` | 새 노트북으로 옮기기: 설치·로그인·작업 스케줄러 등록·memory 복사·확인 (로컬 설정을 바꾸면 같이 고침) |
 
 ## Code 탭 운영: 지휘 세션(토큰전쟁 제작 총괄) + 하위 에이전트 (운영자 결정, 2026-11-15)
 
@@ -91,6 +92,7 @@
 5. 게시 쪽을 바꿨으면 `DRY_RUN=1`로 `agent/publish.py`를 돌려 본다 (실제로 올리지 않음).
 6. **main에 커밋·push 한다.** 매일 작업과 GitHub Actions는 main을 기준으로 돈다. 커밋 메시지는 한국어로 무엇이 바뀌었는지.
 7. 윈도우(이 컴퓨터)와 리눅스(GitHub Actions) 둘 다에서 돌아야 한다. 경로는 `pathlib`, 외부 프로그램은 `shutil.which`로 찾는다.
+8. 이 컴퓨터에만 있는 설정(작업 스케줄러, 프로그램 설치, 로그인, 새 Secret)을 바꾸면 MIGRATION.md도 같이 고친다 (운영자가 2027년 1월쯤 노트북을 바꿈).
 
 ## 꼭 지킬 것
 
