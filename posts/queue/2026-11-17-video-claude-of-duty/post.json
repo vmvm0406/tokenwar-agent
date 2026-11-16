@@ -4,7 +4,7 @@
   "format": "howto",
   "series": "생존 가이드",
   "date": "2026-11-17",
-  "publish_at": "2026-11-17T18:13:00+09:00",
+  "publish_at": "2026-12-31T23:59:00+09:00",
   "rights": "license",
   "credit": "Matt Shumer",
   "rights_note": "게임 코드·prompt.md: mshumer/Claude-of-Duty, MIT License (Copyright (c) 2026 mshumer). 플레이 화면은 그 코드를 토큰전쟁이 직접 실행해 녹화(저장소의 tools/demo.mjs 봇 플레이, 소리는 tools/demo-audio.mjs가 코드로 합성). 원본 X 영상(Matt Shumer, 7월 25일, 55.9초) 중 5초만 인용. 영상은 우리 녹화 두 구간(12초, 14초) 사이에 X 원본 5초(원본 3.5~8.5초)를 넣어 이어 붙임(1.6:1로 가운데를 잘라 확대). X 부분은 인용이며 자막으로 원본임을 밝힘.",
