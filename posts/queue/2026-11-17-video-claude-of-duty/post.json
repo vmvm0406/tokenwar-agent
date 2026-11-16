@@ -7,11 +7,11 @@
   "publish_at": "2026-11-17T18:13:00+09:00",
   "rights": "license",
   "credit": "Matt Shumer",
-  "rights_note": "게임 코드·prompt.md: mshumer/Claude-of-Duty, MIT License (Copyright (c) 2026 mshumer). 플레이 화면은 그 코드를 토큰전쟁이 직접 실행해 녹화(저장소의 tools/demo.mjs 봇 플레이, 소리는 tools/demo-audio.mjs가 코드로 합성). 원본 X 영상(Matt Shumer, 7월 25일, 55.9초) 중 5초만 인용. 영상은 우리 녹화 두 구간(12초, 14초) 사이에 X 원본 5초(원본 3.5~8.5초)를 넣어 이어 붙임(1.6:1로 가운데를 잘라 확대). X 부분은 인용이며 자막으로 원본임을 밝힘.",
+  "rights_note": "게임 코드·prompt.md: mshumer/Claude-of-Duty, MIT License (Copyright (c) 2026 mshumer). 플레이 화면은 그 코드를 토큰전쟁이 실행해 녹화(저장소의 tools/demo.mjs 봇 플레이, 소리는 tools/demo-audio.mjs가 코드로 합성). 녹화 두 구간(12초, 5초)을 0.3초 디졸브로 이어 붙임(1.6:1로 가운데를 잘라 확대). X 원본 영상 인용은 뺐음(2026-11-17 운영자 결정). 배경 음악은 agent/music_gen.py로 만든 코드 음악(외부 음원 없음).",
   "video": {
     "src": "clips/source.mp4",
     "start": 0,
-    "end": 22.0,
+    "end": 16.7,
     "avoid_edge_check": false,
     "avoid_burned": false,
     "sub_motion": "rise"
@@ -45,13 +45,7 @@
     },
     {
       "start": 12.0,
-      "end": 16.9,
-      "text": "제작자가 7월에 올린\n원본 영상입니다",
-      "highlight": "원본 영상"
-    },
-    {
-      "start": 17.0,
-      "end": 21.9,
+      "end": 16.6,
       "text": "세 문단이면\n누구나 만들 수 있습니다",
       "highlight": "누구나"
     }
@@ -399,5 +393,11 @@
     "replies": [
       "출처: Matt Shumer X 원본 영상 (7월 25일) https://x.com/mattshumer_/status/2081054356405731740\nGitHub mshumer/Claude-of-Duty (MIT) https://github.com/mshumer/Claude-of-Duty"
     ]
+  },
+  "music": {
+    "generate": true,
+    "mixed_into": "clips/source.mp4",
+    "credit": "토큰전쟁 코드 음악 (agent/music_gen.py make_tension_music, 외부 음원 없음)",
+    "note": "121.5 BPM, 장면 이음새 11.85초가 박 위. 게임 소리보다 15dB 낮게(통합 LUFS 기준) 섞음"
   }
 }

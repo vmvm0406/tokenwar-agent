@@ -237,6 +237,63 @@ def make_hook_music(out_path, bpm, total, accents=(), seed=7):
     return {"bpm": bpm, "beat": beat, "seconds": total, "accents": list(accents)}
 
 
+# ---------- 긴장감 배경음 (게임·액션 화면 밑에 작게 까는 곡, 운영자 요청 2026-11-17 "배경에 작게 음악") ----------
+# 낮은 베이스 펄스(16분), 빠른 하이햇(16분), 어두운 신스 패드(Am-Am-F-E), 박마다 킥. 멜로디 없음(게임 소리가 주인공).
+DARK_CHORDS = [(45, 48, 52), (45, 48, 52), (41, 45, 48), (40, 44, 47)]  # Am Am F E (낮은 음역)
+
+
+def make_tension_music(out_path, bpm, total, accents=(), seed=11):
+    """bpm 고정, 0초가 첫 박. accents: 낮은 타격음을 넣을 시각(장면 이음새 등). 끝 1.5초 페이드아웃.
+    반환 {"bpm", "beat", "seconds", "accents"}. 섞을 때 크기는 부르는 쪽이 정한다(게임 소리보다 12~18dB 낮게)."""
+    rng = np.random.default_rng(seed)
+    beat = 60.0 / bpm
+    n = int((total + 0.5) * SR)
+    L = np.zeros(n)
+    R = np.zeros(n)
+
+    def add(sig, t0, gl=1.0, gr=1.0):
+        i = int(round(t0 * SR))
+        if i >= n:
+            return
+        m = min(len(sig), n - i)
+        L[i:i + m] += sig[:m] * gl
+        R[i:i + m] += sig[:m] * gr
+
+    nb = int(total / beat) + 1
+    for b in range(nb):
+        t0 = b * beat
+        bar, pos = divmod(b, 4)
+        chord = DARK_CHORDS[bar % 4]
+        add(kick(int(0.3 * SR)) * 0.8, t0)
+        for k in range(4):  # 16분 베이스 펄스: 근음, 박 머리 강조
+            g = 0.5 if k == 0 else 0.32
+            add(lowpass(tone(hz(chord[0] - 12), int(beat / 4 * SR * 0.9), "saw", r=0.05, a=0.003), 24) * g, t0 + k * beat / 4)
+        for k in range(4):  # 빠른 하이햇
+            add(hat(int(0.03 * SR), rng) * (0.7 if k % 2 else 0.35), t0 + k * beat / 4, 0.8 if k % 2 else 1.0, 1.0 if k % 2 else 0.8)
+        if pos == 0:  # 어두운 패드: 살짝 어긋난 두 톱니파를 강하게 깎아 탁하게
+            d = int(4 * beat * SR)
+            pad = sum(lowpass(tone(hz(m), d, "saw", r=3.0, a=0.4) + tone(hz(m) * 1.006, d, "saw", r=3.0, a=0.4), 60)
+                      for m in chord) / 6
+            add(pad * 0.3, t0, 1.0, 0.8)
+            add(pad * 0.3, t0 + 0.015, 0.8, 1.0)
+    for t0 in accents:
+        add(hit(int(0.9 * SR), rng) * 0.5, max(0.0, t0 - 0.02))
+    st = np.stack([L, R], axis=1)[: int(total * SR)]
+    fo = int(min(1.5, total / 4) * SR)
+    st[-fo:] *= np.linspace(1, 0, fo)[:, None]
+    fi = int(0.05 * SR)
+    st[:fi] *= np.linspace(0, 1, fi)[:, None]
+    peak = np.max(np.abs(st)) or 1.0
+    st = np.tanh(st / peak * 1.8) / np.tanh(1.8) * 0.85
+    pcm = (st * 32767).astype(np.int16)
+    with wave.open(str(Path(out_path)), "wb") as w:
+        w.setnchannels(2)
+        w.setsampwidth(2)
+        w.setframerate(SR)
+        w.writeframes(pcm.tobytes())
+    return {"bpm": bpm, "beat": beat, "seconds": total, "accents": list(accents)}
+
+
 if __name__ == "__main__":
     args = sys.argv[1:]
     fade = 0.3
