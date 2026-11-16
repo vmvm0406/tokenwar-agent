@@ -72,6 +72,10 @@
 
 업계 속보·새 모델 바로 올리기(LOCAL.md 6장)로 만든 게시물에 붙인다. `agent/slots.py`가 이 게시물을 하루 칸 수(상한·daily_target)에 세지 않고, `slots.py bump`가 그 앞뒤의 따라 하기·질문만 다음 칸으로 옮긴다. 없으면 보통 게시물.
 
+### 승인 (`"approved": true`, `"approved_at"`, 운영자 승인 뒤에만)
+
+`config.json` `require_approval`이 true면 이 표시가 있는 게시물만 올라간다 (`approval_exempt_before`보다 이른 `publish_at`은 예외). 만들 때는 넣지 않는다. 흐름: 검토 세션 → 운영자 OK → 지휘 세션이 `py -3.12 agent/approve.py posts/queue/<폴더> --edits N` → main에 push. 속보(`breaking`)도 같다. `approve.py`가 post.json 맨 위(`{` 다음 줄)에 두 줄을 넣고 `.render_hash`를 맞추며 `data/approvals.csv`에 기록한다. `approved_at`은 기록용(한국 시간 ISO, 예 `2026-11-16T21:20:54+09:00`). 두 줄은 렌더링 지문(`build.input_hash`)에서 빠져서 승인만 넣으면 다시 렌더링하지 않는다. 손으로 넣지 말고 approve.py를 쓴다 (`{` 다음이 아닌 곳에 넣으면 지문이 바뀌어 한 번 다시 렌더링될 수 있다).
+
 ### 가벼운 화제 (`format: "buzz"`)
 
 카드뉴스(`carousel`)·릴스(`video`) 어디에나 붙인다. 틀은 평소와 같고 다른 점만: `sources` 2개 이상(없으면 오류), 패러디·밈이면 캡션 앞 3줄에 실제 사정("사실은 ~였다", 없으면 경고), 같은 주(월~일) 3개째면 dupes.py 경고. 사진·영상은 공식 채널 영상·공식 보도자료 사진만(보도사진 금지). 규칙은 STYLE_GUIDE 3-2.

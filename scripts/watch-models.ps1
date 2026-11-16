@@ -1,6 +1,8 @@
 ﻿# 새 AI 모델 감시 → 새 발표가 있으면 게시물 1개를 바로 올리기로 만든다 (LOCAL.md 6장).
 # 윈도우 작업 스케줄러(TokenwarModelWatch)가 15분마다 부른다. 등록: setup-local.ps1 -OnlyWatch
-# 매번 먼저 게시 시각이 지난 게시물이 있으면 publish.yml을 직접 실행한다 (GitHub cron 지연 대비)
+# 매번 먼저 게시 시각이 지난 게시물(승인 관문을 통과한 것만)이 있으면 publish.yml을 직접 실행한다 (GitHub cron 지연 대비)
+# 그리고 승인 안 된 게시물 중 게시 시각이 3시간 안이거나 지난 것을 data/approval_alerts.md(덮어쓰기)와 기록에 남긴다
+# (agent/approve.py --pending. 지휘 세션이 이 파일을 읽어 운영자에게 알린다. 이 파일은 git에 올리지 않는다)
 #   powershell -ExecutionPolicy Bypass -File scripts\watch-models.ps1            보통 실행
 #   ... -CheckOnly                                                               감시만 (Claude를 부르지 않음, 기록도 안 바꿈)
 # 매일 작업과 같은 전용 저장소 %USERPROFILE%\tokenwar-daily 에서 돈다. 같은 잠금 파일(%TEMP%\tokenwar.lock)을 쓰므로
@@ -33,13 +35,20 @@ if ((-not $CheckOnly) -and (Test-Path (Join-Path $Repo ".git"))) {
         git -C $Repo fetch --quiet origin main 2>$null
         $now = [DateTimeOffset]::Now
         $due = @()
+        $cfg = (git -C $Repo show "origin/main:config.json") -join "`n" | ConvertFrom-Json
+        # 승인 관문 (config require_approval, agent/approve.py): 승인 대기 게시물 때문에 publish.yml을 계속 깨우지 않게
+        # approved가 true이거나 관문 대상이 아닌 것(관문 꺼짐, approval_exempt_before보다 이른 것)만 '게시 시각 지남'으로 센다
+        $exempt = if ($cfg.approval_exempt_before) { [DateTimeOffset]::Parse($cfg.approval_exempt_before) } else { $null }
         foreach ($f in @(git -C $Repo ls-tree -r --name-only origin/main -- posts/queue | Where-Object { $_ -like "*/post.json" })) {
             $j = (git -C $Repo show "origin/main:$f") -join "`n" | ConvertFrom-Json
-            if ($j.publish_at -and [DateTimeOffset]::Parse($j.publish_at) -le $now) { $due += $f }
+            if (-not $j.publish_at) { continue }
+            $at = [DateTimeOffset]::Parse($j.publish_at)
+            if ($at -gt $now) { continue }
+            $ok = ($j.approved -eq $true) -or (-not $cfg.require_approval) -or ($exempt -and $at -lt $exempt)
+            if ($ok) { $due += $f }
         }
         # 스레드 차례가 된 게시물도 깨운다: posts/published 중 threads 필드가 있고, 아직 threads_id가 없고,
         # 운영자 삭제(status)·건너뜀 표시가 없고, 인스타 게시 + threads_delay_min이 지났고 12시간 안인 것.
-        $cfg = (git -C $Repo show "origin/main:config.json") -join "`n" | ConvertFrom-Json
         $delay = if ($cfg.threads_delay_min) { [int]$cfg.threads_delay_min } else { 40 }
         $maxAge = if ($cfg.threads_max_age_hours) { [double]$cfg.threads_max_age_hours } else { 12 }
         foreach ($f in @(git -C $Repo ls-tree -r --name-only origin/main -- posts/published | Where-Object { $_ -like "*/published.json" })) {
@@ -59,6 +68,29 @@ if ((-not $CheckOnly) -and (Test-Path (Join-Path $Repo ".git"))) {
         }
     } catch {
         ("{0} 게시 확인 실패: {1}" -f (Get-Date -Format "yyyy-MM-dd HH:mm"), $_) | Out-File -Append -FilePath $plog -Encoding utf8
+    }
+    # 승인 알림 준비: 승인 안 된 게시물 중 게시 시각이 3시간 안이거나 지난 것 (origin/main + 열린 검토 브랜치 origin/post/*)
+    # data/approval_alerts.md는 매번 덮어쓴다 (확인 시각 + 목록, 없으면 '없음'). .gitignore에 있어 stash·커밋에 섞이지 않는다
+    if (Test-Path (Join-Path $Repo "agent\approve.py")) {
+        try {
+            git -C $Repo fetch --quiet origin "+refs/heads/post/*:refs/remotes/origin/post/*" 2>$null
+            Push-Location $Repo
+            $env:PYTHONIOENCODING = "utf-8"
+            $pend = @(py -3.12 agent/approve.py --pending --hours 3 --ref origin/main --branches 2>$null | ForEach-Object { "$_".Trim() } | Where-Object { $_ })
+            Pop-Location
+            $stamp = Get-Date -Format "yyyy-MM-dd HH:mm"
+            $body = @("# 승인 대기 알림", "", "확인 시각: $stamp (scripts/watch-models.ps1, 15분마다 덮어씀)", "")
+            if ($pend.Count) {
+                $body += "게시 시각이 3시간 안이거나 지났는데 승인(approved)이 없는 게시물 $($pend.Count)개. 운영자 OK를 받으면 지휘 세션이 'py -3.12 agent/approve.py <폴더> --edits N' 뒤 main에 push:"
+                $body += ""
+                $body += ($pend | ForEach-Object { "- $_" })
+                ("{0} 승인 대기 {1}개: {2}" -f $stamp, $pend.Count, ($pend -join " / ")) | Out-File -Append -FilePath $plog -Encoding utf8
+            } else { $body += "없음" }
+            New-Item -ItemType Directory -Force -Path (Join-Path $Repo "data") | Out-Null
+            [IO.File]::WriteAllText((Join-Path $Repo "data\approval_alerts.md"), (($body -join "`n") + "`n"), (New-Object System.Text.UTF8Encoding $false))
+        } catch {
+            ("{0} 승인 대기 확인 실패: {1}" -f (Get-Date -Format "yyyy-MM-dd HH:mm"), $_) | Out-File -Append -FilePath $plog -Encoding utf8
+        }
     }
 }
 

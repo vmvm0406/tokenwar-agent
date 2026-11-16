@@ -1,5 +1,8 @@
 {
   "mode": "review",
+  "require_approval": true,
+  "approval_exempt_before": "2026-11-17T00:00:00+09:00",
+  "approval_note": "2026-11-16 운영자 결정: 당분간 운영자가 승인한 게시물만 올라간다. require_approval이 true면 publish.py는 post.json에 \"approved\": true가 있는 게시물만 올린다 (지휘 세션이 운영자 OK 뒤 agent/approve.py로 넣음, 속보도 같음). approval_exempt_before보다 이른 publish_at은 관문에서 뺀다 (도입 전 예약분, 지나면 이 줄은 지워도 됨). false로 바꾸면 예전처럼 자동 게시.",
   "timezone": "Asia/Seoul",
   "handle": "@tokenwar_ai",
   "threads_delay_min": 40,

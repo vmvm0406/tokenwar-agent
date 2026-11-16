@@ -3,3 +3,4 @@ __pycache__/
 _render.html
 _analysis/
 logs/
+data/approval_alerts.md

@@ -49,7 +49,7 @@
 }
 ```
 
-- `publish_at`: `python3 agent/slots.py next <carousel|reel>`이 주는 가장 가까운 빈 칸 (`config.json` `slots`: 카드뉴스 10:13, 릴스 11:13·12:43·18:13·19:43·21:13·22:43, 한국 시간. LOCAL.md 5장).
+- `publish_at`: `python3 agent/slots.py next <carousel|reel>`이 주는 가장 가까운 빈 칸 (매일 작업은 오늘부터 모레까지 이틀 치를 미리 만든다: `slots.py need`가 날짜별 개수, 날짜마다 `next <kind> --count N --date <그날> --max <daily_target>`) (`config.json` `slots`: 카드뉴스 10:13, 릴스 11:13·12:43·18:13·19:43·21:13·22:43, 한국 시간. LOCAL.md 5장).
 - `title`, `heading`의 줄바꿈은 `\n`으로 직접 넣는다. 단어 중간에서 끊지 않는다.
 - `highlight`는 제목·소제목 안에 실제로 있는 글자여야 한다.
 - 마지막 장(슬로건, 출처)은 자동으로 붙으므로 넣지 않는다.
@@ -103,6 +103,7 @@
 
 - **review (검토 모드):** `post/<날짜>` 브랜치에 커밋하고 Pull Request를 연다. 제목은 `[검토] 11월 15일 게시물 2건`. 본문에 게시물마다 표지 이미지(브랜치의 raw 주소로 첨부), 캡션 전문, 출처 목록, 게시 예정 시각을 넣는다. 사용자가 PR을 병합하면 GitHub Actions가 게시 시각에 맞춰 올린다.
 - **auto (자동 모드):** `main`에 바로 커밋하고 push한다. GitHub Actions가 게시 시각에 맞춰 올린다.
+- **승인 관문 (`config.json` `require_approval`, 지금 true):** 어느 모드든 post.json에 `"approved": true`가 있어야 게시된다. 만드는 쪽은 `approved`·`approved_at`을 넣지 않는다. 운영자 OK 뒤 지휘 세션이 `python3 agent/approve.py posts/queue/<폴더> --edits N`으로 넣는다 (속보도 같음, LOCAL.md 3장 '승인').
 
 커밋 메시지: `게시물 추가: <날짜> <시리즈> <주제>`
 

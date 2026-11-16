@@ -9,6 +9,10 @@ GitHub Actions에서 실행된다 (.github/workflows/publish.yml).
     MEDIA_BASE        미디어 공개 주소 앞부분. 기본은 GitHub Pages의 docs/media
     DRY_RUN=1         실제로 올리지 않고 할 일만 출력 (docs/media에 복사만 하고 push하지 않음)
 
+승인 관문 (config.json require_approval, agent/approve.py): 켜져 있으면 post.json에 "approved": true가 있는
+게시물만 올린다. 승인 없는 게시물은 게시 시각이 지나도 "승인 대기"로 건너뛴다 (error.log·실패로 치지 않음).
+approval_exempt_before보다 이른 publish_at은 관문에서 뺀다.
+
 미디어 주소: 올릴 게시물의 이미지·영상을 docs/media/<폴더>-<지문 8자>/에 복사해 main에 push하고,
 GitHub Pages(https://<owner>.github.io/<repo>/media/...)가 배포되면 그 주소를 인스타에 넘긴다.
 jsDelivr는 저장소가 50MB를 넘으면 403을 낼 수 있고, raw.githubusercontent와 Release 자산은
@@ -33,6 +37,7 @@ from pathlib import Path
 import requests
 
 import threads
+from approve import may_publish
 
 ROOT = Path(__file__).resolve().parent.parent
 QUEUE = ROOT / "posts" / "queue"
@@ -400,6 +405,10 @@ def main():
             print(f"건너뜀 (실패 {tries}회, error.log 확인 후 삭제하면 다시 시도): {f.name}")
             continue
         if due(post, now):
+            if not may_publish(post, CONFIG):
+                # 승인 관문 (config require_approval, agent/approve.py). 실패가 아니라 기다림이라 error.log에 남기지 않는다
+                print(f"승인 대기: {f.name}")
+                continue
             if not ready(f, post):
                 print(f"건너뜀 (아직 렌더링 전, 렌더링 작업이 끝나면 다음 확인 때 올라감): {f.name}")
                 continue

@@ -15,7 +15,7 @@
 2. `py -3.12 agent/hot.py`로 지금 관심 주제를 새로 모은 뒤, `AGENT.md`, `STYLE_GUIDE.md`, `TEMPLATES.md`, `config.json`, `data/hot.md`, `data/trends.md`, `data/hot_topics.md`를 읽는다. **지금 관심도가 높은 주제부터** 고른다 (STYLE_GUIDE 6-1장 점수표). 릴스·카드뉴스 모두 `data/hot_topics.md`(잘 터진 주제 묶음) 위쪽 주제와 같거나 비슷한 것을 먼저 고르고, PR 본문에 게시물마다 "참고한 잘 터진 주제: <묶음> (대표 게시물 첫 줄, 배수)" 한 줄을 적는다 (STYLE_GUIDE 3장). 주제·형식을 고르기 전에 data/benchmark_patterns.md 위쪽과 data/weekly_insights.md를 본다.
    - **이번 주 한정(2026-11-16~22, data/weekly_insights.md 운영자 승인):** 릴스 주제는 'AI 영상·영화 만들기'(1.27x)와 '미중 경쟁·반도체'(1.29x)를 먼저, 하루 릴스 5개 중 2개 이상. '사진 변환'(0.86x)·'AI 게임 만들기'(0.75x)는 이번 주 릴스에서 줄이고, 다룬다면 카드·자료 묶음으로. 가장 기대되는 릴스는 18~21시 칸(18:13·19:43). 다음 주에는 새 weekly_insights.md를 따른다.
 3. **알고리즘 대응 (STYLE_GUIDE 9-0):** 하루 릴스 5개 중 2개는 직접 만든 결과물 릴스(`origin: own`), 나머지 인용 릴스(`origin: quote`)엔 해설(숫자·비교 모션, 맥락 한 줄)을 얹는다. 2~3개는 짧게(`length: short`), 첫 3초는 결과·숫자, 제목·캡션은 보낼 사람이 떠오르게.
-   만들 개수는 실행할 때 받은 지시("Make N carousel(s) and M reel(s)")대로. `run-local.ps1`이 `py -3.12 agent/slots.py need`로 오늘 몫(`config.json` `slots.daily_target`)에서 이미 예약된 것을 뺀 수를 넘긴다. 둘 다 0이면 부르지 않는다. 손으로 돌릴 때는 직접 `need`를 본다.
+   만들 개수는 실행할 때 받은 지시("Make N carousel(s) and M reel(s)" + 날짜별 칸 명령)대로. **이틀 치를 미리 만든다** (운영자 결정 2026-11-16, 승인 받을 시간을 벌려고): `run-local.ps1`이 `py -3.12 agent/slots.py need`(기본 `--days 2`)로 **오늘부터 모레까지 날짜별** 몫(`config.json` `slots.daily_target`, 하루 릴스 5·카드 1)에서 이미 예약된 것을 뺀 수를 받아(오늘은 남은 빈 칸까지만), 날짜마다 `py -3.12 agent/slots.py next <kind> --count N --date <그날> --max <daily_target>` 명령을 같이 넘긴다. 이른 날짜부터 채운다. 모두 0이면 부르지 않는다. 손으로 돌릴 때는 직접 `need`를 본다 (예전처럼 하루만: `need --date <날짜>`). 새로 만든 게시물에는 `approved`를 넣지 않는다 (3장 '승인').
 4. 만들기 전에 **STYLE_GUIDE 9장 '인스타 추천 체크리스트'**를 본다: 원본으로 보이게(번역 자막·위 제목으로 실질 편집, 영상 아래 해설 추가는 안 함), 캡션 첫 줄에 주제 이름, 보낼 이유 한 줄(구걸 금지), 해시태그 5개 이하, 같은 주제는 이어지는 칸에 두지 않기.
 5. 게시 시각은 칸 배정으로 정한다 (5장). `py -3.12 agent/slots.py status`로 며칠 치 칸 상황을 본다.
 
@@ -57,6 +57,18 @@
   그 아래 게시물마다 표지(또는 썸네일), 캡션 전문, 출처, 고른 이유. 따라 하기면 "게시 후 `dm.md`대로 Zorcha 자동화 만들기". 만들려던 개수보다 적게 만들었으면 이유.
 - auto: main에 push.
 
+### 승인 (운영자 결정 2026-11-16: 당분간 운영자가 승인한 게시물만 올라간다)
+
+`config.json` `require_approval`이 `true`면 `agent/publish.py`는 post.json에 `"approved": true`가 있는 게시물만 올린다. 승인 없는 게시물은 게시 시각이 지나도 "승인 대기: <폴더>"로 건너뛴다 (실패·error.log로 치지 않음, PR이 main에 병합돼 있어도 같다). `approval_exempt_before`보다 이른 `publish_at`은 관문에서 뺀다 (도입 전 예약분, 지나면 지워도 됨). `require_approval`을 `false`로 바꾸면 예전처럼 자동으로 올라간다.
+
+- **흐름:** 만들기(매일 작업·make-posts·속보, approved 없이) → 검토 세션(검토 페이지·PR) → 운영자 OK → 지휘 세션이 `py -3.12 agent/approve.py posts/queue/<폴더> --edits N` → main에 커밋·push. **속보(`breaking`)도 승인이 있어야 올라간다.** 고칠 점이 있으면 고친 뒤 다시 보여 주고 OK를 받은 뒤 승인한다.
+- `approve.py`는 post.json 맨 위에 `"approved": true`, `"approved_at"`(한국 시간 ISO)을 넣고(LF로 씀), 렌더링이 최신이었으면 `.render_hash`를 맞춘다. 승인 줄은 렌더링 지문에서 빠지므로 승인만 넣었을 때 영상·카드를 다시 만들지 않는다. post.json의 다른 곳은 손대지 않는다.
+- `--edits N` = 승인 전에 운영자 지적으로 고친 횟수 (없으면 0).
+- **기록 `data/approvals.csv`** (approve.py가 한 줄씩 붙임): `date`(승인한 날, 한국), `post_id`(게시물 폴더 이름), `edits_before_approval`, `approved_at`.
+- **자동 전환 기준:** 최근 2주 동안 승인한 게시물 중 **수정 없이(`edits_before_approval` 0) 승인된 비율이 80% 이상**이면 지휘 세션이 운영자에게 "자동 게시로 돌릴까요(`require_approval: false`)"를 제안한다. 운영자가 정하기 전에는 바꾸지 않는다.
+- **승인 대기 알림:** `scripts/watch-models.ps1`(15분마다)이 `py -3.12 agent/approve.py --pending --hours 3 --ref origin/main --branches`로 승인 안 된 게시물 중 게시 시각이 3시간 안이거나 지난 것(main 대기열 + 열린 `post/*` 브랜치)을 찾아 `%USERPROFILE%\tokenwar-daily\data\approval_alerts.md`(확인 시각 + 목록, 없으면 '없음', 매번 덮어씀, git에 안 올림)와 `logs/<월>-watch.log`에 남긴다. 지휘 세션이 이 파일을 읽어 최상위 세션에 알린다. publish.yml을 깨우는 '게시 시각 지남'은 승인된 것(또는 관문 밖)만 센다.
+- 손으로 보기: `py -3.12 agent/approve.py --pending --hours 24` (작업 폴더 posts/queue).
+
 ## 4. 끝
 
 마지막 출력에 한 줄 요약(만든 것, PR 링크, 게시 시각, 건너뛴 것과 이유)을 남긴다. `logs/`에 저장된다.
@@ -94,7 +106,7 @@ Code 탭에서 할 때: 운영자의 `tokenwar-agent` 폴더 브랜치를 바꾸
 4. **게시 시각은 바로 올리기:** `py -3.12 agent/slots.py next <carousel|reel> --asap`. 폴더 이름 날짜는 오늘. post.json에 `"breaking": true`를 넣는다 (TEMPLATES.md).
    - **기존 게시물은 뒤로 밀지 않는다** (운영자 결정 2026-11-16). `--asap`은 지금 시각을 줄 뿐 기존 예약을 건드리지 않는다. 시의성 있는 게시물(소식·인터뷰 인용 등)은 속보 바로 옆이라도 원래 시각 그대로 올린다. 이때 하루 칸 수와 같은 종류 90분 간격은 예외로 허용한다 (`breaking` 게시물은 `slots.py`가 하루 칸 수·`need`에 세지 않는다).
    - 시의성 없는 따라 하기·질문(`format: howto/ask`)만 뒤로 민다: 속보 앞뒤 90분 안에 있으면 `py -3.12 agent/slots.py bump --dry-run`으로 보고 `py -3.12 agent/slots.py bump`로 옮긴다 (속보와 90분 넘게 떨어진 다음 빈 칸, `.render_hash`도 같이 고침). 작업 폴더 `posts/queue`의 것만 고치므로, main에 있는 것은 속보 PR에 같이 넣고, 열린 `post/*` 브랜치에 있는 것은 그 PR에 적어 둔다.
-5. 렌더링·직접 검수는 1·2장 그대로. 올리기는 3장: `config.json` `model_watch.auto_publish`가 `false`(지금)면 브랜치 `post/<날짜>-<HHMM>` + PR 하나 (PR 본문 표 맨 위 줄에 "새 모델 바로 올리기: <발표 주소>" 또는 "업계 속보 바로 올리기: <원문 주소>", 옮긴 따라 하기가 있으면 "옮김: 폴더 이전 → 새 시각"), `true`면 main에 바로 push.
+5. 렌더링·직접 검수는 1·2장 그대로. 속보도 승인 관문(3장 '승인')을 거친다: approved 없이 만들고, 운영자 OK 뒤 지휘 세션이 `approve.py`로 넣어야 올라간다. 올리기는 3장: `config.json` `model_watch.auto_publish`가 `false`(지금)면 브랜치 `post/<날짜>-<HHMM>` + PR 하나 (PR 본문 표 맨 위 줄에 "새 모델 바로 올리기: <발표 주소>" 또는 "업계 속보 바로 올리기: <원문 주소>", 옮긴 따라 하기가 있으면 "옮김: 폴더 이전 → 새 시각"), `true`면 main에 바로 push.
 6. 마지막 출력은 정확히 한 줄: 만들었으면 `MODEL_WATCH: done <PR 주소>`, 만들 가치가 없으면 `MODEL_WATCH: skipped <이유>`. `watch-models.ps1`이 이 줄과 종료 코드로 결과를 기록한다 (PR 주소가 없으면 실패로 보고 다음 회차에 다시, 3번 실패하면 failed로 감시 기록에 남김).
 
 손으로 확인: `py -3.12 agent/model_watch.py --dry-run -v` (기록 안 바꿈, 출처별 읽은 수와 거른 이유, 업계 속보 후보·건너뛴 이유). 처음 보는 속보만: `--dry-run --breaking-only`. 기록을 처음부터 다시: `py -3.12 agent/model_watch.py --init`.

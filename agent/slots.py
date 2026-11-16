@@ -10,8 +10,12 @@
     py -3.12 agent/slots.py next carousel --count 2 --date 2026-11-16 --max 4
                                                                그날만 상한을 4개로 (칸 사이 최소 1시간 반)
     py -3.12 agent/slots.py next reel --asap                   바로 올리기: 지금 시각 (렌더링이 끝나면 다음 15분 확인 때 게시)
-    py -3.12 agent/slots.py need [--date 2026-11-16]           매일 작업이 그날 더 만들 개수 (daily_target - 이미 예약된 수)
-                                                               출력 예: carousel=0 reel=1
+    py -3.12 agent/slots.py need [--days 2]                    매일 작업이 미리 만들 개수: 오늘부터 days일 뒤까지 날짜별
+                                                               (daily_target - 이미 예약된 수, 오늘은 남은 빈 칸까지만)
+                                                               출력 예: 2026-11-17 carousel=0 reel=2
+                                                                        2026-11-18 carousel=1 reel=5
+                                                                        carousel=1 reel=7        (마지막 줄 = 합계)
+    py -3.12 agent/slots.py need --date 2026-11-16             그날 하루만 (예전 방식, 한 줄: carousel=0 reel=1)
     py -3.12 agent/slots.py bump [--near 2026-11-16T13:20+09:00] [--window 90] [--dry-run]
                                                                속보 정리: posts/queue에서 속보(breaking) 앞뒤 window분 안의
                                                                따라 하기·질문(format howto/ask)만 다음 빈 칸으로 옮긴다
@@ -167,6 +171,25 @@ def need(d=None, items=None, now=None):
     return out
 
 
+def need_days(days=2, items=None, now=None):
+    """오늘부터 days일 뒤까지 날짜별로 더 만들 개수 [(날짜, {종류: 개수})] (승인·검토 시간을 벌려고 미리 만든다).
+    날마다 daily_target - 그날 예약된 수(속보 빼고). 오늘은 지금+lead_minutes 뒤의 빈 기본 칸 수까지만."""
+    now = (now or datetime.now(KST)).astimezone(KST)
+    items = items if items is not None else taken()
+    target = S.get("daily_target", {"carousel": 1, "reel": 1})
+    out = []
+    for i in range(days + 1):
+        d = now.date() + timedelta(days=i)
+        row = {}
+        for k in KINDS:
+            n = max(0, int(target.get(k, 0)) - len(on_day(items, k, d, breaking=False)))
+            if i == 0:
+                n = min(n, len(_free_base(k, d, on_day(items, k, d), now + LEAD)))
+            row[k] = n
+        out.append((d, row))
+    return out
+
+
 def status(days=3, items=None):
     items = items if items is not None else taken()
     today = datetime.now(KST).date()
@@ -240,7 +263,7 @@ def main(argv=None):
     b = sub.add_parser("next"); b.add_argument("kind", choices=KINDS)
     b.add_argument("--count", type=int, default=1); b.add_argument("--date"); b.add_argument("--max", type=int)
     b.add_argument("--asap", action="store_true")
-    c = sub.add_parser("need"); c.add_argument("--date")
+    c = sub.add_parser("need"); c.add_argument("--date"); c.add_argument("--days", type=int, default=2)
     e = sub.add_parser("bump", help="속보 앞뒤의 따라 하기·질문(howto/ask)만 다음 빈 칸으로")
     e.add_argument("--near", help="속보 게시 시각 (ISO). 없으면 breaking 게시물들의 시각")
     e.add_argument("--window", type=int, default=90, help="속보 앞뒤 몇 분 (기본 90)")
@@ -260,8 +283,14 @@ def main(argv=None):
         if not moved:
             print("옮길 따라 하기·질문 없음")
     elif args.cmd == "need":
-        n = need(date.fromisoformat(args.date) if args.date else None)
-        print(" ".join(f"{k}={v}" for k, v in n.items()))
+        if args.date:
+            n = need(date.fromisoformat(args.date))
+            print(" ".join(f"{k}={v}" for k, v in n.items()))
+            return
+        rows = need_days(args.days)
+        for d, n in rows:
+            print(f"{d} " + " ".join(f"{k}={v}" for k, v in n.items()))
+        print(" ".join(f"{k}={sum(n[k] for _, n in rows)}" for k in KINDS))
     else:
         if args.asap:
             for _ in range(args.count):

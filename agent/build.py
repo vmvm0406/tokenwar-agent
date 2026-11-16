@@ -8,6 +8,7 @@ publish.py는 지문이 맞는 게시물만 올린다. (렌더링 전이나 고�
 """
 import hashlib
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -29,10 +30,22 @@ def _srcs(node):
             yield from _srcs(v)
 
 
+# 승인 표시(approved, approved_at, agent/approve.py)는 렌더링 결과와 상관없어서 지문에서 뺀다.
+# 맨 위 단계의 한 줄짜리 키만 줄째로 지운다. approve.py는 이 줄들을 "{" 바로 다음에 넣으므로(끝에 쉼표),
+# 줄을 지우면 승인 전 post.json 바이트와 똑같아져 지문이 그대로다 (다시 렌더링하지 않음).
+_APPROVAL_LINE = re.compile(rb'(?m)^[ \t]*"approved(?:_at)?"[ \t]*:[^\n]*\n')
+
+
+def post_bytes(pj):
+    """지문용 post.json 바이트: 줄 끝을 LF로 맞추고(윈도우 체크아웃 CRLF도 리눅스와 같은 지문) 승인 줄을 뺀다.
+    LF 파일·승인 줄 없는 파일은 원래 바이트 그대로라 예전 지문이 바뀌지 않는다."""
+    return _APPROVAL_LINE.sub(b"", Path(pj).read_bytes().replace(b"\r\n", b"\n"))
+
+
 def input_hash(folder):
     folder = Path(folder)
     pj = folder / "post.json"
-    h = hashlib.sha256(pj.read_bytes())
+    h = hashlib.sha256(post_bytes(pj))
     post = json.loads(pj.read_text(encoding="utf-8"))
     for src in sorted(set(_srcs(post))):
         f = folder / src
