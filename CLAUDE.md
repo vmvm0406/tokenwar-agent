@@ -41,6 +41,8 @@
 | `agent/dm.py` | 따라 하기 게시물의 댓글 자동 DM 준비물: `dm.md`(Zorcha 설정 메모), `docs/p/<id>/` 안내 페이지(GitHub Pages, DM으로만 알리는 주소. 프로필 링크 자료실은 팔로우 안 한 사람도 받게 되어 쓰지 않음, 2026-11-16 운영자 결정) |
 | `agent/shot.py` | 웹페이지 화면 캡처 → 카드뉴스 사진 (`shot` 필드로 자동, 또는 명령줄) |
 | `agent/thumb.py` | 릴스 썸네일 cover.jpg (그림 꽉 차게 + 가운데 제목 2줄) |
+| `agent/listreel.py` | 목록형 자료 릴스('조명 단어 20가지' 형식): 제목 + 번호 목록, 한 줄씩 강조되며 결과 이미지 교체 |
+| `assets/mascot/` | 마스코트 슬라임 기준 이미지(`slime-base.jpg`)와 만드는 법(README). `gen_images.py`의 `"mascot": true`가 참고 이미지로 붙임 |
 | `agent/tighten.py` | 받아쓰기 단어 시각 → 말 사이 틈을 자른 keep 목록 |
 | `agent/analyze.py` | 영상 분석: 장면 전환, 말소리 구간, 받아쓰기, 시트 이미지 |
 | `agent/gen_images.py` | 실물 이미지 받기(`url`) → 없으면 AI 그림(`prompt`, Cloudflare) |
