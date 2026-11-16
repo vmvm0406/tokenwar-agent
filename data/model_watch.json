@@ -1121,7 +1121,56 @@
    "tries": 0,
    "breaking": true,
    "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMiWEFVX3lxTE1qVE5DV3Q1ekZob0d0Z2RkR0xOTGFRdC1kaXRFUU01UnBLcXVLRV9VS2tRaldfRmxZbXRPdXVIN3YyYzAwM01saU83WWd4UGozWlVEZDhNNUzSAVhBVV95cUxNalROQ1d0NXpGaG9HdGdkZEdMTkxhUXQtZGl0RVFNNVJwS3F1S0VfVUtrUWpXX0ZsWW10T3V1SDd2MmMwMDNNbGlPN1lneFBqM1pVRGQ4TTVM?oc=5": {
+   "source": "news",
+   "company": "메타",
+   "entities": [
+    "메타"
+   ],
+   "tok": [
+    "1조",
+    "과징",
+    "리아",
+    "무단",
+    "사진",
+    "용자",
+    "이용",
+    "이탈",
+    "접근",
+    "진에",
+    "징금",
+    "탈리"
+   ],
+   "title": "[업계 속보: 주요 매체 4곳(AI타임스, SBS, 동아일보, 서울경제) · 규제] 이탈리아, 메타에 1조 과징금…이용자 사진에 무단 접근",
+   "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1qVE5DV3Q1ekZob0d0Z2RkR0xOTGFRdC1kaXRFUU01UnBLcXVLRV9VS2tRaldfRmxZbXRPdXVIN3YyYzAwM01saU83WWd4UGozWlVEZDhNNUzSAVhBVV95cUxNalROQ1d0NXpGaG9HdGdkZEdMTkxhUXQtZGl0RVFNNVJwS3F1S0VfVUtrUWpXX0ZsWW10T3V1SDd2MmMwMDNNbGlPN1lneFBqM1pVRGQ4TTVM?oc=5",
+   "first_seen": "2026-11-16T11:19:17+09:00",
+   "why": "이미 낸 소식과 같음: [업계 속보: 주요 매체 5곳(AI타임스, SBS, 동아일보, 서울경제) · 규제] 이탈리",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMihAFBVV95cUxOelhLb2QtNy1faTdqOEwwQVNzSk5IX25mc0VOQjQzVTdPc3pZdUMyOE9EWkxVd1pJX0huTDZMMTBNR0ZLV0E2WHVkb1Vuam1vMjJ3TUptVGloS2VhWFlmYW1ITGJvVjJpNzNCdkYyQ3hTdXIzUlhaUElJN01UQzVWc2NfSjE?oc=5": {
+   "source": "news",
+   "company": "앤트로픽",
+   "entities": [
+    "앤트로픽",
+    "엔비디아"
+   ],
+   "tok": [
+    "big",
+    "ipo",
+    "next",
+    "test"
+   ],
+   "title": "[업계 속보: 주요 매체 2곳(Financial Times, Reuters) · 상장·투자] Anthropic’s IPO is the next big test for AI",
+   "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxOelhLb2QtNy1faTdqOEwwQVNzSk5IX25mc0VOQjQzVTdPc3pZdUMyOE9EWkxVd1pJX0huTDZMMTBNR0ZLV0E2WHVkb1Vuam1vMjJ3TUptVGloS2VhWFlmYW1ITGJvVjJpNzNCdkYyQ3hTdXIzUlhaUElJN01UQzVWc2NfSjE?oc=5",
+   "first_seen": "2026-11-16T11:19:17+09:00",
+   "why": "48시간 안에 같은 회사·인물 게시물 있음: 2026-11-16-carousel-claude-ppt (앤트로픽)",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
   }
  },
- "updated": "2026-11-16T11:04:17+09:00"
+ "updated": "2026-11-16T11:19:17+09:00"
 }
