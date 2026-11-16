@@ -383,6 +383,8 @@ def page_html(post, imgs, cfg):
     fonts = (ROOT / "assets" / "fonts").as_uri()
     L = post["list"]
     rows = rows_of(post)
+    # 제목 줄 수: 기본 2줄, 운영자가 줄바꿈으로 3줄을 정했으면 3줄까지 (checks.py와 같음)
+    title_lines = min(3, max(2, len(str(post["title"]).split("\n"))))
     mode = L.get("label", "en")        # "en": 영어 이름만 크게(기본), "ko": 한국어 크게 + 영어 작게, "both": 영어 크게 + 한국어 작게
     ko_big = mode == "ko"
     cls = {"ko": "big-ko", "both": ""}.get(mode, "en-only")
@@ -457,8 +459,8 @@ window.twProblems = () => {{
   ttl.style.display = 'block';
   const t = ttl.querySelector('.t'); let tfs = {TITLE_FONT};
   const lines = () => Math.round(t.clientHeight / parseFloat(getComputedStyle(t).lineHeight));
-  while (lines() > 2 && tfs > 56) {{ tfs -= 2; t.style.fontSize = tfs + 'px'; }}
-  if (lines() > 2) out.push('제목이 2줄을 넘음');
+  while (lines() > {title_lines} && tfs > 56) {{ tfs -= 2; t.style.fontSize = tfs + 'px'; }}
+  if (lines() > {title_lines}) out.push('제목이 {title_lines}줄을 넘음');
   if (ttl.getBoundingClientRect().bottom > {SAFE_BOTTOM}) out.push('제목 띠가 안전 영역 밖');
   ttl.style.display = 'none';
   return out;

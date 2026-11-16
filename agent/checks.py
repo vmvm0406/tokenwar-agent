@@ -290,8 +290,10 @@ def check_video(post):
         if not post.get("rights_note"):
             errors.append("rights_note에 허락받은 날짜·경로나 라이선스 이름을 적을 것")
     ls = _lines(post["title"])
-    if len(ls) > lim["cover_title_lines"]:
-        errors.append(f"제목은 {lim['cover_title_lines']}줄 이하")
+    # 목록형 릴스는 제목이 첫 화면에만 나와 3줄까지 (운영자가 고른 긴 제목, 2026-11-17 '반드시 필요한')
+    most_lines = 3 if post.get("list") else lim["cover_title_lines"]
+    if len(ls) > most_lines:
+        errors.append(f"제목은 {most_lines}줄 이하")
     for l in ls:
         if _len(l) > lim["video_title_line_chars"]:
             errors.append(f"제목 한 줄은 {lim['video_title_line_chars']}자 이하: '{l}'")
