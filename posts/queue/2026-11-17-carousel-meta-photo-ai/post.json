@@ -1,0 +1,183 @@
+{
+ "id": "2026-11-17-carousel-meta-photo-ai",
+ "type": "carousel",
+ "format": "howto",
+ "series": "생존 가이드",
+ "date": "2026-11-17",
+ "publish_at": "2026-11-17T10:13:00+09:00",
+ "slides": [
+  {
+   "kind": "cover",
+   "layout": "image",
+   "visual": {
+    "type": "image",
+    "src": "img/cover.jpg",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/d/d2/Mark_Zuckerberg_F8_2019_Keynote_%2846985052234%29.jpg",
+    "position": "45% 30%",
+    "credit": "사진: Anthony Quintano, CC BY 2.0 (위키미디어 공용)",
+    "license": "CC BY 2.0",
+    "hook": "마크 저커버그가 커다란 'privacy'(개인정보) 글자 앞에 서 있는 장면. 사진 무단 접근 벌금 소식과 맞물려 한눈에 아이러니가 보인다"
+   },
+   "title": "메타가 1.2조 원\n벌금을 맞았습니다",
+   "highlight": "1.2조 원",
+   "sub": "이탈리아 · 휴대폰 사진첩에 동의 없이 접근"
+  },
+  {
+   "kind": "body",
+   "visual": {
+    "type": "image",
+    "src": "img/02-garante.jpg",
+    "position": "center 80%",
+    "credit": "화면: 이탈리아 개인정보보호청 발표 (11월 14일)"
+   },
+   "heading": "페이스북 앱이 사진첩을\n동의 없이 열어 봤습니다",
+   "highlight": "동의 없이",
+   "body": "이탈리아 개인정보보호청이 11월 14일 내린 처분입니다. 금액은 8억 500만 유로입니다."
+  },
+  {
+   "kind": "stat",
+   "value": "2,000만",
+   "unit": "명",
+   "label": "이탈리아에서 해당되는 안드로이드 이용자 수입니다",
+   "heading": "올리지도 않은 사진을\n게시물 추천에 꺼냈습니다",
+   "highlight": "올리지도 않은 사진",
+   "body": "사진첩 추천 기능은 처음부터 켜져 있었습니다. 메타는 60일 안에 이 기능을 기본으로 꺼야 하고, 항소하겠다고 밝혔습니다."
+  },
+  {
+   "kind": "body",
+   "visual": {
+    "type": "image",
+    "src": "img/04-instagram.jpg",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/7/7f/Instagram_app_on_smartphone_%28grass_background%29_%28cropped%29.jpg",
+    "position": "center 40%",
+    "credit": "사진: Santeri Viinamäki, CC BY-SA 4.0 (위키미디어 공용)",
+    "license": "CC BY-SA 4.0"
+   },
+   "heading": "내 공개 사진도\nAI 학습에 쓰입니다",
+   "highlight": "AI 학습",
+   "body": "이번 처분과 별개로, 메타는 공개 게시물을 AI 학습에 씁니다. 원하지 않으면 직접 거부 신청을 해야 합니다."
+  },
+  {
+   "kind": "prompt",
+   "num": 1,
+   "num_note": "메타 개인정보 보호 센터",
+   "visual": {
+    "type": "image",
+    "src": "img/05-privacy.jpg",
+    "position": "center top",
+    "credit": "화면: 메타 개인정보 보호 센터 한국어 페이지 (11월 16일)"
+   },
+   "heading": "이 주소에서 '이의를\n제기할 권리'를 펼칩니다",
+   "highlight": "이의를\n제기할 권리",
+   "prompt": "https://www.facebook.com/privacy/genai/",
+   "prompt_label": "주소",
+   "prompt_hint": "주소창에 그대로 붙여 넣기"
+  },
+  {
+   "kind": "body",
+   "num": 2,
+   "num_note": "신청",
+   "heading": "'Instagram'을 누르고\n'제출'을 누릅니다",
+   "highlight": "'제출'",
+   "body": "로그인하면 신청 양식이 열립니다. 제출하면 메타가 앞으로 학습에 쓰지 않겠다는 확인 이메일을 보냅니다.",
+   "point": "같은 계정 센터에 묶인\n페이스북에도 함께 적용됩니다"
+  }
+ ],
+ "sources": [
+  {
+   "name": "이탈리아 개인정보보호청(Garante) 발표: 메타에 8억 500만 유로 (11월 14일)",
+   "url": "https://www.garanteprivacy.it/home/docweb/-/docweb-display/docweb/10321080"
+  },
+  {
+   "name": "ZDNet Korea: 伊, 메타에 1.2조원 과징금 (11월 15일)",
+   "url": "https://zdnet.co.kr/view/?no=20261115110940"
+  },
+  {
+   "name": "AI타임스: 메타, 사용자 사진 무단 접근으로 이탈리아서 1.2조 벌금",
+   "url": "https://www.aitimes.com/news/articleView.html?idxno=217416"
+  },
+  {
+   "name": "메타 개인정보 보호 센터: 생성형 AI 정보 사용 방식과 이의를 제기할 권리",
+   "url": "https://www.facebook.com/privacy/genai/"
+  },
+  {
+   "name": "표지 사진: Anthony Quintano, CC BY 2.0, 위키미디어 공용",
+   "url": "https://commons.wikimedia.org/wiki/File:Mark_Zuckerberg_F8_2019_Keynote_(46985052234).jpg"
+  },
+  {
+   "name": "인스타그램 사진: Santeri Viinamäki, CC BY-SA 4.0, 위키미디어 공용",
+   "url": "https://commons.wikimedia.org/wiki/File:Instagram_app_on_smartphone_(grass_background)_(cropped).jpg"
+  }
+ ],
+ "caption": "인스타그램 사진이 메타 AI 학습에 쓰이지 않게 지금 거부 신청하세요.\n댓글에 '자료' 남기면 신청 링크와 순서를 DM으로 보내 드립니다(팔로우한 분께).\n\n이탈리아 개인정보보호청이 11월 14일 메타에 8억 500만 유로(약 1조 2,000억 원)를 부과했습니다. 페이스북 안드로이드 앱이 사진첩의 사진과 영상을 동의 없이 꺼내 게시물 추천에 썼다는 이유인데, 이탈리아에서만 약 2,000만 명이 해당됩니다. 메타는 항소할 계획이고요.\n\n이번 처분은 사진첩 추천 기능을 다룬 것이고, 메타는 이와 별개로 인스타그램과 페이스북의 공개 게시물을 AI 학습에 씁니다. 원하지 않으면 아래 주소의 '이의를 제기할 권리'에서 직접 거부 신청을 하세요. 한 번 신청하면 같은 계정 센터에 묶인 계정 모두에 적용됩니다.\nhttps://www.facebook.com/privacy/genai/\n\n아이 사진을 공개 계정에 올리는 친구에게 보내 주세요.\n\n출처: 이탈리아 개인정보보호청 발표 (11월 14일), 메타 개인정보 보호 센터, ZDNet Korea (11월 15일)\n사진: Anthony Quintano (CC BY 2.0), Santeri Viinamäki (CC BY-SA 4.0), 위키미디어 공용\n\n팔로우하고 댓글에 '자료' 남기면 신청 링크와 순서 보내 드립니다.",
+ "dm": {
+  "keyword": "자료",
+  "message": "메타 AI 학습 거부 신청 링크와 순서입니다.\n'자료 보기'를 누르면 공식 신청 링크가 있는 페이지가 열립니다.\n인스타그램이나 페이스북에 로그인한 상태에서 신청하십시오.",
+  "cta": "팔로우하고 댓글에 '자료' 남기면\n신청 링크와 순서 보내 드립니다",
+  "page": {
+   "intro": "메타는 인스타그램과 페이스북의 공개 정보를 생성형 AI 학습에 사용하며, 개인정보 보호 센터에서 이에 대한 이의 제기(거부) 신청을 받습니다. 아래 순서대로 신청하십시오.",
+   "result": [
+    {
+     "k": "확인 일자:",
+     "v": "2026년 11월 16일"
+    },
+    {
+     "k": "확인 환경:",
+     "v": "Windows 11, 한국에서 접속, 메타 개인정보 보호 센터 한국어 페이지"
+    },
+    {
+     "k": "결과:",
+     "v": "'Meta가 생성형 AI 모델 및 기능을 위해 정보를 사용하는 방식' 페이지의 '이의를 제기할 권리' 항목에 페이스북, 인스타그램, 메타 계정별 신청 링크가 있습니다. 메타는 신청이 접수되면 공개 정보를 향후 AI 학습에 사용하지 않겠다는 확인 이메일을 보낸다고 안내합니다. 신청은 로그인한 계정과 같은 계정 센터에 추가된 모든 계정에 적용됩니다."
+    },
+    {
+     "k": "미확인 범위:",
+     "v": "로그인한 뒤 열리는 신청 양식 화면은 확인하지 않았습니다."
+    }
+   ],
+   "notice": {
+    "title": "공식 신청 링크",
+    "text": "메타 개인정보 보호 센터에 걸린 링크입니다. 로그인한 상태에서 여십시오.",
+    "links": [
+     {
+      "name": "인스타그램 계정으로 신청",
+      "url": "https://help.instagram.com/contact/233964459562201",
+      "note": "인스타그램 고객 센터"
+     },
+     {
+      "name": "페이스북 계정으로 신청",
+      "url": "https://www.facebook.com/help/contact/6359191084165019",
+      "note": "페이스북 고객 센터"
+     },
+     {
+      "name": "메타 개인정보 보호 센터 안내 페이지",
+      "url": "https://www.facebook.com/privacy/genai/",
+      "note": "'이의를 제기할 권리' 항목"
+     }
+    ]
+   }
+  }
+ },
+ "threads": {
+  "text": "메타가 이탈리아에서 8억 500만 유로, 우리 돈 약 1조 2,000억 원 과징금을 받았습니다.\n\n페이스북 안드로이드 앱이 사진첩 사진을 동의 없이 꺼내 게시물 추천에 썼다는 이유인데요, 이탈리아 이용자만 약 2,000만 명입니다.\n이번 건과 별개로 메타는 공개 게시물을 AI 학습에 쓰고, 한국 계정도 개인정보 보호 센터에서 거부 신청을 할 수 있습니다.\n\n공개로 올린 사진은 기본이 학습 대상이라, 원하지 않으면 직접 신청해야 합니다.",
+  "images": [
+   "cover",
+   2
+  ],
+  "topic": "AI Threads",
+  "replies": [
+   "출처: 이탈리아 개인정보보호청 발표 (11월 14일), 메타 개인정보 보호 센터\nhttps://www.garanteprivacy.it/home/docweb/-/docweb-display/docweb/10321080\nhttps://www.facebook.com/privacy/genai/"
+  ]
+ },
+ "hashtags": [
+  "#메타",
+  "#인스타그램",
+  "#개인정보",
+  "#AI뉴스",
+  "#토큰전쟁"
+ ],
+ "topic": [
+  "메타",
+  "이탈리아 개인정보 과징금",
+  "메타 AI 학습 거부"
+ ]
+}
