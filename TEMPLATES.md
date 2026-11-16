@@ -64,6 +64,25 @@
 
 가짜 UI 화면(설정창, 대화창, 터미널), 아이콘 타일, 점 무늬 배경은 쓰지 않는다.
 
+### 마스코트 그림 (`"mascot": true`, 선택)
+
+`type: image` 그림 어디에나(본문 visual, thumb.image, 목록형 릴스 list.items) 붙인다. 규칙은 STYLE_GUIDE 1-1 "마스코트", 기준 이미지·묘사는 `assets/mascot/README.md`.
+
+```json
+{"type": "image", "src": "img/list/01.jpg", "mascot": true,
+ "prompt": "Same grey sofa, same living room, same camera angle and framing. Change ONLY the lighting: ...",
+ "ref": "img/list/scene.jpg", "seed": 424242}
+```
+
+| 필드 | 내용 |
+|---|---|
+| `mascot` | true면 `gen_images.py`가 참고 이미지를 FLUX.2 편집 입력(input_image_0, 긴 변 1024px)으로 붙이고, 프롬프트 앞에 "기준 캐릭터를 그대로 두라"는 영어 문장을 붙인다 |
+| `prompt` | 영어. 바꿀 것만(조명, 카메라, 그림체, 장면). 캐릭터 모양을 바꾸는 말, 특정 스튜디오·작가 이름은 쓰지 않는다. 없으면 참고 이미지를 그대로 복사한다 |
+| `ref` | 선택. 참고 이미지(게시물 폴더 기준). 없으면 `assets/mascot/slime-base.jpg`. 같은 게시물의 다른 그림이면 그 그림을 먼저 만든다 (장면 기준 그림 하나 → 그 장면의 변형들) |
+| `seed` | 선택. 기본 424242 |
+
+없으면 예전과 같다. 키가 GitHub Secrets에만 있어 그림은 render.yml에서만 만들어진다.
+
 ## 게시물 형식 (`format`, 선택)
 
 `"format": "howto" | "ask" | "weekly" | "news" | "buzz"`. 없으면 예전처럼 동작한다. `howto`·`ask`는 `kind: prompt` 장이 1개 이상 있어야 렌더링된다 (checks.py). 근거는 STYLE_GUIDE 3-1 (ai.trend.kr 상위 게시물 분석).
@@ -174,6 +193,48 @@
 - **자막 모션 (선택, `video.sub_motion: "rise"`):** 자막이 나올 때 0.3초 동안 아래에서 22px 올라오며 자리 잡는다. 화면 녹화처럼 글을 정적으로 띄우면 지루할 때 쓴다. 없으면 예전처럼 정적.
 - **구간 경계 (start/end):** start는 첫 단어 '시작' 시각 - 0.2초, end는 마지막 단어 **'끝'** 시각 + 0.4초. `tighten.py` 출력 `words`의 `[단어, 시작, 끝]` 중 마지막 단어는 세 번째 값(끝)을 쓴다 (시작 시각 근처로 잡으면 마지막 말이 잘린다: 나델라 릴스 "rejected"). 다음 문장 첫소리가 들어가지 않게 한다. 렌더링할 때 video.py가 원본 소리 크기로 '첫 소리'와 '마지막 소리 끝'을 다시 찾아, end가 마지막 소리 끝 + 0.3초보다 앞이면 + 0.4초로 늘리고, 그 사이 다음 말이 들어오면 마지막 소리 끝 + 0.05초부터 0.12초 동안 소리를 줄여 무음으로 한다 (화면은 end까지). start 앞뒤에 앞 문장 꼬리가 있으면 그 소리만 무음 → 첫 소리 직전 페이드인. 문장 한가운데(말이 1.2초 넘게 끊김 없이 이어짐)면 렌더링이 멈춘다. 출력의 "끝: 마지막 소리 … → end …" / "시작: 첫 소리 …" 줄을 확인한다. 끄려면 `video.avoid_edge_check: false`. 끄고 경계를 손으로 정할 때(말이 빨라 소리 틈이 없을 때)는 `video.fade_out`(원본 시각, 보통 마지막 소리 끝 + 0.05초)·`video.fade_in`을 적으면 같은 페이드를 쓴다: end는 마지막 소리 끝 + 0.3초 이상으로 두고 다음 말은 fade_out으로 막는다.
 - **자막 자리:** 우리 자막이 영상 창 안에 들어갈 때 자리는 **항상 영상 창 맨 아래(바닥)**다. 영상 창 위쪽에 자막을 다는 일은 없다 (운영자 결정 2026-11-16: "아래에 다는 게 맞다"). 자막 아래 끝이 안쪽 테두리 위 24px. 2줄 자막 높이 기준으로 고정해 1줄이어도 아래 끝선이 같다(들썩이지 않게). 원본에 박힌 글자(이름 자막·하단 자막·영어 자막)와 겹치면 순서대로: (1) 바닥에서 자막 글씨를 줄인다 50px → 44px → 40px (줄 간격도 함께, 40px 아래로는 줄이지 않음), (2) 그래도 겹치면 원본 글자 띠 바로 위로 조금 올린다. 단, 얼굴(턱·입)을 가리지 않게 올린 자막의 위 끝이 영상 창 아래쪽 1/3 안에 있을 때만 (얼굴 자동 검출이 없어 보수적으로), (3) 그래도 안 되면 바닥에 두고 겹침을 감수한다. 한 릴스 안에서는 글씨 크기·위치 하나로 통일(자막마다 바뀌지 않음). 렌더링 출력에 "자막: 영상 창 맨 아래, 50px" / "자막 크기 44px로 줄여 바닥 유지" / "자막: 영상 창 바닥에서 Npx 올림" / "겹침 감수: 12.3~15.0초 원본 글자와 겹침"(릴스 시각) 줄이 남는다. 겹침 감수가 나오면 PR 본문에 그 구간을 한 줄 적는다. 크기만 손으로 정하려면 `video.captions_size: 44`. `video.captions_pos: "top"`은 더 쓰지 않는다(적혀 있으면 경고 후 바닥). 영상 아래 빈칸이 안전 영역(1250px) 안에 들어가면 지금처럼 영상 아래에 둔다. **원본 글자를 띠로 가리지 않는다.** 박힌 글자 찾기를 끄려면 `video.avoid_burned: false`.
+
+## 목록형 자료 릴스 (`type: "video"` + `list`, 운영자 결정 2026-11-16)
+
+참고 형식 '34가지 조명 코드'. 한 화면에 큰 제목과 번호 목록이 함께 나오고, 목록이 한 줄씩 형광 초록 면으로 강조될 때마다 오른쪽 결과 이미지(세로 4:5)가 바뀐다. `video` 대신 `list`를 쓰고, 나머지(`title`·`thumb`·`dm`·`caption`·`threads`)는 영상 프레임 릴스와 같다. 렌더링은 `agent/listreel.py` (render.py가 `list`를 보고 부른다). 예시 `samples/s14-list-reel` (자리표시 이미지).
+
+```json
+{
+  "type": "video", "format": "howto", "origin": "own", "length": "short", "rights": "own",
+  "title": "AI 그림 분위기를 바꾸는\n조명 단어 20가지", "highlight": "조명 단어",
+  "list": {
+    "items": [{"name": "하이키", "en": "high-key", "type": "image", "src": "img/list/01.jpg", "mascot": true,
+               "prompt": "Same grey sofa, same living room, same camera angle and framing. Change ONLY the lighting: high-key ..."}, ...],
+    "hook": 10,
+    "base": {"name": "원본 사진", "type": "image", "src": "img/list/00.jpg", "mascot": true},
+    "scene": {"type": "image", "src": "img/list/scene.jpg", "mascot": true, "prompt": "(선택) 장면 기준 그림"},
+  },
+  "music": {"generate": true},
+  "thumb": {"title": "...", "image": {"type": "image", "src": "img/list/10.jpg"}},
+  "sources": [{"name": "FLUX.2 [klein] (Cloudflare Workers AI, 결과 이미지 제작 도구)", "url": "https://developers.cloudflare.com/workers-ai/models/flux-2-klein-4b/", "kind": "tool"}],
+  "dm": {"cta": "...", "banner": "...", "page": {"intro": "...", "list_intro": "..."}}
+}
+```
+
+| 필드 | 내용 |
+|---|---|
+| `list.items` | 화면 목록 순서. `name`(화면 이름, 12자 이하, 영어 없이), `en`(영어 프롬프트 단어, DM 자료 페이지에만), `src`(결과 이미지, 4:5). 그림을 AI로 만들 때는 같은 객체에 `"type": "image"`, `"mascot": true`, `prompt`(영어, 바꿀 것만), 선택 `ref`(아래 "마스코트") → render.yml이 만든다 |
+| `list.hook` | 첫 화면(0~2초)에 제목과 함께 크게 보여 줄 항목 번호 (1부터, 기본 1). 가장 눈에 띄는 결과로 |
+| `list.base` | 선택. 맨 앞 원본 사진 줄(번호 00, 항목보다 1.3배 오래). "사진 한 장을 N가지로" 형식. `"mascot": true`에 prompt가 없으면 마스코트 기준 이미지 그대로 |
+| `list.scene` | 선택. 화면에 안 나오는 장면 기준 그림. 항목들이 `"ref": "img/list/scene.jpg"`로 이 그림을 참고해 같은 장면에서 한 가지만 바꾼다 (gen_images가 먼저 만든다) |
+| `list.seconds` | 선택. 항목 하나 보여 주는 초. 없으면 전체가 29초 안팎이 되게 0.9~1.6초 사이에서 자동 |
+| `list.per_page` | 선택. 한 화면 목록 줄 수 상한 (기본 11). 넘으면 고르게 나눠 페이지를 넘긴다 (20개 → 10+10) |
+| `list.position` | 선택. 이미지에서 보여 줄 부분 (CSS object-position, 기본 `center 35%`) |
+| `list.hook_seconds` | 선택. 첫 화면 길이 (기본 2초) |
+
+- **화면:** 0~2초 첫 화면(제목 2줄 + 결과 이미지 크게 + 그 이름) → 목록 화면(위: '자료' 안내 띠 자리, 제목, 왼쪽 번호 목록, 오른쪽 4:5 이미지) → 마지막 항목 0.6초 더 → `dm.cta` 끝 화면 2.5초. 전환은 컷. 긴 이름은 그 줄만 글씨를 줄여 한 줄에 맞추고, 최소 크기로도 안 들어가면 렌더링이 멈춘다.
+- **소리:** `music` 규칙 그대로(없으면 코드로 만든 음악). 박자는 항목 전환에 맞추고, 강한 타격음은 목록 시작·페이지 넘김에만. -14 LUFS.
+- **안내 띠(`dm.banner`):** 안전 영역 맨 위, 3초부터 본편 끝까지. 목록 화면의 제목은 띠 높이 + 20px 아래에서 시작한다.
+- **DM 자료 페이지:** `dm.page`의 소개 아래 '전체 목록'에 항목마다 번호·한국어 이름·영어 단어(복사 상자)가 자동으로 들어간다. `page.list_title`·`page.list_intro`(선택), `page.template`(선택: 직접 써 본 프롬프트 틀, 복사 상자) · `page.template_title` · `page.template_note`.
+- **썸네일:** `thumb.image.src`에 목록 이미지 하나를 그대로 써도 된다(이때는 `url`·`prompt` 없어도 됨). 4:5 이미지가 9:16 화면을 꽉 채우게 잘린다.
+- **출처:** 직접 만든 결과물이라 소식 출처가 없다. 만든 도구 링크를 `"kind": "tool"`로 적는다 (dupes.py 같은 출처 검사에서 빠짐).
+- **checks.py:** 항목 3개 이상, 항목마다 이름·이미지, 이미지 경로 겹침 금지(항목 수 = 이미지 수), 제목·썸네일의 'N가지/N개' = 항목 수, 길이(끝 화면 포함) 20~35초, `rights: own`, `hook` 범위, `en` 없으면 경고.
+- **그림 (마스코트):** 항목 그림은 마스코트 슬라임 AI 그림이다 (STYLE_GUIDE 1-1 "마스코트"). 게시물을 push하면 render.yml이 `gen_images.py`로 그림(항목 수만큼 FLUX.2 호출)을 만들고 렌더링까지 한다. 키(CF_ACCOUNT_ID, CF_API_TOKEN)가 Actions에만 있어서 이 컴퓨터에서 render.py를 돌리면 없는 그림은 회색 자리표시(번호만, `_ph/`에 잠깐 만들고 지움)로 틀만 렌더링한다. Actions에서 그림이 빠지면 렌더링이 멈춘다(자리표시 영상이 올라가지 않게). 그림을 다시 만들려면 그 `src` 파일을 지우고 push.
 
 ## 릴스 썸네일 (`thumb`)
 

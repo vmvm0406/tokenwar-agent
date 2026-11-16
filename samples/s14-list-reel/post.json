@@ -1,0 +1,161 @@
+{
+  "id": "s14-list-reel",
+  "type": "video",
+  "format": "howto",
+  "origin": "own",
+  "length": "short",
+  "series": "생존 가이드",
+  "date": "2026-11-17",
+  "publish_at": "2026-11-17T21:13:00+09:00",
+  "rights": "own",
+  "rights_note": "결과 그림은 토큰전쟁 마스코트 기준 이미지(assets/mascot/slime-base.jpg)를 참고 이미지로 넣어 FLUX.2 [klein] 4B(Cloudflare Workers AI)로 만든 AI 그림. 배경음악은 agent/music_gen.py가 코드로 만든 음악",
+  "title": "사진 한 장, 12가지\n그림체로 바꿔 봤습니다",
+  "highlight": "12가지",
+  "list": {
+    "base": {
+      "name": "원본 사진",
+      "type": "image",
+      "src": "img/list/00.jpg",
+      "mascot": true
+    },
+    "items": [
+      {
+        "name": "수채화",
+        "en": "watercolor painting",
+        "type": "image",
+        "src": "img/list/01.jpg",
+        "mascot": true,
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a watercolor painting with soft bleeding colors on textured paper. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+      },
+      {
+        "name": "유화",
+        "en": "oil painting",
+        "type": "image",
+        "src": "img/list/02.jpg",
+        "mascot": true,
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a classical oil painting with thick visible brush strokes on canvas. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+      },
+      {
+        "name": "연필 스케치",
+        "en": "pencil sketch",
+        "type": "image",
+        "src": "img/list/03.jpg",
+        "mascot": true,
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a graphite pencil sketch in black and white, hatching lines on white paper. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+      },
+      {
+        "name": "수묵화",
+        "en": "ink wash painting",
+        "type": "image",
+        "src": "img/list/04.jpg",
+        "mascot": true,
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as an East Asian ink wash painting, black ink brush strokes with soft grey washes on rice paper. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+      },
+      {
+        "name": "팝아트",
+        "en": "pop art",
+        "type": "image",
+        "src": "img/list/05.jpg",
+        "mascot": true,
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as pop art with bold flat colors, thick black outlines and halftone dots. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+      },
+      {
+        "name": "픽셀 아트",
+        "en": "pixel art",
+        "type": "image",
+        "src": "img/list/06.jpg",
+        "mascot": true,
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as 16-bit pixel art with a limited color palette and crisp square pixels. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+      },
+      {
+        "name": "3D 애니메이션",
+        "en": "3D animation",
+        "type": "image",
+        "src": "img/list/07.jpg",
+        "mascot": true,
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a still from a 3D animated feature film, soft stylized shapes, warm cinematic lighting. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+      },
+      {
+        "name": "클레이 인형",
+        "en": "claymation",
+        "type": "image",
+        "src": "img/list/08.jpg",
+        "mascot": true,
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a claymation scene where everything is made of soft modeling clay with fingerprint textures. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+      },
+      {
+        "name": "종이 공예",
+        "en": "papercraft",
+        "type": "image",
+        "src": "img/list/09.jpg",
+        "mascot": true,
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a layered paper craft diorama made of cut paper layers with soft shadows. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+      },
+      {
+        "name": "스테인드글라스",
+        "en": "stained glass",
+        "type": "image",
+        "src": "img/list/10.jpg",
+        "mascot": true,
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a stained glass window with bold black lead lines and glowing colored glass. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+      },
+      {
+        "name": "모자이크",
+        "en": "mosaic",
+        "type": "image",
+        "src": "img/list/11.jpg",
+        "mascot": true,
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a mosaic made of small square ceramic tiles. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+      },
+      {
+        "name": "일본 목판화",
+        "en": "ukiyo-e woodblock print",
+        "type": "image",
+        "src": "img/list/12.jpg",
+        "mascot": true,
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a Japanese ukiyo-e woodblock print with flat colors, bold outlines and paper texture. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+      }
+    ],
+    "hook": 6
+  },
+  "music": {
+    "generate": true
+  },
+  "thumb": {
+    "title": "사진 한 장이\n12가지 그림이 됩니다",
+    "highlight": "12가지 그림",
+    "image": {
+      "type": "image",
+      "src": "img/list/06.jpg",
+      "position": "center 40%"
+    }
+  },
+  "topic": [
+    "그림체 프롬프트",
+    "목록형 릴스 예시"
+  ],
+  "sources": [
+    {
+      "name": "FLUX.2 [klein] 4B (Cloudflare Workers AI, 결과 그림 제작 도구)",
+      "url": "https://developers.cloudflare.com/workers-ai/models/flux-2-klein-4b/",
+      "kind": "tool"
+    }
+  ],
+  "caption": "AI 그림 도구에 사진 한 장과 그림체 이름만 넣으세요. 12가지 그림이 나옵니다.\n댓글에 '자료'라고 남기면 그림체 12개를 영어 그대로 DM으로 보내 드려요(팔로우한 분께).\n\n목록형 자료 릴스 예시입니다. 그림은 마스코트 슬라임(자리표시로 렌더링).\n\n가족사진으로 그림 선물을 만들고 싶은 친구에게 보내 주세요.\n\n팔로우하고 댓글에 '자료'라고 남기면 그림체 12개와 영어 표현를 DM으로 보내 드려요. (팔로우한 분께 보내집니다)",
+  "hashtags": [
+    "#AI그림",
+    "#그림체",
+    "#토큰전쟁"
+  ],
+  "dm": {
+    "keyword": "자료",
+    "message": "그림체 12개 자료입니다.\n아래 '자료 보기'를 누르면 영상에 나온 순서대로 한국어 이름과 영어 단어를 복사 버튼과 함께 정리한 페이지가 열립니다.\n그림을 만들 때 쓰는 프롬프트에 영어 단어를 그대로 넣어 쓰십시오.",
+    "cta": "팔로우하고 댓글에 '자료' 남기면\n그림체 12개 보내 드립니다",
+    "banner": "댓글에 '자료'라고 남기면\n영어 단어 12개를 DM으로 보내 드립니다",
+    "page": {
+      "intro": "영상에 나온 그림체 12개의 전체 목록입니다. 단어마다 영어 표현을 복사 버튼과 함께 정리했습니다.",
+      "list_title": "전체 목록",
+      "list_intro": "번호는 영상에 나온 순서와 같습니다. 영어 단어를 복사해 그림을 만들 때 쓰는 프롬프트에 넣으십시오."
+    }
+  }
+}
