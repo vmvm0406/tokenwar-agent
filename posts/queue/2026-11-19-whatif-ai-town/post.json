@@ -1,0 +1,189 @@
+{
+  "id": "2026-11-19-whatif-ai-town",
+  "type": "video",
+  "origin": "own",
+  "length": "short",
+  "series": "전황",
+  "format": "news",
+  "date": "2026-11-19",
+  "publish_at": "2026-11-19T12:43:00+09:00",
+  "rights": "own",
+  "title": "만약 AI끼리만\n모여 산다면?",
+  "highlight": "AI끼리만",
+  "narrated": {
+    "cta_line": "AI 마을, 살아 보고 싶다 vs 무섭다? 댓글로",
+    "scenes": [
+      {
+        "beat": "hook",
+        "say": "만약 AI끼리만 한 마을에 모여 산다면, 무슨 일이 벌어질까요?",
+        "text": "AI끼리만\n사는 마을",
+        "at": [
+          "",
+          "마을"
+        ],
+        "hl": "AI끼리만",
+        "image": {
+          "type": "image",
+          "src": "img/s01.jpg",
+          "prompt": "A tiny peaceful village with small houses, a cafe, a park, a college and shops, little villager characters walking on paths, early morning sunlight, cozy 2D pixel art video game style, top-down three-quarter view, warm colors, no text, no letters, no logos",
+          "size": [
+            1344,
+            672
+          ]
+        }
+      },
+      {
+        "beat": "q1",
+        "say": "스탠퍼드랑 구글 연구진이 진짜로 만들었습니다. 이름은 스몰빌, 주민 스물다섯 명이 전부 AI예요.",
+        "text": "주민 25명\n전부 AI",
+        "at": [
+          "스물다섯",
+          "전부"
+        ],
+        "hl": "전부 AI",
+        "source": "스탠퍼드·구글 연구 · 2023 (UIST)",
+        "image": {
+          "type": "image",
+          "src": "img/s02.jpg",
+          "prompt": "Twenty five small villager characters standing together in a town square in front of a fountain, each one different, friendly faces, cozy 2D pixel art video game style, top-down three-quarter view, warm colors, no text, no letters, no logos",
+          "size": [
+            1344,
+            672
+          ]
+        }
+      },
+      {
+        "beat": "q1",
+        "say": "아침에 일어나 밥을 먹고, 출근하고, 카페에서 이웃이랑 수다까지 떱니다.",
+        "text": "기상, 출근,\n카페에서 수다",
+        "at": [
+          "아침",
+          "카페"
+        ],
+        "hl": "카페에서 수다",
+        "image": {
+          "type": "image",
+          "src": "img/s03.jpg",
+          "prompt": "Inside a cozy small cafe, several villager characters sitting at wooden tables drinking coffee and chatting with speech bubbles that contain only simple dots, morning light through windows, cozy 2D pixel art video game style, top-down three-quarter view, warm colors, no text, no letters, no logos",
+          "size": [
+            1344,
+            672
+          ]
+        }
+      },
+      {
+        "beat": "rehook",
+        "say": "그런데 연구진이 딱 한 명한테만 생각 하나를 심었습니다. 밸런타인데이 파티를 열고 싶다.",
+        "text": "딱 1명에게만\n'파티 열고 싶다'",
+        "at": [
+          "한 명",
+          "밸런타인"
+        ],
+        "hl": "1명",
+        "image": {
+          "type": "image",
+          "src": "img/s04.jpg",
+          "prompt": "A single villager woman standing alone behind the counter of a small cafe, a big glowing pink heart floating above her head like an idea, other tables empty, cozy 2D pixel art video game style, top-down three-quarter view, warm colors, no text, no letters, no logos",
+          "size": [
+            1344,
+            672
+          ]
+        }
+      },
+      {
+        "beat": "q2",
+        "kind": "big",
+        "big": "13명",
+        "big_at": "절반",
+        "say": "아무도 시키지 않았는데, 이틀 만에 소문이 마을 절반에 퍼졌습니다. 서로 초대하고, 데이트 신청까지 했죠.",
+        "text": "이틀 만에\n1명 → 13명",
+        "at": [
+          "이틀",
+          "절반"
+        ],
+        "hl": "13명",
+        "source": "파티 소식 아는 AI 1명 → 13명 (52%)",
+        "image": {
+          "type": "image",
+          "src": "img/s05.jpg",
+          "prompt": "Villager characters across a small town passing pink heart shaped invitation letters to each other, little hearts flying between houses, evening light, cozy 2D pixel art video game style, top-down three-quarter view, warm colors, no text, no letters, no logos",
+          "size": [
+            1344,
+            672
+          ]
+        }
+      },
+      {
+        "beat": "answer",
+        "say": "그리고 이월 십사일 오후 다섯 시, AI 다섯 명이 진짜로 카페에 모였습니다.",
+        "text": "2월 14일 오후 5시\nAI 5명 파티 참석",
+        "at": [
+          "이월",
+          "다섯 명"
+        ],
+        "hl": "5명",
+        "source": "초대받은 12명 중 5명 참석 · 논문 결과",
+        "image": {
+          "type": "image",
+          "src": "img/s06.jpg",
+          "prompt": "A small cafe decorated with pink hearts and paper garlands for a Valentine's Day party, five villager characters gathered around a table with cake and drinks, warm evening light, cozy 2D pixel art video game style, top-down three-quarter view, warm colors, no text, no letters, no logos",
+          "size": [
+            1344,
+            672
+          ]
+        }
+      }
+    ]
+  },
+  "thumb": {
+    "title": "만약 AI끼리만\n모여 산다면?",
+    "highlight": "AI끼리만",
+    "image": {
+      "type": "image",
+      "src": "img/thumb.jpg",
+      "prompt": "A tiny village seen from above at golden hour, small houses, a cafe and a park, little villager characters walking around, centered in the upper middle of the frame, cozy 2D pixel art video game style, no text, no letters, no logos",
+      "size": [
+        1088,
+        1920
+      ],
+      "position": "center 40%"
+    }
+  },
+  "topic": [
+    "생성형 에이전트",
+    "AI 마을"
+  ],
+  "keywords": [
+    "AI 마을",
+    "스몰빌",
+    "생성형 에이전트",
+    "스탠퍼드 AI"
+  ],
+  "sources": [
+    {
+      "name": "Park et al., Generative Agents: Interactive Simulacra of Human Behavior (arXiv 2304.03442, UIST 2023)",
+      "url": "https://arxiv.org/abs/2304.03442"
+    },
+    {
+      "name": "ACM UIST '23 논문 페이지",
+      "url": "https://dl.acm.org/doi/10.1145/3586183.3606763"
+    }
+  ],
+  "caption": "AI 마을 스몰빌: 주민 25명이 전부 AI인 마을을 스탠퍼드·구글 연구진이 만들었습니다.\nAI 마을, 살아 보고 싶다 vs 무섭다? 댓글로 알려 주세요.\n\n논문 'Generative Agents'(Park 외, 2023년 4월 공개, UIST 2023 발표)의 실험입니다. AI 주민들은 아침에 일어나 밥을 먹고 출근하고, 카페에서 이웃과 수다도 떨어요.\n\n연구진은 카페 주인 이자벨라 한 명에게만 '밸런타인데이 파티를 열고 싶다'는 생각을 넣었습니다. 게임 속 이틀 동안 파티 소식을 아는 주민은 1명에서 13명(52%)으로 늘었고, 주민들은 서로 초대하고 데이트 신청까지 했어요. 2월 14일 오후 5시, 초대받은 12명 중 5명이 홉스 카페에 모였습니다.\n\n같은 실험에서 시장 선거에 나간다는 소식도 1명에서 8명(32%)으로 퍼졌습니다.\n\n출처: Park 외, Generative Agents (arXiv 2304.03442, UIST 2023)\n음악: '260809 Funky Nurykabe' by jlbrock44 (ccmixter.org/files/jlbrock44/29186), CC BY 3.0\n\n팔로우하면 매일 AI 소식을 받아 보실 수 있어요.",
+  "hashtags": [
+    "#AI에이전트",
+    "#스탠퍼드",
+    "#인공지능",
+    "#토큰전쟁"
+  ],
+  "music": {
+    "src": "music.m4a",
+    "title": "260809 Funky Nurykabe",
+    "artist": "jlbrock44",
+    "url": "https://ccmixter.org/files/jlbrock44/29186",
+    "license": "CC BY 3.0",
+    "credit": "'260809 Funky Nurykabe' by jlbrock44 (ccmixter.org/files/jlbrock44/29186), CC BY 3.0"
+  },
+  "end_cta": "팔로우하면\n매일 AI 소식",
+  "rights_note": "논문 그림은 arXiv 기본 라이선스(비독점 배포, 재사용 허락 없음)라 쓰지 않았다. 장면 그림은 Cloudflare FLUX.2로 새로 만든 AI 그림(픽셀 그림풍, 실존 인물·로고 없음), 화면은 agent/narrated_reel.py가 직접 그림. 내레이션은 ElevenLabs(유료 Starter, 상업 이용 가능) 'Deok' 목소리. 배경음악 '260809 Funky Nurykabe' by jlbrock44 (ccmixter.org/files/jlbrock44/29186), CC BY 3.0 조각(agent/music_fit.py), 효과음은 agent/music_gen.py 코드 생성"
+}

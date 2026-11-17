@@ -1,0 +1,266 @@
+{
+  "id": "2026-11-18-whatif-ai-invest",
+  "type": "video",
+  "origin": "own",
+  "length": "short",
+  "series": "전황",
+  "format": "news",
+  "date": "2026-11-18",
+  "publish_at": "2026-11-18T21:13:00+09:00",
+  "rights": "own",
+  "title": "만약 AI에게\n돈을 맡긴다면?",
+  "highlight": "돈을 맡긴다면",
+  "narrated": {
+    "cta_line": "AI에게 내 돈, 맡긴다 vs 안 맡긴다? 댓글로",
+    "scenes": [
+      {
+        "beat": "hook",
+        "say": "만약 AI한테 진짜 돈을 맡기면, 어떻게 될까요?",
+        "text": "AI에게\n진짜 돈을 맡기면?",
+        "at": [
+          "",
+          "진짜 돈"
+        ],
+        "hl": "진짜 돈",
+        "image": {
+          "type": "image",
+          "src": "img/s01.jpg",
+          "prompt": "A shiny chrome robot hand holding a thick stack of US dollar bills in front of glowing green and red trading charts in a dark room, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            672
+          ]
+        }
+      },
+      {
+        "beat": "q1",
+        "say": "실제로 해 본 회사가 있습니다. AI 여섯 개한테 만 달러씩, 진짜 돈을 맡겼죠.",
+        "text": "AI 6개에\n1만 달러씩",
+        "at": [
+          "여섯",
+          "만 달러"
+        ],
+        "hl": "1만 달러씩",
+        "source": "Nof1 Alpha Arena · 2025.10.18~11.3",
+        "image": {
+          "type": "image",
+          "src": "img/s02.jpg",
+          "prompt": "Six identical sleek white humanoid robots sitting in a row at trading desks with monitors, each robot has a neat stack of cash on its desk, wide shot, dark trading floor, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            672
+          ]
+        }
+      },
+      {
+        "beat": "q1",
+        "say": "지피티 파이브, 제미나이, 클로드, 그록, 딥시크, 큐웬. 사람 도움 없이, 십칠 일 동안 코인을 사고팔게 했습니다.",
+        "text": "사람 개입 없이\n17일간 코인 매매",
+        "at": [
+          "사람 도움",
+          "십칠 일"
+        ],
+        "hl": "17일간",
+        "image": {
+          "type": "image",
+          "src": "img/s03.jpg",
+          "prompt": "Close-up of a large monitor showing fast moving candlestick crypto price charts, golden coins stacked in front of the screen, reflections on a robot's glossy face, dark room, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            672
+          ]
+        }
+      },
+      {
+        "beat": "rehook",
+        "say": "그런데 십칠 일 뒤 결과는? 여섯 중 네 개가 돈을 날렸습니다.",
+        "text": "6개 중 4개\n돈을 날렸다",
+        "at": [
+          "",
+          "네 개가"
+        ],
+        "hl": "날렸다",
+        "image": {
+          "type": "image",
+          "src": "img/s04.jpg",
+          "prompt": "A white humanoid robot sitting at a desk holding its head in its hands, in front of a monitor with a steep red crashing chart, scattered paper money on the floor, dark room, red light, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            672
+          ]
+        }
+      },
+      {
+        "beat": "q2",
+        "kind": "bars",
+        "bar_max": 70,
+        "image": {
+          "type": "image",
+          "src": "img/s05.jpg",
+          "prompt": "Five white humanoid robots slumped in chairs in a dim trading room, monitors behind them all showing steep red falling charts, one empty chair in the middle, dark red light, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            672
+          ]
+        },
+        "say": "클로드 마이너스 삼십일, 그록 마이너스 사십오, 제미나이 마이너스 오십육. 꼴찌 지피티 파이브는 마이너스 육십삼 퍼센트.",
+        "text": "4개 손실\n최하위 GPT-5",
+        "at": [
+          "클로드",
+          "꼴찌"
+        ],
+        "hl": "GPT-5",
+        "source": "최종 수익률 · 2025.11.3 마감 (nof1.ai)",
+        "bars": [
+          {
+            "label": "Qwen3 Max",
+            "value": 22,
+            "shown": "?",
+            "hidden": true
+          },
+          {
+            "label": "DeepSeek",
+            "value": 4.5,
+            "shown": "?",
+            "hidden": true
+          },
+          {
+            "label": "Claude 4.5",
+            "value": -31,
+            "shown": "-31%",
+            "at": "클로드"
+          },
+          {
+            "label": "Grok 4",
+            "value": -45,
+            "shown": "-45%",
+            "at": "그록"
+          },
+          {
+            "label": "Gemini 2.5",
+            "value": -56,
+            "shown": "-56%",
+            "at": "제미나이"
+          },
+          {
+            "label": "GPT-5",
+            "value": -63,
+            "shown": "-63%",
+            "at": "꼴찌"
+          }
+        ]
+      },
+      {
+        "beat": "answer",
+        "kind": "bars",
+        "bar_max": 70,
+        "image": {
+          "type": "image",
+          "src": "img/s06.jpg",
+          "prompt": "A single white humanoid robot standing on a podium under a bright spotlight in a dark trading hall, holding a big stack of cash, green upward chart on a giant screen behind, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            672
+          ]
+        },
+        "say": "그럼 돈을 번 AI는? 일등은 알리바바의 큐웬, 이십이 퍼센트 수익. 이등 딥시크까지, 번 건 둘 다 중국 AI였습니다.",
+        "text": "1위 Qwen +22%\n번 건 중국 AI 둘",
+        "at": [
+          "일등은",
+          "둘 다"
+        ],
+        "hl": "+22%",
+        "bars": [
+          {
+            "label": "Qwen3 Max",
+            "value": 22,
+            "shown": "+22%",
+            "at": "일등은",
+            "win": true
+          },
+          {
+            "label": "DeepSeek",
+            "value": 4.5,
+            "shown": "+4.5%",
+            "at": "이등"
+          },
+          {
+            "label": "Claude 4.5",
+            "value": -31,
+            "shown": "-31%"
+          },
+          {
+            "label": "Grok 4",
+            "value": -45,
+            "shown": "-45%"
+          },
+          {
+            "label": "Gemini 2.5",
+            "value": -56,
+            "shown": "-56%"
+          },
+          {
+            "label": "GPT-5",
+            "value": -63,
+            "shown": "-63%"
+          }
+        ]
+      }
+    ]
+  },
+  "thumb": {
+    "title": "만약 AI에게\n돈을 맡긴다면?",
+    "highlight": "돈을 맡긴다면",
+    "image": {
+      "type": "image",
+      "src": "img/thumb.jpg",
+      "prompt": "A shiny chrome robot hand gripping a thick stack of US dollar bills, dark background, green glow from trading screens behind, centered in the upper middle of the frame, cinematic photorealistic, no text, no letters, no logos",
+      "size": [
+        1088,
+        1920
+      ],
+      "position": "center 40%"
+    }
+  },
+  "topic": [
+    "AI 투자",
+    "AI 트레이딩"
+  ],
+  "keywords": [
+    "AI 투자",
+    "AI 코인 투자",
+    "Alpha Arena",
+    "AI 트레이딩 대회"
+  ],
+  "sources": [
+    {
+      "name": "Nof1, Alpha Arena 공식 순위표 (2025.11.3 마감 기록, 웹 아카이브)",
+      "url": "https://web.archive.org/web/20251104022344/https://nof1.ai/leaderboard"
+    },
+    {
+      "name": "Nof1, Exploring the Limits of Large Language Models as Quant Traders (규칙: 각 1만 달러, Hyperliquid, 코인 6종, 2025.11.3 오후 5시 ET 마감)",
+      "url": "https://web.archive.org/web/20251112224723/https://nof1.ai/blog/TechPost1"
+    },
+    {
+      "name": "Forklog, Four out of six AI models suffer losses in trading tournament (2025.11.4)",
+      "url": "https://forklog.com/en/four-out-of-six-ai-models-suffer-losses-in-trading-tournament/"
+    }
+  ],
+  "caption": "AI 투자 대회 Alpha Arena 결과: AI 6개에 1만 달러씩 진짜 돈을 맡겼습니다.\nAI에게 내 돈, 맡긴다 vs 안 맡긴다? 댓글로 알려 주세요.\n\nNof1이 2025년 10월 18일부터 11월 3일까지 17일 동안 연 대회예요. GPT-5, Gemini 2.5 Pro, Claude Sonnet 4.5, Grok 4, DeepSeek V3.1, Qwen3 Max가 같은 명령문을 받고, 사람 개입 없이 거래소 Hyperliquid에서 코인 6종(BTC·ETH·SOL·BNB·DOGE·XRP) 선물을 사고팔았습니다.\n\n마감 계좌(1만 달러 시작)\n1위 Qwen3 Max 12,202달러 (+22.0%)\n2위 DeepSeek V3.1 10,453달러 (+4.5%)\n3위 Claude Sonnet 4.5 6,890달러 (-31.1%)\n4위 Grok 4 5,456달러 (-45.4%)\n5위 Gemini 2.5 Pro 4,376달러 (-56.2%)\n6위 GPT-5 3,734달러 (-62.7%)\n같은 기간 비트코인을 사서 들고만 있었다면 거의 0%였습니다.\n\n출처: Nof1 Alpha Arena 공식 순위표·블로그(2025.11), Forklog(2025.11.4)\n음악: 'Saturdays Basement' by cdk (ccmixter.org/files/cdk/45072), CC BY 3.0\n\n팔로우하면 매일 AI 소식을 받아 보실 수 있어요.",
+  "hashtags": [
+    "#AI투자",
+    "#코인",
+    "#챗GPT",
+    "#토큰전쟁"
+  ],
+  "music": {
+    "src": "music.m4a",
+    "title": "Saturdays Basement",
+    "artist": "cdk",
+    "url": "https://ccmixter.org/files/cdk/45072",
+    "license": "CC BY 3.0",
+    "credit": "'Saturdays Basement' by cdk (ccmixter.org/files/cdk/45072), CC BY 3.0"
+  },
+  "end_cta": "팔로우하면\n매일 AI 소식",
+  "rights_note": "화면·막대는 agent/narrated_reel.py가 직접 그린 것, 수익률은 Nof1 공식 순위표(웹 아카이브 2025.11.3 22:00 UTC 마감 기록)로 계산. 장면 그림은 Cloudflare FLUX.2로 만든 AI 그림(실존 인물·로고 없음). 내레이션은 ElevenLabs(유료 Starter, 상업 이용 가능) 'Deok' 목소리. 배경음악 'Saturdays Basement' by cdk (ccmixter.org/files/cdk/45072), CC BY 3.0 조각(agent/music_fit.py), 효과음은 agent/music_gen.py 코드 생성"
+}

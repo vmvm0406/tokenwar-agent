@@ -400,6 +400,25 @@ ChatGPT를 씁니다",
 - **화면:** 위 제목 2줄(0초 쾅) + cta_line + basis_line, 가운데 막대(왼쪽 이름 칸, 직각 막대, 막대 끝 값), 아래 왼쪽 큰 날짜 숫자판. 순위가 바뀌면 막대가 0.25초에 미끄러져 자리를 바꾸고, 1·2위로 올라선 순간 막대가 흰색으로 번쩍 + 날짜 옆 녹색 띠('Meta AI 1위', 앞지르는 순간 기준) + 휙·타격. 발표마다 값이 0.45초 동안 늘어나며 틱. 끝: 1위 막대만 녹색, 나머지 흐리게, punch 쾅(3.2초) → `end_cta` 끝 화면 2.5초.
 - **checks.py:** series 수, 점마다 date 순서·value·src·url, basis_line·punch, rights own, beats(anchors 날짜·순서, 글자 수), 길이 20~35초. **렌더링:** 글자 폭·버튼 줄(x 850~) 겹침 검사, 순위 바뀜 시각·박자·효과음·소리 크기 출력, `frames/` 미리보기(0.3초, 후킹 끝, 순위 바뀜 뒤, 질문 중간, 1위 장면, 끝 화면). 음악은 `music.src`(실제 음원, music_fit.py), 없으면 코드 비트.
 
+## 내레이션 모션 릴스 (`type: "video"` + `narrated`, 운영자 결정 2026-11-17 '만약 ~라면?')
+
+남자 내레이션(ElevenLabs 'Deok')에 맞춰 장면이 바뀌는 릴스 (STYLE_GUIDE 6장 "내레이션 모션 릴스"). `video` 대신 `narrated`. 렌더링은 `agent/narrated_reel.py` + `agent/narrated_reel.js` (render.py가 `narrated`를 보면 부른다). 예전 게시물에는 영향 없음(선택 필드).
+
+| 필드 | 내용 |
+|---|---|
+| `narrated.cta_line` | 선택: 제목 아래 0초 한 줄 (양자택일 질문, '댓글로'는 초록). 끝 화면은 post `end_cta` |
+| `narrated.voice` | 선택: `{"voice": "deok", "settings": {...}}` (기본 Deok + `tts.ELEVEN_SETTINGS`) |
+| `narrated.scenes[]` | 3~10개. 첫 장면 `beat: "hook"`, 마지막 `beat: "answer"`, 중간 `q1`/`rehook`/`q2` |
+| `.say` | 읽을 글 (숫자·영어 이름은 한글로). 장면 길이 = 목소리 길이 + 0.28초 |
+| `.text` / `.hl` / `.at` | 화면 글 1~2줄(줄당 14자), 초록 강조 말, 줄마다 박힐 말 속 낱말(`say` 안의 글) |
+| `.source` | 작은 출처 줄 40자 안 (다음 장면에 이어짐, `""`면 지움) |
+| `.kind` | `image`(기본, 천천히 확대) / `bars`(흐린 사진 위 막대: `bars: [{label, value, shown, at, hidden, win}]`, `bar_max`. `at` 없는 막대는 처음부터 다 자람, `hidden`은 '?') / `big`(흐린 사진 위 큰 숫자 `big`, `big_at` 낱말에서 세며 올라감) |
+| `.image` | **모든 장면 필수** `{type: "image", src: "img/s01.jpg", prompt 또는 url, size: [1344, 672]}` (render.yml이 만든다) |
+
+- **목소리는 이 컴퓨터에서만** (Actions에는 키가 없다): `py -3.12 agent/narrated_reel.py --voice posts/queue/<폴더>` → `voice/NN.m4a` + `voice/NN.json`(받아쓰기·낱말 시각, 화면 글 박히는 시각에 쓰임). 다르게 들린 곳은 '!'로 나온다 → `say`를 고쳐 다시. `voice/`를 함께 커밋해야 Actions가 렌더링한다.
+- 계획·길이만 보기: `py -3.12 agent/narrated_reel.py posts/queue/<폴더>` (장면 시각·효과음 시각·검사).
+- **checks.py:** 장면 수, beat 순서, say 숫자(한글로), 화면 글 줄·글자 수, at·hl·big_at이 글 안에 있는지, 모든 장면 사진, 출처 줄, rights own. **렌더링:** 목소리·그림 파일, 글자 폭·버튼 줄(x 850~) 겹침, 소리 크기, `frames/` 미리보기.
+
 ## 릴스 썸네일 (`thumb`)
 
 릴스(`type: "video"`)에는 꼭 넣는다. `cover.jpg`로 만들어져 프로필 격자와 피드에 보인다. 1080x1920, 그림이 꽉 차고 아래가 어두워지며 가운데 정렬 제목 2줄, 그 아래 작은 TOKEN WAR.

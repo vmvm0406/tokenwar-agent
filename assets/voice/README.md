@@ -58,7 +58,7 @@
 
 | 이름 (tts.py 별칭) | voice_id | 왜 끌리나 |
 |---|---|---|
-| Deok - Energetic Korean Narrator (`deok`, 임시 기본) | `wisKdlUQEBMjkKqNAa3c` | 한국 예능 내레이션 톤, 첫 1초부터 텐션이 높아 넘기던 손을 멈추게 함 |
+| Deok - Energetic Korean Narrator (`deok`, **기본: 운영자 결정 2026-11-17 "예능이 좋은듯"**, stability 0.35·style 0.6·speed 1.1) | `wisKdlUQEBMjkKqNAa3c` | 한국 예능 내레이션 톤, 첫 1초부터 텐션이 높아 넘기던 손을 멈추게 함 |
 | GapDragon - Social media (`gapdragon`) | `VwlplMyq7s8eoNKYEgcd` | 바이럴 썰 쇼츠용 이야기꾼, 친구가 말해 주는 듯해 끝까지 듣게 함 |
 | Kang Jun - Powerful Announcer (`kangjun`) | `sIyywe2M6JEImQgP1LTX` | 힘 있는 아나운서 톤, 숫자·결과를 속보처럼 무게 있게 꽂음 |
 

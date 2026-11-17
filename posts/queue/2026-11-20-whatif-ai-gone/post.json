@@ -1,0 +1,224 @@
+{
+  "id": "2026-11-20-whatif-ai-gone",
+  "type": "video",
+  "origin": "own",
+  "length": "short",
+  "series": "전황",
+  "format": "news",
+  "date": "2026-11-20",
+  "publish_at": "2026-11-20T19:43:00+09:00",
+  "rights": "own",
+  "title": "만약 AI가\n내일 사라진다면?",
+  "highlight": "사라진다면",
+  "narrated": {
+    "cta_line": "AI 없이 하루, 버틴다 vs 못 버틴다? 댓글로",
+    "scenes": [
+      {
+        "beat": "hook",
+        "say": "만약 내일 아침, AI가 전부 사라진다면? 생각보다 훨씬 빨리 티가 납니다.",
+        "text": "내일 아침\nAI가 전부 사라지면?",
+        "at": [
+          "",
+          "AI가"
+        ],
+        "hl": "사라지면",
+        "image": {
+          "type": "image",
+          "src": "img/s01.jpg",
+          "prompt": "A smartphone lying on a bedside table at dawn with a completely black dead screen, a cracked coffee mug next to it, cold blue morning light through curtains, eerie quiet mood, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            672
+          ]
+        }
+      },
+      {
+        "beat": "q1",
+        "kind": "big",
+        "big": "99.9%",
+        "big_at": "구십구",
+        "say": "아침에 메일을 열면, 스팸이 쏟아집니다. 지메일은 스팸의 구십구 점 구 퍼센트를 AI로 걸러 내거든요.",
+        "text": "지메일 스팸 차단\nAI가 99.9%",
+        "at": [
+          "메일을",
+          "구십구"
+        ],
+        "hl": "99.9%",
+        "source": "구글 지메일 발표 (2017)",
+        "image": {
+          "type": "image",
+          "src": "img/s02.jpg",
+          "prompt": "An overflowing old metal mailbox exploding with hundreds of envelopes and junk letters flying everywhere, dark street at dawn, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            672
+          ]
+        }
+      },
+      {
+        "beat": "q1",
+        "say": "출근길 지도 앱은 도착 시간을 제대로 못 맞춥니다. 구글 지도의 도착 시간 예측도 AI거든요.",
+        "text": "지도 앱\n도착 시간 예측도 AI",
+        "at": [
+          "지도",
+          "예측도"
+        ],
+        "hl": "AI",
+        "source": "딥마인드·구글 지도 발표 (2020)",
+        "image": {
+          "type": "image",
+          "src": "img/s03.jpg",
+          "prompt": "View from a driver's seat in a heavy morning traffic jam, a phone navigation map on the dashboard showing a frozen loading spinner, red brake lights everywhere, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            672
+          ]
+        }
+      },
+      {
+        "beat": "rehook",
+        "say": "근데 진짜 무서운 건 따로 있습니다. 바로 내 카드.",
+        "text": "진짜 문제는\n내 카드",
+        "at": [
+          "",
+          "내 카드"
+        ],
+        "hl": "내 카드",
+        "image": {
+          "type": "image",
+          "src": "img/s04.jpg",
+          "prompt": "Extreme close-up of a credit card held between fingers under a single harsh red warning light, dark background, tense mood, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            672
+          ]
+        }
+      },
+      {
+        "beat": "q2",
+        "kind": "big",
+        "big": "400억 달러",
+        "big_at": "사백억",
+        "say": "카드 사기를 걸러 내는 것도 AI예요. 비자 혼자서 일 년 동안 막은 사기만, 사백억 달러입니다.",
+        "text": "비자가 막은 사기\n1년 400억 달러",
+        "at": [
+          "비자",
+          "사백억"
+        ],
+        "hl": "400억 달러",
+        "source": "비자 발표 (2023 회계연도)",
+        "image": {
+          "type": "image",
+          "src": "img/s05.jpg",
+          "prompt": "A huge pile of credit cards and cash locked behind a glowing steel vault door, dark bank vault, dramatic light, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            672
+          ]
+        }
+      },
+      {
+        "beat": "q2",
+        "kind": "big",
+        "big": "80%",
+        "big_at": "팔십",
+        "say": "퇴근하고 넷플릭스를 켜도 막막합니다. 시청 시간의 팔십 퍼센트가 추천으로 고른 작품이거든요.",
+        "text": "넷플릭스 시청 80%\n추천으로 고른 것",
+        "at": [
+          "넷플릭스",
+          "팔십"
+        ],
+        "hl": "80%",
+        "source": "넷플릭스 논문 (2015)",
+        "image": {
+          "type": "image",
+          "src": "img/s06.jpg",
+          "prompt": "A person on a sofa in a dark living room holding a TV remote, the big TV screen shows a grid of blank movie poster tiles, blue glow, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            672
+          ]
+        }
+      },
+      {
+        "beat": "answer",
+        "say": "메일도, 길 찾기도, 카드도, 볼 것 고르기도 전부 흔들립니다. AI는 이미 매일 쓰고 있었던 거죠.",
+        "text": "AI는 이미\n매일 쓰고 있었다",
+        "at": [
+          "",
+          "매일"
+        ],
+        "hl": "매일",
+        "image": {
+          "type": "image",
+          "src": "img/s07.jpg",
+          "prompt": "A busy city street at night seen from above, people with phones, glowing lines of light connecting phones, cars, shop card terminals and windows, like an invisible network, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            672
+          ]
+        }
+      }
+    ]
+  },
+  "thumb": {
+    "title": "만약 AI가\n내일 사라진다면?",
+    "highlight": "사라진다면",
+    "image": {
+      "type": "image",
+      "src": "img/thumb.jpg",
+      "prompt": "A smartphone on a bedside table at dawn with a completely black dead screen, cold blue light, eerie quiet mood, centered in the upper middle of the frame, cinematic photorealistic, no text, no letters, no logos",
+      "size": [
+        1088,
+        1920
+      ],
+      "position": "center 40%"
+    }
+  },
+  "topic": [
+    "AI 일상",
+    "AI 없는 하루"
+  ],
+  "keywords": [
+    "AI 일상",
+    "AI 없으면",
+    "스팸 필터",
+    "카드 사기 탐지",
+    "넷플릭스 추천"
+  ],
+  "sources": [
+    {
+      "name": "Google Workspace 블로그, Gmail ML 스팸·피싱 차단 99.9% (2017.5.31)",
+      "url": "https://workspace.google.com/blog/product-announcements/keeping-your-company-data-safe-new-security-updates-gmail"
+    },
+    {
+      "name": "Google DeepMind, Traffic prediction with advanced Graph Neural Networks (2020.9.3)",
+      "url": "https://deepmind.google/discover/blog/traffic-prediction-with-advanced-graph-neural-networks/"
+    },
+    {
+      "name": "Visa, VAAI Score 발표 (FY23 400억 달러 사기 차단, 2024.5)",
+      "url": "https://usa.visa.com/about-visa/newsroom/press-releases.releaseId.20661.html"
+    },
+    {
+      "name": "Gomez-Uribe & Hunt, The Netflix Recommender System (ACM TMIS, 2015)",
+      "url": "https://dl.acm.org/doi/10.1145/2843948"
+    }
+  ],
+  "caption": "AI 일상: AI가 내일 사라지면 메일, 지도, 카드, 넷플릭스부터 흔들립니다.\nAI 없이 하루, 버틴다 vs 못 버틴다? 댓글로 알려 주세요.\n\n지메일: 머신러닝으로 스팸·피싱을 99.9% 넘게 막는다고 구글이 밝혔습니다(2017).\n구글 지도: 도착 시간 예측에 딥마인드 AI를 써서 도시에 따라 정확도를 최대 50% 높였습니다(2020).\n비자: AI 등 기술로 2023 회계연도에 400억 달러 규모 사기 거래를 막았다고 발표했습니다.\n넷플릭스: 시청 시간의 약 80%가 추천 시스템으로 고른 작품이라고 넷플릭스 논문에 적혀 있습니다(2015).\n\n출처: Google Workspace 블로그(2017), Google DeepMind(2020), Visa 발표(2024), Gomez-Uribe & Hunt, ACM TMIS(2015)\n음악: 'Sudden Goodbye' by AlexBeroza (ccmixter.org/files/AlexBeroza/43002), CC BY 3.0\n\n팔로우하면 매일 AI 소식을 받아 보실 수 있어요.",
+  "hashtags": [
+    "#인공지능",
+    "#AI일상",
+    "#넷플릭스",
+    "#토큰전쟁"
+  ],
+  "music": {
+    "src": "music.m4a",
+    "title": "Sudden Goodbye",
+    "artist": "AlexBeroza",
+    "url": "https://ccmixter.org/files/AlexBeroza/43002",
+    "license": "CC BY 3.0",
+    "credit": "'Sudden Goodbye' by AlexBeroza (ccmixter.org/files/AlexBeroza/43002), CC BY 3.0"
+  },
+  "end_cta": "팔로우하면\n매일 AI 소식",
+  "rights_note": "화면·숫자는 agent/narrated_reel.py가 직접 그린 것. 장면 그림은 Cloudflare FLUX.2로 만든 AI 그림(실존 인물·로고 없음). 내레이션은 ElevenLabs(유료 Starter, 상업 이용 가능) 'Deok' 목소리. 배경음악 'Sudden Goodbye' by AlexBeroza (ccmixter.org/files/AlexBeroza/43002), CC BY 3.0 조각(agent/music_fit.py), 효과음은 agent/music_gen.py 코드 생성"
+}

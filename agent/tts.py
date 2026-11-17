@@ -5,7 +5,8 @@
        단어 분석용 BERT kykim/bert-kor-base(Apache-2.0)도 처음 쓸 때 자동으로 받는다. 여자 목소리 하나, 44.1kHz.
        출처·라이선스 기록: assets/voice/README.md. 설치: MIGRATION.md. 유료 API·계정 없음.
        ※ 운영자가 MeloTTS 한국어를 쓰지 않기로 함(2026-11-17 "읽는법이 좀 그래서"). 한국어 내레이션은 아래 ElevenLabs.
-엔진(한국어 내레이션, 기본): ElevenLabs (유료 Starter, 상업 이용 가능, 운영자 결정 2026-11-17). 남자 목소리.
+엔진(한국어 내레이션, 기본): ElevenLabs (유료 Starter, 상업 이용 가능, 운영자 결정 2026-11-17). 남자 목소리 기본 'Deok'(예능 내레이션).
+       내레이션 모션 릴스(narrated)는 agent/narrated_reel.py --voice가 이 모듈로 장면마다 만든다.
        API 키는 사용자 환경 변수 ELEVENLABS_API_KEY (윈도우는 레지스트리 HKCU\\Environment에서도 읽음). 키는 출력·기록·커밋하지 않는다.
        글자 수로 요금이 나가므로(Starter 월 약 3만 자) 같은 글·목소리·설정이면 사용자 캐시
        (%USERPROFILE%\\.cache\\tokenwar-tts\\elevenlabs\\<해시>.mp3)를 다시 쓰고, 빠르기를 올릴 때도 다시 부르지 않고 ffmpeg atempo로 늘린다.
@@ -180,7 +181,7 @@ ELEVEN_VOICES = {
     "krys": "1W00IGEmNmwmsDeYy7ag",       # (반려) Krys - Cheerful, Clear and Measured
     "kyle": "RU7aSi6lT4uQBXMLgDxK",       # (반려) Kyle - Friendly, Natural and Guttural
 }
-ELEVEN_DEFAULT_VOICE = ELEVEN_VOICES["deok"]   # 운영자가 고를 때까지 임시
+ELEVEN_DEFAULT_VOICE = ELEVEN_VOICES["deok"]   # 기본 (운영자 결정 2026-11-17 "예능이 좋은듯", STYLE_GUIDE 6장)
 # 쇼츠 후킹용: 안정성 낮게(억양 출렁), 스타일 높게(과장), 조금 빠르게 (speed 0.7~1.2, ElevenLabs가 직접 조절)
 ELEVEN_SETTINGS = {"stability": 0.35, "similarity_boost": 0.75, "style": 0.6, "use_speaker_boost": True, "speed": 1.1}
 ELEVEN_CACHE = Path.home() / ".cache" / "tokenwar-tts" / "elevenlabs"

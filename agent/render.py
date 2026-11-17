@@ -6,7 +6,8 @@
 결과:
     carousel: slides/01.jpg ... (1080x1350), 표지 motion이 있으면 slides/01.mp4 (첫 장 영상, 01.jpg는 정지 화면)
     reel:     frames/01.jpg ... (1080x1920), reel.mp4, cover.jpg  (카드형 모션 릴스, 선택)
-    video:    reel.mp4, cover.jpg  (영상 프레임 릴스, video.py; list면 listreel.py, rank면 rankreel.py, race면 racereel.py)
+    video:    reel.mp4, cover.jpg  (영상 프레임 릴스, video.py; list면 listreel.py, rank면 rankreel.py, race면 racereel.py,
+              narrated면 narrated_reel.py)
 
 디자인 원칙 (STYLE_GUIDE.md 1-1장): 편집 디자인. 큰 활자, 선, 녹색 면.
 알약 태그·둥근 카드·작은 대문자 라벨·가짜 UI 화면·점 무늬·진행 바 같은 'AI 디자인 티'는 쓰지 않는다.
@@ -475,6 +476,21 @@ def main(folder):
             thumb_or_exit(post, out_dir)   # thumb가 없으면 첫 화면(제목 + '?' 순위표)이 커버
         except ValueError as e:
             print("순위 릴스 렌더링 중단:")
+            for line in str(e).splitlines():
+                print(" -", line)
+            sys.exit(1)
+        print("완료:", out_dir)
+        return
+    if post["type"] == "video" and post.get("narrated"):
+        # 내레이션 모션 릴스 (agent/narrated_reel.py, TEMPLATES.md "내레이션 모션 릴스"). 목소리는 이 컴퓨터에서 미리 voice/에
+        from narrated_reel import make_narrated_reel
+        try:
+            dur = make_narrated_reel(post, out_dir, CONFIG)
+            print(f"내레이션 릴스 길이: {dur:.1f}초")
+            check_sound_or_exit(out_dir)
+            thumb_or_exit(post, out_dir)
+        except ValueError as e:
+            print("내레이션 릴스 렌더링 중단:")
             for line in str(e).splitlines():
                 print(" -", line)
             sys.exit(1)

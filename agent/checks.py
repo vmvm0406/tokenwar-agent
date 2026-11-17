@@ -257,8 +257,9 @@ def check_video(post):
     is_tl = bool(post.get("timeline")) and not is_list and not is_rank   # 연표 릴스 (timeline_reel.py): video 대신 timeline
     is_race = bool(post.get("race")) and not is_list and not is_rank and not is_tl   # 막대 경주 릴스 (racereel.py): video 대신 race
     is_photo = bool(post.get("photo_reel")) and not (is_list or is_rank or is_tl or is_race)   # 사진 내레이션 릴스 (photoreel.py)
+    is_nar = bool(post.get("narrated")) and not (is_list or is_rank or is_tl or is_race or is_photo)   # 내레이션 모션 릴스 (narrated_reel.py)
     main_key = ("rank" if is_rank else "list" if is_list else "timeline" if is_tl else "race" if is_race
-                else "photo_reel" if is_photo else "video")
+                else "photo_reel" if is_photo else "narrated" if is_nar else "video")
     for key in ["id", "series", "date", "publish_at", main_key, "title", "rights", "sources", "caption"]:
         if key not in post:
             errors.append(f"필수 항목 없음: {key}")
@@ -285,6 +286,11 @@ def check_video(post):
     if is_tl:
         from timeline_reel import check_timeline
         e_l, w_l = check_timeline(post)
+        errors += e_l
+        warnings += w_l
+    if is_nar:
+        from narrated_reel import check_narrated
+        e_l, w_l = check_narrated(post)
         errors += e_l
         warnings += w_l
     if post["rights"] not in RIGHTS:
@@ -344,7 +350,7 @@ def check_video(post):
     if not is_rank or post.get("thumb"):   # 순위 릴스는 thumb가 없으면 첫 화면이 커버 (rankreel.py)
         errors += check_thumb(post)
     v = post.get("video") or {}
-    if not is_list and not is_rank and not is_tl and not is_race and not is_photo and not v.get("src"):
+    if not is_list and not is_rank and not is_tl and not is_race and not is_photo and not is_nar and not v.get("src"):
         errors.append("video.src 필요")
     prev_end = -1
     texts = [post["title"]]
@@ -1278,6 +1284,8 @@ def hedging(post):
     for i, s in enumerate(post.get("subtitles") or [], 1):
         if not s.get("speech", post.get("speech", False)):
             texts.append((f"{i}번 자막", s.get("text")))
+    for i, s in enumerate((post.get("narrated") or {}).get("scenes") or [], 1):
+        texts += [(f"narrated.scenes {i}", s.get(k)) for k in ("say", "text", "source")]
     for i, s in enumerate(post.get("slides") or [], 1):
         texts += [(f"{i}번째 장", s.get(k)) for k in ("title", "heading", "body", "sub", "label")]
     texts += _photo_texts(post)
@@ -1320,6 +1328,9 @@ def screen_now(post):
     texts += [("race.beats.hook", B.get("hook"))] + [(f"race.beats.{k}", (B.get(k) or {}).get("text")) for k in ("rehook", "ask")]
     texts += [(f"race.series {s.get('name')}", s.get("name")) for s in R.get("series") or []]
     texts += [(w, t) for w, t in _photo_texts(post) if " cap" in w or "overlay" in w]
+    N = post.get("narrated") or {}
+    texts += [("narrated.cta_line", N.get("cta_line"))]
+    texts += [(f"narrated.scenes {i}", s.get(k)) for i, s in enumerate(N.get("scenes") or [], 1) for k in ("text", "source")]
     for where, t in texts:
         if "지금" in str(t or ""):
             w.append(f"{where}: 화면 정리 글에 '지금' → '현재'나 연도('2026년')로 (STYLE_GUIDE 4장 화면 정리 글)")
@@ -1364,10 +1375,17 @@ def scene_image_gaps(post):
         imgs = [x for x in (R.get("images") or []) if has(x)] + [x for x in (beats.get("images") or []) if has(x)]
         if not imgs:
             notes.append("race: 사진 필드(race.images)가 아직 없음 → 경고만. 막대 그래프는 사진 위에 겹쳐야 함 (STYLE_GUIDE 0장 원칙 0)")
+<<<<<<< HEAD
     elif post.get("photo_reel"):   # 사진 내레이션 릴스 (photoreel.py): 장면마다 img
         for i, s in enumerate((post["photo_reel"].get("scenes") or []), 1):
             if not s.get("img"):
                 gaps.append(f"photo_reel.scenes {i}({s.get('beat')}): 사진 없음")
+=======
+    elif post.get("narrated"):   # 내레이션 모션 릴스: 막대·큰 숫자 장면도 사진 위에 (narrated_reel.py)
+        for i, sc in enumerate((post["narrated"].get("scenes") or []), 1):
+            if not has(sc.get("image")):
+                gaps.append(f"narrated.scenes {i}({sc.get('beat')}): 사진 없음")
+>>>>>>> 2b9fba4 ('만약 ~라면?' 내레이션 모션 릴스 형식(narrated) + 3편(AI 투자 대회·AI 마을·AI가 사라지면): Deok 내레이션이 장면 시간을 정하고 화면 글은 받아쓰기 낱말 시각에 맞춰 박힘, 모든 장면 사진(막대·큰 숫자는 사진 위), 훅→질문→리훅→질문→답 뼈대, 실제 음원 덕킹·효과음, 목소리 만들기+로컬 받아쓰기 확인(--voice). checks·render 연결, STYLE_GUIDE·TEMPLATES·tts 기본 목소리 Deok. 그림은 render.yml. 승인 전)
     else:   # 일반 영상 릴스: 원본 영상(video.src)이 사진을 대신한다
         v = post.get("video") or {}
         if not v.get("src"):
