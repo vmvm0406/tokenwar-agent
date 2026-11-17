@@ -300,6 +300,21 @@
 - **checks.py:** 항목 수·이름 길이·이모지, value 또는 quote, 값이 1위부터 큰 순서, `value_max` 넘침, `source_line` 필수, 공개 자료 출처(url, kind tool 아님) 1개 이상, 제목·썸네일의 'TOP N' = 항목 수, 길이 20~35초, 1위 '?' 2초 안. 제목 끝 'TOP N'·'N위'는 앞에 꾸미는 말(~ㄴ/~ㄹ/~는)이 있으면 서술어가 있는 것으로 본다.
 - **렌더링 출력:** BPM·드롭·1위 공개 시각, 효과음 개수, 안내 띠, 소리 크기(-14 LUFS). `frames/`는 0.3초·1초·카운트다운 중간 두 곳·1위 공개 직후·끝 화면.
 
+## 연표 릴스 (`type: "video"` + `timeline`, 운영자 요청 2026-11-17)
+
+실제 날짜 목록을 연표로 재생하는 릴스 (STYLE_GUIDE 6장 "연표 릴스"). `video` 대신 `timeline`. 렌더링은 `agent/timeline_reel.py` + `agent/timeline_reel.js` (render.py가 `timeline`을 보고 부른다). 그림이 없어 이 컴퓨터에서 바로 끝까지 렌더링된다. 실제 게시물 `posts/queue/2026-11-19-reel-ai-model-pace`.
+
+| 필드 | 내용 |
+|---|---|
+| `timeline.events` | `[{date: "YYYY-MM-DD", lab, name, url}]` 5개 이상, 날짜 순. `lab`은 줄(OpenAI·Google·Anthropic·Meta·xAI·DeepSeek). `url`은 공식 발표 |
+| `timeline.periods` | 끝 표의 기간 `[["2020~22년", 2020, 2022], ...]` (선택, 없으면 해마다) |
+| `timeline.unit_note` | 연표 아래 작은 출처 줄 (예: "주요 AI 모델 55개 · 각 회사 공식 발표") |
+| `timeline.metr` | 선택: 추세선 `{label, long, recent, recent_from, long_months, recent_months, source}`. 쓰면 sources에 METR 원문 |
+| `timeline.thumb_src` | 렌더링이 그리는 썸네일 바탕 그림 경로 (`thumb.image.src`와 같게, url·prompt 없어도 됨) |
+
+- **checks.py:** 날짜 형식·순서, url, rights own, METR 출처, 길이 20~35초. **렌더링:** 글자 폭·버튼 줄 겹침 검사, 기간별 평균 간격·효과음·소리 크기 출력, `frames/` 미리보기.
+- DM 자료 페이지는 `dm.page.setup.steps`(해마다 한 단계, 모델마다 `groups`의 이름·날짜·공식 발표 링크)로 전체 연표를 싣는다.
+
 ## 릴스 썸네일 (`thumb`)
 
 릴스(`type: "video"`)에는 꼭 넣는다. `cover.jpg`로 만들어져 프로필 격자와 피드에 보인다. 1080x1920, 그림이 꽉 차고 아래가 어두워지며 가운데 정렬 제목 2줄, 그 아래 작은 TOKEN WAR.

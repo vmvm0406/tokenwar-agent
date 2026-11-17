@@ -238,6 +238,7 @@ def check_thumb(post):
     if not im.get("src"):
         errs.append("썸네일 image.src 필요")
     list_srcs = {x.get("src") for x in ((post.get("list") or {}).get("items") or []) + [(post.get("list") or {}).get("base") or {}]}
+    list_srcs.add((post.get("timeline") or {}).get("thumb_src"))   # 연표 릴스: 렌더링이 그린 썸네일 바탕 (timeline_reel.py)
     if not (im.get("url") or im.get("prompt")) and im.get("src") not in list_srcs:
         errs.append("썸네일 image에 url(실물 이미지) 또는 prompt(AI 생성) 중 하나는 있어야 함 (직접 넣은 파일이면 url에 원본 주소)")
     return errs
@@ -249,7 +250,8 @@ def check_video(post):
     lim = CONFIG["limits"]
     is_list = bool(post.get("list"))   # 목록형 자료 릴스 (listreel.py): video 대신 list
     is_rank = bool(post.get("rank"))   # 순위 카운트다운 릴스 (rankreel.py): video 대신 rank
-    main_key = "rank" if is_rank else "list" if is_list else "video"
+    is_tl = bool(post.get("timeline")) and not is_list and not is_rank   # 연표 릴스 (timeline_reel.py): video 대신 timeline
+    main_key = "rank" if is_rank else "list" if is_list else "timeline" if is_tl else "video"
     for key in ["id", "series", "date", "publish_at", main_key, "title", "rights", "sources", "caption"]:
         if key not in post:
             errors.append(f"필수 항목 없음: {key}")
@@ -263,6 +265,11 @@ def check_video(post):
         e_k, w_k = check_rank(post)
         errors += e_k
         warnings += w_k
+    if is_tl:
+        from timeline_reel import check_timeline
+        e_l, w_l = check_timeline(post)
+        errors += e_l
+        warnings += w_l
     if post["rights"] not in RIGHTS:
         errors.append(f"rights는 {RIGHTS} 중 하나: own(직접 만듦), permission(원작자 허락), license(이용 허락 라이선스)")
     if post["rights"] == "quote":
@@ -320,7 +327,7 @@ def check_video(post):
     if not is_rank or post.get("thumb"):   # 순위 릴스는 thumb가 없으면 첫 화면이 커버 (rankreel.py)
         errors += check_thumb(post)
     v = post.get("video") or {}
-    if not is_list and not is_rank and not v.get("src"):
+    if not is_list and not is_rank and not is_tl and not v.get("src"):
         errors.append("video.src 필요")
     prev_end = -1
     texts = [post["title"]]

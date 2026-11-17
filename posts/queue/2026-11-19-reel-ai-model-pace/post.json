@@ -1,0 +1,943 @@
+{
+  "id": "2026-11-19-reel-ai-model-pace",
+  "type": "video",
+  "origin": "own",
+  "length": "short",
+  "series": "전황",
+  "date": "2026-11-19",
+  "publish_at": "2026-11-19T18:13:00+09:00",
+  "rights": "own",
+  "rights_note": "연표·그래프는 각 회사 공식 발표 날짜와 METR 보고서 수치로 agent/timeline_reel.py가 직접 그린 것. 배경음·효과음은 코드로 만든 소리",
+  "title": "AI 새 모델이\n16일마다 나옵니다",
+  "highlight": "16일마다",
+  "timeline": {
+    "unit_note": "주요 AI 모델 55개 · 각 회사 공식 발표",
+    "events": [
+      {
+        "date": "2020-06-11",
+        "lab": "OpenAI",
+        "name": "GPT-3",
+        "url": "https://openai.com/index/openai-api/"
+      },
+      {
+        "date": "2022-11-30",
+        "lab": "OpenAI",
+        "name": "ChatGPT",
+        "url": "https://openai.com/index/chatgpt/"
+      },
+      {
+        "date": "2023-02-24",
+        "lab": "Meta",
+        "name": "LLaMA",
+        "url": "https://ai.meta.com/blog/large-language-model-llama-meta-ai/"
+      },
+      {
+        "date": "2023-03-14",
+        "lab": "OpenAI",
+        "name": "GPT-4",
+        "url": "https://openai.com/index/gpt-4-research/"
+      },
+      {
+        "date": "2023-03-14",
+        "lab": "Anthropic",
+        "name": "Claude",
+        "url": "https://www.anthropic.com/news/introducing-claude"
+      },
+      {
+        "date": "2023-07-11",
+        "lab": "Anthropic",
+        "name": "Claude 2",
+        "url": "https://www.anthropic.com/news/claude-2"
+      },
+      {
+        "date": "2023-07-18",
+        "lab": "Meta",
+        "name": "Llama 2",
+        "url": "https://ai.meta.com/blog/llama-2/"
+      },
+      {
+        "date": "2023-11-03",
+        "lab": "xAI",
+        "name": "Grok",
+        "url": "https://x.ai/news/grok"
+      },
+      {
+        "date": "2023-12-06",
+        "lab": "Google",
+        "name": "Gemini 1.0",
+        "url": "https://blog.google/technology/ai/google-gemini-ai/"
+      },
+      {
+        "date": "2024-02-15",
+        "lab": "Google",
+        "name": "Gemini 1.5",
+        "url": "https://blog.google/technology/ai/google-gemini-next-generation-model-february-2024/"
+      },
+      {
+        "date": "2024-03-04",
+        "lab": "Anthropic",
+        "name": "Claude 3",
+        "url": "https://www.anthropic.com/news/claude-3-family"
+      },
+      {
+        "date": "2024-04-18",
+        "lab": "Meta",
+        "name": "Llama 3",
+        "url": "https://ai.meta.com/blog/meta-llama-3/"
+      },
+      {
+        "date": "2024-05-13",
+        "lab": "OpenAI",
+        "name": "GPT-4o",
+        "url": "https://openai.com/index/hello-gpt-4o/"
+      },
+      {
+        "date": "2024-06-20",
+        "lab": "Anthropic",
+        "name": "Claude 3.5 Sonnet",
+        "url": "https://www.anthropic.com/news/claude-3-5-sonnet"
+      },
+      {
+        "date": "2024-08-13",
+        "lab": "xAI",
+        "name": "Grok-2",
+        "url": "https://x.ai/news/grok-2"
+      },
+      {
+        "date": "2024-09-12",
+        "lab": "OpenAI",
+        "name": "o1-preview",
+        "url": "https://openai.com/index/introducing-openai-o1-preview/"
+      },
+      {
+        "date": "2024-12-11",
+        "lab": "Google",
+        "name": "Gemini 2.0 Flash",
+        "url": "https://blog.google/technology/google-deepmind/google-gemini-ai-update-december-2024/"
+      },
+      {
+        "date": "2024-12-26",
+        "lab": "DeepSeek",
+        "name": "DeepSeek-V3",
+        "url": "https://api-docs.deepseek.com/news/news1226"
+      },
+      {
+        "date": "2025-01-20",
+        "lab": "DeepSeek",
+        "name": "DeepSeek-R1",
+        "url": "https://api-docs.deepseek.com/news/news250120"
+      },
+      {
+        "date": "2025-02-17",
+        "lab": "xAI",
+        "name": "Grok 3",
+        "url": "https://x.ai/news/grok-3"
+      },
+      {
+        "date": "2025-02-24",
+        "lab": "Anthropic",
+        "name": "Claude 3.7 Sonnet",
+        "url": "https://www.anthropic.com/news/claude-3-7-sonnet"
+      },
+      {
+        "date": "2025-02-27",
+        "lab": "OpenAI",
+        "name": "GPT-4.5",
+        "url": "https://openai.com/index/introducing-gpt-4-5/"
+      },
+      {
+        "date": "2025-03-25",
+        "lab": "Google",
+        "name": "Gemini 2.5 Pro",
+        "url": "https://blog.google/technology/google-deepmind/gemini-model-thinking-updates-march-2025/"
+      },
+      {
+        "date": "2025-04-05",
+        "lab": "Meta",
+        "name": "Llama 4",
+        "url": "https://ai.meta.com/blog/llama-4-multimodal-intelligence/"
+      },
+      {
+        "date": "2025-04-16",
+        "lab": "OpenAI",
+        "name": "o3",
+        "url": "https://openai.com/index/introducing-o3-and-o4-mini/"
+      },
+      {
+        "date": "2025-05-22",
+        "lab": "Anthropic",
+        "name": "Claude 4",
+        "url": "https://www.anthropic.com/news/claude-4"
+      },
+      {
+        "date": "2025-07-09",
+        "lab": "xAI",
+        "name": "Grok 4",
+        "url": "https://x.ai/news/grok-4"
+      },
+      {
+        "date": "2025-08-07",
+        "lab": "OpenAI",
+        "name": "GPT-5",
+        "url": "https://openai.com/index/introducing-gpt-5/"
+      },
+      {
+        "date": "2025-09-29",
+        "lab": "Anthropic",
+        "name": "Claude Sonnet 4.5",
+        "url": "https://www.anthropic.com/news/claude-sonnet-4-5"
+      },
+      {
+        "date": "2025-11-12",
+        "lab": "OpenAI",
+        "name": "GPT-5.1",
+        "url": "https://openai.com/index/gpt-5-1/"
+      },
+      {
+        "date": "2025-11-18",
+        "lab": "Google",
+        "name": "Gemini 3 Pro",
+        "url": "https://blog.google/products/gemini/gemini-3/"
+      },
+      {
+        "date": "2025-11-24",
+        "lab": "Anthropic",
+        "name": "Claude Opus 4.5",
+        "url": "https://www.anthropic.com/news/claude-opus-4-5"
+      },
+      {
+        "date": "2025-12-01",
+        "lab": "DeepSeek",
+        "name": "DeepSeek-V3.2",
+        "url": "https://api-docs.deepseek.com/updates"
+      },
+      {
+        "date": "2025-12-11",
+        "lab": "OpenAI",
+        "name": "GPT-5.2",
+        "url": "https://openai.com/index/introducing-gpt-5-2/"
+      },
+      {
+        "date": "2026-02-05",
+        "lab": "Anthropic",
+        "name": "Claude Opus 4.6",
+        "url": "https://www.anthropic.com/news/claude-opus-4-6"
+      },
+      {
+        "date": "2026-02-19",
+        "lab": "Google",
+        "name": "Gemini 3.1 Pro",
+        "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-pro/"
+      },
+      {
+        "date": "2026-03-05",
+        "lab": "OpenAI",
+        "name": "GPT-5.4",
+        "url": "https://developers.openai.com/api/docs/changelog"
+      },
+      {
+        "date": "2026-04-08",
+        "lab": "Meta",
+        "name": "Muse Spark",
+        "url": "https://ai.meta.com/blog/introducing-muse-spark-msl/"
+      },
+      {
+        "date": "2026-04-16",
+        "lab": "Anthropic",
+        "name": "Claude Opus 4.7",
+        "url": "https://www.anthropic.com/news/models"
+      },
+      {
+        "date": "2026-04-23",
+        "lab": "OpenAI",
+        "name": "GPT-5.5",
+        "url": "https://openai.com/index/introducing-gpt-5-5/"
+      },
+      {
+        "date": "2026-04-24",
+        "lab": "DeepSeek",
+        "name": "DeepSeek-V4",
+        "url": "https://api-docs.deepseek.com/updates"
+      },
+      {
+        "date": "2026-05-19",
+        "lab": "Google",
+        "name": "Gemini 3.5 Flash",
+        "url": "https://blog.google/innovation-and-ai/technology/ai/google-io-2026-all-our-announcements/"
+      },
+      {
+        "date": "2026-05-28",
+        "lab": "Anthropic",
+        "name": "Claude Opus 4.8",
+        "url": "https://www.anthropic.com/news/models"
+      },
+      {
+        "date": "2026-06-09",
+        "lab": "Anthropic",
+        "name": "Claude Fable·Mythos 5",
+        "url": "https://www.anthropic.com/news/models"
+      },
+      {
+        "date": "2026-07-09",
+        "lab": "OpenAI",
+        "name": "GPT-5.6",
+        "url": "https://openai.com/index/gpt-5-6/"
+      },
+      {
+        "date": "2026-07-16",
+        "lab": "xAI",
+        "name": "Grok 4.5",
+        "url": "https://x.ai/news/grok-4-5"
+      },
+      {
+        "date": "2026-07-24",
+        "lab": "Anthropic",
+        "name": "Claude Opus 5",
+        "url": "https://www.anthropic.com/news/claude-opus-5"
+      },
+      {
+        "date": "2026-08-12",
+        "lab": "xAI",
+        "name": "Grok 4.6",
+        "url": "https://x.ai/news/grok-4-6"
+      },
+      {
+        "date": "2026-09-03",
+        "lab": "OpenAI",
+        "name": "GPT-6 Astra",
+        "url": "https://openai.com/index/gpt-6-astra/"
+      },
+      {
+        "date": "2026-09-15",
+        "lab": "Anthropic",
+        "name": "Claude Fable·Mythos 5.1",
+        "url": "https://www.anthropic.com/news/models"
+      },
+      {
+        "date": "2026-09-21",
+        "lab": "xAI",
+        "name": "Grok 4.7",
+        "url": "https://x.ai/news/grok-4-7"
+      },
+      {
+        "date": "2026-10-12",
+        "lab": "Meta",
+        "name": "Muse Wonder",
+        "url": "https://about.fb.com/news/2026/10/introducing-muse-wonder-models/"
+      },
+      {
+        "date": "2026-10-13",
+        "lab": "Google",
+        "name": "Gemini 4 Argon",
+        "url": "https://deepmind.google/models/model-cards/gemini-4-argon/"
+      },
+      {
+        "date": "2026-11-09",
+        "lab": "Anthropic",
+        "name": "Claude Fable·Mythos 5.2",
+        "url": "https://www.anthropic.com/news/models"
+      },
+      {
+        "date": "2026-11-10",
+        "lab": "Google",
+        "name": "Gemini 4 Carbon",
+        "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-carbon-now-available/"
+      }
+    ],
+    "periods": [
+      [
+        "2020~22년",
+        2020,
+        2022
+      ],
+      [
+        "2023년",
+        2023,
+        2023
+      ],
+      [
+        "2024년",
+        2024,
+        2024
+      ],
+      [
+        "2025년",
+        2025,
+        2025
+      ],
+      [
+        "2026년",
+        2026,
+        2026
+      ]
+    ],
+    "metr": {
+      "label": "AI가 혼자 끝내는 일의 길이",
+      "long": "7개월마다 2배",
+      "recent": "약 4개월마다 2배",
+      "recent_from": 2023,
+      "long_months": 7,
+      "recent_months": 4.3,
+      "source": "METR (2025.3 · 2026.1)"
+    },
+    "thumb_src": "img/thumb.jpg"
+  },
+  "thumb": {
+    "title": "AI 새 모델이\n16일마다 나옵니다",
+    "highlight": "16일마다",
+    "image": {
+      "type": "image",
+      "src": "img/thumb.jpg",
+      "position": "center 40%"
+    }
+  },
+  "topic": [
+    "AI 모델 출시 속도",
+    "AI 발전 속도"
+  ],
+  "sources": [
+    {
+      "name": "OpenAI 개발자 변경 기록 (모델 출시일)",
+      "url": "https://developers.openai.com/api/docs/changelog"
+    },
+    {
+      "name": "Anthropic 모델 목록 (출시일)",
+      "url": "https://www.anthropic.com/news/models"
+    },
+    {
+      "name": "Google Gemini 4 Carbon 발표 (2026.11.10)",
+      "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-carbon-now-available/"
+    },
+    {
+      "name": "DeepSeek API 변경 기록",
+      "url": "https://api-docs.deepseek.com/updates"
+    },
+    {
+      "name": "Meta Muse Wonder 발표 (2026.10.12)",
+      "url": "https://about.fb.com/news/2026/10/introducing-muse-wonder-models/"
+    },
+    {
+      "name": "METR, Measuring AI Ability to Complete Long Tasks (2025.3.19)",
+      "url": "https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/"
+    },
+    {
+      "name": "METR, Time Horizon 1.1 (2026.1.29)",
+      "url": "https://metr.org/blog/2026-01-29-time-horizon-1-1/"
+    }
+  ],
+  "caption": "AI 모델 출시 속도를 한눈에 보세요. 2020년엔 30개월에 하나, 지금은 16일에 하나입니다.\n댓글에 '자료'라고 남기면 모델 55개 출시 연표를 공식 발표 링크와 함께 DM으로 보내 드려요(팔로우한 분께).\n\nGPT-3에서 ChatGPT까지는 902일이 걸렸습니다.\n그 뒤 새 모델 사이 평균 간격은 2023년 53일, 2024년 43일, 2025년 22일, 올해(11월 10일까지) 16일.\n계산 기준은 OpenAI·구글·앤트로픽·메타·xAI·딥시크 주요 모델 55개의 공식 발표일이에요.\n\n빨라진 건 출시 횟수만이 아닙니다. METR 조사에서 AI가 혼자 끝내는 일의 길이는 7개월마다, 2023년부터는 약 4개월마다 두 배가 됐어요.\n\n출처: 각 회사 공식 발표, METR(2025.3, 2026.1)\n\n팔로우하고 댓글에 '자료'라고 남기면 모델 55개 출시 연표를 DM으로 보내 드려요. (팔로우한 분께 보내집니다)",
+  "hashtags": [
+    "#AI모델",
+    "#AI발전",
+    "#챗GPT",
+    "#토큰전쟁"
+  ],
+  "keywords": [
+    "AI 모델 출시 속도",
+    "AI 발전 속도",
+    "AI 새 모델"
+  ],
+  "music": {
+    "generate": true
+  },
+  "dm": {
+    "keyword": "자료",
+    "message": "요청하신 AI 모델 출시 연표예요 📅\n2020년 GPT-3부터 2026년 11월 제미나이 4 카본까지, 주요 모델 55개의 출시일을 회사별로 정리했어요.\n모델마다 공식 발표 링크도 붙여 뒀으니 아래 '자료 보기'에서 바로 확인해 보세요.",
+    "cta": "팔로우하고 댓글에 '자료' 남기면\n모델 55개 출시 연표를\n보내 드립니다",
+    "banner": "댓글에 '자료'라고 남기면\n모델 55개 연표를 DM으로 보내 드립니다",
+    "page": {
+      "intro": "2020년 GPT-3부터 2026년 11월까지 OpenAI·구글·앤트로픽·메타·xAI·딥시크의 주요 모델 55개 출시일을 해마다 정리했어요. 모델마다 공식 발표 링크를 붙였어요.",
+      "result": "새 모델 사이 평균 간격은 2020~22년 902일(약 30개월), 2023년 53일, 2024년 43일, 2025년 22일, 2026년(11월 10일까지) 16일이에요. METR는 AI가 혼자 끝내는 일의 길이가 2019년부터 약 7개월마다, 2023년부터는 약 4개월마다 두 배가 됐다고 발표했어요.",
+      "setup": {
+        "steps": [
+          {
+            "label": "1개",
+            "title": "2020년",
+            "groups": [
+              {
+                "name": "GPT-3",
+                "text": "2020년 6월 11일 · OpenAI",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://openai.com/index/openai-api/"
+                }
+              }
+            ]
+          },
+          {
+            "label": "1개",
+            "title": "2022년",
+            "groups": [
+              {
+                "name": "ChatGPT",
+                "text": "2022년 11월 30일 · OpenAI",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://openai.com/index/chatgpt/"
+                }
+              }
+            ]
+          },
+          {
+            "label": "7개",
+            "title": "2023년",
+            "groups": [
+              {
+                "name": "LLaMA",
+                "text": "2023년 2월 24일 · 메타",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://ai.meta.com/blog/large-language-model-llama-meta-ai/"
+                }
+              },
+              {
+                "name": "GPT-4",
+                "text": "2023년 3월 14일 · OpenAI",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://openai.com/index/gpt-4-research/"
+                }
+              },
+              {
+                "name": "Claude",
+                "text": "2023년 3월 14일 · 앤트로픽",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://www.anthropic.com/news/introducing-claude"
+                }
+              },
+              {
+                "name": "Claude 2",
+                "text": "2023년 7월 11일 · 앤트로픽",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://www.anthropic.com/news/claude-2"
+                }
+              },
+              {
+                "name": "Llama 2",
+                "text": "2023년 7월 18일 · 메타",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://ai.meta.com/blog/llama-2/"
+                }
+              },
+              {
+                "name": "Grok",
+                "text": "2023년 11월 3일 · xAI",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://x.ai/news/grok"
+                }
+              },
+              {
+                "name": "Gemini 1.0",
+                "text": "2023년 12월 6일 · 구글",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://blog.google/technology/ai/google-gemini-ai/"
+                }
+              }
+            ]
+          },
+          {
+            "label": "9개",
+            "title": "2024년",
+            "groups": [
+              {
+                "name": "Gemini 1.5",
+                "text": "2024년 2월 15일 · 구글",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://blog.google/technology/ai/google-gemini-next-generation-model-february-2024/"
+                }
+              },
+              {
+                "name": "Claude 3",
+                "text": "2024년 3월 4일 · 앤트로픽",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://www.anthropic.com/news/claude-3-family"
+                }
+              },
+              {
+                "name": "Llama 3",
+                "text": "2024년 4월 18일 · 메타",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://ai.meta.com/blog/meta-llama-3/"
+                }
+              },
+              {
+                "name": "GPT-4o",
+                "text": "2024년 5월 13일 · OpenAI",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://openai.com/index/hello-gpt-4o/"
+                }
+              },
+              {
+                "name": "Claude 3.5 Sonnet",
+                "text": "2024년 6월 20일 · 앤트로픽",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://www.anthropic.com/news/claude-3-5-sonnet"
+                }
+              },
+              {
+                "name": "Grok-2",
+                "text": "2024년 8월 13일 · xAI",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://x.ai/news/grok-2"
+                }
+              },
+              {
+                "name": "o1-preview",
+                "text": "2024년 9월 12일 · OpenAI",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://openai.com/index/introducing-openai-o1-preview/"
+                }
+              },
+              {
+                "name": "Gemini 2.0 Flash",
+                "text": "2024년 12월 11일 · 구글",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://blog.google/technology/google-deepmind/google-gemini-ai-update-december-2024/"
+                }
+              },
+              {
+                "name": "DeepSeek-V3",
+                "text": "2024년 12월 26일 · 딥시크",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://api-docs.deepseek.com/news/news1226"
+                }
+              }
+            ]
+          },
+          {
+            "label": "16개",
+            "title": "2025년",
+            "groups": [
+              {
+                "name": "DeepSeek-R1",
+                "text": "2025년 1월 20일 · 딥시크",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://api-docs.deepseek.com/news/news250120"
+                }
+              },
+              {
+                "name": "Grok 3",
+                "text": "2025년 2월 17일 · xAI",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://x.ai/news/grok-3"
+                }
+              },
+              {
+                "name": "Claude 3.7 Sonnet",
+                "text": "2025년 2월 24일 · 앤트로픽",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://www.anthropic.com/news/claude-3-7-sonnet"
+                }
+              },
+              {
+                "name": "GPT-4.5",
+                "text": "2025년 2월 27일 · OpenAI",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://openai.com/index/introducing-gpt-4-5/"
+                }
+              },
+              {
+                "name": "Gemini 2.5 Pro",
+                "text": "2025년 3월 25일 · 구글",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://blog.google/technology/google-deepmind/gemini-model-thinking-updates-march-2025/"
+                }
+              },
+              {
+                "name": "Llama 4",
+                "text": "2025년 4월 5일 · 메타",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://ai.meta.com/blog/llama-4-multimodal-intelligence/"
+                }
+              },
+              {
+                "name": "o3",
+                "text": "2025년 4월 16일 · OpenAI",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://openai.com/index/introducing-o3-and-o4-mini/"
+                }
+              },
+              {
+                "name": "Claude 4",
+                "text": "2025년 5월 22일 · 앤트로픽",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://www.anthropic.com/news/claude-4"
+                }
+              },
+              {
+                "name": "Grok 4",
+                "text": "2025년 7월 9일 · xAI",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://x.ai/news/grok-4"
+                }
+              },
+              {
+                "name": "GPT-5",
+                "text": "2025년 8월 7일 · OpenAI",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://openai.com/index/introducing-gpt-5/"
+                }
+              },
+              {
+                "name": "Claude Sonnet 4.5",
+                "text": "2025년 9월 29일 · 앤트로픽",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://www.anthropic.com/news/claude-sonnet-4-5"
+                }
+              },
+              {
+                "name": "GPT-5.1",
+                "text": "2025년 11월 12일 · OpenAI",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://openai.com/index/gpt-5-1/"
+                }
+              },
+              {
+                "name": "Gemini 3 Pro",
+                "text": "2025년 11월 18일 · 구글",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://blog.google/products/gemini/gemini-3/"
+                }
+              },
+              {
+                "name": "Claude Opus 4.5",
+                "text": "2025년 11월 24일 · 앤트로픽",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://www.anthropic.com/news/claude-opus-4-5"
+                }
+              },
+              {
+                "name": "DeepSeek-V3.2",
+                "text": "2025년 12월 1일 · 딥시크",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://api-docs.deepseek.com/updates"
+                }
+              },
+              {
+                "name": "GPT-5.2",
+                "text": "2025년 12월 11일 · OpenAI",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://openai.com/index/introducing-gpt-5-2/"
+                }
+              }
+            ]
+          },
+          {
+            "label": "21개",
+            "title": "2026년",
+            "groups": [
+              {
+                "name": "Claude Opus 4.6",
+                "text": "2026년 2월 5일 · 앤트로픽",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://www.anthropic.com/news/claude-opus-4-6"
+                }
+              },
+              {
+                "name": "Gemini 3.1 Pro",
+                "text": "2026년 2월 19일 · 구글",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-1-pro/"
+                }
+              },
+              {
+                "name": "GPT-5.4",
+                "text": "2026년 3월 5일 · OpenAI",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://developers.openai.com/api/docs/changelog"
+                }
+              },
+              {
+                "name": "Muse Spark",
+                "text": "2026년 4월 8일 · 메타",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://ai.meta.com/blog/introducing-muse-spark-msl/"
+                }
+              },
+              {
+                "name": "Claude Opus 4.7",
+                "text": "2026년 4월 16일 · 앤트로픽",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://www.anthropic.com/news/models"
+                }
+              },
+              {
+                "name": "GPT-5.5",
+                "text": "2026년 4월 23일 · OpenAI",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://openai.com/index/introducing-gpt-5-5/"
+                }
+              },
+              {
+                "name": "DeepSeek-V4",
+                "text": "2026년 4월 24일 · 딥시크",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://api-docs.deepseek.com/updates"
+                }
+              },
+              {
+                "name": "Gemini 3.5 Flash",
+                "text": "2026년 5월 19일 · 구글",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://blog.google/innovation-and-ai/technology/ai/google-io-2026-all-our-announcements/"
+                }
+              },
+              {
+                "name": "Claude Opus 4.8",
+                "text": "2026년 5월 28일 · 앤트로픽",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://www.anthropic.com/news/models"
+                }
+              },
+              {
+                "name": "Claude Fable·Mythos 5",
+                "text": "2026년 6월 9일 · 앤트로픽",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://www.anthropic.com/news/models"
+                }
+              },
+              {
+                "name": "GPT-5.6",
+                "text": "2026년 7월 9일 · OpenAI",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://openai.com/index/gpt-5-6/"
+                }
+              },
+              {
+                "name": "Grok 4.5",
+                "text": "2026년 7월 16일 · xAI",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://x.ai/news/grok-4-5"
+                }
+              },
+              {
+                "name": "Claude Opus 5",
+                "text": "2026년 7월 24일 · 앤트로픽",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://www.anthropic.com/news/claude-opus-5"
+                }
+              },
+              {
+                "name": "Grok 4.6",
+                "text": "2026년 8월 12일 · xAI",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://x.ai/news/grok-4-6"
+                }
+              },
+              {
+                "name": "GPT-6 Astra",
+                "text": "2026년 9월 3일 · OpenAI",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://openai.com/index/gpt-6-astra/"
+                }
+              },
+              {
+                "name": "Claude Fable·Mythos 5.1",
+                "text": "2026년 9월 15일 · 앤트로픽",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://www.anthropic.com/news/models"
+                }
+              },
+              {
+                "name": "Grok 4.7",
+                "text": "2026년 9월 21일 · xAI",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://x.ai/news/grok-4-7"
+                }
+              },
+              {
+                "name": "Muse Wonder",
+                "text": "2026년 10월 12일 · 메타",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://about.fb.com/news/2026/10/introducing-muse-wonder-models/"
+                }
+              },
+              {
+                "name": "Gemini 4 Argon",
+                "text": "2026년 10월 13일 · 구글",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://deepmind.google/models/model-cards/gemini-4-argon/"
+                }
+              },
+              {
+                "name": "Claude Fable·Mythos 5.2",
+                "text": "2026년 11월 9일 · 앤트로픽",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://www.anthropic.com/news/models"
+                }
+              },
+              {
+                "name": "Gemini 4 Carbon",
+                "text": "2026년 11월 10일 · 구글",
+                "src": {
+                  "name": "공식 발표",
+                  "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-carbon-now-available/"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "threads": {
+    "text": "AI 새 모델이 이제 16일마다 하나씩 나옵니다.\n\nGPT-3 다음 ChatGPT가 나오기까지는 902일.\n평균 간격은 2023년 53일 → 2024년 43일 → 2025년 22일 → 올해 16일로 줄었습니다.\nOpenAI, 구글, 앤트로픽, 메타, xAI, 딥시크의 대표 모델 55개 발표일 기준이에요.\n\n속도만 빨라진 게 아니라, AI가 혼자 해내는 일의 길이도 2023년 이후 약 4개월마다 두 배씩 늘고 있습니다(METR).",
+    "images": [
+      "cover"
+    ],
+    "topic": "AI Threads",
+    "replies": [
+      "출처: METR Time Horizon 1.1 https://metr.org/blog/2026-01-29-time-horizon-1-1/ · 모델 출시일은 각 회사 공식 발표"
+    ]
+  }
+}

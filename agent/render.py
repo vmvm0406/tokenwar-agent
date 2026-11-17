@@ -480,6 +480,15 @@ def main(folder):
             sys.exit(1)
         print("완료:", out_dir)
         return
+    if post["type"] == "video" and post.get("timeline"):
+        # 연표 릴스 (agent/timeline_reel.py, TEMPLATES.md "연표 릴스")
+        from timeline_reel import make_timeline_reel
+        dur = make_timeline_reel(post, out_dir, CONFIG)
+        print(f"연표 릴스 길이: {dur:.1f}초")
+        check_sound_or_exit(out_dir)
+        thumb_or_exit(post, out_dir)
+        print("완료:", out_dir)
+        return
     if post["type"] == "video" and post.get("list"):
         # 목록형 자료 릴스 (agent/listreel.py, TEMPLATES.md "목록형 자료 릴스")
         from listreel import make_list_reel, with_placeholders, clear_placeholders
