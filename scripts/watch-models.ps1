@@ -22,6 +22,8 @@ foreach ($d in @("$env:LOCALAPPDATA\Microsoft\WinGet\Links", "$env:LOCALAPPDATA\
     if ((Test-Path $d) -and ($env:Path -notlike "*$d*")) { $env:Path += ";$d" }
 }
 $Repo = Join-Path $env:USERPROFILE "tokenwar-daily"   # 매일 작업 전용 (tokenwar-agent는 건드리지 않는다)
+# 운영자 2026-11-18 "15분마다 계속 확인하고 이런 것들도 다 없애줘. 전에 했던 것들 다 리셋하자": config.json automation_off가 true면 아무것도 안 하고 끝
+try { if ((Get-Content (Join-Path $Repo "config.json") -Raw -Encoding UTF8 | ConvertFrom-Json).automation_off) { exit 0 } } catch { }
 $RepoUrl = "https://github.com/vmvm0406/tokenwar-agent"
 # C 드라이브 정리: cleanup.ps1이 3시간 안에 돌았으면 바로 끝난다 (운영자 2026-11-17 "수시로 정리")
 $cleanupPs = Join-Path $Repo "scripts\cleanup.ps1"

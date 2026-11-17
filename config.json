@@ -306,5 +306,6 @@
   },
   "stories_enabled": false,
   "production_paused": true,
-  "publish_paused": true
+  "publish_paused": true,
+  "automation_off": true
 }
