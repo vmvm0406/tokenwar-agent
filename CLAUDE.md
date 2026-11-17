@@ -42,6 +42,7 @@
 | `agent/shot.py` | 웹페이지 화면 캡처 → 카드뉴스 사진 (`shot` 필드로 자동, 또는 명령줄) |
 | `agent/thumb.py` | 릴스 썸네일 cover.jpg (그림 꽉 차게 + 가운데 제목 2줄) |
 | `agent/listreel.py` | 목록형 자료 릴스('조명 단어 20가지' 형식): 제목 + 번호 목록, 한 줄씩 강조되며 결과 이미지 교체 |
+| `agent/rankreel.py` | 순위 카운트다운 릴스(post `rank`): 제목 박힘 → 10위부터 점수 막대·순위표 쌓기 → 1위 '?' 1초 안에 공개, quote 모드(발언 순위). 운영자 2026-11-17 "움직이며 변하는 걸 계속 보게" |
 | `assets/mascot/` | 마스코트 슬라임 기준 이미지(`slime-base.jpg`)와 만드는 법(README). `gen_images.py`의 `"mascot": true`가 참고 이미지로 붙임 |
 | `agent/tighten.py` | 받아쓰기 단어 시각 → 말 사이 틈을 자른 keep 목록 |
 | `agent/analyze.py` | 영상 분석: 장면 전환, 말소리 구간, 받아쓰기, 시트 이미지 |
