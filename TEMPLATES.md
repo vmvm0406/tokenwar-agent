@@ -317,7 +317,7 @@
 | 필드 | 내용 |
 |---|---|
 | `timeline.events` | `[{date: "YYYY-MM-DD", lab, name, url}]` 5개 이상, 날짜 순. `lab`은 줄(OpenAI·Google·Anthropic·Meta·xAI·DeepSeek). `url`은 공식 발표 |
-| `timeline.beats` | 선택: 대표 모델 그림 멈춤 `[{name(events의 name), text(특징 한 줄 18자 이하), image: {type: "image", src, prompt, size: [1344, 1088]}}]` 6개 안팎 (render.yml이 FLUX로 그림) |
+| `timeline.beats` | 선택: 대표 모델 그림 멈춤 `[{name(events의 name), text(특징 한 줄 12자 이하, 공식 발표에 있는 사실), image: {type: "image", src, prompt, size: [1344, 1088]}}]` 15개 안팎, 멈춤 1.0초→0.5초 (render.yml이 FLUX로 그림) |
 | `timeline.periods` | 끝 정리 화면('새 모델 하나 나오는 데 걸린 시간', 'N개월에 1개')의 기간 `[["2020~22년", 2020, 2022], ...]` (선택, 없으면 해마다) |
 | `timeline.unit_note` | 연표 아래 작은 출처 줄 (예: "주요 AI 모델 55개 · 각 회사 공식 발표") |
 | `timeline.cta_line` | 선택: 제목 아래 0초 한 줄 (양자택일 질문·팔로우 한 줄, '댓글로'는 초록). 끝 화면은 post `end_cta` |

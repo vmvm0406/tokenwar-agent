@@ -102,11 +102,11 @@ function drawHL(ln, cx, y, px) {
 }
 
 function dotPop(dt) { return dt >= 0 && dt < 0.2 ? 1 + 1.4 * (1 - ease(dt / 0.2)) : 1; }
-function beatAt(t) { return P.beats.find(b => t >= b.t0 && t < b.t0 + P.beat_len) || null; }
+function beatAt(t) { return P.beats.find(b => t >= b.t0 && t < b.t0 + b.len) || null; }
 const RH = P.rehook;
 function inRehook(t) { return RH && t >= RH.t0 && t < RH.t0 + P.rehook_len; }
 // 멈춤(그림·리후킹): 재생선이 멈추는 구간 [시작 점 번호, 다시 움직이는 시각]
-const PAUSES = P.beats.map(b => ({ i: b.i, until: b.t0 + P.beat_len })).concat(RH ? [{ i: RH.i, until: RH.t0 + P.rehook_len }] : []);
+const PAUSES = P.beats.map(b => ({ i: b.i, until: b.t0 + b.len })).concat(RH ? [{ i: RH.i, until: RH.t0 + P.rehook_len }] : []);
 
 function playheadU(t) {
   if (t < P.ev[0].t) return lerp(0, P.ev[0].u, clamp((t - P.tl_start) / (P.ev[0].t - P.tl_start), 0, 1));
@@ -199,8 +199,9 @@ function drawCount(t) {
 
 // 대표 모델 그림: 점에서 튀어나와 가운데 카드로, 천천히 확대, 끝에 다시 점으로
 function drawBeat(t, b) {
-  const d = t - b.t0, L = P.beat_len;
-  const qi = ease(d / 0.2), qo = d > L - 0.16 ? ease((d - (L - 0.16)) / 0.16) : 0;
+  const d = t - b.t0, L = b.len;
+  const ti = Math.min(0.2, L * 0.25), to = Math.min(0.16, L * 0.2);   // 짧은 그림은 들어오고 나가는 시간도 짧게
+  const qi = ease(d / ti), qo = d > L - to ? ease((d - (L - to)) / to) : 0;
   const q = qi * (1 - qo);
   const e = P.ev[b.i];
   const dx = xOf(e.u), dy = rowY(e.row);
@@ -222,7 +223,7 @@ function drawBeat(t, b) {
   g.strokeStyle = col; g.lineWidth = 5; g.strokeRect(cx - w / 2, cy - h / 2, w, h);
   g.restore();
   // 이름 + 특징 한 줄 (그림 왼쪽 끝에 맞춤)
-  const ta = ease((d - 0.12) / 0.15) * (1 - qo);
+  const ta = ease((d - ti * 0.5) / 0.1) * (d > L - 0.05 ? 0 : 1);   // 글은 빨리 뜨고 끝까지 남는다 (짧은 그림도 읽히게)
   if (ta > 0) {
     const off = (1 - ta) * 30;
     drawMark(b.lab, CARD_X + off, CAP_NAME_Y + 2, 46, ta);
@@ -280,7 +281,7 @@ function twFrame(t) {
   g.translate(sx, sy);
   const b = t < TL_END ? beatAt(t) : null;
   let dim = 1;
-  if (b) { const d = t - b.t0; dim = 1 - 0.8 * ease(d / 0.2) * (1 - (d > P.beat_len - 0.16 ? ease((d - P.beat_len + 0.16) / 0.16) : 0)); }
+  if (b) { const d = t - b.t0, L = b.len, ti = Math.min(0.2, L * 0.25), to = Math.min(0.16, L * 0.2); dim = 1 - 0.8 * ease(d / ti) * (1 - (d > L - to ? ease((d - L + to) / to) : 0)); }
   const rh = t < TL_END && inRehook(t);
   if (rh) { const d = t - RH.t0; dim = 1 - 0.85 * ease(d / 0.12) * (1 - (d > P.rehook_len - 0.18 ? ease((d - P.rehook_len + 0.18) / 0.18) : 0)); }
   const chartA = (t < TL_END ? 1 : 1 - ease((t - TL_END) / 0.25)) * dim;

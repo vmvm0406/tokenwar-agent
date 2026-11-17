@@ -9,7 +9,7 @@
 장면 (본편 시각):
     0~0.5초     제목 쾅(줄마다) + 빈 연표
     0.5초~      재생: 점 하나 = 실제 모델 하나. 영상 속 간격은 실제 간격의 0.6제곱에 비례 → 점이 계속 빨라진다.
-                timeline.beats의 모델이 찍히면 BEAT_LEN초 멈추고 그 모델 그림(점에서 튀어나옴) + 이름 + 특징 한 줄
+                timeline.beats의 모델이 찍히면 1.0초(처음)~0.5초(끝) 멈추고 그 모델 그림(점에서 튀어나옴) + 이름 + 특징 한 줄
     재생 끝~    정리 화면 SUM_LEN초
     끝          끝 화면 2.5초 (dm.cta 또는 post.end_cta, video.append_cta_card)
 
@@ -49,14 +49,14 @@ SAFE_BOTTOM = _SAFE.get("bottom", 1250)
 SIDE = _SAFE.get("side", 65)
 
 TL_START = 0.5                    # 제목 쾅 뒤 바로 재생
-TL_LEN = 16.0                     # 점만 찍히는 시간 (그림·리후킹 멈춤 제외). 5박자에 맞춤: 답은 25초 언저리
+TL_LEN = 9.0                      # 점만 찍히는 시간 (그림·리후킹 멈춤 제외). 5박자에 맞춤: 답은 25초 언저리
 REHOOK_LEN = 1.8                  # 리후킹 멈춤 (timeline.rehook)
-BEAT_LEN = 1.1                    # 대표 모델 그림 멈춤
+BEAT_LEN = (1.0, 0.5)             # 대표 모델 그림 멈춤: 첫 그림 1.0초 → 마지막 0.5초 (연표가 빨라질수록 짧게, 운영자 2026-11-17 v5)
 TAIL = 0.6                        # 마지막 점 뒤
 SUM_LEN = 5.5                     # 끝 정리 화면 (줄이 다 뜬 뒤 3.5초 이상 그대로)
 GAP_POWER = 0.6                   # 영상 속 간격 = 실제 간격^0.6 (비례 상수는 TL_LEN에 맞춤)
 MIN_STEP = 0.07                   # 같은 날 나온 모델도 0.07초는 띄운다
-LENGTH_RANGE = (20.0, 35.0)       # 끝 화면 포함
+LENGTH_RANGE = (20.0, 40.0)       # 끝 화면 포함
 LABS = ["OpenAI", "Google", "Anthropic", "Meta", "xAI", "DeepSeek"]
 # 회사 색·로고 (assets/logos, Simple Icons CC0. 로고 파일이 없는 회사는 회사 색 점 + 회사 색 이름)
 LAB_INFO = {
@@ -128,6 +128,7 @@ def plan(post, folder=None):
     k2 = (usable - (sum(steps) - usable if sum(steps) > usable else 0)) / sum(steps)
     steps = [s * min(1.0, k2) for s in steps]
     beat_of = {}
+    nbeats = len(tl.get("beats") or [])
     for b in tl.get("beats") or []:
         j = next((i for i, e in enumerate(ev) if e["name"] == b.get("name")), None)
         if j is not None:
@@ -146,9 +147,10 @@ def plan(post, folder=None):
             src = (b.get("image") or {}).get("src")
             if folder and src and (Path(folder) / src).exists():
                 img = "data:image/jpeg;base64," + base64.b64encode((Path(folder) / src).read_bytes()).decode()
-            beats.append({"i": i, "t0": t + 0.1, "name": ev[i]["name"], "lab": ev[i]["lab"],
+            L = BEAT_LEN[0] + (BEAT_LEN[1] - BEAT_LEN[0]) * len(beats) / max(1, nbeats - 1)
+            beats.append({"i": i, "t0": t + 0.08, "len": round(L, 3), "name": ev[i]["name"], "lab": ev[i]["lab"],
                           "text": str(b.get("text", "")), "img": img})
-            t += BEAT_LEN
+            t += 0.08 + L
         if i == rh_i:
             rehook = {"i": i, "t0": t + 0.35, "small": str(rh.get("small", "")), "big": str(rh.get("big", "")),
                       "hl": str(rh.get("highlight", ""))}
@@ -163,7 +165,7 @@ def plan(post, folder=None):
         "ev": [{"name": e["name"], "lab": e["lab"], "date": e["date"].replace("-", "."),
                 "u": (d - x0d).days / span, "row": LABS.index(e["lab"]) if e["lab"] in LABS else len(LABS) - 1,
                 "t": t} for e, d, t in zip(ev, ds, times)],
-        "beats": beats, "beat_len": BEAT_LEN, "rehook": rehook, "rehook_len": REHOOK_LEN,
+        "beats": beats, "rehook": rehook, "rehook_len": REHOOK_LEN,
         "labs": LABS, "lab_info": lab_info(), "years": years, "x0year": ds[0].year, "span": span,
         "tl_start": TL_START, "tl_end": tl_end, "end": tl_end + SUM_LEN,
         "title": str(post["title"]).split("\n"), "hl": post.get("highlight") or "",
@@ -365,7 +367,7 @@ def make_timeline_reel(post, folder, cfg):
 def preview_times(p, total):
     """미리보기: 0.3초, 그림 멈춤마다 가운데, 재생 끝 직전, 정리 화면 끝, 끝 화면."""
     rh = [p["rehook"]["t0"] + 0.6] if p.get("rehook") else []
-    ts = sorted([0.3] + [b["t0"] + p["beat_len"] * 0.5 for b in p["beats"]] + rh) + [p["tl_end"] - 0.4, p["end"] - 0.3]
+    ts = sorted([0.3] + [b["t0"] + b["len"] * 0.5 for b in p["beats"]] + rh) + [p["tl_end"] - 0.4, p["end"] - 0.3]
     if total > p["end"] + 0.5:
         ts.append(total - 1.0)
     return ts
@@ -403,8 +405,8 @@ def check_timeline(post):
         if b.get("name") not in names:
             errors.append(f"timeline.beats {j}: name '{b.get('name')}'이 events에 없음")
         txt = str(b.get("text", "")).strip()
-        if not txt or len(txt) > 18:
-            errors.append(f"timeline.beats {j}: text(특징 한 줄)는 1~18자: '{txt}'")
+        if not txt or len(txt) > 12:
+            errors.append(f"timeline.beats {j}: text(특징 한 줄)는 1~12자 (빠른 그림은 0.5초): '{txt}'")
         im = b.get("image") or {}
         if not (im.get("src") and (im.get("prompt") or im.get("url"))):
             errors.append(f"timeline.beats {j}: image {{type, src, prompt 또는 url}} 필요")
@@ -420,8 +422,7 @@ def check_timeline(post):
     if ts and (post.get("thumb") or {}).get("image", {}).get("src") != ts:
         warnings.append("timeline.thumb_src와 thumb.image.src가 다름 (렌더링이 그린 그림을 썸네일로 쓰려면 같게)")
     if not errors and ev:
-        nb = len([b for b in tl.get("beats") or [] if any(e.get("name") == b.get("name") for e in ev)])
-        total = TL_START + 0.2 + TL_LEN + nb * BEAT_LEN + (0.35 + REHOOK_LEN if tl.get("rehook") else 0) + TAIL + SUM_LEN + (2.5 if ((post.get("dm") or {}).get("cta") or post.get("end_cta")) else 0)
+        total = plan(post)["end"] + (2.5 if ((post.get("dm") or {}).get("cta") or post.get("end_cta")) else 0)
         if not LENGTH_RANGE[0] <= total <= LENGTH_RANGE[1]:
             errors.append(f"연표 릴스 길이 {total:.1f}초 ({LENGTH_RANGE[0]:g}~{LENGTH_RANGE[1]:g}초)")
     return errors, warnings

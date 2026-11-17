@@ -7,7 +7,7 @@
   "date": "2026-11-19",
   "publish_at": "2026-11-19T18:13:00+09:00",
   "rights": "own",
-  "rights_note": "연표·막대는 각 회사 공식 발표 날짜로 agent/timeline_reel.py가 직접 그린 것. 회사 표시는 Simple Icons(CC0) 공식 로고 모양을 회사 이름 표시용(지명적 사용)으로 작게 씀, 로고 파일이 없는 xAI·딥시크는 회사 색 글자. 배경음악은 'Plucked Contemporary Boom' by mindmapthat (ccmixter.org/files/mindmapthat/43975), CC BY 3.0 조각(agent/music_fit.py), 대표 모델 장면 그림은 Cloudflare FLUX.2로 만든 AI 그림(실존 인물·로고 없음), 효과음은 agent/music_gen.py 코드 생성",
+  "rights_note": "연표·막대는 각 회사 공식 발표 날짜로 agent/timeline_reel.py가 직접 그린 것. 회사 표시는 Simple Icons(CC0) 공식 로고 모양을 회사 이름 표시용(지명적 사용)으로 작게 씀, 로고 파일이 없는 xAI·딥시크는 회사 색 글자. 배경음악은 'Invariance' Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0 License (creativecommons.org/licenses/by/4.0/) 조각(agent/music_fit.py), 대표 모델 장면 그림은 Cloudflare FLUX.2로 만든 AI 그림(실존 인물·로고 없음), 효과음은 agent/music_gen.py 코드 생성",
   "title": "특이점 온 AI\n새 모델 출시 간격은?",
   "highlight": "특이점",
   "timeline": {
@@ -396,7 +396,7 @@
       },
       {
         "name": "GPT-4",
-        "text": "변호사 모의시험 상위 10%",
+        "text": "변호사 모의시험 상위권",
         "image": {
           "type": "image",
           "src": "img/beat-gpt4.jpg",
@@ -409,8 +409,60 @@
         }
       },
       {
+        "name": "Llama 2",
+        "text": "상업용도 무료 공개",
+        "image": {
+          "type": "image",
+          "src": "img/beat-llama2.jpg",
+          "prompt": "A heavy vault door swinging wide open in a modern data center, warm light flooding out onto a crowd of small figures walking in freely, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            1088
+          ]
+        }
+      },
+      {
+        "name": "Claude 2",
+        "text": "책 한 권 통째로 읽기",
+        "image": {
+          "type": "image",
+          "src": "img/beat-claude2.jpg",
+          "prompt": "A thick open book whose pages lift off and stream as glowing ribbons of light into a small floating orb, dark library, warm orange glow, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            1088
+          ]
+        }
+      },
+      {
+        "name": "Grok",
+        "text": "X 실시간 정보로 답변",
+        "image": {
+          "type": "image",
+          "src": "img/beat-grok.jpg",
+          "prompt": "A wall of dozens of small glowing social media feed panels updating live in a dark room, a single figure silhouetted in front, cool grey light, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            1088
+          ]
+        }
+      },
+      {
+        "name": "Gemini 1.0",
+        "text": "시험서 전문가 첫 추월",
+        "image": {
+          "type": "image",
+          "src": "img/beat-gemini10.jpg",
+          "prompt": "A glowing translucent AI figure standing on the top step of a podium above a group of human professors in academic gowns, grand lecture hall, blue light, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            1088
+          ]
+        }
+      },
+      {
         "name": "Gemini 1.5",
-        "text": "1시간 영상을 한 번에 이해",
+        "text": "1시간 영상 통째 이해",
         "image": {
           "type": "image",
           "src": "img/beat-gemini15.jpg",
@@ -437,8 +489,34 @@
         }
       },
       {
+        "name": "Claude 3.5 Sonnet",
+        "text": "결과물을 옆 창에 바로",
+        "image": {
+          "type": "image",
+          "src": "img/beat-claude35.jpg",
+          "prompt": "A laptop on a desk with the screen split in two, the left side a conversation and the right side a colorful interactive game appearing instantly, cozy dark room, orange accent light, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            1088
+          ]
+        }
+      },
+      {
+        "name": "o1-preview",
+        "text": "답하기 전 오래 생각",
+        "image": {
+          "type": "image",
+          "src": "img/beat-o1.jpg",
+          "prompt": "A chess board in a dim room with a glowing transparent robot hand hovering thoughtfully over a piece, many faint branching light paths above the board, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            1088
+          ]
+        }
+      },
+      {
         "name": "DeepSeek-R1",
-        "text": "o1급 추론, 무료 공개",
+        "text": "o1급 추론 무료 공개",
         "image": {
           "type": "image",
           "src": "img/beat-deepseekr1.jpg",
@@ -448,6 +526,32 @@
             1088
           ],
           "ai_generated": true
+        }
+      },
+      {
+        "name": "Grok 3",
+        "text": "학습 연산 10배",
+        "image": {
+          "type": "image",
+          "src": "img/beat-grok3.jpg",
+          "prompt": "An enormous supercomputer hall stretching to the horizon, endless rows of server racks glowing, tiny human figure for scale, cool white light, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            1088
+          ]
+        }
+      },
+      {
+        "name": "Gemini 2.5 Pro",
+        "text": "AI 순위표 1위 데뷔",
+        "image": {
+          "type": "image",
+          "src": "img/beat-gemini25.jpg",
+          "prompt": "A sleek glowing trophy on a pedestal at the top of a tall staircase of light, deep blue space background, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            1088
+          ]
         }
       },
       {
@@ -462,6 +566,58 @@
             1088
           ],
           "ai_generated": true
+        }
+      },
+      {
+        "name": "Claude Sonnet 4.5",
+        "text": "30시간 넘게 집중",
+        "image": {
+          "type": "image",
+          "src": "img/beat-sonnet45.jpg",
+          "prompt": "A robot arm working alone at a glowing workstation through the night, a clock on the wall, city lights through a window turning to dawn, warm orange light, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            1088
+          ]
+        }
+      },
+      {
+        "name": "Gemini 3 Pro",
+        "text": "순위표 1501점 1위",
+        "image": {
+          "type": "image",
+          "src": "img/beat-gemini3.jpg",
+          "prompt": "A giant glowing scoreboard pillar rising above a dark city skyline at night, blue beams of light, no readable characters, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            1088
+          ]
+        }
+      },
+      {
+        "name": "Claude Opus 5",
+        "text": "상위 모델급, 반값",
+        "image": {
+          "type": "image",
+          "src": "img/beat-opus5.jpg",
+          "prompt": "Two nearly identical glowing crystal sculptures side by side on a dark pedestal, one with a small price tag cut in half, warm orange light, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            1088
+          ]
+        }
+      },
+      {
+        "name": "Gemini 4 Carbon",
+        "text": "사이버보안 최상위 성능",
+        "image": {
+          "type": "image",
+          "src": "img/beat-gemini4c.jpg",
+          "prompt": "A glowing blue shield of light deflecting streams of red digital particles in a dark server room, cinematic, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            1088
+          ]
         }
       }
     ],
@@ -513,9 +669,13 @@
     {
       "name": "METR, Time Horizon 1.1 (2026.1.29)",
       "url": "https://metr.org/blog/2026-01-29-time-horizon-1-1/"
+    },
+    {
+      "name": "Meta, Llama 2 발표 (2023.7.18, 연구·상업용 무료)",
+      "url": "https://about.fb.com/news/2023/07/llama-2/"
     }
   ],
-  "caption": "AI 새 모델 출시 간격을 한눈에 보세요. 2020년엔 30개월에 하나, 2026년엔 15일에 하나입니다.\nAI 속도, 무섭다 vs 기대된다? 댓글로 알려 주세요.\n\nGPT-3에서 ChatGPT까지는 902일이 걸렸습니다.\n그 뒤 새 모델 하나 나오는 데 걸린 시간은 2023년 평균 53일, 2024년 43일, 2025년 22일, 2026년(11월 10일까지) 15일.\n계산 기준은 OpenAI·구글·앤트로픽·메타·xAI·딥시크 주요 모델 56개의 공식 발표일이에요.\n\nChatGPT는 대화로 묻고 답하는 AI로, GPT-4는 변호사 모의시험 상위 10% 점수로, Gemini 1.5는 1시간 영상을 한 번에 읽는 능력으로, DeepSeek-R1은 o1급 추론을 무료 공개(MIT 라이선스)해서 화제가 됐어요.\n\n빨라진 건 출시 횟수만이 아닙니다. METR 조사에서 AI가 혼자 끝내는 일의 길이는 7개월마다, 2023년부터는 약 4개월마다 두 배가 됐어요.\n\n출처: 각 회사 공식 발표, METR(2025.3, 2026.1)\n음악: 'Plucked Contemporary Boom' by mindmapthat (ccmixter.org/files/mindmapthat/43975), CC BY 3.0\n\n팔로우하면 매일 AI 소식을 받아 보실 수 있어요.",
+  "caption": "AI 새 모델 출시 간격을 한눈에 보세요. 2020년엔 30개월에 하나, 2026년엔 15일에 하나입니다.\nAI 속도, 무섭다 vs 기대된다? 댓글로 알려 주세요.\n\nGPT-3에서 ChatGPT까지는 902일이 걸렸습니다.\n그 뒤 새 모델 하나 나오는 데 걸린 시간은 2023년 평균 53일, 2024년 43일, 2025년 22일, 2026년(11월 10일까지) 15일.\n계산 기준은 OpenAI·구글·앤트로픽·메타·xAI·딥시크 주요 모델 56개의 공식 발표일이에요.\n\n모델마다 화제가 된 이유도 달랐어요. GPT-4는 변호사 모의시험 상위 10%, Llama 2는 상업용도 무료 공개, Gemini 1.5는 1시간 영상 한 번에 이해, DeepSeek-R1은 o1급 추론을 무료 공개(MIT 라이선스), Claude Sonnet 4.5는 30시간 넘게 한 작업에 집중.\n\n빨라진 건 출시 횟수만이 아닙니다. METR 조사에서 AI가 혼자 끝내는 일의 길이는 7개월마다, 2023년부터는 약 4개월마다 두 배가 됐어요.\n\n출처: 각 회사 공식 발표, METR(2025.3, 2026.1)\n음악: 'Invariance' Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0 License (creativecommons.org/licenses/by/4.0/)\n\n팔로우하면 매일 AI 소식을 받아 보실 수 있어요.",
   "hashtags": [
     "#AI모델",
     "#AI발전",
@@ -529,11 +689,11 @@
   ],
   "music": {
     "src": "music.m4a",
-    "title": "Plucked Contemporary Boom",
-    "artist": "mindmapthat",
-    "url": "https://ccmixter.org/files/mindmapthat/43975",
-    "license": "CC BY 3.0",
-    "credit": "'Plucked Contemporary Boom' by mindmapthat (ccmixter.org/files/mindmapthat/43975), CC BY 3.0"
+    "title": "Invariance",
+    "artist": "Kevin MacLeod",
+    "url": "https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100847",
+    "license": "CC BY 4.0",
+    "credit": "'Invariance' Kevin MacLeod (incompetech.com), Licensed under Creative Commons: By Attribution 4.0 License (creativecommons.org/licenses/by/4.0/)"
   },
   "threads": {
     "text": "AI 새 모델이 2026년엔 15일마다 하나씩 나옵니다.\n\nGPT-3 다음 ChatGPT가 나오기까지는 902일.\n평균 간격은 2023년 53일 → 2024년 43일 → 2025년 22일 → 2026년 15일로 줄었습니다.\nOpenAI, 구글, 앤트로픽, 메타, xAI, 딥시크의 대표 모델 56개 발표일 기준이에요.\n\n속도만 빨라진 게 아니라, AI가 혼자 해내는 일의 길이도 2023년 이후 약 4개월마다 두 배씩 늘고 있습니다(METR).",
