@@ -313,13 +313,13 @@
 | 필드 | 내용 |
 |---|---|
 | `timeline.events` | `[{date: "YYYY-MM-DD", lab, name, url}]` 5개 이상, 날짜 순. `lab`은 줄(OpenAI·Google·Anthropic·Meta·xAI·DeepSeek). `url`은 공식 발표 |
-| `timeline.periods` | 끝 표의 기간 `[["2020~22년", 2020, 2022], ...]` (선택, 없으면 해마다) |
+| `timeline.periods` | 끝 막대의 기간 `[["2020~22년", 2020, 2022], ...]` (선택, 없으면 해마다) |
 | `timeline.unit_note` | 연표 아래 작은 출처 줄 (예: "주요 AI 모델 55개 · 각 회사 공식 발표") |
-| `timeline.metr` | 선택: 추세선 `{label, long, recent, recent_from, long_months, recent_months, source}`. 쓰면 sources에 METR 원문 |
+| `timeline.cta_line` | 선택: 제목 아래 0초 한 줄 (양자택일 질문·팔로우 한 줄, '댓글로'는 초록). 끝 화면은 post `end_cta` |
 | `timeline.thumb_src` | 렌더링이 그리는 썸네일 바탕 그림 경로 (`thumb.image.src`와 같게, url·prompt 없어도 됨) |
 
-- **checks.py:** 날짜 형식·순서, url, rights own, METR 출처, 길이 20~35초. **렌더링:** 글자 폭·버튼 줄 겹침 검사, 기간별 평균 간격·효과음·소리 크기 출력, `frames/` 미리보기.
-- DM 자료 페이지는 `dm.page.setup.steps`(해마다 한 단계, 모델마다 `groups`의 이름·날짜·공식 발표 링크)로 전체 연표를 싣는다.
+- 회사 로고·색은 `agent/timeline_reel.py` `LAB_INFO` (로고 파일 `assets/logos/`, 출처 README). `timeline.metr`(추세선)는 더 이상 그리지 않는다(경고).
+- **checks.py:** 날짜 형식·순서, url, rights own, 길이 20~35초. **렌더링:** 글자 폭·버튼 줄 겹침 검사, 기간별 평균 간격·효과음·소리 크기 출력, `frames/` 미리보기 (0.3초·1초·3초·재생 중간 둘·끝 막대·끝 화면).
 
 ## 릴스 썸네일 (`thumb`)
 

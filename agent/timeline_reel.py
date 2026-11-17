@@ -1,32 +1,32 @@
 """연표 릴스 (post type "video" + "timeline", 운영자 요청 2026-11-17 "AI 신모델 개발 간격 / 지수적으로 발전한다는 걸 보여주자").
 
-실제 출시일 목록(timeline.events)을 세로 화면(1080x1920) 위 연표에 점으로 찍는다. 점이 점점 빨리 들어오고
-심장 박동 같은 효과음도 따라 빨라지며, 아래 숫자(그해 새 모델 사이 평균 간격)가 '개월 → 주 → 일'로 줄어든다.
-끝에는 점이 누적 곡선으로 모이고, (선택) METR '혼자 끝내는 일의 길이' 추세선이 화면 위로 뚫고 나간다.
-화면은 계속 움직인다(정지 화면 없음). 길이는 본편 약 25초 + '자료' 끝 화면 2.5초.
+한 가지 생각만 보여 준다: 새 모델이 점점 빨리 나온다 (운영자 2026-11-17 다시 디자인: 심전도 선·누적 곡선·추세선 빼고 단순하게).
+실제 출시일 목록(timeline.events)을 세로 화면(1080x1920) 위 회사별 줄에 회사 색 점으로 찍는다. 줄 앞에는 회사 로고
+(assets/logos, 작게, 지명적 사용) + 회사 색 이름, 로고가 없는 회사는 회사 색 점. 점이 점점 빨리 들어오고(점마다 작은 틱),
+아래 큰 숫자(그해 새 모델 사이 평균 간격)가 '개월 → 주 → 일'로 줄어든다. 끝은 기간별 평균 간격 막대(같은 눈금).
+제목 두 줄과 0초 한 줄(timeline.cta_line, 양자택일 질문·팔로우 한 줄)은 0초부터 끝까지 같은 자리.
 
 장면 (본편 시각):
-    0~2.4초    첫 화면: 다 찍힌 연표 + 제목 두 줄이 쾅 박히고(쿵) 올해 평균 간격 숫자가 박힌다. 올해 점이 차례로 번쩍(박동)
-    2.4~2.9초  되감기: 점이 오른쪽부터 사라지며 처음(2020)으로 (휙). 제목은 작아져 위쪽 자리로
-    2.9~17.9초 재생: 점 하나 = 실제 모델 하나. 영상 속 간격은 실제 간격의 0.6제곱에 비례 (먼 간격은 길게, 촘촘한 간격은 짧게)
-               → 점이 들어오는 속도가 계속 빨라진다. 숫자는 그해 지금까지 들어온 간격의 평균 (정직한 누적 평균)
-    17.9~22.6초 점이 누적 출시 수 곡선으로 모인 뒤, METR 추세선(2배 되는 기간 timeline.metr)이 화면 위로 뚫고 나감
-    22.6~25.1초 기간별 평균 간격 표 (timeline.periods), 마지막 줄이 쾅
-    끝         dm.cta 끝 화면 2.5초 (video.append_cta_card), 3초부터 '자료' 안내 띠 (banner.apply_banner)
+    0~2.4초    첫 화면: 다 찍힌 연표 + 제목 두 줄이 쾅 + 올해 평균 간격 숫자. 올해 점이 차례로 번쩍
+    2.4~2.9초  되감기: 점이 오른쪽부터 사라지며 처음(2020)으로 (휙)
+    2.9~17.9초 재생: 점 하나 = 실제 모델 하나. 영상 속 간격은 실제 간격의 0.6제곱에 비례 → 점이 들어오는 속도가 계속 빨라진다.
+               숫자는 그해 지금까지 들어온 간격의 평균 (정직한 누적 평균)
+    17.9~21.9초 기간별 평균 간격 막대 (timeline.periods), 마지막 줄이 쾅
+    끝         끝 화면 2.5초 (dm.cta 또는 post.end_cta, video.append_cta_card)
 
-글자 자리: 모두 안전 영역(config.json reel_safe) 안. 오른쪽 아래 버튼 줄(x 850~, y 1150~)에는 큰 숫자를 두지 않는다.
-디자인: 검정 배경 + #00FF66 점·선·큰 숫자, 제목·숫자 Black Han Sans, 설명 Wanted Sans. 그라데이션·둥근 카드·이모지 없음.
-소리: 코드로 만든 어두운 패드 + 점마다 심장 박동(쿵) + 쾅·휙·상승음(music_gen.make_hook_sfx) → -14 LUFS (loudness.normalize).
+글자 자리: 모두 안전 영역(config.json reel_safe) 안. 오른쪽 아래 버튼 줄(x 850~, y 1150~)에는 큰 숫자를 두지 않는다. 아래 빈칸은 비운다.
+디자인: 검정 배경 + #00FF66 재생선·큰 숫자, 점·회사 이름은 회사 색. 제목·숫자 Black Han Sans, 설명 Wanted Sans.
+소리: 실제 음원 조각(post music.src, agent/music_fit.py) 또는 대체 패드 + 쾅·휙·점마다 틱(music_gen.make_hook_sfx) → -14 LUFS.
 
 post.json:
   "timeline": {
     "events": [{"date": "2023-03-14", "lab": "OpenAI", "name": "GPT-4", "url": "공식 발표 주소"}, ...],   # 5개 이상, 날짜 순
-    "periods": [["2020~22년", 2020, 2022], ["2023년", 2023, 2023], ...],   # 끝 표 (선택, 없으면 해마다)
-    "unit_note": "주요 AI 모델 55개 · 각 회사 공식 발표",                  # 연표 아래 작은 출처 줄
-    "metr": {"label", "long", "recent", "recent_from", "long_months", "recent_months", "source"},   # 선택
+    "periods": [["2020~22년", 2020, 2022], ["2023년", 2023, 2023], ...],   # 끝 막대 (선택, 없으면 해마다)
+    "unit_note": "주요 AI 모델 56개 · 각 회사 공식 발표",                  # 연표 아래 작은 출처 줄
+    "cta_line": "AI 속도, 무섭다 vs 기대된다? 댓글로",                       # 0초 한 줄 (선택, '댓글로'는 초록)
     "thumb_src": "img/thumb.jpg"   # 렌더링이 그리는 썸네일 바탕 그림 (thumb.image.src와 같게)
   }
-사용법: render.py가 부른다. 단독 미리보기: py -3.12 agent/timeline_reel.py <게시물 폴더> --plan
+사용법: render.py가 부른다. 단독 확인: py -3.12 agent/timeline_reel.py <게시물 폴더>
 """
 import asyncio
 import base64
@@ -48,12 +48,33 @@ SIDE = _SAFE.get("side", 65)
 HOOK, REWIND = 2.4, 0.5
 TL_START = HOOK + REWIND          # 2.9
 TL_LEN = 15.0
-CURVE_LEN = 4.7
-END_LEN = 2.5
+BARS_LEN = 4.0                    # 끝 막대
 GAP_POWER = 0.6                   # 영상 속 간격 = 실제 간격^0.6 (비례 상수는 TL_LEN에 맞춤)
 MIN_STEP = 0.07                   # 같은 날 나온 모델도 0.07초는 띄운다
 LENGTH_RANGE = (20.0, 35.0)       # 끝 화면 포함
 LABS = ["OpenAI", "Google", "Anthropic", "Meta", "xAI", "DeepSeek"]
+# 회사 색·로고 (assets/logos, Simple Icons CC0. 로고 파일이 없는 회사는 회사 색 점 + 회사 색 이름)
+LAB_INFO = {
+    "OpenAI": {"color": "#FFFFFF", "logo": "openai.svg"},
+    "Google": {"color": "#4285F4", "logo": "google.svg"},
+    "Anthropic": {"color": "#D97757", "logo": "anthropic.svg"},
+    "Meta": {"color": "#0A7CFF", "logo": "meta.svg"},
+    "xAI": {"color": "#B9B9B9"},
+    "DeepSeek": {"color": "#6F86FF"},
+}
+
+
+def lab_info():
+    """JS로 넘길 회사 정보: {회사: {color, short, logo(data URL, 회사 색으로 칠한 SVG)}}."""
+    out = {}
+    for lab, v in LAB_INFO.items():
+        d = {"color": v["color"], "short": lab}
+        f = ROOT / "assets" / "logos" / v.get("logo", "-")
+        if v.get("logo") and f.exists():
+            svg = f.read_text(encoding="utf-8").replace("<svg ", f'<svg fill="{v["color"]}" ', 1)
+            d["logo"] = "data:image/svg+xml;base64," + base64.b64encode(svg.encode("utf-8")).decode()
+        out[lab] = d
+    return out
 
 
 def fmt_gap(days):
@@ -119,53 +140,31 @@ def plan(post):
         counters.append({"label": f"{p[0]} 평균 간격", "value": fmt_gap(sum(r) / len(r)), "days": sum(r) / len(r)})
     years = list(range(ds[0].year, ds[-1].year + 1))
     stats = gap_stats(post)
-    m = tl.get("metr")
     tl_end = TL_START + TL_LEN
-    curve_end = tl_end + CURVE_LEN
+    bars_t = [tl_end + 0.5 + 0.45 * i for i in range(len(stats))]
     hook_pulse = [i for i, d in enumerate(ds) if d.year == ds[-1].year]
     return {
         "ev": [{"name": e["name"], "lab": e["lab"], "date": e["date"].replace("-", "."),
                 "u": (d - x0d).days / span, "row": LABS.index(e["lab"]) if e["lab"] in LABS else len(LABS) - 1,
                 "t": t, "days": (d - x0d).days} for e, d, t in zip(ev, ds, times)],
-        "counters": counters, "labs": LABS, "years": years, "x0year": ds[0].year, "span": span,
-        "hook": HOOK, "rewind": REWIND, "tl_start": TL_START, "tl_end": tl_end, "curve_end": curve_end,
-        "end": curve_end + END_LEN, "hook_pulse": hook_pulse,
+        "counters": counters, "labs": LABS, "lab_info": lab_info(), "years": years, "x0year": ds[0].year, "span": span,
+        "hook": HOOK, "rewind": REWIND, "tl_start": TL_START, "tl_end": tl_end,
+        "end": tl_end + BARS_LEN, "hook_pulse": hook_pulse,
         "title": str(post["title"]).split("\n"), "hl": post.get("highlight") or "",
-        "note": tl.get("unit_note", ""),
-        "rows": [{"name": n, "value": fmt_gap(a)} for n, a, _ in stats],
-        "metr": m, "last_year": ds[-1].year, "last_days": (ds[-1] - x0d).days,
+        "note": tl.get("unit_note", ""), "cta": (tl.get("cta_line") or "").strip(),
+        "rows": [{"name": n, "value": fmt_gap(a), "days": a} for n, a, _ in stats], "bars_t": bars_t,
+        "last_year": ds[-1].year,
         "safe": {"top": SAFE_TOP, "bottom": SAFE_BOTTOM, "side": SIDE},
     }
 
 
 def sfx_times(p):
-    """효과음 시각 (화면이 바뀌는 프레임 시각)."""
-    pulses = []
+    """효과음 시각 (화면이 바뀌는 프레임 시각, JS와 같은 식)."""
     n = len(p["hook_pulse"])
-    for j in range(n):
-        pulses.append(0.75 + j * (HOOK - 0.95) / max(1, n - 1))
-    marks = [e["t"] for e in p["ev"]]
-    cur = p["tl_end"]
-    morph = cur + 0.0
-    metr_on = cur + 1.45
-    pen0, pen1 = cur + 1.75, cur + 4.45
-    switch = None
-    if p["metr"]:
-        frac = _metr_switch_frac(p)
-        switch = pen0 + (pen1 - pen0) * frac
-    rows = [p["curve_end"] + 0.15 + 0.22 * i for i in range(len(p["rows"]))]
-    return {"impacts": [0.0, 0.3, 0.62], "pulses": pulses, "marks": marks, "whoosh_end": [TL_START],
-            "morph": morph, "metr_on": metr_on, "pen": (pen0, pen1), "switch": switch,
-            "exit": pen1, "rows": rows}
-
-
-def _metr_switch_frac(p):
-    """METR 추세선에서 '최근' 구간이 시작하는 x 비율 (펜 진행 비율로 씀, JS penX와 같은 식)."""
-    m = p["metr"]
-    y0 = p["x0year"] - 1
-    a = (dt.date(int(m.get("recent_from", 2023)), 1, 1) - dt.date(y0, 1, 1)).days
-    b = (dt.date(p["last_year"], 11, 15) - dt.date(y0, 1, 1)).days
-    return (a / b) ** 0.5  # JS 펜 진행: x = u^2 (끝으로 갈수록 빨라짐) → u = sqrt(x)
+    pulses = [0.75 + j * (HOOK - 0.95) / max(1, n - 1) for j in range(n)]
+    return {"impacts": [0.0, 0.3, 0.62], "pulses": pulses, "marks": [e["t"] for e in p["ev"]],
+            "whoosh_end": [TL_START, p["tl_end"] + 0.3], "rows": p["bars_t"],
+            "riser": (p["ev"][len(p["ev"]) * 2 // 3]["t"], p["tl_end"])}
 
 
 def page_html(post, p, cfg):
@@ -190,6 +189,7 @@ async def _shoot(html_file, times, out_dir, thumb_png=None):
         browser = await pw.chromium.launch(executable_path=exe) if exe else await pw.chromium.launch()
         pg = await browser.new_page(viewport={"width": W, "height": H})
         await pg.goto(html_file.as_uri())
+        await pg.evaluate("twReady()")
         await pg.evaluate("""async () => { await document.fonts.load('96px "Black Han Sans"', '가A1');
             await document.fonts.load('700 30px Wanted', '가A1'); await document.fonts.load('600 30px Wanted', '가A1');
             await document.fonts.ready; }""")
@@ -205,21 +205,6 @@ async def _shoot(html_file, times, out_dir, thumb_png=None):
 
 
 # ---------- 소리 ----------
-
-def _heartbeat(n_sr, strong=True, rng=None):
-    """심장 박동 한 번: 160→60Hz로 떨어지는 짧은 쿵 + 작은 클릭 (폰 스피커에서도 들리게 중저음)."""
-    import numpy as np
-    from music_gen import SR, env, lowpass
-    n = int(0.16 * SR)
-    t = np.arange(n) / SR
-    f = 60 + 100 * np.exp(-t * 30)
-    x = np.sin(2 * np.pi * np.cumsum(f) / SR) * env(n, 0.002, 0.05)
-    x += 0.35 * np.sin(2 * np.pi * np.cumsum(f * 2) / SR) * env(n, 0.001, 0.02)
-    if rng is not None:
-        c = rng.standard_normal(n) * env(n, 0.0005, 0.006) * 0.25
-        x += c - lowpass(c, 4)
-    return x * (1.0 if strong else 0.6)
-
 
 def make_pad(out_wav, total, rise=None):
     """어두운 패드(Am → F → C → E, 마디 길이 2.4초) + 낮은 지속음. rise=(시작, 끝)이면 그 구간 동안 패드가 밝아진다."""
@@ -264,33 +249,29 @@ def make_pad(out_wav, total, rise=None):
 
 
 def make_sfx(p, total):
+    """쾅(제목·마지막 막대), 휙(되감기·막대로 바뀜), 점마다 부드러운 톡(500→1000Hz로 조금씩 올라감, 날카로운 고음 없음),
+    재생 끝 무렵 상승음. 심장 박동은 뺐다 (2026-11-17)."""
     import numpy as np
-    from music_gen import SR, make_hook_sfx
+    from music_gen import SR, env, make_hook_sfx
     s = sfx_times(p)
-    hits = [s["morph"], s["metr_on"]] + s["rows"][:-1] + ([s["switch"]] if s["switch"] else [])
-    base, info = make_hook_sfx(total, impacts=s["impacts"] + [s["exit"], s["rows"][-1]] if s["rows"] else s["impacts"],
-                               hits=hits, whooshes=s["whoosh_end"] + [s["morph"] + 0.6],
-                               riser_to=s["exit"], riser_len=min(2.4, s["exit"] - s["pen"][0]), drop=None)
-    rng = np.random.default_rng(5)
-    n = int(round(total * SR))
-    heart = np.zeros(n)
-
-    def add(sig, t0, g=1.0):
+    r0, r1 = s["riser"]
+    rows = s["rows"]
+    base, info = make_hook_sfx(total, impacts=s["impacts"] + rows[-1:], hits=rows[:-1], whooshes=s["whoosh_end"],
+                               riser_to=r1, riser_len=max(0.5, min(3.0, r1 - r0)), drop=None)
+    n = len(base)
+    tok = np.zeros(n)
+    beats = s["pulses"] + s["marks"]
+    for k, t0 in enumerate(beats):
+        m = int(0.07 * SR)
+        f = 500 + 500 * k / max(1, len(beats) - 1)
+        x = np.sin(2 * np.pi * f * np.arange(m) / SR) * env(m, 0.002, 0.025)
         i = int(round(t0 * SR))
         if 0 <= i < n:
-            m = min(len(sig), n - i)
-            heart[i:i + m] += sig[:m] * g
-    beats = s["pulses"] + s["marks"]
-    for j, t0 in enumerate(beats):
-        nxt = beats[j + 1] if j + 1 < len(beats) else t0 + 1
-        add(_heartbeat(SR, True, rng), t0)
-        if nxt - t0 > 0.42:      # 간격이 넉넉하면 '쿵-쿵' (두 번째는 약하게)
-            add(_heartbeat(SR, False, rng), t0 + 0.17, 0.7)
-    heart = heart / (np.max(np.abs(heart)) or 1)
-    mix = base * 0.85 + np.stack([heart, heart], axis=1) * 0.9
-    mix = mix / (np.max(np.abs(mix)) or 1)
-    info["onsets"]["heartbeats"] = len(beats)
-    return mix, info
+            tok[i:i + m] += x[:n - i]
+    tok = tok / (np.max(np.abs(tok)) or 1) * 0.45
+    mix = base + np.stack([tok, tok], axis=1)
+    info["onsets"]["toks"] = len(beats)
+    return mix / (np.max(np.abs(mix)) or 1), info
 
 
 # ---------- 렌더링 ----------
@@ -322,7 +303,7 @@ def make_timeline_reel(post, folder, cfg):
     subprocess.run(["ffmpeg", "-nostdin", "-y", "-loglevel", "error", "-framerate", str(FPS), "-i", str(work / "f%05d.jpg"),
                     "-vf", f"scale={W}:{H},setsar=1,format=yuv420p", "-c:v", "libx264", "-preset", "veryfast", "-crf", "18",
                     "-r", str(FPS), str(silent)], check=True)
-    # 소리: 패드 + 효과음(심장 박동·쾅·휙·상승음) → listreel.mix_audio (효과음은 음악보다 3dB 크게)
+    # 소리: 음원 + 효과음(쾅·휙·틱·상승음) → listreel.mix_audio (효과음은 음악보다 3dB 크게)
     from listreel import mix_audio
     pm = post.get("music") or {}
     if pm.get("src") and (folder / pm["src"]).exists():     # 실제 음원 조각 (agent/music_fit.py, STYLE_GUIDE 0 원칙)
@@ -334,7 +315,7 @@ def make_timeline_reel(post, folder, cfg):
     mixed = work / "mix.wav"
     mix_audio(music, [], main, mixed, sfx)
     on = info["onsets"]
-    print(f"효과음: 심장 박동 {on['heartbeats']}번, 쾅 {', '.join(f'{x:.2f}' for x in on['impact'])}, "
+    print(f"효과음: 톡 {on['toks']}번, 쾅 {', '.join(f'{x:.2f}' for x in on['impact'])}, "
           f"휙 {', '.join(f'{x:.2f}' for x in on['whoosh_end'])}")
     out = folder / "reel.mp4"
     subprocess.run(["ffmpeg", "-nostdin", "-y", "-loglevel", "error", "-i", str(silent), "-i", str(mixed),
@@ -368,9 +349,9 @@ def make_timeline_reel(post, folder, cfg):
 
 
 def preview_times(p, total):
-    """미리보기: 0.3초, 1초, 재생 중간 두 곳, 곡선, 끝 표, 끝 화면."""
+    """미리보기: 0.3초, 1초, 3초, 재생 중간 두 곳, 끝 막대, 끝 화면."""
     a, b = p["tl_start"], p["tl_end"]
-    ts = [0.3, 1.0, a + (b - a) * 0.35, a + (b - a) * 0.8, p["tl_end"] + 3.9, p["end"] - 0.3]
+    ts = [0.3, 1.0, 3.0, a + (b - a) * 0.45, a + (b - a) * 0.85, p["end"] - 0.3]
     if total > p["end"] + 0.5:
         ts.append(total - 1.0)
     return ts
@@ -381,7 +362,7 @@ def check_timeline(post):
     errors, warnings = [], []
     tl = post.get("timeline")
     if not isinstance(tl, dict):
-        return ["timeline은 {events: [{date, lab, name, url}], periods, metr, thumb_src} 객체 (TEMPLATES.md '연표 릴스')"], warnings
+        return ["timeline은 {events: [{date, lab, name, url}], periods, unit_note, cta_line, thumb_src} 객체 (TEMPLATES.md '연표 릴스')"], warnings
     ev = tl.get("events") or []
     if len(ev) < 5:
         errors.append(f"timeline.events는 5개 이상: 지금 {len(ev)}개")
@@ -403,18 +384,13 @@ def check_timeline(post):
             warnings.append(f"timeline.events {i}: lab '{e.get('lab')}'은 줄 목록 {LABS} 밖 → 마지막 줄에 그린다")
     if post.get("rights") != "own":
         errors.append("연표 릴스는 직접 그린 그래프: rights는 own")
-    m = tl.get("metr")
-    if m:
-        for k in ("label", "long", "recent", "source"):
-            if not str(m.get(k, "")).strip():
-                errors.append(f"timeline.metr.{k} 필요")
-        if not any("metr" in str(s.get("url", "")).lower() for s in post.get("sources", [])):
-            errors.append("timeline.metr를 쓰면 sources에 METR 원문 주소")
+    if tl.get("metr"):
+        warnings.append("timeline.metr는 더 이상 화면에 그리지 않는다 (한 가지 생각만, 2026-11-17). 근거는 캡션에")
     ts = tl.get("thumb_src")
     if ts and (post.get("thumb") or {}).get("image", {}).get("src") != ts:
         warnings.append("timeline.thumb_src와 thumb.image.src가 다름 (렌더링이 그린 그림을 썸네일로 쓰려면 같게)")
     if not errors and ev:
-        total = TL_START + TL_LEN + CURVE_LEN + END_LEN + (2.5 if ((post.get("dm") or {}).get("cta") or post.get("end_cta")) else 0)
+        total = TL_START + TL_LEN + BARS_LEN + (2.5 if ((post.get("dm") or {}).get("cta") or post.get("end_cta")) else 0)
         if not LENGTH_RANGE[0] <= total <= LENGTH_RANGE[1]:
             errors.append(f"연표 릴스 길이 {total:.1f}초 ({LENGTH_RANGE[0]:g}~{LENGTH_RANGE[1]:g}초)")
     return errors, warnings
@@ -426,4 +402,4 @@ if __name__ == "__main__":
     p = plan(post)
     for n, a, c in gap_stats(post):
         print(f"{n}: 평균 {a:.1f}일 ({fmt_gap(a)}), 간격 {c}개")
-    print("효과음 시각:", json.dumps(sfx_times(p), default=float)[:400])
+    print("본편", round(p["end"], 2), "초, 효과음 시각:", json.dumps(sfx_times(p), default=float)[:300])
