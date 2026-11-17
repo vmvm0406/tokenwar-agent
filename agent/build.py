@@ -4,10 +4,15 @@ GitHub Actions(render.yml)가 posts/queue에 바뀐 것이 올라올 때마다 �
 .render_hash는 post.json과 거기서 쓰는 파일(src, 표지 영상 motion.src 포함)의 지문이다. 지문이 같으면 다시 만들지 않는다.
 publish.py는 지문이 맞는 게시물만 올린다. (렌더링 전이나 고친 뒤 다시 만들기 전에는 안 올라감)
 
+AI 그림 하루 상한(agent/image_quota.py)에 닿으면 gen_images.py가 종료 코드 3으로 멈춘다.
+그 게시물은 렌더링하지 않고 '내일 이어서'로 남긴다 (실패로 치지 않음, 다른 게시물은 계속).
+render.yml이 매일 UTC 0시 뒤 다시 돌아 빠진 그림만 만든다.
+
 사용법: python agent/build.py [게시물 폴더 ...]   (폴더를 안 주면 posts/queue 전체)
 """
 import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
@@ -16,6 +21,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 QUEUE = ROOT / "posts" / "queue"
 AGENT = Path(__file__).resolve().parent
+LIMIT_EXIT = 3          # gen_images.py: 하루 그림 상한으로 멈춤
+WAIT = "limit"          # build() 결과: 상한 때문에 내일 이어서
 
 
 def _srcs(node):
@@ -65,6 +72,8 @@ def build(folder):
     from gen_images import missing
     if missing(folder):
         r = subprocess.run([sys.executable, str(AGENT / "gen_images.py"), str(folder)])
+        if r.returncode == LIMIT_EXIT:
+            return WAIT
         if r.returncode:
             return False
     mark = folder / ".render_hash"
@@ -84,11 +93,20 @@ def build(folder):
 
 def main(args):
     folders = [Path(a) for a in args] or sorted(p for p in QUEUE.iterdir() if (p / "post.json").exists())
-    bad = []
+    bad, wait = [], []
     for f in folders:
         print(f"== {f.name}")
-        if not build(f):
+        r = build(f)
+        if r == WAIT:
+            wait.append(f.name)
+        elif not r:
             bad.append(f.name)
+    if wait:
+        msg = (f"AI 그림 하루 상한에 닿아 렌더링을 미룬 게시물 {len(wait)}개: {', '.join(wait)}. "
+               f"UTC 0시(한국 오전 9시) 뒤 render.yml이 빠진 그림만 이어서 만듭니다.")
+        print(msg)
+        if os.environ.get("GITHUB_ACTIONS"):
+            print(f"::warning title=AI 그림 하루 상한::{msg}")
     if bad:
         print("실패:", ", ".join(bad))
         sys.exit(1)

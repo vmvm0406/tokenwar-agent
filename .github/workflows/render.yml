@@ -2,10 +2,15 @@ name: 그림 만들기·렌더링
 
 # posts/queue에 게시물이 올라오거나 고쳐지면 (main이든 검토용 브랜치든)
 # AI 그림을 만들고(Cloudflare), 카드·릴스를 렌더링해서 같은 브랜치에 커밋한다.
+# AI 그림은 하루 상한이 있다 (config.json image_gen.daily_limit, agent/image_quota.py, UTC 날짜 기준).
+# 그림 수 기록(data/image_gen_count.json)은 어느 브랜치에서 돌든 main 하나에만 쌓는다.
+# 상한으로 멈춘 게시물은 매일 UTC 0시 뒤 정기 실행이 main과 열린 검토 PR(post/*) 브랜치에서 이어서 만든다.
 on:
   push:
     paths: ["posts/queue/**"]
   workflow_dispatch:
+  schedule:
+    - cron: "7 0 * * *"   # UTC 0:07 = 한국 9:07, Cloudflare 하루 한도가 바뀐 직후
 
 concurrency:
   group: render-${{ github.ref }}
@@ -13,6 +18,8 @@ concurrency:
 
 permissions:
   contents: write
+  actions: write          # 정기 실행이 검토 PR 브랜치의 렌더링을 다시 부를 때
+  pull-requests: read
 
 jobs:
   render:
@@ -32,13 +39,25 @@ jobs:
           # 러너에 깔린 google-chrome을 쓴다. 없을 때만 Playwright 브라우저를 받는다.
           which google-chrome || python -m playwright install --with-deps chromium
 
+      - name: 그림 수 불러오기 (main 기준)
+        run: |
+          # 작업 폴더가 아니라 임시 파일에 쓴다 → 결과 커밋(git pull --rebase)과 섞이지 않는다
+          git fetch -q --depth=1 origin +refs/heads/main:refs/remotes/origin/main
+          git show origin/main:data/image_gen_count.json > "$RUNNER_TEMP/image_gen_count.json" 2>/dev/null \
+            || echo '{}' > "$RUNNER_TEMP/image_gen_count.json"
+          cp "$RUNNER_TEMP/image_gen_count.json" "$RUNNER_TEMP/image_gen_base.json"
+          echo "IMAGE_GEN_COUNT_FILE=$RUNNER_TEMP/image_gen_count.json" >> "$GITHUB_ENV"
+          python agent/image_quota.py status
+
       - name: 그림 만들기 + 렌더링
         env:
           CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
         run: python agent/build.py
 
+      # 렌더링이 실패해도 이미 만든 그림(돈 든 것)은 커밋해 둔다. .render_hash가 없으면 게시되지 않는다.
       - name: 결과 커밋
+        if: ${{ !cancelled() }}
         run: |
           git config user.name "tokenwar-bot"
           git config user.email "tokenwar-bot@users.noreply.github.com"
@@ -50,3 +69,47 @@ jobs:
             git pull --rebase
             git push
           fi
+
+      - name: 그림 수 기록 (main)
+        if: ${{ !cancelled() }}
+        run: |
+          if cmp -s "$RUNNER_TEMP/image_gen_base.json" "$RUNNER_TEMP/image_gen_count.json"; then
+            echo "이번 실행에서 만든 AI 그림 없음"; exit 0
+          fi
+          git config user.name "tokenwar-bot"
+          git config user.email "tokenwar-bot@users.noreply.github.com"
+          wt="$RUNNER_TEMP/main-count"
+          # main 최신 값 + 이번 실행에서 만든 장 수 (다른 실행과 겹쳐도 숫자를 덮어쓰지 않고 더한다)
+          for i in 1 2 3 4 5; do
+            git fetch -q --depth=1 origin +refs/heads/main:refs/remotes/origin/main
+            git worktree remove --force "$wt" 2>/dev/null || rm -rf "$wt"
+            git worktree add -q --detach "$wt" origin/main
+            python agent/image_quota.py merge --base "$RUNNER_TEMP/image_gen_base.json" \
+              --local "$RUNNER_TEMP/image_gen_count.json" \
+              --remote "$wt/data/image_gen_count.json" --out "$wt/data/image_gen_count.json"
+            git -C "$wt" add data/image_gen_count.json
+            if git -C "$wt" diff --cached --quiet; then echo "바뀐 것 없음"; break; fi
+            git -C "$wt" commit -q -m "AI 그림 수 기록"
+            if git -C "$wt" push -q origin HEAD:main; then echo "기록 완료"; break; fi
+            echo "main이 그새 바뀜, 다시 ($i)"; sleep $((i * 5))
+            [ "$i" = 5 ] && { echo "::warning::그림 수 기록을 main에 올리지 못함"; exit 1; }
+          done
+
+      - name: 상한으로 멈춘 검토 PR 이어서 (정기 실행만)
+        if: ${{ github.event_name == 'schedule' && !cancelled() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # 열린 검토 PR(post/*) 중 그림이 빠진 게시물이 있는 브랜치만 다시 렌더링한다
+          for b in $(gh pr list --state open --limit 100 --json headRefName --jq '.[].headRefName | select(startswith("post/"))'); do
+            wt="$RUNNER_TEMP/chk"
+            git worktree remove --force "$wt" 2>/dev/null || rm -rf "$wt"
+            git fetch -q --depth=1 origin "+refs/heads/$b:refs/remotes/origin/$b" || continue
+            git worktree add -q --detach "$wt" "origin/$b"
+            [ -d "$wt/posts/queue" ] || continue
+            left=$(python agent/gen_images.py --missing "$wt/posts/queue")
+            if [ -n "$left" ]; then
+              echo "$b: 그림 빠진 게시물 $(echo $left)"
+              gh workflow run render.yml --ref "$b"
+            fi
+          done

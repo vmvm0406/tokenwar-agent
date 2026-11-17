@@ -21,9 +21,14 @@ post.json 어디에든(본문 visual, 릴스 thumb.image) 이렇게 적힌 그�
 AI 그림을 하나라도 실제로 쓰면 post.json에 "ai_image": true를 적는다 → 게시할 때 인스타 'AI 정보' 표시.
 실물 이미지를 내려받으면 원본 주소를 그림 정보의 "downloaded_from"에 남긴다.
 
-AI 모델: Cloudflare Workers AI, FLUX.2 [klein] 4B (가로·세로 크기 지정 가능, 하루 무료 한도 안에서 수십 장)
-환경 변수: CF_ACCOUNT_ID, CF_API_TOKEN (GitHub Secrets)
+AI 모델: Cloudflare Workers AI, FLUX.2 [klein] 4B (가로·세로 크기 지정 가능). Workers Paid 요금제라 많이 만들면 돈이 나간다.
+하루 상한 (agent/image_quota.py, config.json "image_gen.daily_limit"): 그림을 받을 때마다 UTC 날짜별로 센다.
+  상한에 닿으면 그 게시물은 만든 데까지 저장하고(post.json 표시 포함) 멈춘다 → 종료 코드 3 (LIMIT_EXIT).
+  build.py는 그 게시물 렌더링만 건너뛰고 다른 게시물은 계속한다. 이미 만든 그림은 파일로 남아
+  다음 실행(render.yml 매일 UTC 0시 뒤)에서 빠진 것만 만든다.
+환경 변수: CF_ACCOUNT_ID, CF_API_TOKEN (GitHub Secrets), IMAGE_GEN_COUNT_FILE (선택, 그림 수 기록 파일)
 사용법: python agent/gen_images.py <게시물 폴더> [...]
+        python agent/gen_images.py --missing <posts/queue 폴더>   그림이 빠진 게시물 폴더 이름만 출력
 """
 import base64
 import io
@@ -37,6 +42,11 @@ import requests
 
 sys.path.insert(0, str(Path(__file__).parent))
 from PIL import Image
+
+import image_quota
+from image_quota import DailyLimitReached
+
+LIMIT_EXIT = 3   # 하루 상한으로 멈춤 (build.py가 실패가 아니라 '내일 이어서'로 본다)
 
 MODEL = "@cf/black-forest-labs/flux-2-klein-4b"
 ROOT = Path(__file__).resolve().parent.parent
@@ -95,6 +105,14 @@ def generate(prompt, w, h, seed=None, ref=None):
         raise RuntimeError(f"Cloudflare 오류 {r.status_code}: {r.text[:300]}")
 
 
+def ai_generate(prompt, w, h, seed=None, ref=None):
+    """상한 확인 → Cloudflare 호출 → 성공해 그림을 받으면 한 장 센다."""
+    image_quota.check()
+    raw = generate(prompt, w, h, seed, ref)
+    image_quota.add(1)
+    return raw
+
+
 def download(url):
     r = requests.get(url, headers={"User-Agent": UA, "Accept": "image/*"}, timeout=60)
     r.raise_for_status()
@@ -126,64 +144,67 @@ def process(folder):
     # 다른 그림의 참고 이미지(ref)로 쓰이는 그림을 먼저 만든다 (마스코트 장면 기준 그림)
     refs = {v.get("ref") for v, _ in imgs if v.get("ref")}
     imgs.sort(key=lambda x: 0 if x[0]["src"] in refs else 1)
-    for v, is_thumb in imgs:
-        out = folder / v["src"]
-        if out.exists():
-            continue
-        if v.get("mascot"):
-            ref_path = folder / v["ref"] if v.get("ref") else MASCOT_BASE
-            if not ref_path.exists():
-                raise RuntimeError(f"마스코트 참고 이미지 없음: {ref_path}")
-            if not v.get("prompt"):   # 기준 이미지 그대로 (목록형 릴스 '원본' 줄)
-                out.parent.mkdir(parents=True, exist_ok=True)
-                Image.open(ref_path).convert("RGB").save(out, "JPEG", quality=92)
-                print(f"  마스코트 기준 이미지 복사: {v['src']} ← {ref_path.name}")
+    try:
+        for v, is_thumb in imgs:
+            out = folder / v["src"]
+            if out.exists():
                 continue
-            w, h = v.get("size") or ((1088, 1920) if is_thumb else (1088, 1360))
-            print(f"  마스코트 그림 만들기: {v['src']} ({w}x{h}, 참고 {ref_path.name})")
-            save_jpeg(generate(MASCOT_KEEP + v["prompt"], w, h, v.get("seed", MASCOT_SEED), ref_png(ref_path)), out)
-            v["ai_generated"] = True
-            changed += 1
-            made += 1
-            continue
-        if v.get("url"):
-            try:
-                save_jpeg(download(v["url"]), out)
-                v["downloaded_from"] = v["url"]
+            if v.get("mascot"):
+                ref_path = folder / v["ref"] if v.get("ref") else MASCOT_BASE
+                if not ref_path.exists():
+                    raise RuntimeError(f"마스코트 참고 이미지 없음: {ref_path}")
+                if not v.get("prompt"):   # 기준 이미지 그대로 (목록형 릴스 '원본' 줄)
+                    out.parent.mkdir(parents=True, exist_ok=True)
+                    Image.open(ref_path).convert("RGB").save(out, "JPEG", quality=92)
+                    print(f"  마스코트 기준 이미지 복사: {v['src']} ← {ref_path.name}")
+                    continue
+                w, h = v.get("size") or ((1088, 1920) if is_thumb else (1088, 1360))
+                print(f"  마스코트 그림 만들기: {v['src']} ({w}x{h}, 참고 {ref_path.name})")
+                save_jpeg(ai_generate(MASCOT_KEEP + v["prompt"], w, h, v.get("seed", MASCOT_SEED), ref_png(ref_path)), out)
+                v["ai_generated"] = True
                 changed += 1
-                print(f"  실물 이미지: {v['src']} ← {v['url']}")
+                made += 1
                 continue
-            except Exception as e:
-                print(f"  내려받기 실패 ({e}): {v['url']}")
-                if not v.get("prompt"):
-                    raise
-        if v.get("shot"):
-            try:
-                from shot import capture
-                sh = dict(v["shot"])
-                capture(sh.pop("url"), out, **{k: sh[k] for k in sh if k in
-                        ("selector", "width", "height", "scroll", "wait", "dark")})
-                v["captured_from"] = v["shot"]["url"]
+            if v.get("url"):
+                try:
+                    save_jpeg(download(v["url"]), out)
+                    v["downloaded_from"] = v["url"]
+                    changed += 1
+                    print(f"  실물 이미지: {v['src']} ← {v['url']}")
+                    continue
+                except Exception as e:
+                    print(f"  내려받기 실패 ({e}): {v['url']}")
+                    if not v.get("prompt"):
+                        raise
+            if v.get("shot"):
+                try:
+                    from shot import capture
+                    sh = dict(v["shot"])
+                    capture(sh.pop("url"), out, **{k: sh[k] for k in sh if k in
+                            ("selector", "width", "height", "scroll", "wait", "dark")})
+                    v["captured_from"] = v["shot"]["url"]
+                    changed += 1
+                    print(f"  화면 캡처: {v['src']} ← {v['shot']['url']}")
+                    continue
+                except Exception as e:
+                    print(f"  화면 캡처 실패 ({e}): {v['shot'].get('url')}")
+                    if not v.get("prompt"):
+                        raise
+            if v.get("prompt"):
+                w, h = v.get("size") or ((1088, 1920) if is_thumb else (1088, 1360))
+                print(f"  AI 그림 만들기: {v['src']} ({w}x{h})")
+                save_jpeg(ai_generate(v["prompt"], w, h, v.get("seed")), out)
+                v["ai_generated"] = True
                 changed += 1
-                print(f"  화면 캡처: {v['src']} ← {v['shot']['url']}")
-                continue
-            except Exception as e:
-                print(f"  화면 캡처 실패 ({e}): {v['shot'].get('url')}")
-                if not v.get("prompt"):
-                    raise
-        if v.get("prompt"):
-            w, h = v.get("size") or ((1088, 1920) if is_thumb else (1088, 1360))
-            print(f"  AI 그림 만들기: {v['src']} ({w}x{h})")
-            save_jpeg(generate(v["prompt"], w, h, v.get("seed")), out)
-            v["ai_generated"] = True
+                made += 1
+    finally:
+        # 중간에 멈춰도(하루 상한·오류) 이미 만든 그림의 표시(ai_generated 등)는 남긴다
+        uses_ai = any(v.get("ai_generated") for v, _ in find_images(post))
+        if uses_ai and not post.get("ai_image"):
+            post["ai_image"] = True
             changed += 1
-            made += 1
-    uses_ai = any(v.get("ai_generated") for v, _ in find_images(post))
-    if uses_ai and not post.get("ai_image"):
-        post["ai_image"] = True
-        changed += 1
-    if changed:
-        pj.write_text(json.dumps(post, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        if changed:
+            pj.write_text(json.dumps(post, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return made
 
 
@@ -194,9 +215,26 @@ def missing(folder):
                for v, _ in find_images(post))
 
 
-if __name__ == "__main__":
+def main(args):
+    if args[:1] == ["--missing"]:
+        for q in args[1:]:
+            for f in sorted(Path(q).iterdir()):
+                if (f / "post.json").exists() and missing(f):
+                    print(f.name)
+        return 0
     total = 0
-    for f in sys.argv[1:]:
+    for f in args:
         print(f"[{f}]")
-        total += process(f)
+        try:
+            total += process(f)
+        except DailyLimitReached as e:
+            print(f"  [그림 상한] {e}")
+            print(f"  그림이 다 모일 때까지 이 게시물은 렌더링하지 않습니다: {Path(f).name}")
+            print(f"상한으로 멈춤. 오늘(UTC) 만든 AI 그림 {image_quota.used()}장")
+            return LIMIT_EXIT
     print(f"새로 만든 AI 그림: {total}장")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

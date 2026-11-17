@@ -32,7 +32,7 @@
 - **해시태그 3~5개** (STYLE_GUIDE 7장 "해시태그"): 주제 이름 1~2 + 한국어 분야 1~2 + #토큰전쟁. 분야 태그는 `data/trends.md` "많이 쓰는 해시태그" 표에서 여러 계정이 쓰고 반응 배수가 높은 것을 고른다. 릴스도 같다.
 - **따라 하기·질문 게시물에는 댓글 자동 DM 자료(`dm`)를 같이 만든다** (STYLE_GUIDE 7-1, TEMPLATES "댓글 자동 DM"). DM 문구 3줄, 안내 페이지의 `intro`·`result`(직접 돌려 본 결과)·`extra`(카드에 없는 추가 문장도 돌려 본 것만)를 쓴다. 캡션 끝은 "댓글에 '자료'를 남기면 ... DM으로 보내 드려요. (팔로우한 분께 보내집니다)". 렌더링하면 게시물 폴더에 `dm.md`, `docs/p/<id>/index.html`이 생긴다. 둘 다 같은 브랜치에 커밋하고, PR 본문 끝에 "DM 설정: 게시 후 `dm.md`대로 Zorcha에 자동화를 만들어 주세요"를 적는다. 릴스도 같다. 게시되면 publish.py가 "Zorcha 설정 필요" 이슈와 `data/zorcha_todo.md` 한 줄로 따로 알린다 (STYLE_GUIDE 7-1).
 - `publish_at`: `py -3.12 agent/slots.py next carousel --count <개수>`가 준 시각 (5장 칸 배정). 빠르게 퍼지는 속보면 `--asap`.
-- AI 이미지(`prompt`)와 실물 이미지(`url`)는 여기서 바로 처리해도 되지만, Cloudflare 키가 이 컴퓨터에는 없으므로 `prompt` 그림은 GitHub Actions(`render.yml`)에 맡긴다 (AGENT.md 3장).
+- AI 이미지(`prompt`)와 실물 이미지(`url`)는 여기서 바로 처리해도 되지만, Cloudflare 키가 이 컴퓨터에는 없으므로 `prompt` 그림은 GitHub Actions(`render.yml`)에 맡긴다 (AGENT.md 3장). AI 그림은 하루 상한(`config.json` `image_gen.daily_limit`, 한국 오전 9시 초기화)이 있다. 오늘 쓴 수는 main의 `data/image_gen_count.json`. 상한에 닿은 게시물은 다음 날 이어서 만들어지므로, 오늘 게시할 것에 AI 그림이 많이 필요하면 그림 수를 줄이거나 실물 이미지로 바꾼다. Actions 기록에 "AI 그림 하루 상한" 경고가 뜨면 그 게시물은 아직 렌더링 전이다.
 
 ## 2. 릴스 (오늘 것이 없을 때)
 

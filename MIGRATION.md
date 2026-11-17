@@ -372,7 +372,7 @@ Get-Content (Get-ChildItem $env:USERPROFILE\tokenwar-daily\logs | Sort-Object La
 - **GitHub Secrets** (저장소 Settings › Secrets and variables › Actions). 값은 여기에만 있고 노트북에는 없다:
   - `IG_ACCESS_TOKEN`, `IG_USER_ID` — 인스타 게시·분석
   - `THREADS_ACCESS_TOKEN` — 스레드 게시
-  - `CF_ACCOUNT_ID`, `CF_API_TOKEN` — Cloudflare AI 그림
+  - `CF_ACCOUNT_ID`, `CF_API_TOKEN` — Cloudflare AI 그림 (Cloudflare Workers Paid 요금제(월 5달러), 운영자 결제 2026-11-17. 하루 그림 상한은 config.json `image_gen.daily_limit`)
   - `GH_PAT` — 토큰 연장 작업(refresh-token.yml)이 Secrets를 고칠 때
   - Variables: `IG_API_HOST`
 - **Meta 개발자 앱**(`tokenwar-publisher`)과 페이지·인스타 연결, 권한
