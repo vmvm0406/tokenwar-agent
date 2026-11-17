@@ -1,3 +1,13 @@
+# ▶ 새 대화는 여기부터 (2026-11-18 리셋)
+
+- **상태:** 자동화 전부 꺼짐(config `automation_off`·`publish_paused`·`production_paused` true, GitHub Actions는 토큰 연장·토큰 점검·Pages만 켜짐). 대기열 비움(`experiments/archive-2026-11-18/`). 세션은 '최상위 에이전트' 하나만, 무거운 일은 하위 에이전트.
+- **리뉴얼 방향(운영자 결정 대기):** 레퍼런스 8곳(agentpoly, base.learn, agentmorphy, ashutoshwithclaude, danborgia, ihc60435, platypus._.ai, withjun.b) 분석 = "사람 캐릭터 + AI 캐릭터" 3D 대화 콩트, 얼굴 출연 없음. 메모: side-session-notes/…/renewal-references.md
+  - 제안: ① 3D 직장 콩트(위기 한 줄 → AI 반응 → 팁 하나 → '자료' DM) ② "OO야, 다섯 살처럼 설명해 줘". 출연: 여성 직장인 '나' + 클로드·챗GPT·제미나이(로고 모양·색 본뜸). 슬라임은 뺌.
+  - 운영자에게 물을 것: 이 방향 확정? 아이디 유지하고 표시 이름·소개글만 바꿀지? 주인공 이름?
+- **제작 도구:** three.js 시험 통과(`experiments/threejs-test/`, a292de3). 노트북 GPU로 30초 릴스 ≈50초 렌더. 추천: 캐릭터는 Blender로 한 번 만들어 glTF → three.js로 연기·카메라·자막 자동. 틀 만들기 2~3일. 고칠 점: AI 팔 짧음, 챗GPT 매듭 울퉁불퉁, 머리 초록 테두리, 자막이 후드티와 겹침, 화면 '비공식 팬 캐릭터' 표기 뺄지 미정.
+- **다시 켜는 법:** config 세 플래그 false + `gh workflow enable <id>`(인스타 게시·그림 만들기 등) + 작업 스케줄러는 그대로(스크립트가 automation_off를 봄).
+- **연동 유지:** 인스타·스레드 토큰, Cloudflare Workers Paid(그림 상한 300, 사용 한도 $5), 일레븐랩스(Deok, Starter 월간, 키는 사용자 환경변수), Zorcha(Live 자동화 6개), GitHub Pages.
+
 # 이어서 할 일 (2026-11-15 대화에서 넘어온 것)
 
 > **목표 (운영자 결정 2026-11-16): 2026-12-16까지 인스타 팔로워 1만 명.** 주제·형식·게시 칸·자료 DM 등 모든 판단의 기준이다. 진행은 data/trends.md 맨 위 '목표 진행'(data/followers.csv, 매일 코드 계산), 게시물별 팔로우 기여는 data/benchmark_patterns.md 주간 요약, 월요일 주간 점검은 지휘 세션이 최상위 세션에 보고한다(뒤처지면 원인과 바꿀 점 3가지).
