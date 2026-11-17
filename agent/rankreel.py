@@ -74,6 +74,9 @@ def opts(post):
 def timeline(post):
     """장면 순서와 길이 (checks.py도 이 함수로 길이를 검사한다).
     반환: {"scenes": [{"kind": hook|rank|top, "i": 항목 번호(0=1위), "start", "dur"}], "bpm", "beat", "main", "cta", "total", "reveal"}"""
+    if (post.get("rank") or {}).get("mode") == "intro":   # 발언 소개 릴스 (agent/quotereel.py): 순위 없이 날짜 순
+        from quotereel import timeline as _qt
+        return _qt(post)
     from video import CTA_SECONDS
     o = opts(post)
     n = len(rank_items(post))
@@ -565,6 +568,9 @@ def preview_times(tl, total):
 
 def make_rank_reel(post, folder, cfg):
     """reel.mp4 (본편 + 안내 띠 + 끝 화면, -14 LUFS), frames/*.jpg, cover.jpg(첫 화면 제목). 전체 길이(초) 반환."""
+    if (post.get("rank") or {}).get("mode") == "intro":
+        from quotereel import make_quote_reel
+        return make_quote_reel(post, folder, cfg)
     folder = Path(folder)
     work = folder / "_rank"
     if work.exists():
