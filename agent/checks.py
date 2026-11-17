@@ -1272,10 +1272,30 @@ def hedging(post):
     return w
 
 
+def screen_now(post):
+    """화면 정리 글의 '지금' 경고 (운영자 2026-11-17 "지금이라는 말 말고 현재 아니면 2026년 이런식으로"):
+    제목·썸네일·0초 줄·출처 줄·목록/순위 항목 이름·결과·연표 특징·기간 이름. 말을 옮긴 자막·발언(quote)은 보지 않는다."""
+    w = []
+    texts = [("제목", post.get("title")), ("썸네일 제목", (post.get("thumb") or {}).get("title"))]
+    for sec in ("rank", "list"):
+        R = post.get(sec) or {}
+        texts += [(f"{sec}.{k}", R.get(k)) for k in ("source_line", "note_line", "cta_line", "topic") if isinstance(R.get(k), str)]
+        for i, it in enumerate(R.get("items") or [], 1):
+            texts += [(f"{sec}.items {i}", it.get(k)) for k in ("label", "result", "name", "note")]
+    T = post.get("timeline") or {}
+    texts += [(f"timeline.{k}", T.get(k)) for k in ("unit_note", "cta_line")]
+    texts += [(f"timeline.beats {i}", b.get("text")) for i, b in enumerate(T.get("beats") or [], 1)]
+    texts += [(f"timeline.periods {i}", p[0]) for i, p in enumerate(T.get("periods") or [], 1) if p]
+    for where, t in texts:
+        if "지금" in str(t or ""):
+            w.append(f"{where}: 화면 정리 글에 '지금' → '현재'나 연도('2026년')로 (STYLE_GUIDE 4장 화면 정리 글)")
+    return w
+
+
 def check_post(post):
     """(errors, warnings) 반환."""
     e, w = _check_post(post)
-    w = w + writing_rules(post) + our_story(post) + deixis(post) + hedging(post)
+    w = w + writing_rules(post) + our_story(post) + deixis(post) + hedging(post) + screen_now(post)
     e = e + check_length_field(post)
     e_t, w_t = check_threads(post)
     return e + check_license(post) + e_t, w + awkward_titles(post) + w_t

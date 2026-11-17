@@ -7,7 +7,7 @@
   "date": "2026-11-19",
   "publish_at": "2026-11-19T18:13:00+09:00",
   "rights": "own",
-  "rights_note": "연표·막대는 각 회사 공식 발표 날짜로 agent/timeline_reel.py가 직접 그린 것. 회사 표시는 Simple Icons(CC0) 공식 로고 모양을 회사 이름 표시용(지명적 사용)으로 작게 씀, 로고 파일이 없는 xAI·딥시크는 회사 색 글자. 배경음악은 'Plucked Contemporary Boom' by mindmapthat (ccmixter.org/files/mindmapthat/43975), CC BY 3.0 조각(agent/music_fit.py), 효과음은 agent/music_gen.py 코드 생성",
+  "rights_note": "연표·막대는 각 회사 공식 발표 날짜로 agent/timeline_reel.py가 직접 그린 것. 회사 표시는 Simple Icons(CC0) 공식 로고 모양을 회사 이름 표시용(지명적 사용)으로 작게 씀, 로고 파일이 없는 xAI·딥시크는 회사 색 글자. 배경음악은 'Plucked Contemporary Boom' by mindmapthat (ccmixter.org/files/mindmapthat/43975), CC BY 3.0 조각(agent/music_fit.py), 대표 모델 장면 그림은 Cloudflare FLUX.2로 만든 AI 그림(실존 인물·로고 없음), 효과음은 agent/music_gen.py 코드 생성",
   "title": "특이점 온 AI\n새 모델 출시 간격은?",
   "highlight": "특이점",
   "timeline": {
@@ -378,7 +378,87 @@
       ]
     ],
     "thumb_src": "img/thumb.jpg",
-    "cta_line": "AI 속도, 무섭다 vs 기대된다? 댓글로"
+    "cta_line": "AI 속도, 무섭다 vs 기대된다? 댓글로",
+    "beats": [
+      {
+        "name": "ChatGPT",
+        "text": "대화하듯 묻고 답하기",
+        "image": {
+          "type": "image",
+          "src": "img/beat-chatgpt.jpg",
+          "prompt": "Close-up of a person's hands typing on a laptop at night in a dark room, the screen glows with a simple chat conversation made of soft rounded speech bubbles, shallow depth of field, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            1088
+          ]
+        }
+      },
+      {
+        "name": "GPT-4",
+        "text": "변호사 모의시험 상위 10%",
+        "image": {
+          "type": "image",
+          "src": "img/beat-gpt4.jpg",
+          "prompt": "A sleek white humanoid robot sitting at a wooden desk in a quiet exam hall, filling in an exam answer sheet with a pencil, rows of empty desks, warm window light, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            1088
+          ]
+        }
+      },
+      {
+        "name": "Gemini 1.5",
+        "text": "1시간 영상을 한 번에 이해",
+        "image": {
+          "type": "image",
+          "src": "img/beat-gemini15.jpg",
+          "prompt": "Hundreds of film frames and video stills flowing like a river into a single glowing lens floating in a dark space, deep blue light, high detail, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            1088
+          ]
+        }
+      },
+      {
+        "name": "GPT-4o",
+        "text": "목소리로 실시간 대화",
+        "image": {
+          "type": "image",
+          "src": "img/beat-gpt4o.jpg",
+          "prompt": "A smartphone standing on a kitchen table showing a glowing sound wave, a woman talking to it while cooking, warm evening light, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            1088
+          ]
+        }
+      },
+      {
+        "name": "DeepSeek-R1",
+        "text": "o1급 추론, 무료 공개",
+        "image": {
+          "type": "image",
+          "src": "img/beat-deepseekr1.jpg",
+          "prompt": "A glowing open treasure chest on a table in a dark room, bright light pouring out while many hands reach in from all sides, blue light, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            1088
+          ]
+        }
+      },
+      {
+        "name": "Claude 4",
+        "text": "당시 코딩 평가 1위",
+        "image": {
+          "type": "image",
+          "src": "img/beat-claude4.jpg",
+          "prompt": "A dark developer desk at night, a large monitor filled with colorful abstract lines of code being written automatically, warm orange glow, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
+          "size": [
+            1344,
+            1088
+          ]
+        }
+      }
+    ]
   },
   "thumb": {
     "title": "특이점 온 AI\n새 모델 출시 간격은?",
@@ -423,7 +503,7 @@
       "url": "https://metr.org/blog/2026-01-29-time-horizon-1-1/"
     }
   ],
-  "caption": "AI 새 모델 출시 간격을 한눈에 보세요. 2020년엔 30개월에 하나, 지금은 15일에 하나입니다.\nAI 속도, 무섭다 vs 기대된다? 댓글로 알려 주세요.\n\nGPT-3에서 ChatGPT까지는 902일이 걸렸습니다.\n그 뒤 새 모델 사이 평균 간격은 2023년 53일, 2024년 43일, 2025년 22일, 올해(11월 10일까지) 15일.\n계산 기준은 OpenAI·구글·앤트로픽·메타·xAI·딥시크 주요 모델 56개의 공식 발표일이에요.\n\n빨라진 건 출시 횟수만이 아닙니다. METR 조사에서 AI가 혼자 끝내는 일의 길이는 7개월마다, 2023년부터는 약 4개월마다 두 배가 됐어요.\n\n출처: 각 회사 공식 발표, METR(2025.3, 2026.1)\n음악: 'Plucked Contemporary Boom' by mindmapthat (ccmixter.org/files/mindmapthat/43975), CC BY 3.0\n\n팔로우하면 매일 AI 소식을 받아 보실 수 있어요.",
+  "caption": "AI 새 모델 출시 간격을 한눈에 보세요. 2020년엔 30개월에 하나, 2026년엔 15일에 하나입니다.\nAI 속도, 무섭다 vs 기대된다? 댓글로 알려 주세요.\n\nGPT-3에서 ChatGPT까지는 902일이 걸렸습니다.\n그 뒤 새 모델 하나 나오는 데 걸린 시간은 2023년 평균 53일, 2024년 43일, 2025년 22일, 2026년(11월 10일까지) 15일.\n계산 기준은 OpenAI·구글·앤트로픽·메타·xAI·딥시크 주요 모델 56개의 공식 발표일이에요.\n\nChatGPT는 대화로 묻고 답하는 AI로, GPT-4는 변호사 모의시험 상위 10% 점수로, Gemini 1.5는 1시간 영상을 한 번에 읽는 능력으로, DeepSeek-R1은 o1급 추론을 무료 공개(MIT 라이선스)해서 화제가 됐어요.\n\n빨라진 건 출시 횟수만이 아닙니다. METR 조사에서 AI가 혼자 끝내는 일의 길이는 7개월마다, 2023년부터는 약 4개월마다 두 배가 됐어요.\n\n출처: 각 회사 공식 발표, METR(2025.3, 2026.1)\n음악: 'Plucked Contemporary Boom' by mindmapthat (ccmixter.org/files/mindmapthat/43975), CC BY 3.0\n\n팔로우하면 매일 AI 소식을 받아 보실 수 있어요.",
   "hashtags": [
     "#AI모델",
     "#AI발전",
@@ -444,7 +524,7 @@
     "credit": "'Plucked Contemporary Boom' by mindmapthat (ccmixter.org/files/mindmapthat/43975), CC BY 3.0"
   },
   "threads": {
-    "text": "AI 새 모델이 이제 15일마다 하나씩 나옵니다.\n\nGPT-3 다음 ChatGPT가 나오기까지는 902일.\n평균 간격은 2023년 53일 → 2024년 43일 → 2025년 22일 → 올해 15일로 줄었습니다.\nOpenAI, 구글, 앤트로픽, 메타, xAI, 딥시크의 대표 모델 56개 발표일 기준이에요.\n\n속도만 빨라진 게 아니라, AI가 혼자 해내는 일의 길이도 2023년 이후 약 4개월마다 두 배씩 늘고 있습니다(METR).",
+    "text": "AI 새 모델이 2026년엔 15일마다 하나씩 나옵니다.\n\nGPT-3 다음 ChatGPT가 나오기까지는 902일.\n평균 간격은 2023년 53일 → 2024년 43일 → 2025년 22일 → 2026년 15일로 줄었습니다.\nOpenAI, 구글, 앤트로픽, 메타, xAI, 딥시크의 대표 모델 56개 발표일 기준이에요.\n\n속도만 빨라진 게 아니라, AI가 혼자 해내는 일의 길이도 2023년 이후 약 4개월마다 두 배씩 늘고 있습니다(METR).",
     "images": [
       "cover"
     ],
