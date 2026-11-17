@@ -128,16 +128,16 @@
     "folder": "2026-11-17-video-claude-of-duty",
     "title": "프롬프트 3문단으로 FPS 게임이 나왔습니다",
     "duration": 21.5,
-    "views": 154,
-    "reach": 85,
+    "views": 158,
+    "reach": 147,
     "saved": 0,
-    "shares": 1,
-    "total_interactions": 1,
+    "shares": 2,
+    "total_interactions": 2,
     "likes": 0,
     "comments": 0,
-    "ig_reels_avg_watch_time": 3685,
-    "ig_reels_video_view_total_time": 316967,
-    "reels_skip_rate": 41
+    "ig_reels_avg_watch_time": 3979,
+    "ig_reels_video_view_total_time": 596993,
+    "reels_skip_rate": 65.5
    },
    "18106928459457054": {
     "timestamp": "2026-11-17T10:51:54+0000",
@@ -152,8 +152,8 @@
     "total_interactions": 2,
     "likes": 1,
     "comments": 0,
-    "ig_reels_avg_watch_time": 10050,
-    "ig_reels_video_view_total_time": 1336655,
+    "ig_reels_avg_watch_time": 9993,
+    "ig_reels_video_view_total_time": 1339076,
     "reels_skip_rate": 45
    },
    "17886021090628832": {
@@ -169,8 +169,8 @@
     "total_interactions": 0,
     "likes": 0,
     "comments": 0,
-    "ig_reels_avg_watch_time": 2862,
-    "ig_reels_video_view_total_time": 317717,
+    "ig_reels_avg_watch_time": 3382,
+    "ig_reels_video_view_total_time": 378837,
     "reels_skip_rate": 86.2
    },
    "18049669823831337": {
@@ -186,8 +186,8 @@
     "total_interactions": 5,
     "likes": 0,
     "comments": 0,
-    "ig_reels_avg_watch_time": 4593,
-    "ig_reels_video_view_total_time": 583368,
+    "ig_reels_avg_watch_time": 4617,
+    "ig_reels_video_view_total_time": 591102,
     "reels_skip_rate": 83.2
    },
    "17882767407553907": {
@@ -203,8 +203,8 @@
     "total_interactions": 2,
     "likes": 1,
     "comments": 0,
-    "ig_reels_avg_watch_time": 4421,
-    "ig_reels_video_view_total_time": 592497,
+    "ig_reels_avg_watch_time": 4401,
+    "ig_reels_video_view_total_time": 594269,
     "reels_skip_rate": 63.4
    },
    "18112593002190549": {
@@ -220,8 +220,8 @@
     "total_interactions": 3,
     "likes": 1,
     "comments": 0,
-    "ig_reels_avg_watch_time": 3054,
-    "ig_reels_video_view_total_time": 387967,
+    "ig_reels_avg_watch_time": 3044,
+    "ig_reels_video_view_total_time": 389670,
     "reels_skip_rate": 84.6
    },
    "18029250590705353": {
@@ -237,8 +237,8 @@
     "total_interactions": 3,
     "likes": 1,
     "comments": 0,
-    "ig_reels_avg_watch_time": 4326,
-    "ig_reels_video_view_total_time": 722551,
+    "ig_reels_avg_watch_time": 4311,
+    "ig_reels_video_view_total_time": 724356,
     "reels_skip_rate": 75.9
    },
    "17902612866655526": {
@@ -254,8 +254,8 @@
     "total_interactions": 0,
     "likes": 0,
     "comments": 0,
-    "ig_reels_avg_watch_time": 13029,
-    "ig_reels_video_view_total_time": 1889305,
+    "ig_reels_avg_watch_time": 12951,
+    "ig_reels_video_view_total_time": 1890896,
     "reels_skip_rate": 55.4
    },
    "18114177902183166": {
@@ -271,8 +271,8 @@
     "total_interactions": 0,
     "likes": 0,
     "comments": 0,
-    "ig_reels_avg_watch_time": 2775,
-    "ig_reels_video_view_total_time": 377522,
+    "ig_reels_avg_watch_time": 2763,
+    "ig_reels_video_view_total_time": 378618,
     "reels_skip_rate": 74.8
    },
    "18108996644269058": {
@@ -288,8 +288,8 @@
     "total_interactions": 0,
     "likes": 0,
     "comments": 0,
-    "ig_reels_avg_watch_time": 5048,
-    "ig_reels_video_view_total_time": 843116,
+    "ig_reels_avg_watch_time": 5024,
+    "ig_reels_video_view_total_time": 844197,
     "reels_skip_rate": 57.7
    },
    "18163250107546991": {
@@ -305,8 +305,8 @@
     "total_interactions": 0,
     "likes": 0,
     "comments": 0,
-    "ig_reels_avg_watch_time": 14904,
-    "ig_reels_video_view_total_time": 2444389,
+    "ig_reels_avg_watch_time": 14820,
+    "ig_reels_video_view_total_time": 2445308,
     "reels_skip_rate": 25
    },
    "17958768750292888": {
@@ -322,8 +322,8 @@
     "total_interactions": 6,
     "likes": 2,
     "comments": 0,
-    "ig_reels_avg_watch_time": 8657,
-    "ig_reels_video_view_total_time": 2614490,
+    "ig_reels_avg_watch_time": 8636,
+    "ig_reels_video_view_total_time": 2616968,
     "reels_skip_rate": 61.6
    }
   }
@@ -355,5 +355,5 @@
   "total_interactions",
   "views"
  ],
- "updated": "2026-11-17T22:28+09:00"
+ "updated": "2026-11-17T22:54+09:00"
 }
