@@ -33,3 +33,4 @@
 ## 지금까지 만든 것
 - 2026-11-16 수묵화 릴스(Dfzdhackgip) — Live
 - 2026-11-16 화풍 스킬 릴스(DfzOGe_iqPS) — Live
+- 2026-11-17 메타 카드 v2(Df0z8Upie5e) — Live
