@@ -30,41 +30,41 @@ STYLE = ("A cute original 3D character mascot toy in a soft matte clay / vinyl f
          "chubby small body, short stubby arms and tiny feet, simple face with two small round solid black dot eyes "
          "and a tiny curved smile, no nose. Full body, centered, front view, plain flat pure white seamless studio "
          "background, soft even studio lighting, soft contact shadow. No text, no letters, no logo, no symbols on the body. ")
-COMP = {   # 회사: [(후보, 묘사, seed)]  A·B는 같은 안의 다른 seed, C는 다른 안
+COMP = {   # 회사: [(후보, 묘사, seed)]  로고 모양·색을 본뜬 몸 (운영자 2026-11-17). A·B는 같은 안의 다른 seed, C는 다른 안
     "claude": [
-        ("A", "Warm terracotta orange round chubby dumpling-shaped body, a small cream knitted scarf.", 101),
-        ("B", "Warm terracotta orange round chubby dumpling-shaped body, a small cream knitted scarf.", 202),
-        ("C", "Warm terracotta orange body shaped like a soft round bread bun with a slightly flat top, small round wire glasses.", 303),
+        ("A", "Body shaped like a chunky puffy starburst: a round center with many short soft rounded rays all around, warm terracotta orange, face on the round center.", 101),
+        ("B", "Body shaped like a chunky puffy starburst: a round center with many short soft rounded rays all around, warm terracotta orange, face on the round center.", 202),
+        ("C", "Round warm terracotta orange body with a ring of short soft rounded sun-like rays around its head.", 303),
     ],
     "chatgpt": [
-        ("A", "Monochrome character: soft white rounded cloud-shaped body with charcoal black hands and feet, a tiny black headset.", 101),
-        ("B", "Monochrome character: soft white rounded cloud-shaped body with charcoal black hands and feet, a tiny black headset.", 202),
-        ("C", "Monochrome character: light grey rounded pebble-shaped body, a tiny black bow tie.", 303),
+        ("A", "Body shaped like a soft puffy hexagonal knot flower made of six interlocking rounded petal loops, monochrome white with charcoal black loop edges, face in the center.", 101),
+        ("B", "Body shaped like a soft puffy hexagonal knot flower made of six interlocking rounded petal loops, monochrome white with charcoal black loop edges, face in the center.", 202),
+        ("C", "Body shaped like a soft puffy hexagonal knot flower made of six interlocking rounded petal loops, glossy charcoal black with a round white face patch in the center.", 303),
     ],
     "gemini": [
-        ("A", "Body shaped like a soft puffy four-pointed sparkle star with very rounded tips, two-tone: sky blue body with lavender purple tips.", 101),
-        ("B", "Body shaped like a soft puffy four-pointed sparkle star with very rounded tips, two-tone: sky blue body with lavender purple tips.", 202),
-        ("C", "Round chubby sky blue body with two small rounded lavender purple star-shaped hair clips on top.", 303),
+        ("A", "Body shaped like a puffy four-pointed sparkle star with gently curved inward sides and soft rounded tips, smooth blue to purple color blend, face in the center.", 101),
+        ("B", "Body shaped like a puffy four-pointed sparkle star with gently curved inward sides and soft rounded tips, smooth blue to purple color blend, face in the center.", 202),
+        ("C", "Puffy four-pointed sparkle star body, smooth blue to purple color blend, with a tiny second sparkle star floating beside its head.", 303),
     ],
     "grok": [
-        ("A", "Matte black egg-shaped body, a short antenna with a small white ball on top, a tiny silver earring.", 101),
-        ("B", "Matte black egg-shaped body, a short antenna with a small white ball on top, a tiny silver earring.", 202),
-        ("C", "Matte black round body with small sunglasses pushed up on top of its head.", 303),
+        ("A", "Matte black body shaped like a chunky soft X made of two thick rounded diagonal bars crossing, face on the crossing center.", 101),
+        ("B", "Matte black body shaped like a chunky soft X made of two thick rounded diagonal bars crossing, face on the crossing center.", 202),
+        ("C", "Matte black round body with one bold diagonal white slash stripe across it, face above the stripe.", 303),
     ],
     "deepseek": [
-        ("A", "Navy blue chubby baby whale-shaped body standing upright, tiny fins as arms, a small water spout on top.", 101),
-        ("B", "Navy blue chubby baby whale-shaped body standing upright, tiny fins as arms, a small water spout on top.", 202),
-        ("C", "Round navy blue body with small white diving goggles on its forehead.", 303),
+        ("A", "Bright royal blue chubby whale-shaped body standing upright, tail curled up behind, small fins as arms, face on the front.", 101),
+        ("B", "Bright royal blue chubby whale-shaped body standing upright, tail curled up behind, small fins as arms, face on the front.", 202),
+        ("C", "Royal blue chubby whale-shaped body with a light blue belly, lying on its belly, tail curled up, small water spout.", 303),
     ],
     "meta": [
-        ("A", "Cobalt blue round chubby body with a soft clay ring-shaped halo floating above its head.", 101),
-        ("B", "Cobalt blue round chubby body with a soft clay ring-shaped halo floating above its head.", 202),
-        ("C", "Blue-violet body shaped like a soft rounded capsule, small round goggles on its forehead.", 303),
+        ("A", "Body shaped like a puffy soft infinity loop (a rounded figure-eight ring), bright blue with a little violet, face on the center crossing.", 101),
+        ("B", "Body shaped like a puffy soft infinity loop (a rounded figure-eight ring), bright blue with a little violet, face on the center crossing.", 202),
+        ("C", "Round bright blue body with a big soft puffy infinity-loop ring floating around its waist.", 303),
     ],
     "copilot": [
-        ("A", "Teal round chubby body wearing a tiny brown leather pilot cap and orange pilot goggles on the forehead.", 101),
-        ("B", "Teal round chubby body wearing a tiny brown leather pilot cap and orange pilot goggles on the forehead.", 202),
-        ("C", "Body in soft teal and orange halves, a tiny white pilot scarf around the neck.", 303),
+        ("A", "Body shaped like a soft rounded pinwheel with four curved puffy blades in blue, green, yellow-orange and pink-purple, face in the center hub.", 101),
+        ("B", "Body shaped like a soft rounded pinwheel with four curved puffy blades in blue, green, yellow-orange and pink-purple, face in the center hub.", 202),
+        ("C", "Round body in soft swirled blue, green, orange and purple, with a small colorful pinwheel spinning on top of its head.", 303),
     ],
 }
 
