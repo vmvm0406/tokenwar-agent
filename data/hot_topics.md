@@ -1,4 +1,4 @@
-# 잘 터진 주제 (2026-11-17 10:25 기준)
+# 잘 터진 주제 (2026-11-17 10:48 기준)
 
 주제를 고를 때 이 표의 위쪽 주제와 **같거나 비슷한 것**을 먼저 고른다 (STYLE_GUIDE 3장). PR 본문에 "참고한 잘 터진 주제: …" 한 줄을 적는다.
 
@@ -10,7 +10,7 @@
 |---|---|---|---|---|---|
 | 1 | AI 영상·영화 만들기 (창작) | @soheejeon_: [그동안 나르시시스트도 같이 요청이 많았어서](https://www.instagram.com/reel/DaFaoQnBiUV/) | 43.6x | 릴스 | 174개 (50) |
 | 2 | 돈·일자리·교육 (생활) | @ai.talk.kr: [“OpenAI와 Anthropic은 AI 버블을 이겨낼 수 있을까?”](https://www.instagram.com/reel/Db2MJLcR-10/) | 304.8x | 릴스 | 108개 (28) |
-| 3 | 유명인·CEO 발언 (인용) | @bizucafe: [화폐는 의미 없다 (일론 머스크)](https://www.instagram.com/reel/De8mVBGgBJL/) | 25.3x | 릴스 | 114개 (29) |
+| 3 | 유명인·CEO 발언 (인용) | @bizucafe: [화폐는 의미 없다 (일론 머스크)](https://www.instagram.com/reel/De8mVBGgBJL/) | 25.2x | 릴스 | 114개 (29) |
 | 4 | 챗GPT·제미나이 사진·그림 변환 (창작) | @ai.trend.kr: [평범한 사진 한 장을 간직하고 싶은 그림으로 만들어보세요 🖼️](https://www.instagram.com/p/DckJfiMD83G/) | 40.6x | 카드 | 149개 (36) |
 | 5 | 미중 경쟁·반도체·데이터센터 (산업) | @ai.talk.kr: [“중국이 AI로 미국을 이길 수 있을까요?”](https://www.instagram.com/reel/DbwhvfvvknP/) | 481.7x | 릴스 | 42개 (13) |
 | 6 | 새 모델·기능 출시 (소식) | @prompt_what: [바탕화면 정리도 이제 러그로 덮고 모른 척합니다.](https://www.instagram.com/reel/DePBnqgSztY/) | 38.3x | 릴스 | 115개 (27) |
@@ -37,8 +37,8 @@
 - 21.3x 릴스 @ai.talk.kr: [“AI 시장, 결국 치킨 게임으로 가고 있는 걸까요?”](https://www.instagram.com/reel/DcDWvDKpGBj/)
 
 ### 유명인·CEO 발언 — 순위 점수 21.3, 릴스 101·카드 13, 배수 중간값 1.00x
-- 25.3x 릴스 @bizucafe: [화폐는 의미 없다 (일론 머스크)](https://www.instagram.com/reel/De8mVBGgBJL/)
-- 21.7x 릴스 @bizucafe: [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/)
+- 25.2x 릴스 @bizucafe: [화폐는 의미 없다 (일론 머스크)](https://www.instagram.com/reel/De8mVBGgBJL/)
+- 21.6x 릴스 @bizucafe: [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/)
 - 17.7x 릴스 @ai.talk.kr: [“일론 머스크는 왜 샘 올트먼을 믿지 않는 걸까요?”](https://www.instagram.com/reel/DbzUQ_VvaxQ/)
 
 ### 챗GPT·제미나이 사진·그림 변환 — 순위 점수 19.6, 릴스 76·카드 73, 배수 중간값 0.93x
@@ -48,7 +48,7 @@
 
 ### 미중 경쟁·반도체·데이터센터 — 순위 점수 18.8, 릴스 34·카드 8, 배수 중간값 1.28x
 - 481.7x 릴스 @ai.talk.kr: [“중국이 AI로 미국을 이길 수 있을까요?”](https://www.instagram.com/reel/DbwhvfvvknP/)
-- 21.7x 릴스 @bizucafe: [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/)
+- 21.6x 릴스 @bizucafe: [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/)
 - 10.2x 릴스 @ai.talk.kr: [“챗GPT에 질문할 때마다 물이 사용된다는 사실, 알고 계셨나요?”](https://www.instagram.com/reel/DcCmtLip1ZU/)
 
 ### 새 모델·기능 출시 — 순위 점수 15.8, 릴스 26·카드 89, 배수 중간값 1.02x
