@@ -1,0 +1,41 @@
+# 예시만 (켜져 있지 않음). 쓰려면 .github/workflows/로 옮긴다.
+# 3D 릴스 프레임을 GitHub Actions 행렬 작업 N개로 나눠 SwiftShader로 그리고, 마지막 작업이 모아 mp4로 만든다.
+# 공개 저장소 러너: 4코어, 분 사용량 무료, 동시 작업 20개. 30초 릴스(900프레임)를 10개로 나누면 작업당 90프레임.
+name: threejs-matrix-render (example)
+on:
+  workflow_dispatch:
+    inputs:
+      variant: { description: "v2 또는 v3", default: "v3" }
+      shards: { description: "나눌 개수", default: "10" }
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -q playwright && python -m playwright install --with-deps chromium   # render.yml과 같은 방식
+      - name: render shard
+        run: |
+          N=$(python -c "print(int({'v2':7.0,'v3':7.5}['${{ inputs.variant }}']*30))")
+          S=${{ inputs.shards }}; K=${{ matrix.shard }}
+          A=$(( N * K / S )); B=$(( N * (K + 1) / S ))
+          python experiments/threejs-test/render.py $([ "${{ inputs.variant }}" = v3 ] && echo --v3) --range $A:$B
+      - uses: actions/upload-artifact@v4
+        with: { name: "frames-${{ matrix.shard }}", path: experiments/threejs-test/out/frames/ }
+  join:
+    needs: render
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: sudo apt-get install -y ffmpeg
+      - uses: actions/download-artifact@v4
+        with: { pattern: "frames-*", merge-multiple: true, path: experiments/threejs-test/out/frames/ }
+      - run: python experiments/threejs-test/render.py $([ "${{ inputs.variant }}" = v3 ] && echo --v3) --encode-only
+      - uses: actions/upload-artifact@v4
+        with: { name: reel, path: experiments/threejs-test/out/*.mp4 }
