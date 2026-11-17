@@ -1875,7 +1875,16 @@
    "tries": 0,
    "breaking": true,
    "status": "skipped"
+  },
+  "https://openai.com/business/customer-stories/revolut": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "How Revolut raises ambition without lowering the bar",
+   "first_seen": "2026-11-17T15:49:27+09:00",
+   "why": "기업·연구·정책 주소",
+   "tries": 0,
+   "status": "skipped"
   }
  },
- "updated": "2026-11-17T15:19:24+09:00"
+ "updated": "2026-11-17T15:49:27+09:00"
 }
