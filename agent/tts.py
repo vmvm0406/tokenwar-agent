@@ -4,7 +4,12 @@
 엔진(한국어): MeloTTS 한국어 (코드·모델 MIT, myshell-ai). 코드 github.com/myshell-ai/MeloTTS, 모델 Hugging Face myshell-ai/MeloTTS-Korean,
        단어 분석용 BERT kykim/bert-kor-base(Apache-2.0)도 처음 쓸 때 자동으로 받는다. 여자 목소리 하나, 44.1kHz.
        출처·라이선스 기록: assets/voice/README.md. 설치: MIGRATION.md. 유료 API·계정 없음.
-GitHub Actions에는 두 엔진 다 없다. 그래서 이 컴퓨터에서 미리 만들어 게시물 폴더 voice/<번호>.wav(목록형은 24kHz 모노, 작게)로 넣고,
+       ※ 운영자가 MeloTTS 한국어를 쓰지 않기로 함(2026-11-17 "읽는법이 좀 그래서"). 한국어 내레이션은 아래 ElevenLabs.
+엔진(한국어 내레이션, 기본): ElevenLabs (유료 Starter, 상업 이용 가능, 운영자 결정 2026-11-17). 남자 목소리.
+       API 키는 사용자 환경 변수 ELEVENLABS_API_KEY (윈도우는 레지스트리 HKCU\\Environment에서도 읽음). 키는 출력·기록·커밋하지 않는다.
+       글자 수로 요금이 나가므로(Starter 월 약 3만 자) 같은 글·목소리·설정이면 사용자 캐시
+       (%USERPROFILE%\\.cache\\tokenwar-tts\\elevenlabs\\<해시>.mp3)를 다시 쓰고, 빠르기를 올릴 때도 다시 부르지 않고 ffmpeg atempo로 늘린다.
+GitHub Actions에는 세 엔진 다 없다. 그래서 이 컴퓨터에서 미리 만들어 게시물 폴더 voice/<번호>.wav(목록형은 24kHz 모노, 작게)로 넣고,
 listreel.py는 그 파일을 박자에 맞춰 섞기만 한다. voice/가 없으면 목소리 없이 예전처럼 동작한다.
 
 사용법:
@@ -14,14 +19,21 @@ listreel.py는 그 파일을 박자에 맞춰 섞기만 한다. voice/가 없으
     목소리·빠르기·읽을 문장을 바꿀 수 있다 (say: 번호별로 화면 글자와 다르게 읽을 때, 예: 약자).
   - list.voice.lang = "ko"(선택, 없으면 "en" 예전 그대로)면 MeloTTS로 한국어를 읽는다. 읽는 글은 say > 항목 name.
   - --text: 문장 하나를 바로 wav로 (내레이션 릴스용). --lang 기본 ko, en이면 Kokoro. 한국어는 44.1kHz.
+    py -3.12 agent/tts.py --engine elevenlabs --voice Hyuk --text "..." --out <폴더>/voice/01.mp3   (.mp3면 받은 그대로, .wav면 무음 자르고 44.1kHz)
+    py -3.12 agent/tts.py --engine elevenlabs --list-voices     # 계정 목소리 + 라이브러리 한국어 남자 목소리
+  - list.voice.engine = "elevenlabs"(선택)면 ElevenLabs로 읽는다: {"engine": "elevenlabs", "voice_id": "...", "settings": {"stability": 0.5}}.
+    voice_id가 없으면 ELEVEN_DEFAULT_VOICE. 게시물 맨 위 "voice"(같은 모양, 선택)도 기본값으로 읽는다.
   - 한국어 글: 숫자·%·연도는 그대로 써도 된다(10% → 십 퍼센트). 영어는 아는 이름(챗GPT, 오픈AI 등)과 약자만 한글로 바꾸고,
     모르는 영어 단어는 글자 하나씩 읽으니 대본에 한글로 쓴다 (예: "Sora" 대신 "소라").
   - 말 앞뒤 무음을 잘라 그림이 바뀌는 박에 바로 말이 시작되게 하고, 항목 길이보다 길면 빠르기를 올려 다시 만든다.
 """
 import argparse
+import hashlib
 import importlib.util
 import json
+import os
 import re
+import shutil
 import sys
 import types
 import wave
@@ -152,6 +164,119 @@ def to_sr(x, sr_from, sr_to):
     return librosa.resample(x, orig_sr=sr_from, target_sr=sr_to).astype(np.float32)
 
 
+# ---------------- 한국어 내레이션 (ElevenLabs) ----------------
+ELEVEN_API = "https://api.elevenlabs.io/v1"
+ELEVEN_MODEL = "eleven_multilingual_v2"
+ELEVEN_FORMAT = "mp3_44100_128"
+# 운영자가 고른 기본 목소리 (assets/voice/README.md "쓰는 목소리"). 라이브러리 목소리는 ID로 바로 부른다.
+ELEVEN_VOICES = {
+    "hyuk": "ZJCNdZEjYwkOElxugmW2",     # Hyuk - Cold and Clear: 차분한 중년 내레이터
+    "krys": "1W00IGEmNmwmsDeYy7ag",     # Krys - Cheerful, Clear and Measured: 밝고 힘찬 젊은 목소리
+    "kyle": "RU7aSi6lT4uQBXMLgDxK",     # Kyle - Friendly, Natural and Guttural: 낮고 굵은 목소리
+}
+ELEVEN_DEFAULT_VOICE = ELEVEN_VOICES["hyuk"]
+ELEVEN_SETTINGS = {"stability": 0.5, "similarity_boost": 0.75, "style": 0.0, "use_speaker_boost": True}
+ELEVEN_CACHE = Path.home() / ".cache" / "tokenwar-tts" / "elevenlabs"
+
+
+def eleven_key():
+    k = os.environ.get("ELEVENLABS_API_KEY")
+    if not k and sys.platform == "win32":
+        import winreg
+        try:
+            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Environment") as h:
+                k = winreg.QueryValueEx(h, "ELEVENLABS_API_KEY")[0]
+        except OSError:
+            k = None
+    if not k:
+        sys.exit("ELEVENLABS_API_KEY가 없다 (MIGRATION.md: setx ELEVENLABS_API_KEY 뒤 앱 다시 시작)")
+    return k.strip()
+
+
+def _mask(s, key):
+    return str(s).replace(key, "***") if key else str(s)
+
+
+def _eleven(path, key, body=None, accept="application/json"):
+    import urllib.error
+    import urllib.request
+    data = json.dumps(body).encode() if body is not None else None
+    req = urllib.request.Request(ELEVEN_API + path, data=data, method="POST" if data else "GET",
+                                 headers={"xi-api-key": key, "Content-Type": "application/json", "Accept": accept})
+    for attempt in range(3):
+        try:
+            with urllib.request.urlopen(req, timeout=120) as r:
+                return r.read()
+        except urllib.error.HTTPError as e:
+            detail = e.read().decode("utf-8", "replace")[:300]
+            if e.code in (429, 500, 502, 503) and attempt < 2:
+                continue
+            sys.exit(f"ElevenLabs {e.code}: {_mask(detail, key)}")
+        except (urllib.error.URLError, TimeoutError) as e:     # 연결 실패는 과금되지 않으니 다시
+            if attempt == 2:
+                sys.exit(f"ElevenLabs 연결 실패: {_mask(e, key)}")
+
+
+def eleven_voice_id(name_or_id, key=None):
+    """이름(Hyuk, 계정 목소리 이름 앞부분) 또는 ID → voice_id."""
+    if not name_or_id:
+        return ELEVEN_DEFAULT_VOICE
+    if name_or_id.lower() in ELEVEN_VOICES:
+        return ELEVEN_VOICES[name_or_id.lower()]
+    if re.fullmatch(r"[A-Za-z0-9]{20}", name_or_id):
+        return name_or_id
+    key = key or eleven_key()
+    for v in json.loads(_eleven("/voices", key))["voices"]:
+        if v["name"].lower().startswith(name_or_id.lower()):
+            return v["voice_id"]
+    sys.exit(f"ElevenLabs 목소리 {name_or_id!r}를 못 찾음 (--list-voices로 확인)")
+
+
+def eleven_mp3(text, voice_id=None, settings=None, model=ELEVEN_MODEL):
+    """문장 → mp3 파일 경로. 같은 글·목소리·설정·모델이면 캐시를 쓴다 (다시 과금되지 않게)."""
+    vs = dict(ELEVEN_SETTINGS, **(settings or {}))
+    voice_id = voice_id or ELEVEN_DEFAULT_VOICE
+    h = hashlib.sha256(json.dumps([text, voice_id, vs, model, ELEVEN_FORMAT], ensure_ascii=False,
+                                  sort_keys=True).encode()).hexdigest()[:24]
+    out = ELEVEN_CACHE / f"{h}.mp3"
+    if out.exists() and out.stat().st_size > 0:
+        return out
+    key = eleven_key()
+    audio = _eleven(f"/text-to-speech/{voice_id}?output_format={ELEVEN_FORMAT}", key,
+                    {"text": text, "model_id": model, "voice_settings": vs}, accept="audio/mpeg")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_bytes(audio)
+    print(f"  ElevenLabs {len(text)}자 사용 ({voice_id})", file=sys.stderr)
+    return out
+
+
+def decode(path, sr, tempo=1.0):
+    """오디오 파일 → 모노 float32 (ffmpeg). tempo > 1이면 atempo로 빠르게 (다시 합성하지 않음)."""
+    import subprocess
+    ff = shutil.which("ffmpeg") or sys.exit("ffmpeg가 없다")
+    cmd = [ff, "-nostdin", "-loglevel", "error", "-i", str(path)]
+    if abs(tempo - 1.0) > 1e-3:
+        cmd += ["-af", f"atempo={tempo:.3f}"]
+    raw = subprocess.run(cmd + ["-ac", "1", "-ar", str(sr), "-f", "f32le", "-"], capture_output=True, check=True).stdout
+    return np.frombuffer(raw, dtype=np.float32).copy()
+
+
+def synth_eleven(text, sr, voice_id=None, settings=None, speed=1.0):
+    return decode(eleven_mp3(text, voice_id, settings), sr, tempo=speed)
+
+
+def list_eleven_voices():
+    key = eleven_key()
+    print("[계정 목소리]")
+    for v in json.loads(_eleven("/voices", key))["voices"]:
+        lb = v.get("labels") or {}
+        print(f"  {v['voice_id']}  {v['name']}  ({v.get('category')}, {lb.get('gender')}, {lb.get('age')})")
+    print("[라이브러리 한국어 남자 목소리, 많이 쓰는 순]")
+    q = "/shared-voices?page_size=30&language=ko&gender=male&sort=usage_character_count_1y"
+    for v in json.loads(_eleven(q, key))["voices"]:
+        print(f"  {v['voice_id']}  {v['name']}  ({v.get('age')}, {v.get('use_case')}, {v.get('descriptive')})")
+
+
 def kokoro_pipe():
     from kokoro import KPipeline
     return KPipeline(lang_code="a", repo_id="hexgrad/Kokoro-82M")
@@ -170,11 +295,32 @@ def main():
     ap.add_argument("--out", help="--text의 출력 wav")
     ap.add_argument("--lang", choices=["ko", "en"], help="--text의 언어 (기본 ko)")
     ap.add_argument("--speed", type=float, default=1.0, help="--text의 빠르기")
+    ap.add_argument("--engine", choices=["melo", "kokoro", "elevenlabs"],
+                    help="--text 엔진 (기본: ko는 melo, en은 kokoro). elevenlabs는 --voice에 이름(Hyuk/Krys/Kyle) 또는 ID")
+    ap.add_argument("--list-voices", action="store_true", help="ElevenLabs 목소리 목록")
     a = ap.parse_args()
+    if a.list_voices:
+        list_eleven_voices()
+        return
+    if a.text and a.engine == "elevenlabs":
+        if not a.out:
+            ap.error("--text에는 --out이 필요하다")
+        out = Path(a.out)
+        vid = eleven_voice_id(a.voice)
+        mp3 = eleven_mp3(a.text, vid)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        if out.suffix.lower() == ".mp3" and abs(a.speed - 1.0) < 1e-3:
+            shutil.copyfile(mp3, out)
+            x, sr = decode(mp3, KO_SR), KO_SR
+        else:
+            x, sr = trim(decode(mp3, KO_SR, tempo=a.speed), sr=KO_SR), KO_SR
+            save(out, x, sr)
+        print(f"{a.out}: {len(x) / sr:.2f}초, ElevenLabs {vid}, 빠르기 {a.speed:g}")
+        return
     if a.text:
         if not a.out:
             ap.error("--text에는 --out이 필요하다")
-        if (a.lang or "ko") == "ko":
+        if (a.lang or "ko") == "ko" and a.engine != "kokoro":
             x, sr = trim(synth_ko(a.text, a.speed), sr=KO_SR), KO_SR
         else:
             x, sr = trim(kokoro_synth(kokoro_pipe(), a.text, a.voice or DEFAULT_VOICE, a.speed)), SR
@@ -187,11 +333,18 @@ def main():
     post = json.loads((folder / "post.json").read_text(encoding="utf-8"))
     from listreel import rows_of, timeline
     tl = timeline(post)
-    cfg = (post.get("list") or {}).get("voice") or {}
+    cfg = dict(post.get("voice") or {}, **((post.get("list") or {}).get("voice") or {}))
     lang = cfg.get("lang", "en")
     speed0 = float(cfg.get("speed", 1.0))
     say = cfg.get("say") or {}
-    if lang == "ko":
+    if cfg.get("engine") == "elevenlabs":
+        lang = cfg.get("lang", "ko")
+        vid = eleven_voice_id(a.voice or cfg.get("voice_id"))
+        voice = f"ElevenLabs {vid}"
+
+        def gen(text, speed):      # 빠르기를 올려도 다시 합성하지 않는다 (캐시 + atempo)
+            return synth_eleven(text, SR, vid, cfg.get("settings"), speed)
+    elif lang == "ko":
         voice = "MeloTTS KR"
 
         def gen(text, speed):

@@ -21,6 +21,7 @@
 |---|---|---|
 | 프로그램 | Python 3.12, Git, GitHub CLI, FFmpeg, Node.js, Claude Code, yt-dlp, Playwright 크로미움 | 2장 |
 | 로그인 | Claude Code(구독 계정), GitHub CLI(vmvm0406) | 3장 (직접) |
+| ElevenLabs 키 | 사용자 환경 변수 `ELEVENLABS_API_KEY` (운영자 계정, Starter 월 결제) | 3-4장 (setx) |
 | 저장소 두 개 | `%USERPROFILE%\tokenwar-agent`(Code 탭용), `%USERPROFILE%\tokenwar-daily`(매일 작업 전용) | 4장 |
 | 작업 스케줄러 2개 | `TokenwarAgent`, `TokenwarModelWatch` | 5장 |
 | Claude 기억(memory) | `C:\Users\vmmxu\.claude\projects\C--Users-vmmxu-tokenwar-agent\memory\` | 1장에서 복사, 4장에서 붙여 넣기 |
@@ -156,6 +157,7 @@ py -3.12 -m pip install "kokoro==0.9.4" soundfile   # 목록형 릴스 영어 �
 # 한국어에 필요한 것만 따로 깐다 (원래 requirements는 transformers 4.27 등 옛 버전 고정이라 파이썬 3.12에서 안 깔림. 중국어·일본어 패키지는 tts.py가 빈 모듈로 막음)
 py -3.12 -m pip install "librosa==1.0.1" "jamo==0.4.1" "anyascii==0.3.3" "g2pkk==0.1.2" "txtsplit==1.0.0" "python-mecab-ko==1.3.7"
 py -3.12 -m pip install --no-deps "git+https://github.com/myshell-ai/MeloTTS.git@209145371cff8fc3bd60d7be902ea69cbdb7965a"
+# ※ MeloTTS 한국어는 운영자가 쓰지 않기로 함(2026-11-17). 한국어 내레이션은 ElevenLabs(3-4장), 아래 줄은 예전 기록
 py -3.12 agent/tts.py --text "시험입니다" --out $env:TEMP\ko-test.wav   # 처음 한 번: 모델(MeloTTS-Korean 약 200MB, bert-kor-base 약 450MB)을 Hugging Face에서 받고 nltk cmudict를 %APPDATA%\nltk_data에 받음
 ```
 
@@ -205,6 +207,23 @@ gh auth status
 git config --global user.name "vmvm0406"
 git config --global user.email "vmmxu0406@gmail.com"
 ```
+
+### 3-4. ElevenLabs 키 (한국어 내레이션, 2026-11-17)
+
+한국어 내레이션 목소리는 ElevenLabs(운영자 본인 계정, **Starter 월 결제**, 상업 이용 가능)로 만든다 (`agent/tts.py --engine elevenlabs`, assets/voice/README.md).
+키는 **이 컴퓨터의 사용자 환경 변수 `ELEVENLABS_API_KEY`에만** 있다. 저장소·GitHub Secrets에는 없다(Actions는 목소리를 만들지 않음). 키 권한: Text to Speech + Voices 읽기.
+
+1. elevenlabs.io 로그인 → 개발자(API Keys) → 새 키 (권한: Text to Speech, Voices 읽기). 옛 노트북 키는 지우고 새로 만드는 편이 안전하다.
+2. 보통 권한 PowerShell에서 (키는 화면 기록·채팅에 남기지 않는다):
+
+```powershell
+setx ELEVENLABS_API_KEY "<새 키>"
+```
+
+3. **Claude 앱과 터미널을 완전히 껐다 다시 연다** (setx는 새로 연 프로그램에만 보인다. tts.py는 윈도우에서 레지스트리 HKCU\Environment도 직접 읽어서 앱을 다시 안 켜도 대개 동작한다).
+4. 확인 (글자 수 안 씀): `py -3.12 agent/tts.py --engine elevenlabs --list-voices`
+
+만든 음성 캐시는 `%USERPROFILE%\.cache\tokenwar-tts\elevenlabs\` (옮길 필요 없음).
 
 ---
 
