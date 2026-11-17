@@ -225,7 +225,7 @@
               "type": "image", "src": "img/more/underlighting.jpg", "mascot": true, "prompt": "..."},
              {"name": "키 라이트", "en": "key light", "desc": "장면을 비추는 가장 센 주된 빛입니다."}],
     "more_title": "추가 조명 용어 30개", "more_intro": "...",
-    "usage": ["(선택) '쓰는 법' 문장. 없으면 dm.py 종류별 기본 문구"]}}
+    "usage": ["(선택) '사용법' 문장. 없으면 dm.py 종류별 기본 문구"]}}
 }
 ```
 

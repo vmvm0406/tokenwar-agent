@@ -5,7 +5,7 @@ post.json에 `dm`이 있으면 두 가지를 만든다 (STYLE_GUIDE 7-1, TEMPLAT
      운영자가 게시 후 이 메모대로 도구에 자동화를 하나 만든다. (도구 계정·비밀번호는 여기에 없다)
   2. 자료 안내 페이지 — 공개 저장소 GitHub Pages(docs/p/<게시물 id>/index.html).
      카드에 나온 프롬프트 전체 + dm.page의 추가 자료. DM 안 링크가 이 페이지를 가리킨다.
-     목록형 자료 릴스(post.list)는 복사용 프롬프트 없이 '쓰는 법'(용어를 요청 문장 어디에 넣는지) + 용어 목록 + 예시 그림.
+     목록형 자료 릴스(post.list)는 복사용 프롬프트 없이 '사용법'(용어를 요청 문장 어디에 넣는지) + 용어 목록 + 예시 그림.
      순위 카운트다운 릴스(post.rank)는 '읽는 법'(점수 뜻) + 영상 속 순위(값·하는 일·발언·출처) + 이어지는 순위(dm.page.more).
      예시 폴더(samples/)는 docs에 올리지 않고 폴더 안 page.html로만 만든다(미리보기).
   안내 페이지 목록(자료실)은 만들지 않는다 (운영자 결정 2026-11-16: 팔로우 안 한 사람도 받게 되므로).
@@ -58,7 +58,7 @@ META_KEY_RE = re.compile(r"일자|날짜|환경|미확인|범위|버전|실행|�
 
 
 # 목록형 자료 릴스(post.list) 자료 페이지: 복사해 붙이는 완성 프롬프트는 싣지 않고, 용어를 요청 문장에 어떻게 넣는지만
-# 설명한다 (운영자 결정 2026-11-17, STYLE_GUIDE 7-1). 종류별 '쓰는 법' 기본 문구. 게시물 id의 'list-<종류>'로 고르고,
+# 설명한다 (운영자 결정 2026-11-17, STYLE_GUIDE 7-1). 종류별 '사용법' 기본 문구. 게시물 id의 'list-<종류>'로 고르고,
 # post.json dm.page.usage(문장 하나나 목록)가 있으면 그것을 쓴다. dm.page.kind로 종류를 직접 정해도 된다.
 LIST_USAGE = {
     "lighting": [
@@ -119,7 +119,7 @@ def list_kind(post):
 
 
 def list_usage(post):
-    """목록형 자료 페이지 '쓰는 법' 문장 목록. dm.page.usage(문장 하나나 목록)가 있으면 그것, 없으면 종류별 기본."""
+    """목록형 자료 페이지 '사용법' 문장 목록. dm.page.usage(문장 하나나 목록)가 있으면 그것, 없으면 종류별 기본."""
     u = ((post.get("dm") or {}).get("page") or {}).get("usage")
     if u:
         return [u] if isinstance(u, str) else list(u)
@@ -406,7 +406,7 @@ def page_html(post, folder=None):
         groups = "".join(group(g) for g in st.get("groups") or [])
         parts.append(f'<section class="step"><span class="k">{i:02d}</span>{lb}<h2>{esc(st["title"])}</h2>'
                      f'{boxes}{text}{groups}</section>')
-    # 목록형 자료 릴스(post.list): '쓰는 법' + 전체 목록(번호·한국어 이름·영어 용어·뜻과 분위기 한 줄·예시 그림).
+    # 목록형 자료 릴스(post.list): '사용법' + 전체 목록(번호·한국어 이름·영어 용어·뜻과 분위기 한 줄·예시 그림).
     # 복사해 붙이는 완성 프롬프트(복사 상자, template, extra)는 싣지 않는다 (운영자 결정 2026-11-17, STYLE_GUIDE 7-1).
     # 화면에는 한국어 이름만 나온다. 소개 글의 복사 안내는 no_copy()로 뺀다 (승인된 post.json을 고치지 않고 페이지에서만).
     lst = ""
@@ -416,7 +416,7 @@ def page_html(post, folder=None):
         def txt(v):
             return words(no_copy(clean(v)))
         usage = [x for x in (txt(u) for u in list_usage(post)) if x]
-        usage_html = (f'<div class="rule"></div><h3>{esc(pg.get("usage_title") or "쓰는 법")}</h3>'
+        usage_html = (f'<div class="rule"></div><h3>{esc(pg.get("usage_title") or "사용법")}</h3>'
                       '<ul class="usage">' + "".join(f"<li>{esc(x)}</li>" for x in usage) + "</ul>" if usage else "")
 
         def term(i, it):
