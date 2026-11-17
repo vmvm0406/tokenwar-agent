@@ -128,7 +128,7 @@
     "folder": "2026-11-17-video-claude-of-duty",
     "title": "프롬프트 3문단으로 FPS 게임이 나왔습니다",
     "duration": 21.5,
-    "views": 151,
+    "views": 154,
     "reach": 85,
     "saved": 0,
     "shares": 1,
@@ -137,7 +137,7 @@
     "comments": 0,
     "ig_reels_avg_watch_time": 3685,
     "ig_reels_video_view_total_time": 316967,
-    "reels_skip_rate": 41.8
+    "reels_skip_rate": 41
    },
    "18106928459457054": {
     "timestamp": "2026-11-17T10:51:54+0000",
@@ -355,5 +355,5 @@
   "total_interactions",
   "views"
  ],
- "updated": "2026-11-17T22:25+09:00"
+ "updated": "2026-11-17T22:28+09:00"
 }
