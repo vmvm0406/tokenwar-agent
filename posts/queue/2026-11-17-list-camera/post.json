@@ -183,6 +183,7 @@
       }
     ],
     "hook": 11,
+    "bpm": 105.882353,
     "align": false,
     "voice": {
       "engine": "Kokoro-82M (Apache-2.0)",

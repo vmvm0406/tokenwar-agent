@@ -116,11 +116,11 @@ def _hook_row(post, rows):
 
 
 def _beats(rows, k, flood=False):
-    """장면마다 박 수: 첫 화면 HOOK_BEATS, 원본 줄 k+1, 항목 k, 마지막 항목 k+END_BEATS, (쏟아지기 FLOOD_BEATS)."""
+    """장면마다 박 수: 첫 화면 HOOK_BEATS, 원본 줄 k+1, 항목 k, 마지막 항목 k+END_BEATS(쏟아지기가 있으면 k), (쏟아지기 FLOOD_BEATS)."""
     out = [HOOK_BEATS]
     for r, row in enumerate(rows):
         b = k + 1 if row["base"] else k
-        if r == len(rows) - 1:
+        if r == len(rows) - 1 and not flood:   # 쏟아지기가 있으면 마지막 항목 뒤 쉼 없이 바로 (운영자 2026-11-17 "실루엣 다음에 쉬는 시간 없이")
             b += END_BEATS
         out.append(b)
     if flood:
