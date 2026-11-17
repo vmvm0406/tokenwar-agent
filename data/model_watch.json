@@ -1771,7 +1771,38 @@
    "tries": 0,
    "breaking": true,
    "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMidEFVX3lxTE9GazBOVUJ0TjNnN0lOREEta29sRjVUVlh4R2pkUEJuV0dlaC1jYXZHOU5DZV90Ri1DYk0tdHV0ZDhtY1VSRVduY0dkTkZTZTRwOUlPMlA3aTlqcjA0dWxyZDNSVXM3ZmcwZDJDOWQ2WmN2UkNW0gF0QVVfeXFMUEl0ck01VFBqanBrVHFwSWJackVYcFI3elJyRnVkbmZHTS15QlRCRGFYZE1JbUhPTTIxdFd4Q01zM3JmZy1DNTlCZWlfemFjS3JvNC1ITEpSZDFBRE9tNTQxNXhwZHFMT1paVk5Oc3pmYmhUV0Y?oc=5": {
+   "source": "news",
+   "company": "엔비디아",
+   "entities": [
+    "엔비디아"
+   ],
+   "tok": [
+    "0억",
+    "30",
+    "83",
+    "더니",
+    "럼프",
+    "보유",
+    "수출",
+    "완화",
+    "주식",
+    "출통",
+    "칩수",
+    "통제",
+    "트럼",
+    "하더",
+    "화하"
+   ],
+   "title": "[업계 속보: 주요 매체 3곳(KBS, MBC, 동아일보) · 인사] 칩수출통제 완화하더니‥\"트럼프, 엔비디아 주식 830억 원 보유\"",
+   "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE9GazBOVUJ0TjNnN0lOREEta29sRjVUVlh4R2pkUEJuV0dlaC1jYXZHOU5DZV90Ri1DYk0tdHV0ZDhtY1VSRVduY0dkTkZTZTRwOUlPMlA3aTlqcjA0dWxyZDNSVXM3ZmcwZDJDOWQ2WmN2UkNW0gF0QVVfeXFMUEl0ck01VFBqanBrVHFwSWJackVYcFI3elJyRnVkbmZHTS15QlRCRGFYZE1JbUhPTTIxdFd4Q01zM3JmZy1DNTlCZWlfemFjS3JvNC1ITEpSZDFBRE9tNTQxNXhwZHFMT1paVk5Oc3pmYmhUV0Y?oc=5",
+   "first_seen": "2026-11-17T13:04:20+09:00",
+   "why": "48시간 안에 같은 회사·인물 게시물 있음: 2026-11-17-video-amodei-chips-north-korea (엔비디아)",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
   }
  },
- "updated": "2026-11-17T12:49:41+09:00"
+ "updated": "2026-11-17T13:04:20+09:00"
 }
