@@ -1,13 +1,32 @@
 {
   "id": "2026-11-19-reel-anthropic-ipo",
-  "type": "reel",
+  "type": "video",
   "series": "전황",
   "origin": "own",
   "length": "short",
   "date": "2026-11-19",
   "publish_at": "2026-11-19T23:45:00+09:00",
   "asap_after_listing": true,
-  "note": "asap_after_listing: true. 나스닥 첫 거래(예정 11/19 미국 동부 9:30 = 한국 23:30) 직후 올릴 미리 만든 릴스. 지금 숫자는 공모가 범위 중간값 74달러 기준 자리표시. 확정 공모가·시초가가 나오면 ipo 블록과 ipo.fill이 가리키는 장 필드를 고치고 다시 렌더링 (안내: side-session-notes ipo-fill.md). 투자 권유·매수/매도 표현 금지.",
+  "rights": "own",
+  "rights_note": "사진: 위키미디어 공용 CC BY 2.0·CC BY 3.0·CC BY 4.0·CC0 (장면 credit), 화면: claude.com 공식 페이지 캡처, 음성: ElevenLabs 유료 요금제(상업 이용 가능), 음악: ccMixter CC BY 3.0",
+  "note": "asap_after_listing: true. 나스닥 첫 거래(예정 11/19 미국 동부 9:30 = 한국 23:30) 직후 올릴 미리 만든 릴스. 숫자는 공모가 범위 중간값 74달러 자리표시. 확정 공모가·시초가가 나오면 ipo 블록(status final, price, open, krw_rate, compare)을 고치고 목소리(fill 장면)·제목·캡션·스레드를 다시 만든다 (side-session-notes ipo-fill.md). 매수·매도·전망 표현 금지.",
+  "title": "오픈AI 뛰쳐나온 7명이\n1,290조 회사 만들었다",
+  "highlight": "1,290조",
+  "title_options": [
+    {
+      "type": "사실",
+      "title": "클로드 만든 앤트로픽,\n나스닥에 상장한다"
+    },
+    {
+      "type": "A 비튼 제목",
+      "title": "오픈AI 뛰쳐나온 7명이\n1,290조 회사 만들었다"
+    },
+    {
+      "type": "B 큰 판",
+      "title": "삼성전자보다 큰\nAI 회사가 나왔다"
+    }
+  ],
+  "end_cta": "팔로우하면\n매일 AI 소식",
   "ipo": {
     "status": "placeholder",
     "ticker": "ANT",
@@ -19,96 +38,256 @@
     "price": 74,
     "open": null,
     "shares_outstanding_after": 13086672593,
-    "market_cap_at_price_usd_100m": 9680,
-    "fill": {
-      "slides[0].big": "공모가 기준 시가총액(억 달러) = 13,086,672,593주 x 공모가 / 1억, 콤마 포함 7자 이하",
-      "slides[1].visual.items[4]": "상장 막대 value·display = 위와 같은 시가총액(억 달러)",
-      "slides[4].value": "확정 공모가(달러)",
-      "slides[4].label": "'범위 중간값·확정 전' 문구를 '확정 공모가'로",
-      "slides[4].body": "첫 거래 시초가 OO달러 (ipo.open)",
-      "caption": "첫 줄 다음 문단의 공모가·시가총액 숫자",
-      "threads.text": "공모가·시가총액 숫자",
-      "slides[0].sub": "'공모가 OO달러 기준' 가격"
+    "krw_rate": 1337.2,
+    "krw_rate_source": "네이버 증권 USD/KRW 2026-11-17 21:46 (ECB 기준 11/16 1,334.87)",
+    "compare": {
+      "name": "삼성전자 보통주",
+      "krw_jo": 1109.6,
+      "basis": "2026-11-17 종가, 네이버 증권 시가총액 1,109조 6,237억 원 (우선주 121조 7,197억 원 별도)"
+    },
+    "fill": "side-session-notes ipo-fill.md. 화면 숫자는 ipo 값으로 자동 계산. 손으로 고칠 곳: title·highlight·title_options(1,290조), caption 둘째 문단, threads.text. status final이면 장면의 *_final을 씀 → 목소리 다시 만들기"
+  },
+  "photo_reel": {
+    "voice": {
+      "engine": "elevenlabs",
+      "voice": "deok"
+    },
+    "scenes": [
+      {
+        "beat": "hook",
+        "img": "img/dario.jpg",
+        "focus": [
+          0.42,
+          0.6
+        ],
+        "zoom": [
+          1.0,
+          1.06
+        ],
+        "credit": "사진: UK Prime Minister (CC BY 2.0)",
+        "vo": "클로드를 만든 회사, 몸값이 1,200조 원 넘었습니다!",
+        "cap": "몸값 1,200조 원 넘었다",
+        "hl": "1,200조 원",
+        "overlay": {
+          "type": "big",
+          "big": "{cap_krw}",
+          "sub": "{cap_usd} · 공모가 범위 중간값 {price}달러 기준",
+          "size": 130
+        },
+        "overlay_final": {
+          "type": "big",
+          "big": "{cap_krw}",
+          "sub": "{cap_usd} · 공모가 {price}달러 기준",
+          "size": 130
+        },
+        "overlay_at": "low"
+      },
+      {
+        "beat": "delay1",
+        "img": "img/office.jpg",
+        "focus": [
+          0.45,
+          0.45
+        ],
+        "zoom": [
+          1.0,
+          1.08
+        ],
+        "credit": "사진: 앤트로픽 샌프란시스코 사무실 · 영국 DSIT (CC BY 2.0)",
+        "vo": "2021년, 오픈AI를 나온 7명이 차린 회사죠.",
+        "cap": "2021년, 오픈AI 출신\n7명이 창업",
+        "hl": "7명",
+        "overlay": {
+          "type": "big",
+          "big": "2021",
+          "count": false,
+          "sub": "공동 창업자 7명 · 오픈AI 출신"
+        }
+      },
+      {
+        "beat": "delay1",
+        "img": "img/jack-clark.jpg",
+        "focus": [
+          0.55,
+          0.3
+        ],
+        "zoom": [
+          1.0,
+          1.1
+        ],
+        "credit": "사진: 공동 창업자 잭 클라크 강연 · Mvolz (CC0)",
+        "vo": "몸값은 1년 2개월 만에 열다섯 배 넘게 뛰었고요.",
+        "cap": "몸값, 1년 2개월 만에\n15배 넘게 뛰었다",
+        "hl": "15배",
+        "overlay": {
+          "type": "steps",
+          "items": [
+            [
+              "2025.3",
+              "615억 달러"
+            ],
+            [
+              "2025.9",
+              "1,830억 달러"
+            ],
+            [
+              "2026.2",
+              "3,800억 달러"
+            ],
+            [
+              "2026.5",
+              "9,650억 달러"
+            ]
+          ]
+        }
+      },
+      {
+        "beat": "rehook",
+        "img": "img/samsung.jpg",
+        "focus": [
+          0.5,
+          0.35
+        ],
+        "zoom": [
+          1.0,
+          1.08
+        ],
+        "credit": "사진: 삼성디지털시티 · Grzegorz Sokol (CC BY 3.0)",
+        "vo": "얼마나 크냐면, 삼성전자 시가총액보다 큽니다!",
+        "cap": "삼성전자 시가총액보다\n큽니다",
+        "hl": "삼성전자",
+        "overlay": {
+          "type": "bars",
+          "items": [
+            {
+              "label": "앤트로픽 (공모가 기준)",
+              "value": "{cap_krw_jo}",
+              "display": "{cap_krw}",
+              "on": true
+            },
+            {
+              "label": "삼성전자 (보통주)",
+              "value": "{cmp_krw_jo}",
+              "display": "{cmp_krw}"
+            }
+          ],
+          "note": "삼성전자 11월 17일 종가 · 1달러 {krw_rate}원"
+        }
+      },
+      {
+        "beat": "delay2",
+        "img": "img/claude-code.jpg",
+        "focus": [
+          0.5,
+          0.0
+        ],
+        "zoom": [
+          1.0,
+          1.06
+        ],
+        "credit": "화면: claude.com 공식 페이지",
+        "vo": "분기 매출은 1년 반 만에 마흔다섯 배.",
+        "cap": "분기 매출,\n1년 반 만에 45배",
+        "hl": "45배",
+        "overlay": {
+          "type": "big",
+          "big": "45배",
+          "sub": "분기 매출 3.8억 → 170억 달러"
+        }
+      },
+      {
+        "beat": "delay2",
+        "img": "img/claude-home.jpg",
+        "focus": [
+          0.5,
+          0.45
+        ],
+        "zoom": [
+          1.0,
+          1.06
+        ],
+        "credit": "화면: claude.com 공식 페이지",
+        "vo": "10만 달러 넘게 쓰는 기업 고객만 만 천구백 곳.",
+        "cap": "1년에 10만 달러 넘게 쓰는\n기업 고객 11,900곳",
+        "hl": "11,900곳",
+        "overlay": {
+          "type": "big",
+          "big": "11,900곳",
+          "sub": "1년 전 950곳"
+        }
+      },
+      {
+        "beat": "answer",
+        "img": "img/nasdaq.jpg",
+        "focus": [
+          0.5,
+          0.45
+        ],
+        "zoom": [
+          1.0,
+          1.1
+        ],
+        "credit": "사진: 나스닥 마켓사이트 · ajay_suresh (CC BY 2.0)",
+        "vo": "그리고 오늘 밤, 나스닥 상장! 종목 코드는 에이, 엔, 티.",
+        "cap": "그리고 오늘 밤,\n나스닥 상장",
+        "hl": "나스닥 상장",
+        "overlay": {
+          "type": "big",
+          "big": "ANT",
+          "count": false,
+          "sub": "나스닥 종목 코드"
+        }
+      },
+      {
+        "beat": "answer",
+        "img": "img/nasdaq-tower.jpg",
+        "focus": [
+          0.5,
+          0.4
+        ],
+        "zoom": [
+          1.0,
+          1.08
+        ],
+        "credit": "사진: 나스닥 타워 · Nielsoncaetanosalmeron (CC BY 4.0)",
+        "fill": true,
+        "vo": "공모가는 70에서 78달러 사이.",
+        "cap": "공모가\n70~78달러 사이",
+        "hl": "70~78달러",
+        "overlay": {
+          "type": "big",
+          "big": "{range}달러",
+          "count": false,
+          "sub": "1주 공모가 범위"
+        },
+        "vo_final": "공모가는 {price}달러, 첫 거래는 {open}달러에서 시작했습니다.",
+        "cap_final": "공모가 {price}달러,\n첫 거래 {open}달러",
+        "hl_final": "첫 거래 {open}달러",
+        "overlay_final": {
+          "type": "big",
+          "big": "{open}달러",
+          "sub": "첫 거래 가격 · 공모가 {price}달러"
+        }
+      }
+    ],
+    "gap": 0.35
+  },
+  "thumb": {
+    "title": "삼성전자보다 큰\nAI 회사가 나왔다",
+    "highlight": "삼성전자",
+    "person": {
+      "name": "Dario Amodei",
+      "desc": "앤트로픽 CEO"
+    },
+    "image": {
+      "type": "image",
+      "src": "img/dario.jpg",
+      "url": "https://commons.wikimedia.org/wiki/File:Dario_Amodei_in_2023.jpg"
     }
   },
-  "slides": [
-    {
-      "kind": "cover",
-      "layout": "big",
-      "big": "9,680억",
-      "title": "클로드 회사가\n주식시장에 나왔다",
-      "highlight": "주식시장",
-      "sub": "공모가 74달러 기준 시가총액(달러) · 투자 권유 아님"
-    },
-    {
-      "kind": "body",
-      "heading": "2021년 창업,\n몸값이 이렇게 컸다",
-      "highlight": "몸값",
-      "visual": {
-        "type": "bars",
-        "unit": "억 달러",
-        "items": [
-          {
-            "label": "2025.3 시리즈 E",
-            "value": 615,
-            "display": "615억"
-          },
-          {
-            "label": "2025.9 시리즈 F",
-            "value": 1830,
-            "display": "1,830억"
-          },
-          {
-            "label": "2026.2 시리즈 G",
-            "value": 3800,
-            "display": "3,800억"
-          },
-          {
-            "label": "2026.5 시리즈 H",
-            "value": 9650,
-            "display": "9,650억"
-          },
-          {
-            "label": "2026.11 상장",
-            "value": 9680,
-            "display": "9,680억",
-            "on": true
-          }
-        ]
-      },
-      "body": "상장 막대는 공모가 기준 시가총액입니다"
-    },
-    {
-      "kind": "stat",
-      "value": "45",
-      "unit": "배",
-      "heading": "분기 매출\n1년 반 만에 45배",
-      "highlight": "45배",
-      "label": "3.8억 달러에서 170억 달러가 됐습니다",
-      "body": "2025년 1분기와 2026년 3분기 증권신고서 숫자입니다"
-    },
-    {
-      "kind": "stat",
-      "value": "11,900",
-      "unit": "곳",
-      "heading": "1년에 10만 달러 넘게\n내는 기업 고객",
-      "highlight": "10만 달러",
-      "label": "1년 전 950곳에서 12배로 늘었습니다",
-      "body": "2026년 9월 말 증권신고서 기준입니다"
-    },
-    {
-      "kind": "stat",
-      "value": "74",
-      "unit": "달러",
-      "heading": "나스닥 상장\n종목 코드 ANT",
-      "highlight": "ANT",
-      "label": "공모가 범위 70~78달러의 중간값입니다 (확정 전)",
-      "body": "공시 숫자 정리이며 투자 권유가 아닙니다"
-    }
-  ],
   "sources": [
     {
-      "name": "Anthropic 증권신고서 S-1/A (SEC EDGAR, 2026.11.10)",
+      "name": "Anthropic 증권신고서 S-1/A (SEC EDGAR, 2026.11.10): 공동 창업자 7명, 2021년 창업, 분기 매출, 고객 수, 종목 코드 ANT, 공모가 범위, 상장 뒤 주식 수",
       "url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026072484/anthropicpbc-sx1ax2.htm"
     },
     {
@@ -122,9 +301,45 @@
     {
       "name": "Anthropic 시리즈 E 발표 (2025.3)",
       "url": "https://www.anthropic.com/news/anthropic-raises-series-e-at-usd61-5b-post-money-valuation"
+    },
+    {
+      "name": "네이버 증권 삼성전자(005930) 시가총액 2026.11.17 종가",
+      "url": "https://m.stock.naver.com/domestic/stock/005930/total"
+    },
+    {
+      "name": "네이버 증권 원·달러 환율 2026.11.17",
+      "url": "https://m.stock.naver.com/marketindex/exchange/FX_USDKRW"
+    },
+    {
+      "name": "사진 Dario Amodei in 2023 (UK Prime Minister, CC BY 2.0)",
+      "url": "https://commons.wikimedia.org/wiki/File:Dario_Amodei_in_2023.jpg"
+    },
+    {
+      "name": "사진 Peter Kyle visits Anthropic (DSIT, CC BY 2.0)",
+      "url": "https://commons.wikimedia.org/wiki/File:Secretary_of_State_Peter_Kyle_visits_Anthropic_in_San_Francisco._(54098999333).jpg"
+    },
+    {
+      "name": "사진 Jack Clark talk (Mvolz, CC0)",
+      "url": "https://commons.wikimedia.org/wiki/File:Jack_Clark,_co-founder_of_Anthropic,_giving_a_talk_on_AI_at_the_Schwarzman_Centre_in_Oxford.jpg"
+    },
+    {
+      "name": "사진 Samsung Digital Complex, Suwon (Grzegorz Sokol, CC BY 3.0)",
+      "url": "https://commons.wikimedia.org/wiki/File:Samsung_Digital_Complex,_Suwon_-_panoramio.jpg"
+    },
+    {
+      "name": "사진 Nasdaq MarketSite (ajay_suresh, CC BY 2.0)",
+      "url": "https://commons.wikimedia.org/wiki/File:Nasdaq_MarketSite_(51494550508).jpg"
+    },
+    {
+      "name": "사진 Nasdaq Tower May 2026 (Nielsoncaetanosalmeron, CC BY 4.0)",
+      "url": "https://commons.wikimedia.org/wiki/File:Nasdaq_Tower_May_2026.jpg"
+    },
+    {
+      "name": "화면 claude.com",
+      "url": "https://claude.com/product/claude-code"
     }
   ],
-  "caption": "앤트로픽 상장, 클로드를 만든 회사가 나스닥에 종목 코드 ANT로 올라왔습니다.\n\n공모가 74달러 기준 시가총액은 약 9,680억 달러. 상장 뒤 발행 주식 130억 8,667만 주로 계산했습니다.\n\n2021년에 창업한 회사입니다. 투자 유치 직후 기업가치는 2025년 3월 615억 달러, 9월 1,830억 달러, 2026년 2월 3,800억 달러, 5월 9,650억 달러였습니다.\n\n분기 매출은 2025년 1분기 3.8억 달러에서 2026년 3분기 170억 달러로 늘었습니다. 1년에 10만 달러 넘게 내는 고객은 950곳에서 1만 1,900곳이 됐습니다.\n\n증권신고서(S-1)와 회사 발표 숫자를 정리한 글이며, 투자 권유가 아닙니다.\n\n출처: Anthropic 증권신고서 S-1/A (SEC EDGAR, 11월 10일), Anthropic 공식 발표",
+  "caption": "앤트로픽 상장, 클로드 만든 회사가 나스닥에 종목 코드 ANT로 올라옵니다.\n\n공모가 범위 70~78달러, 중간값 74달러 기준 시가총액은 약 9,680억 달러. 1달러 1,337.2원으로 환산하면 약 1,290조 원. 11월 17일 종가 기준 삼성전자 보통주 시가총액 1,109조 원보다 큽니다.\n\n2021년 오픈AI 출신 7명이 세운 회사. 투자 유치 직후 기업가치는 2025년 3월 615억 달러, 9월 1,830억 달러, 2026년 2월 3,800억 달러, 5월 9,650억 달러였습니다.\n\n분기 매출은 2025년 1분기 3.8억 달러에서 2026년 3분기 170억 달러로 45배. 1년에 10만 달러 넘게 쓰는 기업 고객은 950곳에서 1만 1,900곳이 됐습니다.\n\n팔로우하면 매일 AI 소식\n\n출처: Anthropic 증권신고서 S-1/A (SEC EDGAR, 11월 10일), Anthropic 공식 발표, 네이버 증권(삼성전자 시가총액·원달러 환율, 11월 17일)\n사진: UK Prime Minister (CC BY 2.0), 영국 DSIT (CC BY 2.0), Mvolz (CC0), Grzegorz Sokol (CC BY 3.0), ajay_suresh (CC BY 2.0), Nielsoncaetanosalmeron (CC BY 4.0), 화면: claude.com\n음악: 'The Power of Will' by Robbero (ccmixter.org/files/Robbero/52281), CC BY 3.0",
   "hashtags": [
     "#앤트로픽",
     "#클로드",
@@ -144,11 +359,15 @@
     "ANT"
   ],
   "music": {
-    "generate": true,
-    "credit": "배경음악: 토큰전쟁이 코드로 직접 만든 음악 (외부 음원 없음)"
+    "src": "music.m4a",
+    "title": "The Power of Will",
+    "artist": "Robbero",
+    "url": "https://ccmixter.org/files/Robbero/52281",
+    "license": "CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/), 곡 페이지에서 확인 2026-11-17",
+    "credit": "'The Power of Will' by Robbero (ccmixter.org/files/Robbero/52281), CC BY 3.0"
   },
   "threads": {
-    "text": "앤트로픽이 나스닥에 상장했습니다. 종목 코드는 ANT입니다.\n\n공모가 74달러 기준 시가총액은 약 9,680억 달러.\n2021년 창업, 2025년 3월 기업가치 615억 달러에서 1년 8개월 만입니다.\n\n분기 매출은 2025년 1분기 3.8억 달러에서 2026년 3분기 170억 달러가 됐습니다.\n\n증권신고서 숫자 정리이고, 투자 권유는 아닙니다.",
+    "text": "클로드 만든 앤트로픽, 나스닥 상장. 종목 코드 ANT.\n\n공모가 범위 중간값 74달러로 계산하면 시가총액 약 9,680억 달러, 원화로 약 1,290조 원. 11월 17일 종가 기준 삼성전자 보통주(1,109조 원)보다 큰 숫자입니다.\n\n오픈AI를 나온 7명이 2021년에 차린 회사. 분기 매출은 1년 반 사이 3.8억 달러에서 170억 달러로 늘었습니다.",
     "images": [
       "cover"
     ],

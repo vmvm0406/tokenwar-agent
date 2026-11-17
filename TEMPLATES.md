@@ -326,6 +326,39 @@
 - 회사 로고·색은 `agent/timeline_reel.py` `LAB_INFO` (로고 파일 `assets/logos/`, 출처 README). `timeline.metr`(추세선)는 더 이상 그리지 않는다(경고).
 - **checks.py:** 날짜 형식·순서, url, rights own, 길이 20~35초. **렌더링:** 글자 폭·버튼 줄 겹침 검사, 기간별 평균 간격·효과음·소리 크기 출력, `frames/` 미리보기 (0.3초·그림 멈춤마다·재생 끝·정리 화면 끝·끝 화면).
 
+## 사진 내레이션 릴스 (`type: "video"` + `photo_reel`, 2026-11-17)
+
+소식 릴스를 사진 + 한국어 내레이션으로 (운영자 2026-11-17 "사진은 무조건 넣어", "tts 써보자"). `agent/photoreel.py`. 장면마다 사진 한 장이 화면을 꽉 채우고(천천히 확대, 장면이 바뀌면 살짝 당겨짐), 숫자·비교는 사진 위 정리 글(overlay), 아래는 내레이션을 짧게 옮긴 자막. **장면 길이는 목소리가 정한다**(목소리 길이 + `gap`). 글·그래프만 있는 장면은 없다(모든 장면 `img` 필수, checks.py).
+
+```json
+"photo_reel": {
+  "voice": {"engine": "elevenlabs", "voice": "deok"},
+  "gap": 0.35,
+  "scenes": [
+    {"beat": "hook", "img": "img/a.jpg", "focus": [0.4, 0.7], "zoom": [1.0, 1.06], "credit": "사진: ... (CC BY 2.0)",
+     "vo": "클로드를 만든 회사, 몸값이 1,200조 원 넘었습니다!", "cap": "클로드 만든 회사 몸값,
+1,200조 원 넘었다", "hl": "1,200조 원",
+     "overlay_at": "low", "overlay": {"type": "big", "big": "{cap_krw}", "sub": "{cap_usd} · 공모가 {price}달러 기준"}}
+  ]
+}
+```
+
+| 필드 | 내용 |
+|---|---|
+| `beat` | `hook`·`delay1`·`rehook`·`delay2`·`answer` (5박자, STYLE_GUIDE 6장). 렌더링이 박자별 시각을 출력 |
+| `img`·`focus`·`zoom`·`credit` | 사진(게시물 폴더 기준), 보여 줄 중심(가로·세로 0~1), 확대 시작·끝, 출처·라이선스(필수) |
+| `vo` | 내레이션. 숫자·영어는 그대로 써도 `tts_ko_norm`이 읽는 한글로 바꿔 보낸다. 잘못 읽히면 한글로(예: '에이, 엔, 티') |
+| `cap`·`hl` | 화면 자막(내레이션을 짧게, 2줄 이하), 녹색 강조 |
+| `overlay` | `big`(큰 숫자, 첫 숫자가 0부터 올라감. `count: false`면 그대로) / `steps`(`items: [[날짜, 값]]`, 한 줄씩) / `bars`(`items: [{label, value, display, on}]`, `note`) |
+| `overlay_at` | `low`면 정리 글을 자막 바로 위로 (사진 위쪽 얼굴을 가리지 않게). 기본 `top` |
+| `*_final` | post `ipo.status`가 `final`이면 `vo_final`·`cap_final`·`hl_final`·`overlay_final`을 쓴다 (상장일 확정 숫자) |
+| `fill` | 상장일 등에 다시 만드는 장면 표시 (선택) |
+
+- 글자 틀: `{cap_usd}`(공모가 기준 시가총액 '9,680억 달러') `{cap_krw}`('1,290조 원') `{cap_krw_jo}`(숫자, bars value에) `{cmp_krw}`·`{cmp_krw_jo}`(ipo.compare) `{price}` `{open}` `{range}` `{krw_rate}`. post `ipo`의 `shares_outstanding_after`·`price`·`open`·`krw_rate`로 계산. `ipo.compare.krw_jo`가 있으면 원화 시가총액이 그보다 커야 렌더링한다(비교 장면이 거짓이 되지 않게).
+- 목소리 파일 `voice/NN.wav`는 이 컴퓨터에서 만든다 (GitHub Actions에는 TTS가 없어 저장소의 파일을 쓴다): `py -3.12 agent/photoreel.py <폴더> --voice --asr` (바뀐 장면만 다시 만들고 받아쓰기로 확인, '확인 필요' 줄은 대본을 고쳐 다시). 계획만: `py -3.12 agent/photoreel.py <폴더>`.
+- 소리: 실제 음원 조각(`music.src`) 위에 목소리, 말하는 동안 음악을 낮춤(덕킹) + 장면 전환 효과음 → 끝 화면(`end_cta`) → -14 LUFS.
+- 면책 문구('투자 권유 아님' 등)는 쓰지 않는다 (STYLE_GUIDE 0 원칙 6, checks.py 오류).
+
 ## 막대 경주 릴스 (`type: "video"` + `race`, 2026-11-17)
 
 회사·서비스별 실제 수치(사용자 수, 기업가치)를 날짜 순으로 쌓아 막대가 서로 앞지르는 '바 차트 레이스' (STYLE_GUIDE 6장 "막대 경주 릴스"). `video` 대신 `race`. 렌더링은 `agent/racereel.py` + `agent/racereel.js` (render.py가 `race`를 보고 부른다). 그림이 없어 이 컴퓨터에서 바로 끝까지 렌더링된다. 실제 게시물 `posts/queue/2026-11-18-race-ai-users`, `2026-11-18-race-ai-valuation`.

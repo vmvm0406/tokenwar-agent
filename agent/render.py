@@ -489,6 +489,21 @@ def main(folder):
         thumb_or_exit(post, out_dir)
         print("완료:", out_dir)
         return
+    if post["type"] == "video" and post.get("photo_reel") and not (post.get("race") or post.get("list") or post.get("timeline")):
+        # 사진 내레이션 릴스 (agent/photoreel.py, TEMPLATES.md "사진 내레이션 릴스"): 장면마다 사진 + 한국어 내레이션
+        from photoreel import make_photo_reel
+        try:
+            dur = make_photo_reel(post, out_dir, CONFIG)
+        except ValueError as e:
+            print("사진 내레이션 릴스 렌더링 중단:")
+            for line in str(e).splitlines():
+                print(" -", line)
+            sys.exit(1)
+        print(f"사진 내레이션 릴스 길이: {dur:.1f}초")
+        check_sound_or_exit(out_dir)
+        thumb_or_exit(post, out_dir)
+        print("완료:", out_dir)
+        return
     if post["type"] == "video" and post.get("race"):
         # 막대 경주 릴스 (agent/racereel.py + racereel.js, TEMPLATES.md "막대 경주 릴스")
         from racereel import make_race_reel

@@ -43,6 +43,7 @@
 | `agent/thumb.py` | 릴스 썸네일 cover.jpg (그림 꽉 차게 + 가운데 제목 2줄) |
 | `agent/listreel.py` | 목록형 자료 릴스('조명 단어 20가지' 형식): 제목 + 번호 목록, 한 줄씩 강조되며 결과 이미지 교체 |
 | `agent/rankreel.py` | 순위 카운트다운 릴스(post `rank`): 제목 박힘 → 10위부터 점수 막대·순위표 쌓기 → 1위 '?' 1초 안에 공개, quote 모드(발언 순위). 운영자 2026-11-17 "움직이며 변하는 걸 계속 보게" |
+| `agent/photoreel.py` | 사진 내레이션 릴스(post `photo_reel`): 장면마다 사진 + ElevenLabs 한국어 내레이션(목소리가 장면 길이를 정함) + 숫자·비교 정리 글 + 자막. `--voice --asr`로 목소리 만들기·받아쓰기 확인 (TEMPLATES "사진 내레이션 릴스") |
 | `assets/mascot/` | 마스코트 슬라임 기준 이미지(`slime-base.jpg`)와 만드는 법(README). `gen_images.py`의 `"mascot": true`가 참고 이미지로 붙임 |
 | `agent/tighten.py` | 받아쓰기 단어 시각 → 말 사이 틈을 자른 keep 목록 |
 | `agent/analyze.py` | 영상 분석: 장면 전환, 말소리 구간, 받아쓰기, 시트 이미지 |

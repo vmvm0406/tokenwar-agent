@@ -256,7 +256,9 @@ def check_video(post):
     is_rank = bool(post.get("rank"))   # 순위 카운트다운 릴스 (rankreel.py): video 대신 rank
     is_tl = bool(post.get("timeline")) and not is_list and not is_rank   # 연표 릴스 (timeline_reel.py): video 대신 timeline
     is_race = bool(post.get("race")) and not is_list and not is_rank and not is_tl   # 막대 경주 릴스 (racereel.py): video 대신 race
-    main_key = "rank" if is_rank else "list" if is_list else "timeline" if is_tl else "race" if is_race else "video"
+    is_photo = bool(post.get("photo_reel")) and not (is_list or is_rank or is_tl or is_race)   # 사진 내레이션 릴스 (photoreel.py)
+    main_key = ("rank" if is_rank else "list" if is_list else "timeline" if is_tl else "race" if is_race
+                else "photo_reel" if is_photo else "video")
     for key in ["id", "series", "date", "publish_at", main_key, "title", "rights", "sources", "caption"]:
         if key not in post:
             errors.append(f"필수 항목 없음: {key}")
@@ -275,6 +277,11 @@ def check_video(post):
         e_r, w_r = check_race(post)
         errors += e_r
         warnings += w_r
+    if is_photo:
+        from photoreel import check_photo_reel
+        e_p, w_p = check_photo_reel(post)
+        errors += e_p
+        warnings += w_p
     if is_tl:
         from timeline_reel import check_timeline
         e_l, w_l = check_timeline(post)
@@ -337,7 +344,7 @@ def check_video(post):
     if not is_rank or post.get("thumb"):   # 순위 릴스는 thumb가 없으면 첫 화면이 커버 (rankreel.py)
         errors += check_thumb(post)
     v = post.get("video") or {}
-    if not is_list and not is_rank and not is_tl and not is_race and not v.get("src"):
+    if not is_list and not is_rank and not is_tl and not is_race and not is_photo and not v.get("src"):
         errors.append("video.src 필요")
     prev_end = -1
     texts = [post["title"]]
@@ -1255,7 +1262,8 @@ def deixis(post):
 
 # 중립 지키기·변명 말투 (운영자 2026-11-17 "뭔가 중립을 지키려고 하는 게 굉장히 AI 같아", STYLE_GUIDE 0 원칙 5·6). 경고만.
 HEDGE_RE = re.compile(r"(라는|다는|란) 뜻은 아니|뜻은 아닙니다|의미는 아닙니다|것은 아닙니다|물론 [^.!?]{0,30}(도 있|수도 있)|"
-                      r"단정할 수는? 없|단정하기는? 어렵|일반화하기는? 어렵|선을 그었|소멸 아님|사라진다는 뜻")
+                      r"단정할 수는? 없|단정하기는? 어렵|일반화하기는? 어렵|선을 그었|소멸 아님|사라진다는 뜻|"
+                      r"투자\s*권유|투자\s*조언|투자를 권하")   # 면책 문구도 중립 지키기 (운영자 2026-11-17 "투자 권유 아님 / 이런게 중립지키는 행동")
 
 
 def hedging(post):
@@ -1271,12 +1279,25 @@ def hedging(post):
         if not s.get("speech", post.get("speech", False)):
             texts.append((f"{i}번 자막", s.get("text")))
     for i, s in enumerate(post.get("slides") or [], 1):
-        texts += [(f"{i}번째 장", s.get(k)) for k in ("title", "heading", "body", "sub")]
+        texts += [(f"{i}번째 장", s.get(k)) for k in ("title", "heading", "body", "sub", "label")]
+    texts += _photo_texts(post)
+    texts.append(("스레드 글", (post.get("threads") or {}).get("text")))
     for where, t in texts:
         m = HEDGE_RE.search(str(t or ""))
         if m:
             w.append(f"{where}: 중립·변명 말투 '{m.group(0)}' → 빼고, 정확함은 제목·주장 고르기로 (STYLE_GUIDE 0 원칙 5·6)")
     return w
+
+
+def _photo_texts(post):
+    """사진 내레이션 릴스(photoreel.py) 장면의 내레이션·자막·정리 글."""
+    out = []
+    for i, s in enumerate((post.get("photo_reel") or {}).get("scenes") or [], 1):
+        out += [(f"photo_reel {i}번 {k}", s.get(k)) for k in ("vo", "cap", "vo_final", "cap_final")]
+        for k in ("overlay", "overlay_final"):
+            o = s.get(k) or {}
+            out += [(f"photo_reel {i}번 {k}", json.dumps(o, ensure_ascii=False))] if o else []
+    return out
 
 
 def screen_now(post):
@@ -1298,6 +1319,7 @@ def screen_now(post):
     B = R.get("beats") or {}
     texts += [("race.beats.hook", B.get("hook"))] + [(f"race.beats.{k}", (B.get(k) or {}).get("text")) for k in ("rehook", "ask")]
     texts += [(f"race.series {s.get('name')}", s.get("name")) for s in R.get("series") or []]
+    texts += [(w, t) for w, t in _photo_texts(post) if " cap" in w or "overlay" in w]
     for where, t in texts:
         if "지금" in str(t or ""):
             w.append(f"{where}: 화면 정리 글에 '지금' → '현재'나 연도('2026년')로 (STYLE_GUIDE 4장 화면 정리 글)")
@@ -1342,6 +1364,10 @@ def scene_image_gaps(post):
         imgs = [x for x in (R.get("images") or []) if has(x)] + [x for x in (beats.get("images") or []) if has(x)]
         if not imgs:
             notes.append("race: 사진 필드(race.images)가 아직 없음 → 경고만. 막대 그래프는 사진 위에 겹쳐야 함 (STYLE_GUIDE 0장 원칙 0)")
+    elif post.get("photo_reel"):   # 사진 내레이션 릴스 (photoreel.py): 장면마다 img
+        for i, s in enumerate((post["photo_reel"].get("scenes") or []), 1):
+            if not s.get("img"):
+                gaps.append(f"photo_reel.scenes {i}({s.get('beat')}): 사진 없음")
     else:   # 일반 영상 릴스: 원본 영상(video.src)이 사진을 대신한다
         v = post.get("video") or {}
         if not v.get("src"):
