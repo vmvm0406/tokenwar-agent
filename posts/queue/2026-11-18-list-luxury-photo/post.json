@@ -1,0 +1,308 @@
+{
+  "id": "2026-11-18-list-luxury-photo",
+  "type": "video",
+  "format": "howto",
+  "origin": "own",
+  "length": "short",
+  "series": "생존 가이드",
+  "date": "2026-11-18",
+  "publish_at": "2026-11-18T18:13:00+09:00",
+  "rights": "own",
+  "rights_note": "결과 그림은 토큰전쟁 마스코트 기준 이미지(assets/mascot/slime-base.jpg)를 참고 이미지로 넣어 FLUX.2 [klein] 4B(Cloudflare Workers AI)로 만든 AI 그림. 배경음악은 agent/music_gen.py가 코드로 만든 음악",
+  "title": "AI 사진 제작자에게\n반드시 필요한\n고급 사진 용어 15가지",
+  "highlight": "고급 사진 용어",
+  "list": {
+    "items": [
+      {
+        "name": "시네마틱",
+        "en": "cinematic",
+        "desc": "영화 한 장면 같은 색과 분위기입니다.",
+        "type": "image",
+        "src": "img/list/01.jpg",
+        "mascot": true,
+        "prompt": "Same slime character as the reference image. Make the photo look like this: cinematic look, dramatic color grading, widescreen movie still feeling, soft haze. Photorealistic, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "에디토리얼 화보",
+        "en": "editorial photoshoot",
+        "desc": "잡지 화보처럼 연출한 사진입니다.",
+        "type": "image",
+        "src": "img/list/02.jpg",
+        "mascot": true,
+        "prompt": "Same slime character as the reference image. Make the photo look like this: editorial fashion magazine photoshoot look, clean styled set, refined composition. Photorealistic, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "제품 광고 사진",
+        "en": "commercial product photography",
+        "desc": "깨끗한 배경과 조명으로 찍은 상품 사진입니다.",
+        "type": "image",
+        "src": "img/list/03.jpg",
+        "mascot": true,
+        "prompt": "Same slime character as the reference image. Make the photo look like this: commercial product photography, the slime on a clean seamless studio backdrop, perfect studio light, glossy reflections. Photorealistic, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "부드러운 확산광",
+        "en": "soft diffused light",
+        "desc": "그림자가 부드럽게 퍼지는 빛입니다.",
+        "type": "image",
+        "src": "img/list/04.jpg",
+        "mascot": true,
+        "prompt": "Same slime character as the reference image. Make the photo look like this: soft diffused light, very gentle shadows, smooth soft tones. Photorealistic, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "자연광 인물 사진",
+        "en": "natural light portrait",
+        "desc": "창가 햇빛으로 찍은 인물 사진입니다.",
+        "type": "image",
+        "src": "img/list/05.jpg",
+        "mascot": true,
+        "prompt": "Same slime character as the reference image. Make the photo look like this: natural light portrait style, soft daylight from a window, warm and honest mood. Photorealistic, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "골든아워 역광",
+        "en": "golden hour backlight",
+        "desc": "해 질 녘 해를 등지고 찍어 윤곽이 빛나는 빛입니다.",
+        "type": "image",
+        "src": "img/list/06.jpg",
+        "mascot": true,
+        "prompt": "Same slime character as the reference image. Make the photo look like this: golden hour backlight, warm sun behind the slime making its translucent body glow, soft lens haze. Photorealistic, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "얕은 심도",
+        "en": "shallow depth of field",
+        "desc": "대상만 선명하고 배경은 흐린 사진입니다.",
+        "type": "image",
+        "src": "img/list/07.jpg",
+        "mascot": true,
+        "prompt": "Same slime character as the reference image. Make the photo look like this: shallow depth of field, the slime sharp and the background softly blurred. Photorealistic, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "85mm 렌즈",
+        "en": "85mm lens",
+        "desc": "인물 사진에 많이 쓰는 렌즈로, 배경이 부드럽게 흐려집니다.",
+        "type": "image",
+        "src": "img/list/08.jpg",
+        "mascot": true,
+        "prompt": "Same slime character as the reference image. Make the photo look like this: shot with an 85mm portrait lens, flattering compression, creamy background blur. Photorealistic, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "매크로 촬영",
+        "en": "macro photography",
+        "desc": "아주 가까이서 작은 부분을 크게 찍는 촬영입니다.",
+        "type": "image",
+        "src": "img/list/09.jpg",
+        "mascot": true,
+        "prompt": "Same slime character as the reference image. Make the photo look like this: macro photography, very close to the slime, tiny bubbles and glossy surface details in sharp focus. Photorealistic, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "미니멀 구도",
+        "en": "minimalist composition",
+        "desc": "대상 하나와 넓은 빈 공간으로 만든 구도입니다.",
+        "type": "image",
+        "src": "img/list/10.jpg",
+        "mascot": true,
+        "prompt": "Same slime character as the reference image. Make the photo look like this: minimalist composition, the slime alone with lots of empty space and a plain background. Photorealistic, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "무광 질감",
+        "en": "matte texture",
+        "desc": "반사가 적은 차분한 표면입니다.",
+        "type": "image",
+        "src": "img/list/11.jpg",
+        "mascot": true,
+        "prompt": "Same slime character as the reference image. Make the photo look like this: matte texture look, soft non-reflective surfaces, calm muted tones. Photorealistic, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "고급 대리석 배경",
+        "en": "luxury marble background",
+        "desc": "대리석 바닥과 벽 배경입니다.",
+        "type": "image",
+        "src": "img/list/12.jpg",
+        "mascot": true,
+        "prompt": "Same slime character as the reference image. Make the photo look like this: the slime on a luxury white marble surface with a marble background, elegant soft light. Photorealistic, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "벨벳 배경",
+        "en": "velvet backdrop",
+        "desc": "짙은 벨벳 천 배경입니다.",
+        "type": "image",
+        "src": "img/list/13.jpg",
+        "mascot": true,
+        "prompt": "Same slime character as the reference image. Make the photo look like this: the slime in front of a deep green velvet backdrop, rich soft folds, elegant studio light. Photorealistic, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "필름 색감",
+        "en": "film color grading",
+        "desc": "필름 사진처럼 바랜 색입니다.",
+        "type": "image",
+        "src": "img/list/14.jpg",
+        "mascot": true,
+        "prompt": "Same slime character as the reference image. Make the photo look like this: film color grading, soft faded film colors and gentle grain, nostalgic mood. Photorealistic, vertical 4:5, no text, no letters."
+      },
+      {
+        "name": "8K 초고해상도",
+        "en": "8K ultra detailed",
+        "desc": "아주 세밀하고 선명하게 표현하라는 말입니다.",
+        "type": "image",
+        "src": "img/list/15.jpg",
+        "mascot": true,
+        "prompt": "Same slime character as the reference image. Make the photo look like this: 8K ultra detailed, extremely sharp, every tiny bubble and reflection visible. Photorealistic, vertical 4:5, no text, no letters."
+      }
+    ],
+    "hook": 12,
+    "align": true,
+    "hook_anim": true,
+    "stack": true,
+    "flood": true,
+    "flood_text": "나머지는 DM으로"
+  },
+  "music": {
+    "generate": true
+  },
+  "thumb": {
+    "title": "AI 사진 제작자에게\n반드시 필요한\n고급 사진 용어 15가지",
+    "highlight": "고급 사진 용어",
+    "image": {
+      "type": "image",
+      "src": "img/list/12.jpg",
+      "position": "center 40%"
+    },
+    "max_lines": 3
+  },
+  "topic": [
+    "고급 사진 프롬프트",
+    "AI 제품 사진"
+  ],
+  "sources": [
+    {
+      "name": "FLUX.2 [klein] 4B (Cloudflare Workers AI, 결과 그림 제작 도구)",
+      "url": "https://developers.cloudflare.com/workers-ai/models/flux-2-klein-4b/",
+      "kind": "tool"
+    }
+  ],
+  "caption": "AI 사진 프롬프트 고급 사진 용어 15가지, 끝에 하나만 붙여 보세요. 같은 사진이 광고 화보처럼 달라집니다.\n댓글에 '자료'라고 남기면 고급 사진 용어 30개의 뜻과 쓰는 법을 DM으로 보내 드려요(팔로우한 분께).\n\n같은 슬라임에 용어만 바꿔 15장을 만들었습니다.\n제품 광고 사진을 넣으면 깨끗한 스튜디오 배경이, 매크로 촬영을 넣으면 작은 공기 방울까지 보이는 접사가 나와요.\n대리석이나 벨벳 배경 같은 용어 하나로도 분위기가 달라집니다.\n\n쇼핑몰 상품 사진을 AI로 만드는 친구에게 보내 주세요.\n\n팔로우하고 댓글에 '자료'라고 남기면 고급 사진 용어 30개의 뜻과 쓰는 법을 DM으로 보내 드려요. (팔로우한 분께 보내집니다)",
+  "hashtags": [
+    "#AI사진",
+    "#프롬프트",
+    "#AI그림",
+    "#토큰전쟁"
+  ],
+  "dm": {
+    "keyword": "자료",
+    "message": "요청하신 고급 사진 용어 30개, 뜻과 쓰는 법까지 정리해 뒀어요 ✨\n아래 '자료 보기'를 누르면 용어마다 뜻과 분위기를 예시 그림과 함께 볼 수 있어요.\n사진 설명 끝에 촬영 용어 하나만 붙여 보세요. 같은 사진도 화보처럼 달라져요.",
+    "cta": "팔로우하고 댓글에 '자료' 남기면\n고급 사진 용어 30개를\n보내 드립니다",
+    "banner": "댓글에 '자료'라고 남기면\n사진 용어 30개를 DM으로 보내 드립니다",
+    "page": {
+      "intro": "AI 사진 제작자에게 꼭 필요한 고급 사진 용어 30개를 정리했어요. 사진가들이 실제로 쓰는 이름이라 AI도 그대로 알아들어요. 용어마다 뜻과 분위기를 함께 담았어요.",
+      "list_title": "영상에 나온 고급 사진 용어 15개",
+      "list_intro": "번호는 영상에 나온 순서와 같아요. 그림은 토큰전쟁 마스코트 슬라임으로 만든 예시예요.",
+      "more": [
+        {
+          "name": "하이엔드 화보",
+          "en": "high-end fashion photography",
+          "desc": "명품 광고처럼 연출한 패션 사진입니다."
+        },
+        {
+          "name": "스튜디오 조명",
+          "en": "studio lighting",
+          "desc": "스튜디오에서 여러 조명으로 맞춘 빛입니다."
+        },
+        {
+          "name": "림 라이트",
+          "en": "rim light",
+          "desc": "뒤에서 비춰 윤곽선을 밝히는 빛입니다."
+        },
+        {
+          "name": "부드러운 그림자",
+          "en": "soft shadows",
+          "desc": "경계가 흐린 옅은 그림자입니다."
+        },
+        {
+          "name": "은은한 반사",
+          "en": "subtle reflections",
+          "desc": "바닥이나 표면에 살짝 비치는 반사입니다."
+        },
+        {
+          "name": "배경지",
+          "en": "seamless paper backdrop",
+          "desc": "이음매 없는 종이 배경입니다."
+        },
+        {
+          "name": "다크 무드",
+          "en": "dark moody tones",
+          "desc": "어둡고 차분한 색조입니다.",
+          "type": "image",
+          "src": "img/more/dark-moody-tones.jpg",
+          "mascot": true,
+          "prompt": "Same slime character as the reference image. Make the photo look like this: dark moody tones, deep shadows, rich dark colors, a single soft light on the slime. Photorealistic, vertical 4:5, no text, no letters."
+        },
+        {
+          "name": "뉴트럴 톤",
+          "en": "neutral color palette",
+          "desc": "베이지·회색처럼 튀지 않는 색 조합입니다."
+        },
+        {
+          "name": "미드센추리 인테리어",
+          "en": "mid-century modern interior",
+          "desc": "1950~60년대풍 가구와 실내 양식입니다.",
+          "type": "image",
+          "src": "img/more/mid-century-modern-interior.jpg",
+          "mascot": true,
+          "prompt": "Same slime character as the reference image. Make the photo look like this: the slime on a walnut mid-century modern lounge chair in a 1960s style living room, warm lamp light. Photorealistic, vertical 4:5, no text, no letters."
+        },
+        {
+          "name": "브러시드 메탈",
+          "en": "brushed metal",
+          "desc": "결이 보이는 무광 금속 표면입니다.",
+          "type": "image",
+          "src": "img/more/brushed-metal.jpg",
+          "mascot": true,
+          "prompt": "Same slime character as the reference image. Make the photo look like this: the slime on a brushed metal pedestal with a brushed metal background, cool reflections, product photo. Photorealistic, vertical 4:5, no text, no letters."
+        },
+        {
+          "name": "실크 천",
+          "en": "silk fabric drape",
+          "desc": "윤기 있는 실크 천을 늘어뜨린 배경입니다.",
+          "type": "image",
+          "src": "img/more/silk-fabric-drape.jpg",
+          "mascot": true,
+          "prompt": "Same slime character as the reference image. Make the photo look like this: the slime on flowing champagne-colored silk fabric drapes, soft glossy folds, elegant studio light. Photorealistic, vertical 4:5, no text, no letters."
+        },
+        {
+          "name": "3분할 구도",
+          "en": "rule of thirds",
+          "desc": "화면을 가로세로 셋으로 나눈 선 위에 대상을 두는 구도입니다."
+        },
+        {
+          "name": "대칭 구도",
+          "en": "symmetrical composition",
+          "desc": "좌우가 맞는 안정된 구도입니다."
+        },
+        {
+          "name": "HDR",
+          "en": "high dynamic range",
+          "desc": "밝은 곳과 어두운 곳을 모두 살린 사진입니다."
+        },
+        {
+          "name": "중형 포맷 카메라",
+          "en": "medium format camera",
+          "desc": "필름이나 센서가 커서 계조가 풍부한 카메라입니다."
+        }
+      ],
+      "more_title": "추가 고급 사진 용어 15개",
+      "more_intro": "영상에 나오지 않은 용어 15개예요. 일부 용어에는 예시 그림을 붙였어요."
+    }
+  },
+  "threads": {
+    "text": "AI 사진 프롬프트 끝에 촬영 용어 하나만 붙여도 같은 사진이 화보처럼 바뀝니다.\n\n'제품 광고 사진'을 넣으면 깨끗한 스튜디오 배경이 되고, '매크로 촬영'을 넣으면 작은 공기 방울까지 보이는 접사가 나오거든요.\n대리석, 벨벳 같은 배경 이름 하나로도 분위기가 확 달라집니다.\n\n고급스러움은 긴 설명보다 정확한 용어 하나에서 나옵니다.",
+    "images": [
+      "cover"
+    ],
+    "topic": "AI Threads"
+  },
+  "keywords": [
+    "AI 사진 프롬프트",
+    "고급 사진 용어",
+    "AI 제품 사진"
+  ]
+}
