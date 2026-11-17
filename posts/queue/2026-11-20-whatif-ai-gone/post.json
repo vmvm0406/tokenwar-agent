@@ -28,7 +28,22 @@
           "url": "https://upload.wikimedia.org/wikipedia/commons/c/cc/Black_smartphone_in_hand_%28Unsplash%29.jpg",
           "credit": "사진: Dennis Cortés cortes / Wikimedia Commons, CC0",
           "license": "CC0"
-        }
+        },
+        "pops": [
+          {
+            "word": "내일 아침",
+            "at": "내일"
+          },
+          {
+            "word": "AI 없음",
+            "color": "#FF4D4D",
+            "at": "사라진"
+          },
+          {
+            "num": "?",
+            "at": "티가"
+          }
+        ]
       },
       {
         "beat": "q1",
@@ -49,7 +64,23 @@
           "url": "https://upload.wikimedia.org/wikipedia/commons/4/4f/Reading_mail_at_night_%28Unsplash%29.jpg",
           "credit": "사진: Jay Wennington jaywennington / Wikimedia Commons, CC0",
           "license": "CC0"
-        }
+        },
+        "pops": [
+          {
+            "word": "스팸",
+            "at": "스팸이"
+          },
+          {
+            "logo": "gmail",
+            "label": "Gmail",
+            "at": "지메일"
+          },
+          {
+            "num": "99.9%",
+            "label": "AI 차단",
+            "at": "구십구"
+          }
+        ]
       },
       {
         "beat": "q1",
@@ -67,7 +98,22 @@
           "url": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Stuck_in_traffic_%28Unsplash%29.jpg",
           "credit": "사진: Charles Deluvio charlesdeluvio / Wikimedia Commons, CC0",
           "license": "CC0"
-        }
+        },
+        "pops": [
+          {
+            "word": "출근길",
+            "at": "출근길"
+          },
+          {
+            "word": "도착 시간",
+            "at": "도착 시간을"
+          },
+          {
+            "logo": "googlemaps",
+            "label": "Google 지도",
+            "at": "구글 지도"
+          }
+        ]
       },
       {
         "beat": "rehook",
@@ -85,7 +131,18 @@
           "credit": "사진: Shixart1985 / Wikimedia Commons, CC BY 2.0",
           "license": "CC BY 2.0"
         },
-        "source": ""
+        "source": "",
+        "pops": [
+          {
+            "word": "진짜 문제",
+            "at": "무서운"
+          },
+          {
+            "word": "내 카드",
+            "color": "#00FF66",
+            "at": "내 카드"
+          }
+        ]
       },
       {
         "beat": "q2",
@@ -107,7 +164,23 @@
             "url": "https://usa.visa.com/about-visa/newsroom/press-releases.releaseId.20661.html"
           },
           "credit": "화면: Visa 공식 보도자료 (2024.5.7)"
-        }
+        },
+        "pops": [
+          {
+            "word": "카드 사기",
+            "at": "카드 사기"
+          },
+          {
+            "logo": "visa",
+            "label": "Visa",
+            "at": "비자"
+          },
+          {
+            "num": "$400억",
+            "label": "1년 막은 사기",
+            "at": "사백억"
+          }
+        ]
       },
       {
         "beat": "q2",
@@ -128,7 +201,23 @@
           "url": "https://upload.wikimedia.org/wikipedia/commons/2/24/Grandpa_sitting_for_Television_%28Unsplash%29.jpg",
           "credit": "사진: JD  Mason jmason / Wikimedia Commons, CC0",
           "license": "CC0"
-        }
+        },
+        "pops": [
+          {
+            "word": "퇴근",
+            "at": "퇴근"
+          },
+          {
+            "logo": "netflix",
+            "label": "Netflix",
+            "at": "넷플릭스"
+          },
+          {
+            "num": "80%",
+            "label": "추천으로 시청",
+            "at": "팔십"
+          }
+        ]
       },
       {
         "beat": "answer",
@@ -146,7 +235,34 @@
           "credit": "사진: Alex wong killerfvith / Wikimedia Commons, CC0",
           "license": "CC0"
         },
-        "source": ""
+        "source": "",
+        "pops": [
+          {
+            "logo": "gmail",
+            "label": "메일",
+            "at": "메일도"
+          },
+          {
+            "logo": "googlemaps",
+            "label": "길 찾기",
+            "at": "길 찾기도"
+          },
+          {
+            "logo": "visa",
+            "label": "카드",
+            "at": "카드도"
+          },
+          {
+            "logo": "netflix",
+            "label": "추천",
+            "at": "볼 것"
+          },
+          {
+            "word": "매일 AI",
+            "color": "#00FF66",
+            "at": "매일"
+          }
+        ]
       }
     ]
   },

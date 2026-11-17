@@ -64,6 +64,80 @@ def trim(x, thr=0.012, pad=0.01, sr=SR):
     return y
 
 
+def frame_db(x, sr, win=0.01):
+    """10ms 창 RMS(dBFS) 배열."""
+    n = int(win * sr)
+    m = len(x) // n
+    if not m:
+        return np.array([-120.0])
+    r = np.sqrt(np.mean(np.square(x[:m * n].reshape(m, n)), axis=1))
+    return 20 * np.log10(np.maximum(r, 1e-6))
+
+
+def trim_breath(x, sr, floor_db=-45.0, head=0.03, tail=0.06, offset=False):
+    """앞뒤 무음만 자른다 (말끝·숨 끝을 자르지 않게): 10ms 에너지가 floor_db(최대 대비)보다 큰 첫·끝 창을 찾고
+    앞 30ms, 뒤 60ms를 남긴 뒤 짧게 페이드 (운영자 2026-11-17 "호흡이 어색한 부분")."""
+    db = frame_db(x, sr)
+    on = np.where(db > db.max() + floor_db)[0]
+    if not len(on):
+        return (x, 0.0) if offset else x
+    a = max(0, int((on[0] * 0.01 - head) * sr))
+    z = min(len(x), int(((on[-1] + 1) * 0.01 + tail) * sr))
+    y = x[a:z].copy()
+    f = int(0.005 * sr)
+    y[:f] *= np.linspace(0, 1, f)
+    g = int(0.03 * sr)
+    y[-g:] *= np.linspace(1, 0, g)
+    return (y, a / sr) if offset else y
+
+
+def remap_time(t, trim_offset, fixes):
+    """원래 음성 시각 → trim_breath(offset)·tighten_pauses(fixes) 뒤 시각."""
+    t = t - trim_offset
+    shift = 0.0
+    for pos, dur, keep in fixes:
+        if t >= pos + dur:
+            shift += dur - keep
+        elif t > pos + keep / 2:
+            shift += t - pos - keep / 2
+    return max(0.0, t - shift)
+
+
+def tighten_pauses(x, sr, max_gap=0.35, keep=0.22, floor_db=-40.0):
+    """문장 안 긴 쉼(max_gap초 넘는 무음)을 keep초로 줄인다 (가운데를 잘라 20ms 크로스페이드). 반환 (오디오, [(위치초, 원래초, 줄인초)])."""
+    db = frame_db(x, sr)
+    quiet = db < db.max() + floor_db
+    out, last, fixes = [], 0, []
+    i = 0
+    n = len(quiet)
+    while i < n:
+        if quiet[i]:
+            j = i
+            while j < n and quiet[j]:
+                j += 1
+            dur = (j - i) * 0.01
+            if dur > max_gap and i > 0 and j < n:
+                cut_a = int((i * 0.01 + keep / 2) * sr)
+                cut_z = int((j * 0.01 - keep / 2) * sr)
+                out.append(x[last:cut_a])
+                last = cut_z
+                fixes.append((round(i * 0.01, 2), round(dur, 2), keep))
+            i = j
+        else:
+            i += 1
+    out.append(x[last:])
+    if not fixes:
+        return x, []
+    y = out[0]
+    c = int(0.02 * sr)
+    for seg in out[1:]:
+        if len(y) > c and len(seg) > c:
+            y = np.concatenate([y[:-c], y[-c:] * np.linspace(1, 0, c) + seg[:c] * np.linspace(0, 1, c), seg[c:]])
+        else:
+            y = np.concatenate([y, seg])
+    return y, fixes
+
+
 def save(path, x, sr=SR):
     path.parent.mkdir(parents=True, exist_ok=True)
     x = x / (np.max(np.abs(x)) or 1) * 0.9
@@ -253,24 +327,65 @@ def eleven_text(text, normalize=True, words=None):
     return out
 
 
-def eleven_mp3(text, voice_id=None, settings=None, model=ELEVEN_MODEL, normalize=True, words=None):
+def eleven_mp3(text, voice_id=None, settings=None, model=ELEVEN_MODEL, normalize=True, words=None,
+                previous_text=None, next_text=None):
     """문장 → mp3 파일 경로. 같은 글·목소리·설정·모델이면 캐시를 쓴다 (다시 과금되지 않게).
-    normalize(기본 켬): tts_ko_norm으로 읽을 글로 바꾼 뒤 보내고, 캐시 키도 바꾼 글로 잡는다. words: 추가 사전."""
+    normalize(기본 켬): tts_ko_norm으로 읽을 글로 바꾼 뒤 보내고, 캐시 키도 바꾼 글로 잡는다. words: 추가 사전.
+    previous_text/next_text(선택): 앞뒤 문장을 함께 넘겨 억양이 이어지게 한다 (줄마다 따로 만들 때 호흡이 끊기지 않게,
+    운영자 2026-11-17 "호흡이 어색한 부분"). 읽지는 않는다. 넘기면 캐시 키에도 들어간다."""
     text = eleven_text(text, normalize, words)
+    ctx = {}
+    if previous_text:
+        ctx["previous_text"] = eleven_text(previous_text, normalize, words)
+    if next_text:
+        ctx["next_text"] = eleven_text(next_text, normalize, words)
     vs = dict(ELEVEN_SETTINGS, **(settings or {}))
     voice_id = voice_id or ELEVEN_DEFAULT_VOICE
-    h = hashlib.sha256(json.dumps([text, voice_id, vs, model, ELEVEN_FORMAT], ensure_ascii=False,
-                                  sort_keys=True).encode()).hexdigest()[:24]
+    key_parts = [text, voice_id, vs, model, ELEVEN_FORMAT] + ([ctx] if ctx else [])
+    h = hashlib.sha256(json.dumps(key_parts, ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:24]
     out = ELEVEN_CACHE / f"{h}.mp3"
     if out.exists() and out.stat().st_size > 0:
         return out
     key = eleven_key()
     audio = _eleven(f"/text-to-speech/{voice_id}?output_format={ELEVEN_FORMAT}", key,
-                    {"text": text, "model_id": model, "voice_settings": vs}, accept="audio/mpeg")
+                    dict({"text": text, "model_id": model, "voice_settings": vs}, **ctx), accept="audio/mpeg")
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_bytes(audio)
     print(f"  ElevenLabs {len(text)}자 사용 ({voice_id})", file=sys.stderr)
     return out
+
+
+def eleven_mp3_ts(text, voice_id=None, settings=None, model=ELEVEN_MODEL, normalize=True, words=None,
+                   previous_text=None, next_text=None):
+    """eleven_mp3와 같고 /with-timestamps로 글자별 시각도 받는다 → (mp3 경로, {"text", "chars", "starts", "ends"}).
+    글자 시각은 보낸 글(정규화한 글) 기준. 같은 캐시 규칙 (키에 'ts'), 시각은 mp3 옆 .json."""
+    import base64
+    text = eleven_text(text, normalize, words)
+    ctx = {}
+    if previous_text:
+        ctx["previous_text"] = eleven_text(previous_text, normalize, words)
+    if next_text:
+        ctx["next_text"] = eleven_text(next_text, normalize, words)
+    vs = dict(ELEVEN_SETTINGS, **(settings or {}))
+    voice_id = voice_id or ELEVEN_DEFAULT_VOICE
+    h = hashlib.sha256(json.dumps([text, voice_id, vs, model, ELEVEN_FORMAT, ctx, "ts"], ensure_ascii=False,
+                                  sort_keys=True).encode()).hexdigest()[:24]
+    out = ELEVEN_CACHE / f"{h}.mp3"
+    js = out.with_suffix(".json")
+    if out.exists() and js.exists():
+        return out, json.loads(js.read_text(encoding="utf-8"))
+    key = eleven_key()
+    raw = _eleven(f"/text-to-speech/{voice_id}/with-timestamps?output_format={ELEVEN_FORMAT}", key,
+                  dict({"text": text, "model_id": model, "voice_settings": vs}, **ctx))
+    d = json.loads(raw)
+    al = d.get("alignment") or d.get("normalized_alignment") or {}
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_bytes(base64.b64decode(d["audio_base64"]))
+    meta = {"text": text, "chars": al.get("characters", []), "starts": al.get("character_start_times_seconds", []),
+            "ends": al.get("character_end_times_seconds", [])}
+    js.write_text(json.dumps(meta, ensure_ascii=False), encoding="utf-8")
+    print(f"  ElevenLabs {len(text)}자 사용 ({voice_id}, 시각 포함)", file=sys.stderr)
+    return out, meta
 
 
 def decode(path, sr, tempo=1.0):

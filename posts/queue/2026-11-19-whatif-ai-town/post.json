@@ -28,7 +28,18 @@
           "url": "https://upload.wikimedia.org/wikipedia/commons/c/c8/European_village_%28Unsplash%29.jpg",
           "credit": "사진: Łukasz Czechowicz jestspoko / Wikimedia Commons, CC0",
           "license": "CC0"
-        }
+        },
+        "pops": [
+          {
+            "word": "AI 마을",
+            "color": "#00FF66",
+            "at": "마을"
+          },
+          {
+            "num": "?",
+            "at": "무슨 일"
+          }
+        ]
       },
       {
         "beat": "q1",
@@ -46,7 +57,28 @@
           "url": "https://upload.wikimedia.org/wikipedia/commons/f/f1/Stanford_University_Main_Quad_May_2011_001.jpg",
           "credit": "사진: King of Hearts / Wikimedia Commons, CC BY-SA 3.0",
           "license": "CC BY-SA 3.0"
-        }
+        },
+        "pops": [
+          {
+            "word": "스탠퍼드",
+            "color": "#E0474C",
+            "at": "스탠퍼드"
+          },
+          {
+            "logo": "google",
+            "label": "Google",
+            "at": "구글"
+          },
+          {
+            "word": "스몰빌",
+            "at": "스몰빌"
+          },
+          {
+            "num": "25명",
+            "label": "AI 주민",
+            "at": "스물다섯"
+          }
+        ]
       },
       {
         "beat": "q1",
@@ -63,7 +95,26 @@
           "url": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Chatting_in_a_coffee_shop_%28Unsplash%29.jpg",
           "credit": "사진: Nick Hillier nhillier / Wikimedia Commons, CC0",
           "license": "CC0"
-        }
+        },
+        "pops": [
+          {
+            "word": "기상",
+            "at": "일어나"
+          },
+          {
+            "word": "식사",
+            "at": "밥을"
+          },
+          {
+            "word": "출근",
+            "at": "출근"
+          },
+          {
+            "word": "수다",
+            "color": "#00FF66",
+            "at": "수다"
+          }
+        ]
       },
       {
         "beat": "rehook",
@@ -80,7 +131,23 @@
           "url": "https://upload.wikimedia.org/wikipedia/commons/f/f4/020170206_Party_Dekoration_zum_Valentinstag%2C_Bielsko-Biala.jpg",
           "credit": "사진: Silar / Wikimedia Commons, CC BY-SA 4.0",
           "license": "CC BY-SA 4.0"
-        }
+        },
+        "pops": [
+          {
+            "num": "1명",
+            "label": "딱 한 명",
+            "at": "한 명"
+          },
+          {
+            "word": "생각 1개",
+            "at": "생각"
+          },
+          {
+            "word": "파티",
+            "color": "#00FF66",
+            "at": "밸런타인"
+          }
+        ]
       },
       {
         "beat": "q2",
@@ -102,7 +169,28 @@
             "url": "https://arxiv.org/abs/2304.03442"
           },
           "credit": "화면: arXiv 논문 페이지"
-        }
+        },
+        "pops": [
+          {
+            "num": "2일",
+            "label": "게임 속",
+            "at": "이틀"
+          },
+          {
+            "num": "52%",
+            "label": "소식 아는 주민",
+            "at": "절반"
+          },
+          {
+            "word": "초대",
+            "at": "초대"
+          },
+          {
+            "word": "데이트",
+            "color": "#00FF66",
+            "at": "데이트"
+          }
+        ]
       },
       {
         "beat": "answer",
@@ -120,7 +208,24 @@
           "url": "https://upload.wikimedia.org/wikipedia/commons/4/41/Party_balloons_%28Unsplash%29.jpg",
           "credit": "사진: Sofiya Levchenko sofelini / Wikimedia Commons, CC0",
           "license": "CC0"
-        }
+        },
+        "pops": [
+          {
+            "num": "2.14",
+            "label": "밸런타인데이",
+            "at": "이월"
+          },
+          {
+            "num": "17:00",
+            "label": "오후 5시",
+            "at": "오후"
+          },
+          {
+            "num": "5명",
+            "label": "파티 참석",
+            "at": "다섯 명"
+          }
+        ]
       }
     ]
   },

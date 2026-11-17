@@ -14,7 +14,7 @@
     0초          제목 질문 쾅 + 첫 장면(훅) 그림·글
     장면마다     컷 전환(휙) → 그림 칸 → 화면 글 줄마다 쾅(말 속 위치) → 작은 출처 줄
     마지막 장면  beat "answer": 상승음 끝에 쾅, 정답 공개 (bars hidden 공개)
-    끝           끝 화면 2.5초 (post.end_cta, video.append_cta_card)
+    끝           끝 화면 2.2초 (post.end_cta): 페이드 없이 컷 + 쾅, 음악은 끝까지 이어지다 딱 끝남
 
 목소리 만들기 (이 컴퓨터에서만, GitHub Actions에는 ElevenLabs 키가 없다):
     py -3.12 agent/narrated_reel.py --voice posts/queue/<폴더> [--force]
@@ -64,8 +64,12 @@ SAFE_BOTTOM = _SAFE.get("bottom", 1250)
 SIDE = _SAFE.get("side", 65)
 
 VOICE_DIR = "voice"
-SCENE_GAP = 0.22          # 말 끝과 다음 장면 사이 (호흡)
-LEAD = 0.06               # 장면 시작 뒤 말이 시작되기까지
+SCENE_GAP = 0.12          # 장면 사이에 더하는 쉼. 목소리 파일 끝 60ms + 앞 30ms 여유와 합쳐 문장 사이 약 0.2초
+                          # (운영자 2026-11-17 "호흡이 어색한 부분" → 문장 사이 0.15~0.25초, 0.4초 넘는 빈 소리 없게)
+LEAD = 0.0                # 장면 시작 = 목소리 파일 시작 (파일 앞 30ms 여유가 이미 있음)
+END_SECS = 2.2            # 끝 화면 (페이드 없이 딱 끊어 들어가고, 음악은 끝까지 이어지다 딱 끝남. 운영자 2026-11-17 "페이드 아웃할 필요 없을듯")
+MAX_PAUSE = 0.35          # 문장 안 쉼이 이보다 길면 PAUSE_KEEP로 줄인다
+PAUSE_KEEP = 0.22
 MIN_SCENE = 1.4
 LENGTH_RANGE = (25.0, 40.0)   # 본편 (끝 화면 제외)
 BEATS = ("hook", "q1", "rehook", "q2", "answer")
@@ -109,19 +113,67 @@ def char_time(say, pos, words, dur):
     return words[-1][2]
 
 
-def cue(say, word, words, dur, default):
+def align_time(word, align):
+    """말 속 낱말 → 그 낱말 첫 글자를 말한 시각 (ElevenLabs 글자 시각, 정규화한 글 기준). 못 찾으면 None."""
+    if not align or not word:
+        return None
+    from tts_ko_norm import normalize
+    txt = align["text"]
+    for w in (normalize(word), word):
+        i = txt.find(w)
+        if i >= 0 and i < len(align["t"]):
+            return align["t"][i]
+    return None
+
+
+def cue(say, word, words, dur, default, align=None):
     if not word:
         return default
+    t = align_time(word, align)
+    if t is not None:
+        return t
     i = say.find(word)
     if i < 0:
         return default
     return char_time(say, i, words, dur)
 
 
+LOGO_COLORS = {"openai": "#FFFFFF", "googlegemini": "#8E75B2", "claude": "#D97757", "anthropic": "#D97757",
+               "google": "#4285F4", "alibabacloud": "#FF6A00", "gmail": "#EA4335", "googlemaps": "#34A853",
+               "visa": "#FFFFFF", "netflix": "#E50914", "meta": "#0A7CFF"}
+
+
+def logo_data(name, color=None):
+    """assets/logos/<name>.svg (Simple Icons CC0, 지명적 사용) → 회사 색으로 칠한 data URL. 없으면 None (글자로 그림)."""
+    f = ROOT / "assets" / "logos" / f"{name}.svg"
+    if not f.exists():
+        return None
+    svg = f.read_text(encoding="utf-8").replace("<svg ", f'<svg fill="{color or LOGO_COLORS.get(name, "#FFFFFF")}" ', 1)
+    return "data:image/svg+xml;base64," + base64.b64encode(svg.encode("utf-8")).decode()
+
+
+GAP_TARGET = 0.2          # 문장 사이 실제 빈 소리 (앞 문장 말끝 ~ 다음 문장 첫소리). 0.15~0.25초
+
+
+def edge_silence(path):
+    """목소리 파일 앞·뒤 무음 길이(초, 최대 대비 -40dB 아래)."""
+    import numpy as np
+    import tts
+    db = tts.frame_db(tts.decode(path, 16000), 16000)
+    idx = np.where(db > db.max() - 40)[0]
+    if not len(idx):
+        return 0.0, 0.0
+    return idx[0] * 0.01, (len(db) - 1 - idx[-1]) * 0.01
+
+
 def plan(post, folder=None):
-    """화면·소리 계획 (JS로 넘김)."""
+    """화면·소리 계획 (JS로 넘김). 장면 길이 = 목소리 길이 + (문장 사이 빈 소리가 GAP_TARGET이 되게 맞춘 값)."""
     N = post["narrated"]
     scenes = N.get("scenes") or []
+    edges = []
+    for k in range(1, len(scenes) + 1):
+        vp = voice_path(folder, k) if folder else None
+        edges.append(edge_silence(vp) if vp and vp.exists() else (0.0, 0.0))
     out, t = [], 0.0
     src_line = ""
     for k, s in enumerate(scenes, 1):
@@ -137,14 +189,18 @@ def plan(post, folder=None):
             vdur = est_secs(say)
             vp = None
         words = meta.get("words") or []
-        dur = max(MIN_SCENE, LEAD + vdur + SCENE_GAP)
+        align = meta.get("align")
+        if vp and k < len(scenes):
+            dur = max(MIN_SCENE, LEAD + vdur + GAP_TARGET - edges[k - 1][1] - edges[k][0])
+        else:
+            dur = max(MIN_SCENE, LEAD + vdur + SCENE_GAP)
         lines = [l for l in str(s.get("text", "")).split("\n") if l.strip()]
         at = s.get("at") or []
         lt = []
         for i, ln in enumerate(lines):
             d = (i / max(1, len(lines))) * vdur * 0.6
             w = at[i] if i < len(at) else ""
-            lt.append(round(LEAD + (cue(say, w, words, vdur, d) if w else d), 3))
+            lt.append(round(LEAD + (cue(say, w, words, vdur, d, align) if w else d), 3))
         if "source" in s:
             src_line = str(s.get("source") or "")
         kind = s.get("kind", "image")
@@ -157,16 +213,28 @@ def plan(post, folder=None):
             bars.append({"label": str(b.get("label", "")), "value": float(b.get("value", 0)),
                          "shown": str(b.get("shown", b.get("value", ""))), "hidden": bool(b.get("hidden")),
                          "win": bool(b.get("win")), "instant": not b.get("at"),
-                         "t": round(LEAD + cue(say, b.get("at"), words, vdur, 0.0), 3)})
-        big_t = round(LEAD + cue(say, s.get("big_at"), words, vdur, 0.0), 3)
+                         "t": round(LEAD + cue(say, b.get("at"), words, vdur, 0.0, align), 3)})
+        pops = []
+        for q in s.get("pops") or []:
+            d = dict(q)
+            d["t"] = round(LEAD + cue(say, q.get("at"), words, vdur, 0.0, align), 3)
+            if q.get("logo"):
+                d["logo_svg"] = logo_data(q["logo"], q.get("color"))
+            if q.get("photo") and folder and (Path(folder) / q["photo"]).exists():
+                d["photo_data"] = "data:image/jpeg;base64," + base64.b64encode((Path(folder) / q["photo"]).read_bytes()).decode()
+            pops.append(d)
+        big_t = round(LEAD + cue(say, s.get("big_at"), words, vdur, 0.0, align), 3)
         out.append({"k": k, "t0": round(t, 3), "dur": round(dur, 3), "beat": s.get("beat", ""), "kind": kind,
                     "lines": lines, "lt": lt, "hl": s.get("hl") or "", "source": src_line, "img": img,
                     "has_img": bool(im.get("src")), "bars": bars, "bar_max": float(s.get("bar_max") or 0),
-                    "big": str(s.get("big", "")), "big_t": big_t, "voice": str(vp) if vp else None,
+                    "big": str(s.get("big", "")), "big_t": big_t, "pops": pops, "voice": str(vp) if vp else None,
                     "vdur": round(vdur, 3)})
         t += dur
     # bars가 hidden인 막대는 answer 장면에서 공개: 같은 라벨의 막대를 answer 장면에 그대로 다시 그린다 (bars를 이어받음)
-    return {"scenes": out, "end": round(t, 3), "title": str(post["title"]).split("\n"),
+    from video import dm_cta
+    cta = dm_cta(post) or ""
+    return {"scenes": out, "end": round(t, 3), "cta_end": cta.split("\n") if cta else [],
+            "total": round(t + (END_SECS if cta else 0), 3), "title": str(post["title"]).split("\n"),
             "hl": post.get("highlight") or "", "cta": (N.get("cta_line") or "").strip(),
             "safe": {"top": SAFE_TOP, "bottom": SAFE_BOTTOM, "side": SIDE}}
 
@@ -185,7 +253,11 @@ def sfx_times(p):
         hits += [s["t0"] + b["t"] for b in s["bars"]]
         if s["kind"] == "big" and s["big"]:
             hits.append(s["t0"] + s["big_t"] + 0.5)
+    for s in sc:
+        hits += [s["t0"] + q["t"] for q in s.get("pops") or []]
     hits += rehook
+    if p.get("cta_end"):
+        impacts.append(p["end"])          # 끝 화면으로 딱 끊어 들어갈 때 쾅 (페이드 없음)
     riser = (ans["t0"] - 1.6, ans["t0"]) if ans and ans["t0"] > 2 else None
     return {"impacts": impacts, "hits": sorted(set(round(h, 3) for h in hits)), "whooshes": whooshes, "riser": riser}
 
@@ -249,7 +321,7 @@ def make_narrated_reel(post, folder, cfg):
     work.mkdir()
     html_file = work / "narrated.html"
     html_file.write_text(page_html(post, p, cfg), encoding="utf-8")
-    main = p["end"]
+    main = p["total"]                     # 본편 + 끝 화면 (끝 화면도 캔버스에서 그린다: 페이드 없이 컷)
     nfr = int(round(main * FPS))
     problems = asyncio.run(_shoot(html_file, [k / FPS for k in range(nfr)], work))
     if problems:
@@ -268,6 +340,9 @@ def make_narrated_reel(post, folder, cfg):
         music = work / "music.wav"
         make_pad(music, main)
     voices = [(s["t0"] + LEAD, Path(s["voice"])) for s in p["scenes"]]
+    from listreel import _read_audio, SR as MSR
+    if len(_read_audio(music)) < main * MSR - MSR * 0.05:
+        raise ValueError(f"음악 조각이 릴스({main:.1f}초)보다 짧다 → music_fit.py --no-fade --dur로 더 길게 (끝 페이드 없이 딱 끊기게)")
     sfx, info = make_sfx(p, main)
     mixed = work / "mix.wav"
     m = mix_audio(music, voices, main, mixed, sfx)
@@ -277,10 +352,6 @@ def make_narrated_reel(post, folder, cfg):
                     "-map", "0:v:0", "-map", "1:a:0", "-t", f"{main:.3f}", "-c:v", "copy",
                     "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", str(out)], check=True)
     dur = main
-    from video import dm_cta, append_cta_card
-    cta = dm_cta(post)
-    if cta:
-        dur = append_cta_card(out, cta, cfg, work, dur)
     from loudness import normalize
     normalize(out)
     frames = folder / "frames"
@@ -299,8 +370,8 @@ def make_narrated_reel(post, folder, cfg):
 def preview_times(p, total):
     """미리보기: 장면마다 끝 직전(줄이 다 박힌 뒤) + 끝 화면."""
     ts = [0.5] + [s["t0"] + s["dur"] - 0.25 for s in p["scenes"]]
-    if total > p["end"] + 0.5:
-        ts.append(total - 1.0)
+    if p.get("cta_end"):
+        ts.append(total - 0.6)
     return ts
 
 
@@ -426,18 +497,24 @@ def make_voices(folder, force=False):
     for k, s in enumerate(N["scenes"], 1):
         say = s["say"].strip()
         sent = normalize(say)
+        prev_say = N["scenes"][k - 2]["say"].strip() if k > 1 else None
+        next_say = N["scenes"][k]["say"].strip() if k < len(N["scenes"]) else None
         out = voice_path(folder, k)
         meta_f = out.with_suffix(".json")
         old = json.loads(meta_f.read_text(encoding="utf-8")) if meta_f.exists() else {}
-        if out.exists() and not force and old.get("say") == say and old.get("sent") == sent:
+        ctx = {"prev": prev_say, "next": next_say, "trim": "breath-v1", "ts": True}
+        if out.exists() and not force and old.get("say") == say and old.get("sent") == sent and old.get("ctx") == ctx:
             meta = old
         else:
             h = tts.ELEVEN_CACHE
             before = set(h.glob("*.mp3")) if h.exists() else set()
-            mp3 = tts.eleven_mp3(say, vid, settings)
+            # 앞뒤 문장으로 억양 이어짐 + 글자별 시각(/with-timestamps): 화면 움직임을 말에 정확히 맞춘다
+            mp3, al = tts.eleven_mp3_ts(say, vid, settings, previous_text=prev_say, next_text=next_say)
             if mp3 not in before:
                 used += len(sent)
-            x = tts.trim(tts.decode(mp3, tts.KO_SR), sr=tts.KO_SR)
+            x, off = tts.trim_breath(tts.decode(mp3, tts.KO_SR), tts.KO_SR, offset=True)   # 말끝·숨 끝 안 자름
+            x, fixes = tts.tighten_pauses(x, tts.KO_SR, MAX_PAUSE, PAUSE_KEEP)
+            align = {"text": al["text"], "t": [round(tts.remap_time(a, off, fixes), 3) for a in al["starts"]]}
             wav = out.with_suffix(".wav")
             tts.save(wav, x, tts.KO_SR)
             subprocess.run(["ffmpeg", "-nostdin", "-y", "-loglevel", "error", "-i", str(wav), "-c:a", "aac", "-b:a", "96k",
@@ -445,7 +522,7 @@ def make_voices(folder, force=False):
             wav.unlink()
             heard, words = asr_words(out)
             g = verify_audio(out, say)
-            meta = {"say": say, "sent": sent, "heard": heard, "gate": g["ok"], "gate_ratio": g["ratio"],
+            meta = {"say": say, "sent": sent, "ctx": ctx, "pauses_cut": fixes, "align": align, "heard": heard, "gate": g["ok"], "gate_ratio": g["ratio"],
                     "gate_diffs": g["diffs"], "gate_asr": g["asr"], "words": words}
             meta_f.write_text(json.dumps(meta, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
         d = _probe(out)

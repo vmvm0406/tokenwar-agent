@@ -50,8 +50,13 @@ function drawHL(ln, x, y, px, hl, align) {
 function loadImg(src) {
   return new Promise(res => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = src; });
 }
+const POPIMG = {};
 async function nrReady() {
   for (const s of P.scenes) if (s.img) { const im = await loadImg(s.img); if (im) IMG[s.k] = im; }
+  for (const s of P.scenes) for (const [i, q] of (s.pops || []).entries()) {
+    const src = q.logo_svg || q.photo_data;
+    if (src) { const im = await loadImg(src); if (im) POPIMG[s.k + '_' + i] = im; }
+  }
   return Object.keys(IMG).length;
 }
 function sceneAt(t) {
@@ -60,12 +65,13 @@ function sceneAt(t) {
   return cur;
 }
 const ANS = P.scenes.find(s => s.beat === 'answer');
-const SHAKES = [0.0].concat(ANS ? [ANS.t0 + (ANS.lt[0] || 0)] : []);
+const SHAKES = [[0.0, 12]].concat(ANS ? [[ANS.t0 + (ANS.lt[0] || 0), 12]] : []);
+P.scenes.forEach(s => (s.pops || []).forEach(q => SHAKES.push([s.t0 + q.t, 5])));   // 로고·숫자가 박힐 때 살짝 흔들림
 function shake(t) {
   let x = 0, y = 0;
-  for (const s of SHAKES) {
+  for (const [s, amp] of SHAKES) {
     const d = t - s;
-    if (d >= 0 && d < 0.4) { const a = 12 * Math.exp(-d * 12); x += a * Math.sin(d * 83); y += a * 0.6 * Math.cos(d * 71); }
+    if (d >= 0 && d < 0.4) { const a = amp * Math.exp(-d * 12); x += a * Math.sin(d * 83); y += a * 0.6 * Math.cos(d * 71); }
   }
   return [x, y];
 }
@@ -172,9 +178,74 @@ function drawLines(s, d) {
   if (s.source) text(s.source, SIDE, SRC_Y, SRC_PX, C.muted, { w: 600 });
 }
 
+// 끝 화면 (post.end_cta): 본편이 끝나면 페이드 없이 컷으로 들어와 글이 쾅 박힌다 (운영자 2026-11-17 "페이드 아웃할 필요 없을듯")
+function drawEnd(t) {
+  const d = t - P.end;
+  const cy = 780, px = 84;
+  const n = P.cta_end.length;
+  text('TOKEN WAR', W / 2, cy - 70 - (n - 1) * px * 0.62, 44, C.accent, { bhs: true, align: 'center' });
+  P.cta_end.forEach((ln, i) => {
+    const y = cy + (i - (n - 1) / 2) * px * 1.25 + px * 0.35;
+    scaleAt(W / 2, y - px * 0.35, slam(d - i * 0.12) || 0.0001, () => {
+      if (d >= i * 0.12) text(ln, W / 2, y, px, C.text, { bhs: true, align: 'center' });
+    });
+  });
+  g.fillStyle = C.accent; g.fillRect(W / 2 - 80, cy + n * px * 0.7 + 40, 160, 8);
+}
+
+// 아래 칸 움직임 (화면 아래 절반이 비지 않게): 말 속 낱말에 맞춰 로고·숫자·말·사진이 하나씩 쾅 박히며 격자로 쌓인다.
+// 운영자 2026-11-17 "AI이름 나열할 때는 로고를 빡 빡 빡 박을 수 있잖아". 읽어야 할 글은 위 안전 영역에 있고 이 칸은 보조.
+const POP_Y0 = 1290, POP_H = 380;
+function popSlam(dt) {            // 1.6배에서 쾅
+  if (dt < 0) return 0;
+  if (dt < 0.13) return 1.6 - 0.68 * (dt / 0.13);
+  if (dt < 0.24) return 0.92 + 0.08 * ((dt - 0.13) / 0.11);
+  return 1;
+}
+function drawPops(s, d) {
+  const ps = s.pops || [];
+  if (!ps.length) return;
+  const n = ps.length, cols = Math.min(n, 3), rows = Math.ceil(n / 3);
+  const cw = PW / cols, ch = Math.min(190, POP_H / rows);
+  const y0 = POP_Y0 + (POP_H - ch * rows) / 2;
+  ps.forEach((q, i) => {
+    const dt = d - q.t;
+    if (dt < 0) return;
+    const r = Math.floor(i / cols), c = i % cols;
+    const inRow = Math.min(cols, n - r * cols);
+    const cx = PX + (PW - cw * inRow) / 2 + cw * (c + 0.5), cy = y0 + ch * (r + 0.5);
+    const im = POPIMG[s.k + '_' + i];
+    scaleAt(cx, cy, popSlam(dt), () => {
+      if (q.logo_svg && im) {
+        const sz = Math.min(ch * 0.58, 120);
+        g.drawImage(im, cx - sz / 2, cy - ch * 0.42, sz, sz);
+        if (q.label) text(q.label, cx, cy + ch * 0.36, Math.min(42, ch * 0.24), q.label_color || C.text, { bhs: true, align: 'center' });
+      } else if (q.photo_data && im) {
+        const w = cw * 0.86, h = ch * 0.7;
+        const rr = Math.max(w / im.width, h / im.height);
+        g.save(); g.beginPath(); g.rect(cx - w / 2, cy - ch * 0.45, w, h); g.clip();
+        g.drawImage(im, cx - im.width * rr / 2, cy - ch * 0.45 + h / 2 - im.height * rr / 2, im.width * rr, im.height * rr);
+        g.restore();
+        if (q.label) text(q.label, cx, cy + ch * 0.42, Math.min(36, ch * 0.2), C.text, { bhs: true, align: 'center' });
+      } else if (q.num) {
+        let px = Math.min(120, ch * 0.62);
+        while (px > 40 && width(q.num, px, true) > cw - 24) px -= 4;
+        text(q.num, cx, cy + px * 0.28 - (q.label ? 14 : 0), px, q.color || C.accent, { bhs: true, align: 'center' });
+        if (q.label) text(q.label, cx, cy + ch * 0.42, Math.min(32, ch * 0.18), C.muted, { w: 700, align: 'center' });
+      } else {
+        const ln = q.word || q.label || '';
+        let px = Math.min(72, ch * 0.4);
+        while (px > 34 && width(ln, px, true) > cw - 24) px -= 4;
+        text(ln, cx, cy + px * 0.35, px, q.color || C.text, { bhs: true, align: 'center' });
+      }
+    });
+  });
+}
+
 function nrFrame(t) {
   g.setTransform(1, 0, 0, 1, 0, 0);
   g.fillStyle = C.bg; g.fillRect(0, 0, W, H);
+  if (P.cta_end.length && t >= P.end) { drawEnd(t); return cv.toDataURL('image/jpeg', 0.92); }
   const [sx, sy] = shake(t);
   g.translate(sx, sy);
   const s = sceneAt(t);
@@ -184,6 +255,7 @@ function nrFrame(t) {
   else if (s.kind === 'big') drawBig(s, d);
   else drawImage(s, d, 1);
   drawLines(s, d);
+  drawPops(s, d);
   g.setTransform(1, 0, 0, 1, 0, 0);
   drawTitle(t);
   return cv.toDataURL('image/jpeg', 0.92);

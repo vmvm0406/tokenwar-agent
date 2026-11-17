@@ -404,14 +404,17 @@
 | `narrated.cta_line` | 선택: 제목 아래 0초 한 줄 (양자택일 질문, '댓글로'는 초록). 끝 화면은 post `end_cta` |
 | `narrated.voice` | 선택: `{"voice": "deok", "settings": {...}}` (기본 Deok + `tts.ELEVEN_SETTINGS`) |
 | `narrated.scenes[]` | 3~10개. 첫 장면 `beat: "hook"`, 마지막 `beat: "answer"`, 중간 `q1`/`rehook`/`q2` |
-| `.say` | 읽을 글 (숫자·영어 이름은 한글로). 장면 길이 = 목소리 길이 + 0.28초 |
+| `.say` | 읽을 글 (숫자·영어 이름은 한글로). 장면 길이 = 목소리 길이 + 문장 사이 빈 소리가 0.2초가 되게 맞춘 값 |
 | `.text` / `.hl` / `.at` | 화면 글 1~2줄(줄당 14자), 초록 강조 말, 줄마다 박힐 말 속 낱말(`say` 안의 글) |
 | `.source` | 작은 출처 줄 40자 안 (다음 장면에 이어짐, `""`면 지움) |
 | `.kind` | `image`(기본, 천천히 확대) / `bars`(흐린 사진 위 막대: `bars: [{label, value, shown, at, hidden, win}]`, `bar_max`. `at` 없는 막대는 처음부터 다 자람, `hidden`은 '?') / `big`(흐린 사진 위 큰 숫자 `big`, `big_at` 낱말에서 세며 올라감) |
+| `.pops` | 화면 아래 절반 움직임 2~6개, 말 속 낱말(`at`)에 쾅: `{"logo": "openai", "label": "GPT-5", "at": "지피티"}`(assets/logos/<이름>.svg, `label_color` 선택) / `{"num": "-63%", "label": "GPT-5", "color", "at"}` / `{"word": "중국 AI", "color", "at"}` / `{"photo": "img/x.jpg", "label", "at"}`. 3열 격자로 쌓인다 |
 | `.image` | **모든 장면 필수** `{type: "image", src: "img/s01.jpg", prompt 또는 url, size: [1344, 672]}` (render.yml이 만든다) |
 
 - **목소리는 이 컴퓨터에서만** (Actions에는 키가 없다): `py -3.12 agent/narrated_reel.py --voice posts/queue/<폴더>` → `voice/NN.m4a` + `voice/NN.json`(받아쓰기·낱말 시각, 화면 글 박히는 시각에 쓰임). 다르게 들린 곳은 '!'로 나온다 → `say`를 고쳐 다시. `voice/`를 함께 커밋해야 Actions가 렌더링한다.
 - 계획·길이만 보기: `py -3.12 agent/narrated_reel.py posts/queue/<폴더>` (장면 시각·효과음 시각·검사).
+- 글자 시각: 목소리를 ElevenLabs `/with-timestamps`로 만들어 `voice/NN.json` `align`(보낸 글, 글자별 시각)에 둔다. `at`은 이 시각으로 맞추고 없으면 받아쓰기 낱말 시각.
+- 끝 화면(`end_cta`)은 캔버스에서 그린다: 페이드 없이 컷, 음악은 끝까지 (음악 조각이 릴스보다 짧으면 렌더링이 멈춘다).
 - **checks.py:** 장면 수, beat 순서, say 숫자(한글로), 화면 글 줄·글자 수, at·hl·big_at이 글 안에 있는지, 모든 장면 사진, 출처 줄, rights own. **렌더링:** 목소리·그림 파일, 글자 폭·버튼 줄(x 850~) 겹침, 소리 크기, `frames/` 미리보기.
 
 ## 릴스 썸네일 (`thumb`)

@@ -5,7 +5,7 @@
   (0.85~1.21배 안에서만, sped-up 폰크 정도, 음높이 유지), 시작점을 박 위치에 맞춰 0초가 박이 되게 한다 → 장면 전환이 박에 맞는다.
 - 끝 1초 페이드 아웃. 크기는 렌더러가 -14 LUFS로 맞춘다.
 
-사용법: py -3.12 agent/music_fit.py <원곡.mp3> <출력.m4a> [--bpm 120] [--start 30] [--dur 40]
+사용법: py -3.12 agent/music_fit.py <원곡.mp3> <출력.m4a> [--bpm 120] [--start 30] [--dur 40] [--no-fade]
   --start: 원곡에서 대략 어디부터(초). 그 근처 박에 맞춘다. 인트로를 건너뛰고 비트가 꽉 찬 곳을 고른다.
 post.json: "music": {"src": "music.m4a", "title", "artist", "url", "license", "credit"} (STYLE_GUIDE 0 원칙 적용 세부)
 """
@@ -60,7 +60,7 @@ def tempo_and_phase(x):
     return bpm, ph / fps
 
 
-def fit(src, out, bpm=120.0, start=30.0, dur=40.0):
+def fit(src, out, bpm=120.0, start=30.0, dur=40.0, fade=True):
     x = _read_mono(src, max(0.0, start - 2), 24)
     tb, phase = tempo_and_phase(x)
     # 릴스 BPM과 가장 가까운 관계 (같음·2배·절반·1.5배·2/3)
@@ -76,7 +76,7 @@ def fit(src, out, bpm=120.0, start=30.0, dur=40.0):
     need = dur * factor + 0.5
     af = f"atempo={factor:.5f}," if abs(factor - 1) > 0.002 else ""
     subprocess.run(["ffmpeg", "-nostdin", "-y", "-v", "error", "-ss", f"{s0:.3f}", "-t", f"{need:.3f}", "-i", str(src),
-                    "-af", f"{af}atrim=0:{dur:.3f},afade=t=out:st={dur - 1:.3f}:d=1",
+                    "-af", f"{af}atrim=0:{dur:.3f}" + (f",afade=t=out:st={dur - 1:.3f}:d=1" if fade else ""),
                     "-ac", "2", "-ar", "44100", "-c:a", "aac", "-b:a", "160k", str(out)], check=True)
     print(f"원곡 템포 {tb:.1f} BPM → {factor:.3f}배 (릴스 {bpm:g} BPM), 시작 {s0:.2f}초, 길이 {dur:g}초 → {out}")
     return {"tempo": tb, "factor": factor, "start": s0}
@@ -88,6 +88,9 @@ if __name__ == "__main__":
         print(__doc__)
         sys.exit(1)
     kw = {}
+    if "--no-fade" in a:          # 끝 페이드 없이 (내레이션 릴스는 끝을 딱 끊는다, 운영자 2026-11-17 "페이드 아웃할 필요 없을듯")
+        a.remove("--no-fade")
+        kw["fade"] = False
     for name in ("bpm", "start", "dur"):
         if f"--{name}" in a:
             i = a.index(f"--{name}")
