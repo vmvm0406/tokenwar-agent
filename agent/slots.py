@@ -19,6 +19,14 @@
     py -3.12 agent/slots.py bump [--near 2026-11-16T13:20+09:00] [--window 90] [--dry-run]
                                                                속보 정리: posts/queue에서 속보(breaking) 앞뒤 window분 안의
                                                                따라 하기·질문(format howto/ask)만 다음 빈 칸으로 옮긴다
+    py -3.12 agent/slots.py swap <폴더A> <폴더B> [--dry-run]    두 게시물의 publish_at을 맞바꾼다 (기대 순위 칸 배치)
+    py -3.12 agent/slots.py move <폴더> 19:43 [--dry-run]      게시 시각만 옮긴다 (HH:MM = 그 게시물 날짜의 그 시각, 또는 ISO).
+                                                               같은 종류 예약이 이미 있는 시각이면 거절 (swap을 쓴다)
+    폴더는 posts/queue 안의 폴더 이름이나 경로. swap·move·bump는 렌더링이 최신이었으면 .render_hash를 새 post.json
+    기준으로 다시 써서 다시 렌더링하지 않는다 (게시 시각은 렌더링 결과와 상관없음). 승인 표시(approved)는 그대로.
+
+기대 순위 칸 (config.json `slots.prime_slots`, 운영자 결정 2026-11-17): 하루 릴스 중 가장 잘 나올 것 같은 두 개를
+18:13·19:43에 둔다 (data/trends.md 18~21시 1.19x). 만든 뒤 순위가 바뀌면 swap으로 맞바꾼다. status에서 ★ 표시.
 
 속보(post.json `"breaking": true`, LOCAL.md 6장)는 --asap으로 지금 시각을 받을 뿐 기존 예약을 밀지 않는다.
 속보는 하루 칸 수(상한·daily_target)에 세지 않는다. 시의성 있는 게시물(소식·인용 등)은 원래 시각 그대로 두고,
@@ -28,6 +36,7 @@
 """
 import argparse
 import json
+import re
 import subprocess
 import sys
 from datetime import date, datetime, time, timedelta, timezone
@@ -42,6 +51,7 @@ S = CONFIG.get("slots", {})
 GAP = timedelta(minutes=int(S.get("min_gap_minutes", 90)))      # 상한을 넘겨 칸을 더 만들 때 같은 종류끼리 최소 간격
 LEAD = timedelta(minutes=int(S.get("lead_minutes", 40)))        # 지금부터 이만큼 뒤의 칸부터 (렌더링·검토 시간)
 DAY_START, DAY_END = time(10, 0), time(23, 0)                    # 상한을 넘겨 칸을 더 만들 때 쓸 수 있는 시간대
+PRIME = set(S.get("prime_slots", []))                            # 기대 순위 1·2위 릴스를 두는 칸 (운영자 결정 2026-11-17)
 
 
 def _times(kind):
@@ -203,10 +213,72 @@ def status(days=3, items=None):
             cells = []
             for t in _times(k):
                 hm = t.strftime("%H:%M")
-                cells.append(f"{hm} {'■ ' + used.pop(hm) if hm in used else '□'}")
+                star = "★" if k == "reel" and hm in PRIME else ""
+                cells.append(f"{star}{hm} {'■ ' + used.pop(hm) if hm in used else '□'}")
             cells += [f"{hm} ■ {n} (추가 칸)" for hm, n in sorted(used.items())]
             lines.append(f"  {k}: " + " | ".join(cells))
     return "\n".join(lines)
+
+
+_PUBLISH_AT = re.compile(r'(?m)^([ \t]*"publish_at"[ \t]*:[ \t]*)"[^"\n]*"')
+
+
+def set_publish_at(pj, new):
+    """post.json의 publish_at만 바꾼다. 다른 줄은 바이트 그대로 두고(줄 끝은 LF, Actions 리눅스와 같게)
+    렌더링이 최신이었으면 .render_hash를 새 post.json 기준으로 다시 쓴다. 반환: 렌더링이 최신이었는지.
+    지문 계산식(build.input_hash)은 그대로라 대기열·열린 브랜치의 기존 .render_hash가 모두 유효하다."""
+    pj = Path(pj)
+    sys.path.insert(0, str(ROOT / "agent"))
+    from build import input_hash
+    mark = pj.parent / ".render_hash"
+    fresh = mark.exists() and mark.read_text().strip() == input_hash(pj.parent)
+    text = pj.read_bytes().decode("utf-8").replace("\r\n", "\n")
+    new_text, n = _PUBLISH_AT.subn(lambda m: f'{m.group(1)}"{new.isoformat()}"', text, count=1)
+    if n != 1 or json.loads(new_text).get("publish_at") != new.isoformat():
+        post = json.loads(text)
+        post["publish_at"] = new.isoformat()
+        new_text = json.dumps(post, ensure_ascii=False, indent=2) + "\n"
+    pj.write_bytes(new_text.encode("utf-8"))
+    if fresh:
+        mark.write_bytes((input_hash(pj.parent) + "\n").encode())
+    return fresh
+
+
+def _folder(arg):
+    p = Path(arg)
+    for cand in (p, ROOT / "posts" / "queue" / arg):
+        if (cand / "post.json").exists():
+            return cand.resolve()
+    sys.exit(f"게시물 폴더를 못 찾음: {arg} (posts/queue 안 폴더 이름이나 경로)")
+
+
+def _at(pj):
+    return datetime.fromisoformat(json.loads(Path(pj).read_text(encoding="utf-8"))["publish_at"]).astimezone(KST)
+
+
+def swap(a, b, dry_run=False):
+    """두 게시물의 publish_at을 맞바꾼다. 반환 [(폴더 이름, 이전, 새 시각, 렌더링 최신이었는지(시험이면 None))]."""
+    pa, pb = Path(a) / "post.json", Path(b) / "post.json"
+    ta, tb = _at(pa), _at(pb)
+    if dry_run:
+        return [(Path(a).name, ta, tb, None), (Path(b).name, tb, ta, None)]
+    return [(Path(a).name, ta, tb, set_publish_at(pa, tb)), (Path(b).name, tb, ta, set_publish_at(pb, ta))]
+
+
+def move(folder, when, dry_run=False, items=None):
+    """게시 시각을 when(HH:MM이면 그 게시물 날짜의 그 시각, 아니면 ISO)으로. 같은 종류 예약이 1분 안에 있으면 거절."""
+    pj = Path(folder) / "post.json"
+    old = _at(pj)
+    if re.fullmatch(r"\d{1,2}:\d{2}", when):
+        new = datetime.combine(old.date(), time(*map(int, when.split(":"))), KST)
+    else:
+        new = datetime.fromisoformat(when).astimezone(KST)
+    kind = kind_of(json.loads(pj.read_text(encoding="utf-8")))
+    items = items if items is not None else taken()
+    clash = [n for k, at, n, _ in items if k == kind and n != Path(folder).name and abs((at - new).total_seconds()) < 60]
+    if clash:
+        raise ValueError(f"{new:%m/%d %H:%M}에 이미 {', '.join(clash)} 예약: swap으로 맞바꾸세요")
+    return Path(folder).name, old, new, (None if dry_run else set_publish_at(pj, new))
 
 
 TIMELESS = ("howto", "ask")   # 시의성 없는 형식: 속보 때문에 칸을 정리할 때 이것만 뒤로 민다
@@ -243,16 +315,7 @@ def bump(near=None, window=90, dry_run=False, now=None, items=None):
         items = [x for x in items if x[2] != name] + [(kind, new, name, info)]
         if dry_run:
             continue
-        pj = info["path"]
-        sys.path.insert(0, str(ROOT / "agent"))
-        from build import input_hash
-        mark = pj.parent / ".render_hash"
-        fresh = mark.exists() and mark.read_text().strip() == input_hash(pj.parent)
-        post = json.loads(pj.read_text(encoding="utf-8"))
-        post["publish_at"] = new.isoformat()
-        pj.write_text(json.dumps(post, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        if fresh:
-            mark.write_text(input_hash(pj.parent) + "\n")
+        set_publish_at(info["path"], new)
     return moved
 
 
@@ -268,9 +331,28 @@ def main(argv=None):
     e.add_argument("--near", help="속보 게시 시각 (ISO). 없으면 breaking 게시물들의 시각")
     e.add_argument("--window", type=int, default=90, help="속보 앞뒤 몇 분 (기본 90)")
     e.add_argument("--dry-run", action="store_true")
-    for p in (a, b, c, e):
+    f = sub.add_parser("swap", help="두 게시물의 publish_at 맞바꾸기 (.render_hash도 같이)")
+    f.add_argument("a"); f.add_argument("b"); f.add_argument("--dry-run", action="store_true")
+    g = sub.add_parser("move", help="게시 시각만 옮기기 (HH:MM 또는 ISO, .render_hash도 같이)")
+    g.add_argument("folder"); g.add_argument("when"); g.add_argument("--dry-run", action="store_true")
+    for p in (a, b, c, e, f, g):
         p.add_argument("--no-fetch", action="store_true")
     args = ap.parse_args(argv)
+    if args.cmd in ("swap", "move"):
+        if args.cmd == "swap":
+            rows = swap(_folder(args.a), _folder(args.b), args.dry_run)
+        else:
+            if not args.no_fetch:
+                fetch()
+            try:
+                rows = [move(_folder(args.folder), args.when, args.dry_run)]
+            except ValueError as err:
+                sys.exit(str(err))
+        for name, old, new, fresh in rows:
+            note = "" if fresh is None else (" (.render_hash 갱신, 다시 렌더링 안 함)" if fresh
+                                             else " (렌더링이 최신 아님: render.yml이 렌더링한 뒤 게시)")
+            print(f"{'(시험) ' if args.dry_run else ''}{name}: {old:%m/%d %H:%M} → {new:%m/%d %H:%M}{note}")
+        return
     if not args.no_fetch:
         fetch()
     if args.cmd == "status":
