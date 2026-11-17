@@ -1375,17 +1375,14 @@ def scene_image_gaps(post):
         imgs = [x for x in (R.get("images") or []) if has(x)] + [x for x in (beats.get("images") or []) if has(x)]
         if not imgs:
             notes.append("race: 사진 필드(race.images)가 아직 없음 → 경고만. 막대 그래프는 사진 위에 겹쳐야 함 (STYLE_GUIDE 0장 원칙 0)")
-<<<<<<< HEAD
     elif post.get("photo_reel"):   # 사진 내레이션 릴스 (photoreel.py): 장면마다 img
         for i, s in enumerate((post["photo_reel"].get("scenes") or []), 1):
             if not s.get("img"):
                 gaps.append(f"photo_reel.scenes {i}({s.get('beat')}): 사진 없음")
-=======
     elif post.get("narrated"):   # 내레이션 모션 릴스: 막대·큰 숫자 장면도 사진 위에 (narrated_reel.py)
         for i, sc in enumerate((post["narrated"].get("scenes") or []), 1):
             if not has(sc.get("image")):
                 gaps.append(f"narrated.scenes {i}({sc.get('beat')}): 사진 없음")
->>>>>>> 2b9fba4 ('만약 ~라면?' 내레이션 모션 릴스 형식(narrated) + 3편(AI 투자 대회·AI 마을·AI가 사라지면): Deok 내레이션이 장면 시간을 정하고 화면 글은 받아쓰기 낱말 시각에 맞춰 박힘, 모든 장면 사진(막대·큰 숫자는 사진 위), 훅→질문→리훅→질문→답 뼈대, 실제 음원 덕킹·효과음, 목소리 만들기+로컬 받아쓰기 확인(--voice). checks·render 연결, STYLE_GUIDE·TEMPLATES·tts 기본 목소리 Deok. 그림은 render.yml. 승인 전)
     else:   # 일반 영상 릴스: 원본 영상(video.src)이 사진을 대신한다
         v = post.get("video") or {}
         if not v.get("src"):

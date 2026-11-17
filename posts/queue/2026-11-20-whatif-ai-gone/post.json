@@ -25,11 +25,9 @@
         "image": {
           "type": "image",
           "src": "img/s01.jpg",
-          "prompt": "A smartphone lying on a bedside table at dawn with a completely black dead screen, a cracked coffee mug next to it, cold blue morning light through curtains, eerie quiet mood, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
-          "size": [
-            1344,
-            672
-          ]
+          "url": "https://upload.wikimedia.org/wikipedia/commons/c/cc/Black_smartphone_in_hand_%28Unsplash%29.jpg",
+          "credit": "사진: Dennis Cortés cortes / Wikimedia Commons, CC0",
+          "license": "CC0"
         }
       },
       {
@@ -48,11 +46,9 @@
         "image": {
           "type": "image",
           "src": "img/s02.jpg",
-          "prompt": "An overflowing old metal mailbox exploding with hundreds of envelopes and junk letters flying everywhere, dark street at dawn, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
-          "size": [
-            1344,
-            672
-          ]
+          "url": "https://upload.wikimedia.org/wikipedia/commons/4/4f/Reading_mail_at_night_%28Unsplash%29.jpg",
+          "credit": "사진: Jay Wennington jaywennington / Wikimedia Commons, CC0",
+          "license": "CC0"
         }
       },
       {
@@ -68,11 +64,9 @@
         "image": {
           "type": "image",
           "src": "img/s03.jpg",
-          "prompt": "View from a driver's seat in a heavy morning traffic jam, a phone navigation map on the dashboard showing a frozen loading spinner, red brake lights everywhere, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
-          "size": [
-            1344,
-            672
-          ]
+          "url": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Stuck_in_traffic_%28Unsplash%29.jpg",
+          "credit": "사진: Charles Deluvio charlesdeluvio / Wikimedia Commons, CC0",
+          "license": "CC0"
         }
       },
       {
@@ -87,12 +81,11 @@
         "image": {
           "type": "image",
           "src": "img/s04.jpg",
-          "prompt": "Extreme close-up of a credit card held between fingers under a single harsh red warning light, dark background, tense mood, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
-          "size": [
-            1344,
-            672
-          ]
-        }
+          "url": "https://upload.wikimedia.org/wikipedia/commons/1/14/Close-up_of_a_woman_looking_at_a_credit_card_while_working_on_her_laptop.jpg",
+          "credit": "사진: Shixart1985 / Wikimedia Commons, CC BY 2.0",
+          "license": "CC BY 2.0"
+        },
+        "source": ""
       },
       {
         "beat": "q2",
@@ -110,11 +103,10 @@
         "image": {
           "type": "image",
           "src": "img/s05.jpg",
-          "prompt": "A huge pile of credit cards and cash locked behind a glowing steel vault door, dark bank vault, dramatic light, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
-          "size": [
-            1344,
-            672
-          ]
+          "shot": {
+            "url": "https://usa.visa.com/about-visa/newsroom/press-releases.releaseId.20661.html"
+          },
+          "credit": "화면: Visa 공식 보도자료 (2024.5.7)"
         }
       },
       {
@@ -133,31 +125,28 @@
         "image": {
           "type": "image",
           "src": "img/s06.jpg",
-          "prompt": "A person on a sofa in a dark living room holding a TV remote, the big TV screen shows a grid of blank movie poster tiles, blue glow, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
-          "size": [
-            1344,
-            672
-          ]
+          "url": "https://upload.wikimedia.org/wikipedia/commons/2/24/Grandpa_sitting_for_Television_%28Unsplash%29.jpg",
+          "credit": "사진: JD  Mason jmason / Wikimedia Commons, CC0",
+          "license": "CC0"
         }
       },
       {
         "beat": "answer",
-        "say": "메일도, 길 찾기도, 카드도, 볼 것 고르기도 전부 흔들립니다. AI는 이미 매일 쓰고 있었던 거죠.",
-        "text": "AI는 이미\n매일 쓰고 있었다",
+        "say": "메일도, 길 찾기도, 카드도, 볼 것 고르기도 전부 흔들립니다. 결국 우리는 매일 AI를 쓰고 있었던 겁니다.",
+        "text": "우리는 이미\n매일 AI를 쓰고 있었다",
         "at": [
-          "",
+          "결국",
           "매일"
         ],
-        "hl": "매일",
+        "hl": "매일 AI",
         "image": {
           "type": "image",
           "src": "img/s07.jpg",
-          "prompt": "A busy city street at night seen from above, people with phones, glowing lines of light connecting phones, cars, shop card terminals and windows, like an invisible network, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
-          "size": [
-            1344,
-            672
-          ]
-        }
+          "url": "https://upload.wikimedia.org/wikipedia/commons/9/9d/City_Lights_at_Night_%28Unsplash_-uzgaA9LfNw%29.jpg",
+          "credit": "사진: Alex wong killerfvith / Wikimedia Commons, CC0",
+          "license": "CC0"
+        },
+        "source": ""
       }
     ]
   },
@@ -167,12 +156,10 @@
     "image": {
       "type": "image",
       "src": "img/thumb.jpg",
-      "prompt": "A smartphone on a bedside table at dawn with a completely black dead screen, cold blue light, eerie quiet mood, centered in the upper middle of the frame, cinematic photorealistic, no text, no letters, no logos",
-      "size": [
-        1088,
-        1920
-      ],
-      "position": "center 40%"
+      "position": "center 40%",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/c/cc/Black_smartphone_in_hand_%28Unsplash%29.jpg",
+      "credit": "사진: Dennis Cortés cortes / Wikimedia Commons, CC0",
+      "license": "CC0"
     }
   },
   "topic": [
@@ -204,7 +191,7 @@
       "url": "https://dl.acm.org/doi/10.1145/2843948"
     }
   ],
-  "caption": "AI 일상: AI가 내일 사라지면 메일, 지도, 카드, 넷플릭스부터 흔들립니다.\nAI 없이 하루, 버틴다 vs 못 버틴다? 댓글로 알려 주세요.\n\n지메일: 머신러닝으로 스팸·피싱을 99.9% 넘게 막는다고 구글이 밝혔습니다(2017).\n구글 지도: 도착 시간 예측에 딥마인드 AI를 써서 도시에 따라 정확도를 최대 50% 높였습니다(2020).\n비자: AI 등 기술로 2023 회계연도에 400억 달러 규모 사기 거래를 막았다고 발표했습니다.\n넷플릭스: 시청 시간의 약 80%가 추천 시스템으로 고른 작품이라고 넷플릭스 논문에 적혀 있습니다(2015).\n\n출처: Google Workspace 블로그(2017), Google DeepMind(2020), Visa 발표(2024), Gomez-Uribe & Hunt, ACM TMIS(2015)\n음악: 'Sudden Goodbye' by AlexBeroza (ccmixter.org/files/AlexBeroza/43002), CC BY 3.0\n\n팔로우하면 매일 AI 소식을 받아 보실 수 있어요.",
+  "caption": "AI 일상: AI가 내일 사라지면 메일, 지도, 카드, 넷플릭스부터 흔들립니다.\nAI 없이 하루, 버틴다 vs 못 버틴다? 댓글로 알려 주세요.\n\n지메일: 머신러닝으로 스팸·피싱을 99.9% 넘게 막는다고 구글이 밝혔습니다(2017).\n구글 지도: 도착 시간 예측에 딥마인드 AI를 써서 도시에 따라 정확도를 최대 50% 높였습니다(2020).\n비자: AI 등 기술로 2023 회계연도에 400억 달러 규모 사기 거래를 막았다고 발표했습니다.\n넷플릭스: 시청 시간의 약 80%가 추천 시스템으로 고른 작품이라고 넷플릭스 논문에 적혀 있습니다(2015).\n\n출처: Google Workspace 블로그(2017), Google DeepMind(2020), Visa 발표(2024), Gomez-Uribe & Hunt, ACM TMIS(2015)\n사진: Shixart1985 (CC BY 2.0) · Unsplash 작가들 (CC0), Wikimedia Commons / 공식 화면 캡처\n음악: 'Sudden Goodbye' by AlexBeroza (ccmixter.org/files/AlexBeroza/43002), CC BY 3.0\n\n팔로우하면 매일 AI 소식을 받아 보실 수 있어요.",
   "hashtags": [
     "#인공지능",
     "#AI일상",
@@ -220,5 +207,5 @@
     "credit": "'Sudden Goodbye' by AlexBeroza (ccmixter.org/files/AlexBeroza/43002), CC BY 3.0"
   },
   "end_cta": "팔로우하면\n매일 AI 소식",
-  "rights_note": "화면·숫자는 agent/narrated_reel.py가 직접 그린 것. 장면 그림은 Cloudflare FLUX.2로 만든 AI 그림(실존 인물·로고 없음). 내레이션은 ElevenLabs(유료 Starter, 상업 이용 가능) 'Deok' 목소리. 배경음악 'Sudden Goodbye' by AlexBeroza (ccmixter.org/files/AlexBeroza/43002), CC BY 3.0 조각(agent/music_fit.py), 효과음은 agent/music_gen.py 코드 생성"
+  "rights_note": "화면·숫자는 agent/narrated_reel.py가 직접 그린 것. 장면 사진(실물 자유 이용 사진·공식 화면 캡처, AI 그림 없음): Dennis Cortés cortes, 'Black smartphone in hand (Unsplash).jpg' (https://commons.wikimedia.org/wiki/File:Black_smartphone_in_hand_(Unsplash).jpg), CC0 / Jay Wennington jaywennington, 'Reading mail at night (Unsplash).jpg' (https://commons.wikimedia.org/wiki/File:Reading_mail_at_night_(Unsplash).jpg), CC0 / Charles Deluvio charlesdeluvio, 'Stuck in traffic (Unsplash).jpg' (https://commons.wikimedia.org/wiki/File:Stuck_in_traffic_(Unsplash).jpg), CC0 / Shixart1985, 'Close-up of a woman looking at a credit card while working on her laptop.jpg' (https://commons.wikimedia.org/wiki/File:Close-up_of_a_woman_looking_at_a_credit_card_while_working_on_her_laptop.jpg), CC BY 2.0 / 화면: Visa 공식 보도자료 (2024.5.7) https://usa.visa.com/about-visa/newsroom/press-releases.releaseId.20661.html / JD  Mason jmason, 'Grandpa sitting for Television (Unsplash).jpg' (https://commons.wikimedia.org/wiki/File:Grandpa_sitting_for_Television_(Unsplash).jpg), CC0 / Alex wong killerfvith, 'City Lights at Night (Unsplash -uzgaA9LfNw).jpg' (https://commons.wikimedia.org/wiki/File:City_Lights_at_Night_(Unsplash_-uzgaA9LfNw).jpg), CC0. 화면 글·막대·숫자는 agent/narrated_reel.py가 직접 그림. 내레이션은 ElevenLabs(유료 Starter, 상업 이용 가능) 'Deok' 목소리. 배경음악 'Sudden Goodbye' by AlexBeroza (ccmixter.org/files/AlexBeroza/43002), CC BY 3.0 조각(agent/music_fit.py), 효과음은 agent/music_gen.py 코드 생성 장면 사진(실물 자유 이용 사진·공식 화면 캡처, AI 그림 없음): Dennis Cortés cortes, 'Black smartphone in hand (Unsplash).jpg' (https://commons.wikimedia.org/wiki/File:Black_smartphone_in_hand_(Unsplash).jpg), CC0 / Jay Wennington jaywennington, 'Reading mail at night (Unsplash).jpg' (https://commons.wikimedia.org/wiki/File:Reading_mail_at_night_(Unsplash).jpg), CC0 / Charles Deluvio charlesdeluvio, 'Stuck in traffic (Unsplash).jpg' (https://commons.wikimedia.org/wiki/File:Stuck_in_traffic_(Unsplash).jpg), CC0 / Shixart1985, 'Close-up of a woman looking at a credit card while working on her laptop.jpg' (https://commons.wikimedia.org/wiki/File:Close-up_of_a_woman_looking_at_a_credit_card_while_working_on_her_laptop.jpg), CC BY 2.0 / 화면: Visa 공식 보도자료 (2024.5.7) https://usa.visa.com/about-visa/newsroom/press-releases.releaseId.20661.html / JD  Mason jmason, 'Grandpa sitting for Television (Unsplash).jpg' (https://commons.wikimedia.org/wiki/File:Grandpa_sitting_for_Television_(Unsplash).jpg), CC0 / Alex wong killerfvith, 'City Lights at Night (Unsplash -uzgaA9LfNw).jpg' (https://commons.wikimedia.org/wiki/File:City_Lights_at_Night_(Unsplash_-uzgaA9LfNw).jpg), CC0. 화면 글·막대·숫자는 agent/narrated_reel.py가 직접 그림. 내레이션은 ElevenLabs(유료 Starter, 상업 이용 가능) 'Deok' 목소리. 배경음악 'Sudden Goodbye' by AlexBeroza (ccmixter.org/files/AlexBeroza/43002), CC BY 3.0 조각(agent/music_fit.py), 효과음은 agent/music_gen.py 코드 생성"
 }

@@ -18,7 +18,8 @@
 
 목소리 만들기 (이 컴퓨터에서만, GitHub Actions에는 ElevenLabs 키가 없다):
     py -3.12 agent/narrated_reel.py --voice posts/queue/<폴더> [--force]
-  → voice/NN.m4a (장면 번호, 무음 자름) + voice/NN.json (faster-whisper medium 받아쓰기·낱말 시각).
+  → 대본은 tts_ko_norm으로 읽을 글로 바꿔 보낸다(tts.py 기본) → voice/NN.m4a (장면 번호, 무음 자름)
+    + voice/NN.json (받아쓰기 관문 tts_ko_norm.verify_audio 결과, faster-whisper medium 낱말 시각).
     받아쓰기와 대본이 다른 곳을 '!'로 보고한다 → 잘못 들리는 낱말은 대본(say)을 바꿔 다시 (예: '잃은'이 '이룬'으로 들림 → '날린').
     같은 글·목소리·설정이면 ElevenLabs 캐시를 다시 쓴다 (과금 없음, agent/tts.py).
 
@@ -408,7 +409,10 @@ def diff_report(say, heard):
 
 
 def make_voices(folder, force=False):
+    """장면마다 목소리: tts.eleven_mp3(보내기 전에 tts_ko_norm으로 읽을 글로 바꿈) → voice/NN.m4a,
+    받아쓰기 관문(tts_ko_norm.verify_audio, 다르면 '!' + 종료 코드 1) + 낱말 시각(faster-whisper medium) → voice/NN.json."""
     import tts
+    from tts_ko_norm import normalize, verify_audio
     folder = Path(folder)
     post = json.loads((folder / "post.json").read_text(encoding="utf-8"))
     N = post["narrated"]
@@ -418,19 +422,21 @@ def make_voices(folder, force=False):
     (folder / VOICE_DIR).mkdir(exist_ok=True)
     used = 0
     total = 0.0
+    failed = []
     for k, s in enumerate(N["scenes"], 1):
         say = s["say"].strip()
+        sent = normalize(say)
         out = voice_path(folder, k)
         meta_f = out.with_suffix(".json")
         old = json.loads(meta_f.read_text(encoding="utf-8")) if meta_f.exists() else {}
-        if out.exists() and not force and old.get("say") == say:
+        if out.exists() and not force and old.get("say") == say and old.get("sent") == sent:
             meta = old
         else:
             h = tts.ELEVEN_CACHE
             before = set(h.glob("*.mp3")) if h.exists() else set()
             mp3 = tts.eleven_mp3(say, vid, settings)
             if mp3 not in before:
-                used += len(say)
+                used += len(sent)
             x = tts.trim(tts.decode(mp3, tts.KO_SR), sr=tts.KO_SR)
             wav = out.with_suffix(".wav")
             tts.save(wav, x, tts.KO_SR)
@@ -438,24 +444,30 @@ def make_voices(folder, force=False):
                             str(out)], check=True)
             wav.unlink()
             heard, words = asr_words(out)
-            ratio, bad = diff_report(say, heard)
-            meta = {"say": say, "heard": heard, "match": round(ratio, 3), "diff": bad, "words": words}
+            g = verify_audio(out, say)
+            meta = {"say": say, "sent": sent, "heard": heard, "gate": g["ok"], "gate_ratio": g["ratio"],
+                    "gate_diffs": g["diffs"], "gate_asr": g["asr"], "words": words}
             meta_f.write_text(json.dumps(meta, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
         d = _probe(out)
         total += d + LEAD + SCENE_GAP
-        meta["diff"] = diff_report(say, meta["heard"])[1]
-        flag = "" if not meta["diff"] else "  !"
-        print(f"{k:02d} {d:5.2f}초 일치 {meta['match']:.2f}{flag} | {say}")
+        diff = diff_report(sent, meta["heard"])[1]
+        flag = "" if meta.get("gate") and not diff else "  !"
+        if not meta.get("gate"):
+            failed.append(k)
+        print(f"{k:02d} {d:5.2f}초 관문 {'통과' if meta.get('gate') else '실패'} {meta.get('gate_ratio')}{flag} | {say}")
         if flag:
-            print(f"     들림: {meta['heard']}")
-            print(f"     다른 곳: {meta['diff']}")
+            print(f"     들림(small): {meta.get('gate_asr')}")
+            print(f"     들림(medium): {meta['heard']}")
+            print(f"     관문 차이: {[(x['expected'], x['heard']) for x in meta.get('gate_diffs') or []]}  medium 차이: {diff}")
     print(f"본편 약 {total:.1f}초, 이번에 ElevenLabs {used}자 사용 (캐시 제외)")
+    if failed:
+        print(f"받아쓰기 관문 실패: 장면 {failed} → say를 다른 말로 바꿔 다시 (STYLE_GUIDE 6장 '내레이션 모션 릴스')")
+    return failed
 
 
 def main():
     if len(sys.argv) >= 3 and sys.argv[1] == "--voice":
-        make_voices(sys.argv[2], force="--force" in sys.argv)
-        return
+        sys.exit(1 if make_voices(sys.argv[2], force="--force" in sys.argv) else 0)
     f = Path(sys.argv[1])
     post = json.loads((f / "post.json").read_text(encoding="utf-8"))
     p = plan(post, f)

@@ -25,16 +25,14 @@
         "image": {
           "type": "image",
           "src": "img/s01.jpg",
-          "prompt": "A shiny chrome robot hand holding a thick stack of US dollar bills in front of glowing green and red trading charts in a dark room, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
-          "size": [
-            1344,
-            672
-          ]
+          "url": "https://upload.wikimedia.org/wikipedia/commons/b/b0/Close-up_of_a_Bitcoin_physical_coin_in_a_womans_hand_and_a_laptop_on_her_lap.jpg",
+          "credit": "사진: Shixart1985 / Wikimedia Commons, CC BY 2.0",
+          "license": "CC BY 2.0"
         }
       },
       {
         "beat": "q1",
-        "say": "실제로 해 본 회사가 있습니다. AI 여섯 개한테 만 달러씩, 진짜 돈을 맡겼죠.",
+        "say": "실제로 해 본 회사가 있습니다. AI 여섯 개에게 각자 만 달러씩, 진짜 돈을 줬습니다.",
         "text": "AI 6개에\n1만 달러씩",
         "at": [
           "여섯",
@@ -45,16 +43,15 @@
         "image": {
           "type": "image",
           "src": "img/s02.jpg",
-          "prompt": "Six identical sleek white humanoid robots sitting in a row at trading desks with monitors, each robot has a neat stack of cash on its desk, wide shot, dark trading floor, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
-          "size": [
-            1344,
-            672
-          ]
+          "shot": {
+            "url": "https://web.archive.org/web/20251112224723/https://nof1.ai/blog/TechPost1"
+          },
+          "credit": "화면: Nof1 공식 블로그 (2025.10, 웹 아카이브)"
         }
       },
       {
         "beat": "q1",
-        "say": "지피티 파이브, 제미나이, 클로드, 그록, 딥시크, 큐웬. 사람 도움 없이, 십칠 일 동안 코인을 사고팔게 했습니다.",
+        "say": "지피티 파이브, 제미나이, 클로드, 그록, 딥시크, 그리고 알리바바 AI까지. 사람 도움 없이, 십칠 일 동안 코인을 사고팔게 했습니다.",
         "text": "사람 개입 없이\n17일간 코인 매매",
         "at": [
           "사람 도움",
@@ -64,11 +61,10 @@
         "image": {
           "type": "image",
           "src": "img/s03.jpg",
-          "prompt": "Close-up of a large monitor showing fast moving candlestick crypto price charts, golden coins stacked in front of the screen, reflections on a robot's glossy face, dark room, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
-          "size": [
-            1344,
-            672
-          ]
+          "shot": {
+            "url": "https://web.archive.org/web/20251103225959/https://nof1.ai/"
+          },
+          "credit": "화면: Alpha Arena 공식 계좌 그래프 (2025.11.3 마감, 웹 아카이브)"
         }
       },
       {
@@ -83,11 +79,9 @@
         "image": {
           "type": "image",
           "src": "img/s04.jpg",
-          "prompt": "A white humanoid robot sitting at a desk holding its head in its hands, in front of a monitor with a steep red crashing chart, scattered paper money on the floor, dark room, red light, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
-          "size": [
-            1344,
-            672
-          ]
+          "url": "https://upload.wikimedia.org/wikipedia/commons/a/a0/Close-up_of_a_lost_debit_card_on_the_ground_%2851293172180%29.jpg",
+          "credit": "사진: Ivan Radic / Wikimedia Commons, CC BY 2.0",
+          "license": "CC BY 2.0"
         }
       },
       {
@@ -97,11 +91,9 @@
         "image": {
           "type": "image",
           "src": "img/s05.jpg",
-          "prompt": "Five white humanoid robots slumped in chairs in a dim trading room, monitors behind them all showing steep red falling charts, one empty chair in the middle, dark red light, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
-          "size": [
-            1344,
-            672
-          ]
+          "url": "https://upload.wikimedia.org/wikipedia/commons/7/78/Market_centre_in_Tokyo_stock_exchange.jpg",
+          "credit": "사진: ehnmark / Wikimedia Commons, CC BY 2.0",
+          "license": "CC BY 2.0"
         },
         "say": "클로드 마이너스 삼십일, 그록 마이너스 사십오, 제미나이 마이너스 오십육. 꼴찌 지피티 파이브는 마이너스 육십삼 퍼센트.",
         "text": "4개 손실\n최하위 GPT-5",
@@ -157,19 +149,17 @@
         "image": {
           "type": "image",
           "src": "img/s06.jpg",
-          "prompt": "A single white humanoid robot standing on a podium under a bright spotlight in a dark trading hall, holding a big stack of cash, green upward chart on a giant screen behind, no text, no letters, no logos, cinematic photorealistic, dramatic lighting",
-          "size": [
-            1344,
-            672
-          ]
+          "url": "https://upload.wikimedia.org/wikipedia/commons/2/27/Alibaba_group_Headquarters_%28cropped%29.jpg",
+          "credit": "사진: Thomas LOMBARD, designed by HASSELL (architects)[1] / Wikimedia Commons, CC BY-SA 3.0",
+          "license": "CC BY-SA 3.0"
         },
-        "say": "그럼 돈을 번 AI는? 일등은 알리바바의 큐웬, 이십이 퍼센트 수익. 이등 딥시크까지, 번 건 둘 다 중국 AI였습니다.",
-        "text": "1위 Qwen +22%\n번 건 중국 AI 둘",
+        "say": "그럼 돈을 번 AI는? 일등은 알리바바 AI, 이십이 퍼센트 수익. 이등 딥시크까지, 번 건 둘 다 중국 AI였습니다.",
+        "text": "1위 알리바바 Qwen\n번 건 중국 AI 둘",
         "at": [
           "일등은",
           "둘 다"
         ],
-        "hl": "+22%",
+        "hl": "Qwen",
         "bars": [
           {
             "label": "Qwen3 Max",
@@ -214,12 +204,10 @@
     "image": {
       "type": "image",
       "src": "img/thumb.jpg",
-      "prompt": "A shiny chrome robot hand gripping a thick stack of US dollar bills, dark background, green glow from trading screens behind, centered in the upper middle of the frame, cinematic photorealistic, no text, no letters, no logos",
-      "size": [
-        1088,
-        1920
-      ],
-      "position": "center 40%"
+      "position": "center 40%",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/b/b0/Close-up_of_a_Bitcoin_physical_coin_in_a_womans_hand_and_a_laptop_on_her_lap.jpg",
+      "credit": "사진: Shixart1985 / Wikimedia Commons, CC BY 2.0",
+      "license": "CC BY 2.0"
     }
   },
   "topic": [
@@ -246,7 +234,7 @@
       "url": "https://forklog.com/en/four-out-of-six-ai-models-suffer-losses-in-trading-tournament/"
     }
   ],
-  "caption": "AI 투자 대회 Alpha Arena 결과: AI 6개에 1만 달러씩 진짜 돈을 맡겼습니다.\nAI에게 내 돈, 맡긴다 vs 안 맡긴다? 댓글로 알려 주세요.\n\nNof1이 2025년 10월 18일부터 11월 3일까지 17일 동안 연 대회예요. GPT-5, Gemini 2.5 Pro, Claude Sonnet 4.5, Grok 4, DeepSeek V3.1, Qwen3 Max가 같은 명령문을 받고, 사람 개입 없이 거래소 Hyperliquid에서 코인 6종(BTC·ETH·SOL·BNB·DOGE·XRP) 선물을 사고팔았습니다.\n\n마감 계좌(1만 달러 시작)\n1위 Qwen3 Max 12,202달러 (+22.0%)\n2위 DeepSeek V3.1 10,453달러 (+4.5%)\n3위 Claude Sonnet 4.5 6,890달러 (-31.1%)\n4위 Grok 4 5,456달러 (-45.4%)\n5위 Gemini 2.5 Pro 4,376달러 (-56.2%)\n6위 GPT-5 3,734달러 (-62.7%)\n같은 기간 비트코인을 사서 들고만 있었다면 거의 0%였습니다.\n\n출처: Nof1 Alpha Arena 공식 순위표·블로그(2025.11), Forklog(2025.11.4)\n음악: 'Saturdays Basement' by cdk (ccmixter.org/files/cdk/45072), CC BY 3.0\n\n팔로우하면 매일 AI 소식을 받아 보실 수 있어요.",
+  "caption": "AI 투자 대회 Alpha Arena 결과: AI 6개에 1만 달러씩 진짜 돈을 맡겼습니다.\nAI에게 내 돈, 맡긴다 vs 안 맡긴다? 댓글로 알려 주세요.\n\nNof1이 2025년 10월 18일부터 11월 3일까지 17일 동안 연 대회예요. GPT-5, Gemini 2.5 Pro, Claude Sonnet 4.5, Grok 4, DeepSeek V3.1, Qwen3 Max가 같은 명령문을 받고, 사람 개입 없이 거래소 Hyperliquid에서 코인 6종(BTC·ETH·SOL·BNB·DOGE·XRP) 선물을 사고팔았습니다.\n\n마감 계좌(1만 달러 시작)\n1위 Qwen3 Max(알리바바) 12,202달러 (+22.0%)\n2위 DeepSeek V3.1(딥시크, 중국) 10,453달러 (+4.5%)\n3위 Claude Sonnet 4.5 6,890달러 (-31.1%)\n4위 Grok 4 5,456달러 (-45.4%)\n5위 Gemini 2.5 Pro 4,376달러 (-56.2%)\n6위 GPT-5 3,734달러 (-62.7%)\n같은 기간 비트코인을 사서 들고만 있었다면 거의 0%였습니다.\n\n출처: Nof1 Alpha Arena 공식 순위표·블로그(2025.11), Forklog(2025.11.4)\n사진: Shixart1985, Ivan Radic, ehnmark (CC BY 2.0) · Thomas LOMBARD (CC BY-SA 3.0), Wikimedia Commons / 공식 화면 캡처\n음악: 'Saturdays Basement' by cdk (ccmixter.org/files/cdk/45072), CC BY 3.0\n\n팔로우하면 매일 AI 소식을 받아 보실 수 있어요.",
   "hashtags": [
     "#AI투자",
     "#코인",
@@ -262,5 +250,5 @@
     "credit": "'Saturdays Basement' by cdk (ccmixter.org/files/cdk/45072), CC BY 3.0"
   },
   "end_cta": "팔로우하면\n매일 AI 소식",
-  "rights_note": "화면·막대는 agent/narrated_reel.py가 직접 그린 것, 수익률은 Nof1 공식 순위표(웹 아카이브 2025.11.3 22:00 UTC 마감 기록)로 계산. 장면 그림은 Cloudflare FLUX.2로 만든 AI 그림(실존 인물·로고 없음). 내레이션은 ElevenLabs(유료 Starter, 상업 이용 가능) 'Deok' 목소리. 배경음악 'Saturdays Basement' by cdk (ccmixter.org/files/cdk/45072), CC BY 3.0 조각(agent/music_fit.py), 효과음은 agent/music_gen.py 코드 생성"
+  "rights_note": "화면·막대는 agent/narrated_reel.py가 직접 그린 것, 수익률은 Nof1 공식 순위표(웹 아카이브 2025.11.3 22:00 UTC 마감 기록)로 계산. 장면 사진(실물 자유 이용 사진·공식 화면 캡처, AI 그림 없음): Shixart1985, 'Close-up of a Bitcoin physical coin in a womans hand and a laptop on her lap.jpg' (https://commons.wikimedia.org/wiki/File:Close-up_of_a_Bitcoin_physical_coin_in_a_womans_hand_and_a_laptop_on_her_lap.jpg), CC BY 2.0 / 화면: Nof1 공식 블로그 (2025.10, 웹 아카이브) https://web.archive.org/web/20251112224723/https://nof1.ai/blog/TechPost1 / 화면: Alpha Arena 공식 계좌 그래프 (2025.11.3 마감, 웹 아카이브) https://web.archive.org/web/20251103225959/https://nof1.ai/ / Ivan Radic, 'Close-up of a lost debit card on the ground (51293172180).jpg' (https://commons.wikimedia.org/wiki/File:Close-up_of_a_lost_debit_card_on_the_ground_(51293172180).jpg), CC BY 2.0 / ehnmark, 'Market centre in Tokyo stock exchange.jpg' (https://commons.wikimedia.org/wiki/File:Market_centre_in_Tokyo_stock_exchange.jpg), CC BY 2.0 / Thomas LOMBARD, designed by HASSELL (architects)[1], 'Alibaba group Headquarters (cropped).jpg' (https://commons.wikimedia.org/wiki/File:Alibaba_group_Headquarters_(cropped).jpg), CC BY-SA 3.0. 화면 글·막대·숫자는 agent/narrated_reel.py가 직접 그림. 내레이션은 ElevenLabs(유료 Starter, 상업 이용 가능) 'Deok' 목소리. 배경음악 'Saturdays Basement' by cdk (ccmixter.org/files/cdk/45072), CC BY 3.0 조각(agent/music_fit.py), 효과음은 agent/music_gen.py 코드 생성 장면 사진(실물 자유 이용 사진·공식 화면 캡처, AI 그림 없음): Shixart1985, 'Close-up of a Bitcoin physical coin in a womans hand and a laptop on her lap.jpg' (https://commons.wikimedia.org/wiki/File:Close-up_of_a_Bitcoin_physical_coin_in_a_womans_hand_and_a_laptop_on_her_lap.jpg), CC BY 2.0 / 화면: Nof1 공식 블로그 (2025.10, 웹 아카이브) https://web.archive.org/web/20251112224723/https://nof1.ai/blog/TechPost1 / 화면: Alpha Arena 공식 계좌 그래프 (2025.11.3 마감, 웹 아카이브) https://web.archive.org/web/20251103225959/https://nof1.ai/ / Ivan Radic, 'Close-up of a lost debit card on the ground (51293172180).jpg' (https://commons.wikimedia.org/wiki/File:Close-up_of_a_lost_debit_card_on_the_ground_(51293172180).jpg), CC BY 2.0 / ehnmark, 'Market centre in Tokyo stock exchange.jpg' (https://commons.wikimedia.org/wiki/File:Market_centre_in_Tokyo_stock_exchange.jpg), CC BY 2.0 / Thomas LOMBARD, designed by HASSELL (architects)[1], 'Alibaba group Headquarters (cropped).jpg' (https://commons.wikimedia.org/wiki/File:Alibaba_group_Headquarters_(cropped).jpg), CC BY-SA 3.0. 화면 글·막대·숫자는 agent/narrated_reel.py가 직접 그림. 내레이션은 ElevenLabs(유료 Starter, 상업 이용 가능) 'Deok' 목소리. 배경음악 'Saturdays Basement' by cdk (ccmixter.org/files/cdk/45072), CC BY 3.0 조각(agent/music_fit.py), 효과음은 agent/music_gen.py 코드 생성"
 }
