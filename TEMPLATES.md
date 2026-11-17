@@ -361,44 +361,39 @@
 
 ## 막대 경주 릴스 (`type: "video"` + `race`, 2026-11-17)
 
-회사·서비스별 실제 수치(사용자 수, 기업가치)를 날짜 순으로 쌓아 막대가 서로 앞지르는 '바 차트 레이스' (STYLE_GUIDE 6장 "막대 경주 릴스"). `video` 대신 `race`. 렌더링은 `agent/racereel.py` + `agent/racereel.js` (render.py가 `race`를 보고 부른다). 그림이 없어 이 컴퓨터에서 바로 끝까지 렌더링된다. 실제 게시물 `posts/queue/2026-11-18-race-ai-users`, `2026-11-18-race-ai-valuation`.
+고전 '바 차트 레이스' (STYLE_GUIDE 6장 "막대 경주 릴스"). `video` 대신 `race`. 렌더링은 `agent/racereel.py` + `agent/racereel.js` (render.py가 `race`를 보고 부른다). 이 컴퓨터에서 바로 끝까지 렌더링된다. 실제 게시물 `posts/queue/2026-11-18-race-ai-users`, `2026-11-18-race-ai-valuation`.
 
 ```json
 "race": {
   "format": "people_m",
-  "end": "2026-11-17",
-  "basis_line": "회사 공식 발표 · ChatGPT는 주간, 나머지는 월간 사용자",
+  "start": "2024-06-01", "end": "2026-11-17", "seconds": 24,
+  "unit_label": "사용자 수(명) · ChatGPT는 주간",
   "cta_line": "ChatGPT vs Gemini, 뭐 쓰세요?",
-  "punch": "일주일에 12억 명이
-ChatGPT를 씁니다",
+  "punch": "1위는 다시 ChatGPT",
   "thumb_src": "img/thumb.jpg",
-  "series": [{"name": "ChatGPT", "color": "#10A37F", "tag": "주간",
+  "series": [{"name": "ChatGPT", "color": "#10A37F",
               "points": [{"date": "2023-11-06", "value": 100, "kind": "official",
                           "src": "Sam Altman, OpenAI DevDay 2023", "url": "https://..."}]}],
-  "beats": {"hook": "AI 사용자 1위,
-지금은 누구?", "hook_until": 3,
-            "anchors": [["2024-08-29", 3], ["2026-02-04", 12], ["2026-07-22", 13.6], ["2026-09-29", 23.5]],
-            "rehook": {"date": "2026-07-22", "text": "ChatGPT 3위로"},
-            "ask": {"text": "1위 자리,
-또 뒤집힐까?", "from": 15}}
+  "images": [{"series": "ChatGPT", "src": "img/altman.jpg", "x": 50, "y": 40, "fy": 22,
+              "credit": "Village Global, CC BY 2.0 (Wikimedia Commons)", "url": "https://commons.wikimedia.org/..."}]
 }
 ```
 
 | 필드 | 내용 |
 |---|---|
-| `race.format` | `people_m`(값 = 백만 명 → '12억 명', '700만 명') 또는 `usd_b`(값 = 십억 달러 → '1조 2,500억 달러', '5.2억 달러') |
-| `race.series` | 2~8개. `name`(화면 이름, 로고 대신 글자. 길면 띄어쓰기에서 두 줄), `color`(회사 색 단색), `tag`(선택, 값 뒤 작은 글씨: 지표가 다른 항목 '주간' 등) |
-| `race.series[].points` | 날짜 순. `date`(발표·보도 날짜), `value`, `src`(누가·어디서), `url`(확인한 출처), `kind`(`official` 회사 발표 / `reported` 언론 보도). **값은 발표가 나온 날에만 바뀐다** (사이를 지어내지 않음, 마지막 발표 뒤에는 그 값 유지) |
-| `race.basis_line` | **필수.** 제목 아래 근거·단위 한 줄 (40자 이하, STYLE_GUIDE 0 원칙 10). 지표가 섞이면 여기에 밝힌다 |
-| `race.cta_line` | 선택. 0.5초부터 제목 아래 짧은 양자택일 질문·팔로우 한 줄 (원칙 8) |
-| `race.punch` | **필수.** 끝 장면 한 줄 (1~2줄, 줄당 16자 이하). 마지막 줄 녹색 |
-| `race.end` | 선택. 숫자판 끝 날짜 (기본 마지막 발표일) |
-| `race.images` | **사진 필수 (STYLE_GUIDE 0장 원칙 0).** `[{series, src, x, y, dim, credit, url}]` 회사마다 한 장(게시물 폴더 안 1080x1920 jpg, 300KB 이하). 대표 인물 사진은 위키미디어 공용 자유 라이선스(CC BY·BY-SA·퍼블릭 도메인), 없으면 공식 사이트 화면(`agent/shot.py --width 720 --height 1280`). 통신사·언론 사진 금지. 화면 전체 배경으로 깔리고 막대·글자는 위에 겹친다: 발표가 난 회사 사진으로 0.35초 겹쳐 바뀌고(1.6초 이상 유지, 앞지르기·반전은 바로), 4초 넘게 같으면 그때 상위 3개 회사 사진을 2.4초마다 돌리고, 답부터는 1위 사진. 후킹(`beats.hook`) 동안은 상위 3개 회사 사진을 세로 세 칸으로. `dim`: 사진 위 어둡게(기본 0.6, 밝은 화면 캡처 0.86). 캡션에 '사진:' 줄 |
-| `race.thumb_src` | 렌더링이 그리는 썸네일 바탕(1위 회사 사진 + 아래 끝 순위 막대, 사진이 없으면 큰 막대만). `thumb.image.src`와 같게 |
-| `race.beats` | 선택. 이야기 박자 (운영자 승인 릴스 뼈대 2026-11-17: 후킹 0~3초 질문, 끝 1위는 안 보임 → 지연 → 반전 12~15초 → 지연(질문) → 답 25~30초). `hook`: 0~`hook_until`초 막대 칸 아래 큰 질문(줄당 14자). `anchors`: `[발표일, 영상 초]` 고정점 (사이 발표는 실제 간격^0.45 비례). `rehook`: 그 발표의 앞지르기 띠를 이 글로 바꾸고 큰 쿵. `ask`: `from`초부터 마지막 순위 바뀜(답)까지 날짜 옆 질문. 없으면 첫 발표 0초 ~ 마지막 발표 20.1초로 고르게 |
+| `race.format` | `people_m`(값 = 백만 명 → '12억', '700만') 또는 `usd_b`(값 = 십억 달러 → '1조 2,500억', '5.2억'). 단위는 숫자에 붙이지 않고 `unit_label`에 |
+| `race.series` | 2~8개. `name`(화면 이름, 로고 대신 글자. 길면 띄어쓰기에서 두 줄), `color`(회사 색 단색) |
+| `race.series[].points` | 날짜 순. `date`(발표·보도 날짜), `value`, `src`(누가·어디서), `url`(확인한 출처), `kind`(`official` / `reported`). 화면 값은 점과 점 사이를 비율로 이어 그린다(기하 보간). 첫 점 때 0에서 0.4초 자라 들어오고, 마지막 점 뒤에는 그 값 유지 |
+| `race.start`·`end`·`seconds` | 날짜판 처음·끝(기본 첫·마지막 발표일), 본편 길이(기본 24초). 날짜는 한결같은 속도로 흐른다. `start` 전 점은 보간에만 쓴다 |
+| `race.unit_label` | **필수.** 날짜 왼쪽 작은 단위 라벨 하나 (24자 이하). 지표가 섞이면 여기에만 짧게 ('· ChatGPT는 주간'). 다른 근거 줄은 화면에 두지 않고 캡션에 |
+| `race.cta_line` | 선택. 0.5초부터 제목 아래 짧은 질문 한 줄 |
+| `race.punch` | 선택. 끝 한 줄 사실 (1~2줄, 줄당 16자 이하). 마지막 줄 녹색 |
+| `race.images` | **사진 필수 (STYLE_GUIDE 0장 원칙 0).** `[{series, src, x, y, fy, credit, url}]` 회사마다 한 장(1080x1920 jpg, 300KB 이하). 대표 인물 사진은 위키미디어 공용 자유 라이선스, 없으면 공식 사이트 화면(`agent/shot.py --width 720 --height 1280`). 통신사·언론 사진 금지. 막대 끝 동그란 사진(`fy`: 세로 초점 %), 배경은 1위 회사 사진을 흐리고 어둡게(1위가 바뀌면 0.5초 겹쳐 바뀜). 캡션에 '사진:' 줄 |
+| `race.thumb_src` | 렌더링이 그리는 썸네일 바탕(1위 회사 사진 + 아래 끝 순위 막대). `thumb.image.src`와 같게 |
 
-- **화면:** 위 제목 2줄(0초 쾅) + cta_line + basis_line, 가운데 막대(왼쪽 이름 칸, 직각 막대, 막대 끝 값), 아래 왼쪽 큰 날짜 숫자판. 순위가 바뀌면 막대가 0.25초에 미끄러져 자리를 바꾸고, 1·2위로 올라선 순간 막대가 흰색으로 번쩍 + 날짜 옆 녹색 띠('Meta AI 1위', 앞지르는 순간 기준) + 휙·타격. 발표마다 값이 0.45초 동안 늘어나며 틱. 끝: 1위 막대만 녹색, 나머지 흐리게, punch 쾅(3.2초) → `end_cta` 끝 화면 2.5초.
-- **checks.py:** series 수, 점마다 date 순서·value·src·url, basis_line·punch, rights own, beats(anchors 날짜·순서, 글자 수), 길이 20~35초. **렌더링:** 글자 폭·버튼 줄(x 850~) 겹침 검사, 순위 바뀜 시각·박자·효과음·소리 크기 출력, `frames/` 미리보기(0.3초, 후킹 끝, 순위 바뀜 뒤, 질문 중간, 1위 장면, 끝 화면). 음악은 `music.src`(실제 음원, music_fit.py), 없으면 코드 비트.
+- **화면 글은 이것만** (운영자 2026-11-17 "쓸데없는 부연설명이 많아"): 제목 2줄(0초 쾅), 0초 질문 한 줄, 단위 라벨, 날짜(오른쪽 위, 달마다 바뀜), 막대(이름·숫자·동그란 사진), 끝 punch 한 줄. 중간 글자 카드·앞지르기 띠·근거 줄 없음 (예전 `basis_line`·`beats`·`series[].tag`는 쓰지 않는다).
+- **움직임:** 날짜가 흐르는 동안 숫자가 계속 올라가고, 순위가 바뀌면 막대가 0.3초 미끄러진다. 끝은 1위 막대만 녹색, 나머지 흐리게 → `end_cta` 끝 화면 2.5초. 소리: 실제 음원 + 1위 바뀔 때 휙·쿵, 해 바뀔 때 틱, 끝 상승음·쿵, -14 LUFS.
+- **checks.py:** series 수, 점마다 date 순서·value·src·url, unit_label, punch 길이, rights own, images(series·src·credit), 길이 20~35초. 'N초 만에 보는 …' 제목은 명사로 끝나도 된다(운영자 2026-11-17). **렌더링:** 글자 폭·버튼 줄 검사, 1위 바뀜 시각·순위 바뀜 수 출력, `frames/` 미리보기(0.3초, 3초, 본편 1/3·1/2·2/3, 1위 바뀐 뒤, 끝 장면, 끝 화면).
 
 ## 내레이션 모션 릴스 (`type: "video"` + `narrated`, 운영자 결정 2026-11-17 '만약 ~라면?')
 

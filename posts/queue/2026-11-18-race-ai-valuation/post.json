@@ -8,14 +8,13 @@
   "date": "2026-11-18",
   "publish_at": "2026-11-18T12:43:00+09:00",
   "rights": "own",
-  "rights_note": "화면은 직접 그린 막대 경주 그래프(글자·막대, 로고 없이 회사 이름 글자). 기업가치는 투자 유치 때 매겨진 값(대부분 투자 후 기준)만, 값은 발표·보도가 나온 날에만 바뀌고 사이를 지어내지 않음. 회사 공식 발표: OpenAI 1,570억(2024-10)·3,000억(2025-03)·8,520억(2026-03), Anthropic 615억·1,830억·3,800억·9,650억, Mistral 117억 유로·210억 유로. 언론 보도(회사 확인 없음): OpenAI 290억(2023-01 WSJ)·800억(2024-02 직원 주식 매각, NYT. Bloomberg는 860억 → 낮은 쪽)·5,000억(2025-10 직원 주식 매각, Reuters)·1조 2,500억(2026-11-06 Bloomberg, 1차 110억 달러 마감, CNBC 확인, 라운드 진행 중·투자 전/후 기준 보도마다 다름), Anthropic 41억·184억·3,500억, xAI 240억·800억(머스크 X 게시 X 합병)·2,300억·2,500억(2026-02 SpaceX 합병 때, 그 뒤 독립 가치 없음 → 2,500억 유지), Perplexity 전부, SSI 전부, Thinking Machines 120억. 유로는 그날 환율로 달러 환산(Mistral 2억 유로·58억 유로·117억 유로·210억 유로 → 22억·62억·137억·240억 달러, Reuters 240억 달러). 제외: OpenAI 2021년 140억(원문 확인 못 함), Mistral 2023-06 시드(원문 확인 못 함), xAI 2024-12 500억·2025-09 2,000억(보도마다 다르거나 머스크 부인), Perplexity 30억·140억(날짜 확인 못 함), 진행 중인 협상 값(Thinking Machines 400억, Perplexity 300억 이상). 제목 43배 = OpenAI 290억(2023-01) → 1조 2,500억(2026-11), 3년 10개월. 점마다 출처는 race.series[].points[].url. 배경음악 'Put The Needle Down' by AlexBeroza (ccmixter.org/files/AlexBeroza/28062), CC BY 3.0 조각(agent/music_fit.py), 효과음은 agent/music_gen.py 코드 생성. 배경 사진: 회사 대표 인물 사진은 위키미디어 공용 자유 라이선스(CC BY·CC BY-SA·퍼블릭 도메인, race.images[].credit·url, 캡션 '사진:' 줄), 통신사·언론 사진 아님. 사진이 없는 회사는 공식 사이트 화면을 agent/shot.py로 캡처(2026-11-17). 막대는 사진 위에 겹침(STYLE_GUIDE 0장 원칙 0).",
-  "title": "OpenAI 몸값,\n4년 만에 43배 뛰었다",
+  "rights_note": "화면은 직접 그린 막대 경주 그래프(글자·막대, 로고 없이 회사 이름 글자). 기업가치는 투자 유치 때 매겨진 값(대부분 투자 후 기준)만, 값은 투자 발표·보도 날에 바뀌고(0.4초 동안 늘어남) 다음 발표까지 유지(기업가치는 투자 때 정해지는 값이라 사이를 이어 그리지 않음). 날짜판은 한결같은 속도로 흐름. 회사 공식 발표: OpenAI 1,570억(2024-10)·3,000억(2025-03)·8,520억(2026-03), Anthropic 615억·1,830억·3,800억·9,650억, Mistral 117억 유로·210억 유로. 언론 보도(회사 확인 없음): OpenAI 290억(2023-01 WSJ)·800억(2024-02 직원 주식 매각, NYT. Bloomberg는 860억 → 낮은 쪽)·5,000억(2025-10 직원 주식 매각, Reuters)·1조 2,500억(2026-11-06 Bloomberg, 1차 110억 달러 마감, CNBC 확인, 라운드 진행 중·투자 전/후 기준 보도마다 다름), Anthropic 41억·184억·3,500억, xAI 240억·800억(머스크 X 게시 X 합병)·2,300억·2,500억(2026-02 SpaceX 합병 때, 그 뒤 독립 가치 없음 → 2,500억 유지), Perplexity 전부, SSI 전부, Thinking Machines 120억. 유로는 그날 환율로 달러 환산(Mistral 2억 유로·58억 유로·117억 유로·210억 유로 → 22억·62억·137억·240억 달러, Reuters 240억 달러). 제외: OpenAI 2021년 140억(원문 확인 못 함), Mistral 2023-06 시드(원문 확인 못 함), xAI 2024-12 500억·2025-09 2,000억(보도마다 다르거나 머스크 부인), Perplexity 30억·140억(날짜 확인 못 함), 진행 중인 협상 값(Thinking Machines 400억, Perplexity 300억 이상). 제목 43배 = OpenAI 290억(2023-01) → 1조 2,500억(2026-11), 3년 10개월. 점마다 출처는 race.series[].points[].url. 배경음악 'Put The Needle Down' by AlexBeroza (ccmixter.org/files/AlexBeroza/28062), CC BY 3.0 조각(agent/music_fit.py), 효과음은 agent/music_gen.py 코드 생성. 배경 사진: 회사 대표 인물 사진은 위키미디어 공용 자유 라이선스(CC BY·CC BY-SA·퍼블릭 도메인, race.images[].credit·url, 캡션 '사진:' 줄), 통신사·언론 사진 아님. 사진이 없는 회사는 공식 사이트 화면을 agent/shot.py로 캡처(2026-11-17). 막대는 사진 위에 겹침(STYLE_GUIDE 0장 원칙 0).",
+  "title": "30초 만에 보는\nAI 회사 몸값 순위 변화",
   "title_options": [
-    "OpenAI 몸값,\n4년 만에 43배 뛰었다",
-    "AI 몸값 1위,\n두 번 뒤집혔다",
-    "1조 달러 AI,\n1위 싸움이 붙었다"
+    "30초 만에 보는\nAI 회사 몸값 순위 변화",
+    "30초 만에 보는\nAI 기업가치 순위"
   ],
-  "highlight": "43배",
+  "highlight": "순위 변화",
   "music": {
     "src": "music.m4a",
     "title": "Put The Needle Down",
@@ -32,9 +31,9 @@
     "Anthropic"
   ],
   "keywords": [
+    "AI 회사 몸값",
     "OpenAI 기업가치",
     "Anthropic 기업가치",
-    "AI 회사 몸값",
     "xAI"
   ],
   "sources": [
@@ -59,7 +58,7 @@
       "url": "https://mistral.ai/news/mistral-makes-sovereign-open-weight-ai-to-frontier/"
     }
   ],
-  "caption": "OpenAI 기업가치 1조 2,500억 달러, Anthropic·xAI와 벌인 AI 회사 몸값 1위 다툼 4년 기록입니다.\n\n2023년 1월 290억 달러였던 OpenAI는 3년 10개월 만에 43배가 됐습니다.\n2026년 5월에는 Anthropic이 9,650억 달러 투자를 받으며 처음 1위.\n11월 OpenAI가 1조 2,500억 달러에 1차 투자를 마감하며 5개월 만에 1위를 되찾았다고 블룸버그가 보도했습니다.\n2위 다툼은 xAI와 Anthropic이 네 번 주고받았습니다.\n\nOpenAI와 Anthropic, 다음 1위는 어디일까요?\n\n출처: OpenAI·Anthropic·Mistral 투자 발표, Bloomberg·Reuters·CNBC·WSJ 보도 (2023년 1월~2026년 11월)\n사진: 샘 올트먼(Village Global, CC BY 2.0), 다리오 아모데이(UK Prime Minister's Office, CC BY 2.0), 일론 머스크(U.S. Air Force/Trevor Cokley, 퍼블릭 도메인), 위키미디어 공용 / 화면: SSI·Perplexity·Mistral AI·Thinking Machines Lab 공식 사이트\n음악: 'Put The Needle Down' by AlexBeroza (ccmixter.org/files/AlexBeroza/28062), CC BY 3.0\n\n팔로우하면 매일 AI 소식을 받아 볼 수 있어요.",
+  "caption": "AI 회사 몸값(기업가치) 순위 변화를 30초로 정리했습니다. OpenAI, Anthropic, xAI, SSI, Perplexity, Mistral.\n\n2023년 1월 290억 달러였던 OpenAI는 3년 10개월 만에 43배가 됐습니다.\n2026년 5월에는 Anthropic이 9,650억 달러 투자를 받으며 처음 1위.\n11월 OpenAI가 1조 2,500억 달러에 1차 투자를 마감하며 5개월 만에 1위를 되찾았다고 블룸버그가 보도했습니다.\n2위 다툼은 xAI와 Anthropic이 네 번 주고받았습니다.\n\nOpenAI와 Anthropic, 다음 1위는 어디일까요?\n\n출처: OpenAI·Anthropic·Mistral 투자 발표, Bloomberg·Reuters·CNBC·WSJ 보도 (2023년 1월~2026년 11월)\n사진: 샘 올트먼(Village Global, CC BY 2.0), 다리오 아모데이(UK Prime Minister's Office, CC BY 2.0), 일론 머스크(U.S. Air Force/Trevor Cokley, 퍼블릭 도메인), 위키미디어 공용 / 화면: SSI·Perplexity·Mistral AI·Thinking Machines Lab 공식 사이트\n음악: 'Put The Needle Down' by AlexBeroza (ccmixter.org/files/AlexBeroza/28062), CC BY 3.0\n\n팔로우하면 매일 AI 소식을 받아 볼 수 있어요.",
   "hashtags": [
     "#오픈AI",
     "#앤트로픽",
@@ -68,8 +67,8 @@
   ],
   "end_cta": "팔로우하면\n매일 AI 소식",
   "thumb": {
-    "title": "OpenAI 몸값,\n4년 만에 43배 뛰었다",
-    "highlight": "43배",
+    "title": "30초 만에 보는\nAI 회사 몸값 순위 변화",
+    "highlight": "순위 변화",
     "image": {
       "type": "image",
       "src": "img/thumb.jpg",
@@ -79,9 +78,8 @@
   "race": {
     "format": "usd_b",
     "end": "2026-11-17",
-    "basis_line": "투자 유치 때 매겨진 기업가치 · 회사 발표·주요 언론 보도",
     "cta_line": "OpenAI vs Anthropic, 다음 1위는?",
-    "punch": "OpenAI가 5개월 만에\n1위를 되찾았다",
+    "punch": "1위는 다시 OpenAI",
     "thumb_src": "img/thumb.jpg",
     "series": [
       {
@@ -337,36 +335,6 @@
         ]
       }
     ],
-    "beats": {
-      "hook": "AI 회사 몸값,\n1위는 어디?",
-      "hook_until": 3,
-      "anchors": [
-        [
-          "2023-12-21",
-          3.0
-        ],
-        [
-          "2026-02-12",
-          12.0
-        ],
-        [
-          "2026-05-28",
-          13.6
-        ],
-        [
-          "2026-11-06",
-          23.5
-        ]
-      ],
-      "rehook": {
-        "date": "2026-05-28",
-        "text": "OpenAI, 2위로"
-      },
-      "ask": {
-        "text": "OpenAI,\n1위 되찾을까?",
-        "from": 15.0
-      }
-    },
     "images": [
       {
         "series": "OpenAI",
@@ -374,7 +342,8 @@
         "x": 50,
         "y": 40,
         "credit": "Village Global, CC BY 2.0 (Wikimedia Commons)",
-        "url": "https://commons.wikimedia.org/wiki/File:Sam_Altman_November_2022.jpg"
+        "url": "https://commons.wikimedia.org/wiki/File:Sam_Altman_November_2022.jpg",
+        "fy": 22
       },
       {
         "series": "Anthropic",
@@ -382,7 +351,8 @@
         "x": 50,
         "y": 40,
         "credit": "UK Prime Minister's Office, CC BY 2.0 (Wikimedia Commons)",
-        "url": "https://commons.wikimedia.org/wiki/File:Dario_Amodei_in_2023.jpg"
+        "url": "https://commons.wikimedia.org/wiki/File:Dario_Amodei_in_2023.jpg",
+        "fy": 22
       },
       {
         "series": "xAI",
@@ -390,7 +360,8 @@
         "x": 50,
         "y": 40,
         "credit": "U.S. Air Force/Trevor Cokley, 퍼블릭 도메인 (Wikimedia Commons)",
-        "url": "https://commons.wikimedia.org/wiki/File:Elon_Musk_Colorado_2022_(cropped2).jpg"
+        "url": "https://commons.wikimedia.org/wiki/File:Elon_Musk_Colorado_2022_(cropped2).jpg",
+        "fy": 22
       },
       {
         "series": "SSI",
@@ -399,7 +370,7 @@
         "y": 40,
         "credit": "화면: SSI 공식 사이트",
         "url": "https://ssi.inc",
-        "dim": 0.86
+        "fy": 8
       },
       {
         "series": "Perplexity",
@@ -408,7 +379,7 @@
         "y": 40,
         "credit": "화면: Perplexity 공식 사이트",
         "url": "https://www.perplexity.ai",
-        "dim": 0.86
+        "fy": 8
       },
       {
         "series": "Mistral",
@@ -417,7 +388,7 @@
         "y": 40,
         "credit": "화면: Mistral AI 공식 사이트",
         "url": "https://mistral.ai",
-        "dim": 0.86
+        "fy": 8
       },
       {
         "series": "Thinking Machines",
@@ -426,8 +397,11 @@
         "y": 40,
         "credit": "화면: Thinking Machines Lab 공식 사이트",
         "url": "https://thinkingmachines.ai",
-        "dim": 0.86
+        "fy": 8
       }
-    ]
+    ],
+    "start": "2023-01-01",
+    "seconds": 24,
+    "unit_label": "기업가치(달러)"
   }
 }

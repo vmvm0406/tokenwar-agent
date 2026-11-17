@@ -206,6 +206,10 @@ def title_sentence(title, where, no_question=True):
     one = " ".join(_lines(title)).strip()
     if not one:
         return []
+    # 'N초 만에 보는 …' 정리형 제목 (운영자 결정 2026-11-17, 막대 경주 릴스 "30초 만에 보는 AI 사용자 수 순위 변화"):
+    # 이 모양만 명사로 끝나도 된다. 다른 명사 제목은 그대로 막는다
+    if re.match(r"^\d+초 만에 보는 \S", one):
+        return []
     # 유형 B '큰 의미를 던지는 짧은 질문' (운영자 결정 2026-11-17, 'AI로 의학 대체 가능?'): 15자 안팎 짧은 물음표 제목은 허용
     if one.endswith("?") and len(one.replace(" ", "")) <= 15 and not re.search(r"(까요|까)\?$", one):
         return []

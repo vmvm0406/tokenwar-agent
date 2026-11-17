@@ -1,45 +1,37 @@
-"""막대 경주 릴스 (post type "video" + "race", 2026-11-17).
+"""막대 경주 릴스 (post type "video" + "race", 2026-11-17, 고전 바 차트 레이스로 다시 만듦).
 
-회사·서비스별 실제 수치(사용자 수, 기업가치)를 날짜 순으로 쌓아 막대가 서로 앞지르는 '바 차트 레이스'로 보여 준다.
-값은 **공식 발표·보도가 나온 날에만 바뀐다** (발표 사이를 지어내지 않음). 바뀔 때 0.45초 동안 부드럽게 늘어나고,
-순위가 바뀌면 막대가 미끄러지며 자리를 바꾼다. 1·2위로 올라선 순간은 막대가 번쩍이고 날짜 옆에 짧은 띠('Meta AI 1위').
-끝은 1위 막대만 녹색으로 남고 punch 한 줄이 쾅 박힌 뒤 end_cta 끝 화면.
-
-장면 (본편):
-    0초          제목 두 줄이 쾅 박히고(쿵) 첫 발표 막대가 이미 보인다. 날짜 숫자판이 바로 굴러간다
-    0.6초~       발표마다 막대가 늘어나고(틱) 순위가 바뀌면 휙 + 타격 + 번쩍 + 띠
-    race_end~    1위만 녹색, 나머지 흐리게, punch 한 줄 쾅 (3.2초, 1위 막대는 천천히 커짐 → 정지 화면 없음)
-    끝           end_cta(또는 dm.cta) 끝 화면 2.5초 (video.append_cta_card)
-
-발표 사이 영상 시간 = 실제 간격(일)^0.45에 비례 → 발표가 드문 초기는 빨리, 촘촘한 최근은 천천히 지나간다.
-글자 자리: 모두 안전 영역(config.json reel_safe) 안. 날짜·띠는 오른쪽 아래 버튼 줄(x 850~) 왼쪽. 렌더링이 글자 폭을 검사한다.
-디자인: 검정 배경, 막대는 회사 색 단색 직각(그라데이션·둥근 모서리·글로우 없음), 로고 대신 회사 이름 글자.
-소리: 실제 음원 조각(music.src, agent/music_fit.py) + 효과음(music_gen.make_hook_sfx) → -14 LUFS.
+운영자 (2026-11-17): "시간에 따라서 연속적으로 숫자가 바뀌어야", "년도랑 월은 너무 눈에 잘 안 띄어", "쓸데없는 부연설명이 많아".
+- 시간 한 줄: 본편 race_len초 동안 날짜가 한결같은 속도로 흐르고(달마다 째깍), 오른쪽 위 작은 날짜판이 따라 바뀐다.
+- 값은 발표·보도 사이를 비율로 이어 그린다(기하 보간). 막대 끝 숫자가 계속 올라가고, 순위가 바뀌면 막대가 0.3초 미끄러진다.
+  첫 발표 때 0에서 짧게 자라 들어오고, 마지막 발표 뒤에는 그 값을 유지한다.
+- 화면 글: 제목 2줄(0초 쾅), 0초 질문 한 줄(cta_line), 작은 단위 라벨(unit_label), 날짜, 막대(이름·숫자·막대 끝 동그란 사진),
+  끝 punch 한 줄(선택). 중간 글자 카드·띠·근거 줄 없음 (근거는 캡션).
+- 배경: 1위 회사 사진을 흐리고 어둡게 (1위가 바뀌면 0.5초 겹쳐 바뀜). 사진 필수 (STYLE_GUIDE 0장 원칙 0).
+- 끝: 1위 막대만 녹색, 나머지 흐리게, punch → end_cta(또는 dm.cta) 끝 화면 2.5초.
+소리: 실제 음원 조각(music.src, agent/music_fit.py) + 효과음(1위 바뀔 때 휙·쿵, 해 바뀔 때 틱, 끝 상승음·쿵) → -14 LUFS.
 
 post.json:
   "race": {
-    "format": "people_m" | "usd_b",       # 값 단위: 백만 명 → '12억 명' / 십억 달러 → '1조 2,500억 달러'
-    "end": "2026-11-17",                    # 숫자판 끝 날짜 (선택, 기본 마지막 발표일). 처음은 첫 발표일
-    "series": [{"name": "ChatGPT", "color": "#10A37F", "tag": "주간",          # tag: 값 뒤 작은 글씨 (선택)
-                "points": [{"date": "2023-11-06", "value": 100, "src": "출처 이름", "url": "https://...",
-                            "kind": "official" | "reported", "note": "(선택)"}]}],
-    "basis_line": "회사 공식 발표 · ChatGPT는 주간, 나머지 월간 사용자",   # 화면 위 작은 근거 줄 (필수, 40자 이하)
-    "cta_line": "ChatGPT vs Gemini, 뭐 쓰세요?",   # 0초부터 제목 아래 한 줄 (선택)
-    "punch": "일주일에 12억 명이\nChatGPT를 씁니다",  # 끝 한 줄 (필수, 2줄까지)
-    "thumb_src": "img/thumb.jpg",           # 렌더링이 그리는 썸네일 바탕 (thumb.image.src와 같게)
-    "beats": {                              # 선택. 이야기 박자 (운영자 승인 뼈대: 후킹 0~3 → 지연 → 반전 12~15 → 지연 → 답 25~30)
-      "hook": "AI 사용자 1위,\\n지금은 누구?", "hook_until": 3,      # 0초부터 막대 칸 아래에 크게 (끝 1위는 아직 안 보임)
-      "anchors": [["2024-08-29", 3], ["2026-02-04", 12], ["2026-07-22", 13.5], ["2026-09-29", 22]],  # [발표일, 영상 초]
-      "rehook": {"date": "2026-07-22", "text": "ChatGPT 3위로"},  # 그 발표의 띠를 이 글로, 큰 쿵
-      "ask": {"text": "1위 자리,\\n또 뒤집힐까?", "from": 15}  # from ~ 마지막 순위 바뀜(답)까지 날짜 옆에
-    }
+    "format": "people_m" | "usd_b",       # 값 단위: 백만 명 → '12억'·'700만' / 십억 달러 → '1조 2,500억'·'5.2억'
+    "start": "2024-06-01", "end": "2026-11-17",   # 날짜판 처음·끝 (선택, 기본 첫·마지막 발표일). 처음 전 발표는 보간에만 씀
+    "seconds": 24,                         # 선택. 본편(날짜가 흐르는) 길이
+    "interp": "geometric" | "step",        # 선택. 기본: people_m은 발표 사이 이어 그림, usd_b는 다음 발표까지 유지
+    "unit_label": "사용자 수(명) · ChatGPT는 주간",   # 날짜 왼쪽 작은 단위 라벨 (지표가 섞이면 여기에 짧게)
+    "cta_line": "ChatGPT vs Gemini, 뭐 쓰세요?",      # 0.5초부터 제목 아래 한 줄 (선택)
+    "punch": "ChatGPT 주간 12억 명",       # 선택. 끝 한 줄 (1~2줄, 줄당 16자 이하)
+    "series": [{"name": "ChatGPT", "color": "#10A37F",
+                "points": [{"date": "2023-11-06", "value": 100, "kind": "official", "src": "누가·어디서", "url": "https://..."}]}],
+    "images": [{"series": "ChatGPT", "src": "img/altman.jpg", "x": 50, "y": 40, "fy": 25, "credit": "...", "url": "..."}],
+    "thumb_src": "img/thumb.jpg"            # 렌더링이 그리는 썸네일 바탕 (thumb.image.src와 같게)
   }
+  (예전 필드 basis_line·beats·series[].tag는 화면에 쓰지 않는다)
 사용법: render.py가 부른다. 계획만 보기: py -3.12 agent/racereel.py <게시물 폴더>
 """
 import asyncio
 import base64
 import datetime as dt
 import json
+import math
 import shutil
 import subprocess
 import sys
@@ -54,13 +46,10 @@ SAFE_BOTTOM = _SAFE.get("bottom", 1250)
 SIDE = _SAFE.get("side", 65)
 RAIL_LEFT = _SAFE.get("rail_left", 850)
 
-FIRST = 0.6            # 첫 발표 다음 변화가 시작하는 시각
-RACE_END = 21.0        # 마지막 발표 + 숫자판이 끝 날짜까지 가는 시각
-LAST_HOLD = 0.9        # 마지막 발표 뒤 끝 날짜까지
-WIN_LEN = 3.2          # 1위 + punch
-TWEEN = 0.45
-GAP_POWER = 0.45
-MIN_STEP = 0.32
+RACE_LEN = 24.0        # 본편: 날짜가 처음부터 끝까지 흐르는 시간
+HOLD = 0.4             # 끝 날짜에서 잠깐
+WIN_LEN = 3.1          # 1위 녹색 + punch
+ENTRY_SEC = 0.4        # 새 회사가 0에서 자라 들어오는 시간
 END_LEN = 2.5
 LENGTH_RANGE = (20.0, 35.0)
 FORMATS = ("people_m", "usd_b")
@@ -71,205 +60,92 @@ def _d(s):
 
 
 def fmt_value(v, fmt):
-    """화면 값 표기 (JS fmtValue와 같은 규칙)."""
+    """화면 값 표기 (JS fmtValue와 같음). 단위는 unit_label에."""
     if fmt == "people_m":
         if v >= 100:
-            x = round(v / 100, 1)
-            return f"{x:g}억 명"
-        return f"{round(v * 100):,}만 명"
-    eok = v * 10                      # 십억 달러 → 억 달러
+            return f"{round(v / 100, 1):g}억"
+        return f"{round(v * 100):,}만"
+    eok = v * 10
     if eok >= 10000:
         jo, rest = divmod(round(eok), 10000)
-        return f"{jo}조 {rest:,}억 달러" if rest else f"{jo}조 달러"
+        return f"{jo}조 {rest:,}억" if rest else f"{jo}조"
     if eok < 10:
-        return f"{round(eok, 1):g}억 달러"
-    return f"{round(eok):,}억 달러"
+        return f"{round(eok, 1):g}억"
+    return f"{round(eok):,}억"
+
+
+def images_of(post):
+    """race.images (사진 필수, STYLE_GUIDE 0장 원칙 0) → {막대 번호: 항목}."""
+    names = [s["name"] for s in post["race"]["series"]]
+    return {names.index(im["series"]): im for im in post["race"].get("images") or []
+            if im.get("series") in names and im.get("src")}
+
+
+def value_at(s, day, entry_days, step=False):
+    """JS valueAt와 같음: 발표 사이 기하 보간(step이면 다음 발표까지 유지하고 발표 때 entry_days 동안 늘어남),
+    첫 발표 때 자라 들어옴, 마지막 뒤 유지."""
+    pts = s["pts"]
+    if day < pts[0]["d"]:
+        return None
+    if step:
+        k = max(j for j, q in enumerate(pts) if q["d"] <= day)
+        a = pts[k - 1]["v"] if k > 0 else 0.0
+        if k == 0 and pts[0]["d"] <= 0:
+            return pts[0]["v"]
+        span = s.get("span", 10 ** 9)
+        x = min(1.0, (day - pts[k]["d"]) / max(1, min(entry_days, span - pts[k]["d"])))
+        return a + (pts[k]["v"] - a) * (1 - (1 - x) ** 3)
+    if pts[0]["d"] > 0 and day < pts[0]["d"] + entry_days:
+        x = (day - pts[0]["d"]) / entry_days
+        return pts[0]["v"] * (1 - (1 - x) ** 3)
+    for a, b in zip(pts, pts[1:]):
+        if day < b["d"]:
+            f = (day - a["d"]) / (b["d"] - a["d"])
+            return a["v"] * (b["v"] / a["v"]) ** f if a["v"] > 0 and b["v"] > 0 else a["v"] + (b["v"] - a["v"]) * f
+    return pts[-1]["v"]
 
 
 def plan(post):
     R = post["race"]
-    series = R["series"]
-    dates = sorted({p["date"] for s in series for p in s["points"]})
-    ds = [_d(x) for x in dates]
-    start = ds[0]
+    dates = sorted({p["date"] for s in R["series"] for p in s["points"]})
+    start = _d(R.get("start") or dates[0])
     end = _d(R.get("end") or dates[-1])
-    gaps = [max(1, (ds[i] - ds[i - 1]).days) for i in range(1, len(ds))]
-    # 영상 시각: 고정점(anchors, [발표일, 초]) 사이 발표는 실제 간격^GAP_POWER 비례로 나눈다.
-    # 기본 고정점: 첫 발표 0초, 둘째 FIRST, 마지막 RACE_END - LAST_HOLD. beats.anchors로 이야기 박자(후킹·반전·답)에 맞춘다
-    B = R.get("beats") or {}
-    anchors = {dates[0]: 0.0}
-    if B.get("anchors"):
-        for d, t in B["anchors"]:
-            anchors[str(d)] = float(t)
-    else:
-        if len(ds) > 1:
-            anchors[dates[1]] = FIRST
-        anchors[dates[-1]] = RACE_END - LAST_HOLD
-    idx = sorted(dates.index(d) for d in anchors)
-    times = [0.0] * len(ds)
-    for a_i, b_i in zip(idx, idx[1:]):
-        ta, tb = anchors[dates[a_i]], anchors[dates[b_i]]
-        w = [gaps[j - 1] ** GAP_POWER for j in range(a_i + 1, b_i + 1)]
-        c = 0.0
-        for j, x in zip(range(a_i + 1, b_i + 1), w):
-            c += x
-            times[j] = ta + (tb - ta) * c / sum(w)
-    times[0] = 0.0
-    tmap = dict(zip(dates, times))
-    # 숫자판: (영상 시각, 날짜 일수) 꺾은선
-    keys = [(0.0, (start - start).days)]
-    for x, t in zip(ds, times):
-        if t > 0:
-            keys.append((t, (x - start).days))
-    last_t = times[-1]
-    keys.append((last_t + LAST_HOLD, (end - start).days))
+    span = (end - start).days
+    race_len = float(R.get("seconds", RACE_LEN))
+    entry_days = ENTRY_SEC / race_len * span
     ser = []
-    for s in series:
+    for s in R["series"]:
         pts = sorted(s["points"], key=lambda p: p["date"])
-        ser.append({"name": s["name"], "color": s.get("color", "#9AA59F"), "tag": s.get("tag", ""),
-                    "pts": [{"t": tmap[p["date"]], "v": float(p["value"])} for p in pts]})
-    race_end = last_t + LAST_HOLD
-    p = {"fmt": R.get("format", "people_m"), "ser": ser, "keys": keys,
-         "start": [start.year, start.month, start.day], "tween": TWEEN, "race_end": race_end,
-         "win_end": race_end + WIN_LEN, "title": str(post["title"]).split("\n"), "hl": post.get("highlight") or "",
-         "cta": (R.get("cta_line") or "").strip(), "basis": R.get("basis_line", ""),
-         "punch": str(R.get("punch", "")).split("\n"),
+        ser.append({"name": s["name"], "color": s.get("color", "#9AA59F"), "span": span,
+                    "pts": [{"d": (_d(p["date"]) - start).days, "v": float(p["value"])} for p in pts]})
+    race_end = race_len + HOLD
+    # 값 잇는 법: 사용자 수는 발표 사이를 비율로 이어 그림, 기업가치는 투자 때 정해지는 값이라 다음 발표까지 유지(step)
+    step = R.get("interp", "step" if R.get("format") == "usd_b" else "geometric") == "step"
+    p = {"fmt": R.get("format", "people_m"), "step": step, "ser": ser, "start": [start.year, start.month, start.day], "span": span,
+         "race_len": race_len, "race_end": race_end, "win_end": race_end + WIN_LEN, "entry_days": entry_days,
+         "title": str(post["title"]).splitlines(), "hl": post.get("highlight") or "",
+         "cta": (R.get("cta_line") or "").strip(), "unit": (R.get("unit_label") or "").strip(),
+         "punch": [l for l in str(R.get("punch", "")).splitlines() if l.strip()],
          "safe": {"top": SAFE_TOP, "bottom": SAFE_BOTTOM, "side": SIDE, "rail": RAIL_LEFT}}
-    p["overtakes"] = overtakes(p)
-    # 이야기 박자 (운영자 승인 릴스 뼈대 2026-11-17): 후킹 질문(0~hook_until) → 반전(rehook) → 질문(ask) → 답
-    p["hook"] = [l for l in str(B.get("hook", "")).splitlines() if l.strip()]
-    p["hook_until"] = float(B.get("hook_until", 3.0))
-    rh = B.get("rehook") or {}
-    p["rehook_t"] = None
-    if rh.get("date") in tmap:
-        t0 = tmap[rh["date"]]
-        o = next((o for o in p["overtakes"] if t0 - 1e-6 <= o["t"] <= t0 + TWEEN + 0.05), None)
-        if o is None:
-            o = {"t": t0 + 0.1, "i": -1, "rank": 0, "label": ""}
-            p["overtakes"].append(o)
-            p["overtakes"].sort(key=lambda x: x["t"])
-        if rh.get("text"):
-            o["label"] = rh["text"]
-        o["rehook"] = True
-        p["rehook_t"] = o["t"]
-    p["answer_t"] = p["overtakes"][-1]["t"] if p["overtakes"] else race_end
-    ak = B.get("ask") or {}
-    p["ask"] = {"lines": [l for l in str(ak.get("text", "")).splitlines() if l.strip()],
-                "from": float(ak.get("from", 15.0)), "to": p["answer_t"]} if ak.get("text") else None
-    vals = [(s["pts"][-1]["v"], i) for i, s in enumerate(ser)]
-    p["winner"] = max(vals)[1]
-    p["event_times"] = sorted({pt["t"] for s in ser for pt in s["pts"] if pt["t"] > 0})
-    p["spot"], p["hook_strip"] = spotlight(p, images_of(post))
+    # 1위 바뀜(배경 사진·효과음)과 순위 바뀜: 프레임마다 값으로 정한다
+    lead, swaps, prev_order = [], [], None
+    for k in range(int(race_len * FPS) + 1):
+        t = k / FPS
+        day = t / race_len * span
+        vs = [value_at(s, day, entry_days, step) for s in ser]
+        order = sorted([i for i, v in enumerate(vs) if v is not None], key=lambda i: (-vs[i], i))
+        if order and (not lead or lead[-1][1] != order[0]):
+            if not lead or t - lead[-1][0] >= 0.5:
+                lead.append([round(t, 3), order[0]])
+        if prev_order and [i for i in order if i in prev_order] != prev_order:
+            swaps.append(round(t, 3))
+        prev_order = order
+    p["lead"] = lead
+    p["swaps"] = swaps
+    p["winner"] = max(range(len(ser)), key=lambda i: value_at(ser[i], span, entry_days, step) or 0)
+    p["years"] = [round((dt.date(y, 1, 1) - start).days / span * race_len, 3)
+                  for y in range(start.year + 1, end.year + 1)]
     return p
-
-
-def images_of(post):
-    """race.images (사진 필수, STYLE_GUIDE 0장 원칙 0): [{series, src, x, y, dim, credit, url}] (dim: 사진 위 어둡게 0~1, 기본 0.6, 밝은 화면 캡처는 0.85) → {막대 번호: 항목}."""
-    names = [s["name"] for s in post["race"]["series"]]
-    out = {}
-    for im in post["race"].get("images") or []:
-        if im.get("series") in names and im.get("src"):
-            out[names.index(im["series"])] = im
-    return out
-
-
-SPOT_HOLD = 1.6        # 배경 사진은 이 시간 안에 다시 바뀌지 않는다 (앞지르기는 0.6초)
-
-
-def spotlight(p, imgs):
-    """배경 사진 순서 [(시각, 막대 번호)]: 발표가 난 회사 사진으로 바뀌고(1.6초 이상 유지), 앞지르기·반전은 바로,
-    답(마지막 순위 바뀜)부터는 1위 사진 고정. 후킹 동안은 경쟁 회사 사진 세 장을 세로로 나눠 보여 준다(끝 1위를 홀로 드러내지 않음)."""
-    if not imgs:
-        return [], []
-    start = p["hook_until"] if p["hook"] else 0.0
-    evs = sorted([(pt["t"], i, False) for i, s in enumerate(p["ser"]) for pt in s["pts"] if pt["t"] > 0] +
-                 [(o["t"], o["i"], True) for o in p["overtakes"] if o["i"] >= 0])
-    first = next((i for t, i, _ in reversed(evs) if t <= start and i in imgs), None)
-    if first is None:
-        first = next(i for i in range(len(p["ser"])) if i in imgs)
-    spot = [(start, first)]
-    for t, i, strong in evs:
-        if t < start or i not in imgs or i == spot[-1][1] or t >= p["answer_t"] - 1e-6:
-            continue
-        if t - spot[-1][0] >= (0.6 if strong else SPOT_HOLD):
-            spot.append((t, i))
-    w = p["winner"]
-    end = p["answer_t"]
-    # 4초 넘게 같은 사진이면 그때 상위 3개 회사 사진을 2.4초마다 돌린다 (질문 구간에서 '누가?' 긴장)
-    filled = []
-    for k, (t0, i0) in enumerate(spot):
-        filled.append((t0, i0))
-        t1 = spot[k + 1][0] if k + 1 < len(spot) else end
-        t = t0 + 2.4
-        last = i0
-        while t1 - t >= 1.6:
-            top = [j for j in _order(p, t)[:3] if j in imgs and j != last]
-            if not top:
-                break
-            last = top[0]
-            filled.append((t, last))
-            t += 2.4
-    spot = filled
-    if w in imgs and spot[-1][1] != w:
-        spot.append((max(end, spot[-1][0] + 0.4), w))
-    strip = []
-    if p["hook"]:
-        order = sorted(range(len(p["ser"])), key=lambda i: -max(pt["v"] for pt in p["ser"][i]["pts"]))
-        strip = [i for i in order if i in imgs][:3]
-    return [[round(t, 3), i] for t, i in spot], strip
-
-
-def _ease_io(x):
-    x = min(1.0, max(0.0, x))
-    return 4 * x ** 3 if x < 0.5 else 1 - (-2 * x + 2) ** 3 / 2
-
-
-def _value_at(s, t):
-    """화면에 보이는 값 (JS cur()와 같음: 발표 뒤 TWEEN초 동안 easeIO로 늘어남)."""
-    k = -1
-    for j, pt in enumerate(s["pts"]):
-        if pt["t"] <= t:
-            k = j
-    if k < 0:
-        return None
-    pt = s["pts"][k]
-    if pt["t"] == 0:
-        return pt["v"]
-    prev = s["pts"][k - 1]["v"] if k > 0 else 0.0
-    return prev + (pt["v"] - prev) * _ease_io((t - pt["t"]) / TWEEN)
-
-
-def _order(p, t):
-    vs = [(_value_at(s, t), i) for i, s in enumerate(p["ser"])]
-    present = sorted([x for x in vs if x[0] is not None], key=lambda x: (-x[0], x[1]))
-    return [i for _, i in present]
-
-
-def overtakes(p):
-    """발표 시각마다 순위가 오른 것 중 1·2위로 올라선 것 (띠와 효과음). [{t, i, rank, label}]"""
-    out = []
-    ts = sorted({pt["t"] for s in p["ser"] for pt in s["pts"] if pt["t"] > 0})
-    for t in ts:
-        before, after = _order(p, t - 1e-4), _order(p, t + TWEEN + 0.01)
-        best = None
-        for r, i in enumerate(after, 1):
-            if r > 2:
-                break
-            old = before.index(i) + 1 if i in before else None
-            if old is None and len(after) == 1:
-                continue
-            if old is None or r < old:
-                passed = [j for j in before[:old - 1 if old else len(before)] if j in after and after.index(j) + 1 > r]
-                if passed and (best is None or r < best["rank"]):
-                    # 띠·번쩍·효과음은 막대가 실제로 앞지르는 순간 (늘어나는 도중)
-                    tc = next((t + k * 0.01 for k in range(int(TWEEN * 100) + 2)
-                               if i in _order(p, t + k * 0.01)[:r] and _order(p, t + k * 0.01).index(i) + 1 == r), t)
-                    best = {"t": round(tc, 3), "i": i, "rank": r, "label": f"{p['ser'][i]['name']} {r}위"}
-        # 붙어 있는 발표에서 같은 앞지르기가 두 번 잡히면 하나만
-        if best and not any(o["i"] == best["i"] and o["rank"] == best["rank"] and best["t"] - o["t"] < TWEEN + 0.2
-                            for o in out):
-            out.append(best)
-    return out
 
 
 def page_html(p, cfg):
@@ -310,14 +186,15 @@ async def _shoot(html_file, times, out_dir, thumb_png=None):
     return problems
 
 
+
+
 def sfx_tracks(p, total):
     from music_gen import make_hook_sfx
-    ot = [o["t"] for o in p["overtakes"]]
-    ticks = [t for t in p["event_times"] if all(abs(t - o) > 0.05 for o in ot)]
-    imp = [0.0, p["race_end"] + 0.05] + ([p["rehook_t"]] if p.get("rehook_t") else []) +           ([p["answer_t"]] if p["answer_t"] < p["race_end"] - 0.2 else [])
-    return make_hook_sfx(total, impacts=imp, hits=[t + 0.12 for t in ot],
-                         whooshes=[t + 0.1 for t in ot], riser_to=p["answer_t"],
-                         riser_len=min(2.0, p["answer_t"] - 1), drop=None, ticks=ticks)
+    lead = [t for t, _ in p["lead"][1:]]
+    hits = [t for t in p["swaps"] if all(abs(t - x) > 0.2 for x in lead)]
+    hits = [t for k, t in enumerate(hits) if k == 0 or t - hits[k - 1] > 0.4]
+    return make_hook_sfx(total, impacts=[0.0, p["race_end"] + 0.1] + lead, hits=hits,
+                         whooshes=lead, riser_to=p["race_end"] + 0.1, riser_len=1.6, drop=None, ticks=p["years"])
 
 
 def make_race_reel(post, folder, cfg):
@@ -328,15 +205,15 @@ def make_race_reel(post, folder, cfg):
     if work.exists():
         shutil.rmtree(work)
     work.mkdir()
-    html_file = work / "race.html"
     missing = [im["src"] for im in images_of(post).values() if not (folder / im["src"]).exists()]
     if missing:
         shutil.rmtree(work)
         raise ValueError("race.images 파일 없음: " + ", ".join(missing))
     # data URI로 넣는다 (file:// 그림은 캔버스를 오염시켜 toDataURL이 막힘)
     p["imgs"] = {str(i): {"uri": "data:image/jpeg;base64," + base64.b64encode((folder / im["src"]).read_bytes()).decode(),
-                          "x": im.get("x", 50), "y": im.get("y", 40), "dim": float(im.get("dim", 0.6))}
+                          "x": im.get("x", 50), "y": im.get("y", 40), "fy": im.get("fy", im.get("y", 40))}
                  for i, im in images_of(post).items()}
+    html_file = work / "race.html"
     html_file.write_text(page_html(p, cfg), encoding="utf-8")
     main = p["win_end"]
     nfr = int(round(main * FPS))
@@ -386,39 +263,24 @@ def make_race_reel(post, folder, cfg):
                         "-frames:v", "1", "-q:v", "2", str(frames / f"{k:02d}.jpg")], check=True)
     shutil.copy(frames / "01.jpg", folder / "cover.jpg")
     shutil.rmtree(work)
-    on = info["onsets"]
-    print(f"발표 {len(p['event_times']) + 1}번, 순위 바뀜: " +
-          ", ".join(f"{o['label']} {o['t']:.1f}초" for o in p["overtakes"]))
-    print("효과음: " + ", ".join(f"{k} {len(v) if isinstance(v, (list, tuple)) else v}" for k, v in on.items()))
-    print("박자: " + " → ".join(beats(p)))
-    print("배경 사진: " + ", ".join(f"{t:.1f}초 {p['ser'][i]['name']}" for t, i in p["spot"]) +
-          (f" (후킹: {', '.join(p['ser'][i]['name'] for i in p['hook_strip'])})" if p["hook_strip"] else ""))
-    print(f"1위: {p['ser'][p['winner']]['name']} {fmt_value(p['ser'][p['winner']]['pts'][-1]['v'], p['fmt'])}, "
-          f"본편 {main:.1f}초")
+    print(summary(p))
     return dur
 
 
-def beats(p):
-    """이야기 박자 요약 (보고·PR 본문용)."""
-    out = [f"후킹 0~{p['hook_until']:g}초({' '.join(p['hook'])})" if p["hook"] else "후킹 0초"]
-    if p.get("rehook_t"):
-        lab = next(o["label"] for o in p["overtakes"] if o.get("rehook"))
-        out.append(f"반전 {p['rehook_t']:.1f}초({lab})")
-    if p.get("ask"):
-        out.append(f"질문 {p['ask']['from']:.1f}~{p['ask']['to']:.1f}초({' '.join(p['ask']['lines'])})")
-    out.append(f"답 {p['answer_t']:.1f}초 → 1위·punch {p['race_end']:.1f}~{p['win_end']:.1f}초")
-    return out
+def summary(p):
+    names = [s["name"] for s in p["ser"]]
+    return (f"1위 바뀜: " + ", ".join(f"{t:.1f}초 {names[i]}" for t, i in p["lead"]) +
+            f" / 순위 바뀜 {len(p['swaps'])}번 / 1위 {names[p['winner']]} "
+            f"{fmt_value(p['ser'][p['winner']]['pts'][-1]['v'], p['fmt'])} / 본편 {p['win_end']:.1f}초")
 
 
 def preview_times(p, total):
-    """미리보기: 0.3초, 후킹 끝, 순위가 바뀐 0.6초 뒤(마지막 4개), 질문 중간, 1위 장면, 끝 화면."""
-    ts = [0.3, p["hook_until"] - 0.3] + [o["t"] + 0.6 for o in p["overtakes"]][-4:]
-    if p.get("ask"):
-        ts.append((p["ask"]["from"] + p["ask"]["to"]) / 2)
-    ts = sorted(ts) + [p["race_end"] + 1.5]
+    """미리보기: 0.3초, 3초, 본편 1/3·1/2·2/3, 1위 바뀐 0.6초 뒤(마지막 2개), 끝 장면, 끝 화면."""
+    L = p["race_len"]
+    ts = [0.3, 3.0, L / 3, L / 2, L * 2 / 3] + [t + 0.6 for t, _ in p["lead"][1:]][-2:] + [p["race_end"] + 1.5]
     if total > p["win_end"] + 0.5:
         ts.append(total - 1.0)
-    return ts
+    return sorted(set(round(t, 2) for t in ts))
 
 
 def check_race(post):
@@ -426,7 +288,7 @@ def check_race(post):
     errors, warnings = [], []
     R = post.get("race")
     if not isinstance(R, dict):
-        return ["race는 {format, series: [{name, color, points: [{date, value, src, url}]}], basis_line, punch} 객체 "
+        return ["race는 {format, series: [{name, color, points: [{date, value, src, url}]}], unit_label, images} 객체 "
                 "(TEMPLATES.md '막대 경주 릴스')"], warnings
     if R.get("format", "people_m") not in FORMATS:
         errors.append(f"race.format은 {FORMATS} 중 하나")
@@ -456,35 +318,17 @@ def check_race(post):
             if p["date"] <= prev:
                 errors.append(f"race {nm}: 날짜 순서·중복 ({p['date']})")
             prev = p["date"]
-    if not str(R.get("basis_line", "")).strip():
-        errors.append("race.basis_line 필수: 화면에 띄울 근거·단위 한 줄 (STYLE_GUIDE 0 원칙 10)")
-    elif len(R["basis_line"]) > 40:
-        errors.append(f"race.basis_line은 40자 이하: {len(R['basis_line'])}자")
-    pl = [l for l in str(R.get("punch", "")).split("\n") if l.strip()]
-    if not pl or len(pl) > 2 or any(len(l) > 16 for l in pl):
-        errors.append("race.punch 필수: 1~2줄, 줄당 16자 이하")
+    if not str(R.get("unit_label", "")).strip():
+        errors.append("race.unit_label 필수: 날짜 옆 작은 단위 라벨 한 줄 (예: '사용자 수(명) · ChatGPT는 주간', STYLE_GUIDE 0 원칙 10)")
+    elif len(R["unit_label"]) > 24:
+        errors.append(f"race.unit_label은 24자 이하 (작은 라벨 하나): {len(R['unit_label'])}자")
+    pl = [l for l in str(R.get("punch", "")).splitlines() if l.strip()]
+    if len(pl) > 2 or any(len(l) > 16 for l in pl):
+        errors.append("race.punch는 1~2줄, 줄당 16자 이하 (없어도 됨)")
     if post.get("rights") != "own":
         errors.append("막대 경주 릴스는 직접 그린 그래프: rights는 own")
-    B = R.get("beats") or {}
-    dates = {p.get("date") for s in ser for p in (s.get("points") or [])}
-    prev_t = 0.0
-    for a in B.get("anchors") or []:
-        if not (isinstance(a, list) and len(a) == 2 and a[0] in dates):
-            errors.append(f"race.beats.anchors 항목은 [발표일(points의 date), 초]: {a!r}")
-        elif float(a[1]) <= prev_t:
-            errors.append(f"race.beats.anchors 시각은 커지는 순서: {a!r}")
-        else:
-            prev_t = float(a[1])
-    if B.get("rehook") and B["rehook"].get("date") not in dates:
-        errors.append("race.beats.rehook.date는 points의 발표일")
-    for k in ("hook", "rehook", "ask"):
-        v = B.get(k)
-        txt = v.get("text", "") if isinstance(v, dict) else (v or "")
-        if any(len(l) > 14 for l in str(txt).splitlines()):
-            errors.append(f"race.beats.{k} 한 줄 14자 이하: {txt!r}")
     names = [s.get("name") for s in ser]
-    imgs = R.get("images") or []
-    for im in imgs:
+    for im in R.get("images") or []:
         if im.get("series") not in names:
             errors.append(f"race.images: series '{im.get('series')}'가 race.series 이름에 없음")
         if not im.get("src") or not str(im.get("credit", "")).strip():
@@ -505,10 +349,5 @@ def check_race(post):
 if __name__ == "__main__":
     f = Path(sys.argv[1])
     post = json.loads((f / "post.json").read_text(encoding="utf-8"))
-    p = plan(post)
     print(check_race(post))
-    print("발표 시각:", [round(t, 2) for t in p["event_times"]])
-    for o in p["overtakes"]:
-        print(f"  {o['t']:.2f}초 {o['label']}")
-    print("박자:", " → ".join(beats(p)))
-    print(f"본편 {p['win_end']:.1f}초")
+    print(summary(plan(post)))
