@@ -36,3 +36,4 @@
 - 2026-11-17 메타 카드 v2(Df0z8Upie5e) — Live
 - 2026-11-17 조명 릴스(Df02CTVgaJb) — Live
 - 2026-11-17 카메라 용어 릴스(Df1mKLOijbM) — Live (공개 답글 4개)
+- 2026-11-17 FPS 릴스 Claude-of-Duty(Df16b-oEnTA) — Live (중복 게시로 Df16vxejrXX는 삭제됨. Zorcha 목록에 게시물 2개가 보여 먼저 올라간 쪽을 골랐으니 댓글로 시험해 확인)
