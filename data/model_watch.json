@@ -1630,7 +1630,58 @@
    "tries": 0,
    "breaking": true,
    "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMiUkFVX3lxTFAxdUdIMGR2Qkd4bkxadWhIaWdFQTM0WTRFZDhnWUp4RDVIR2JPWWdTWG96Q1dnY0lfV1laMllZWDRNV183RHhFenlZRmR5SlR5aGfSAVNBVV95cUxNdGRKWWR1cjlvVUFSZVJsMHVkTEk2MEh4eFViUDFHRk5jLVAycmJSV2RRcU1HWmZfNHNGdkQwLXRrcThMem13d1FsMk1oQUFPdnhTQQ?oc=5": {
+   "source": "news",
+   "company": "엔비디아",
+   "entities": [
+    "엔비디아",
+    "오픈AI"
+   ],
+   "tok": [
+    "결점",
+    "괜찮",
+    "업계",
+    "영웅",
+    "웅도",
+    "임에",
+    "있다",
+    "찮을",
+    "해임"
+   ],
+   "title": "[업계 속보: 주요 매체 4곳(YTN, 서울경제, 연합뉴스, 한겨레) · 인사] 젠슨 황 해임에 올트먼 “영웅도 결점 있다...AI 업계 괜찮을 것”",
+   "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTFAxdUdIMGR2Qkd4bkxadWhIaWdFQTM0WTRFZDhnWUp4RDVIR2JPWWdTWG96Q1dnY0lfV1laMllZWDRNV183RHhFenlZRmR5SlR5aGfSAVNBVV95cUxNdGRKWWR1cjlvVUFSZVJsMHVkTEk2MEh4eFViUDFHRk5jLVAycmJSV2RRcU1HWmZfNHNGdkQwLXRrcThMem13d1FsMk1oQUFPdnhTQQ?oc=5",
+   "first_seen": "2026-11-17T11:19:23+09:00",
+   "why": "48시간 안에 같은 회사·인물 게시물 있음: 2026-11-17-video-amodei-chips-north-korea (엔비디아)",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMigwFBVV95cUxNRnRydEtpWGZ3OWg4aWs2X05MVkdWUU5yUllXSFUzTVBXUklkOHhUVEdEZmJsa3phNURqWDZoMDRac2FpMFJpWHNrTHg1cU1aTWZKb1pPRy1kaW9DYk1yYTlsQzNoNTlCMUt0MTU0RnFxbkdBZmJkZDg5Qk1RdHpLNVItcw?oc=5": {
+   "source": "news",
+   "company": "엔비디아",
+   "entities": [
+    "엔비디아"
+   ],
+   "tok": [
+    "고려",
+    "긍정",
+    "럼프",
+    "복귀",
+    "사회",
+    "유보",
+    "이사",
+    "트럼",
+    "프는"
+   ],
+   "title": "[업계 속보: 주요 매체 3곳(동아일보, 매일경제, 조선일보) · 인사] 엔비디아 이사회 “젠슨 황 복귀 고려 안 해”, 트럼프는 복귀 ‘긍정’, 올트먼은 유보",
+   "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxNRnRydEtpWGZ3OWg4aWs2X05MVkdWUU5yUllXSFUzTVBXUklkOHhUVEdEZmJsa3phNURqWDZoMDRac2FpMFJpWHNrTHg1cU1aTWZKb1pPRy1kaW9DYk1yYTlsQzNoNTlCMUt0MTU0RnFxbkdBZmJkZDg5Qk1RdHpLNVItcw?oc=5",
+   "first_seen": "2026-11-17T11:19:23+09:00",
+   "why": "48시간 안에 같은 회사·인물 게시물 있음: 2026-11-17-video-amodei-chips-north-korea (엔비디아)",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
   }
  },
- "updated": "2026-11-17T11:04:21+09:00"
+ "updated": "2026-11-17T11:19:23+09:00"
 }
