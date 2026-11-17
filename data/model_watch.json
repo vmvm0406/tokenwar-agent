@@ -1681,7 +1681,36 @@
    "tries": 0,
    "breaking": true,
    "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMiVEFVX3lxTE1EdmhKSndoWVkzVTNINmh0bjNmOEptdmpLUHpJWC1xQTBoNXpMM2RLVWZ0RTdxdGlpQmxHTi0tbHJ1YnRyMlMtRW9pZTFRSlQ0MllQbg?oc=5": {
+   "source": "news",
+   "company": "엔비디아",
+   "entities": [
+    "엔비디아"
+   ],
+   "tok": [
+    "나쁜",
+    "럼프",
+    "리스",
+    "복귀",
+    "쁜생",
+    "생각",
+    "수도",
+    "스파",
+    "아냐",
+    "아닐",
+    "앨리",
+    "트럼",
+    "파이"
+   ],
+   "title": "[업계 속보: 주요 매체 3곳(JTBC, 연합뉴스, 한국경제) · 인사] 트럼프 \"앨리스 황, 스파이 아닐 수도…젠슨 황 복귀 ‘나쁜생각’ 아냐\"",
+   "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE1EdmhKSndoWVkzVTNINmh0bjNmOEptdmpLUHpJWC1xQTBoNXpMM2RLVWZ0RTdxdGlpQmxHTi0tbHJ1YnRyMlMtRW9pZTFRSlQ0MllQbg?oc=5",
+   "first_seen": "2026-11-17T12:04:27+09:00",
+   "why": "48시간 안에 같은 회사·인물 게시물 있음: 2026-11-17-video-amodei-chips-north-korea (엔비디아)",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
   }
  },
- "updated": "2026-11-17T11:49:23+09:00"
+ "updated": "2026-11-17T12:04:27+09:00"
 }
