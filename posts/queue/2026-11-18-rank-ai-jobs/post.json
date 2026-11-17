@@ -6,7 +6,7 @@
   "length": "short",
   "series": "전황",
   "date": "2026-11-18",
-  "publish_at": "2026-11-18T19:43:00+09:00",
+  "publish_at": "2026-11-18T18:13:00+09:00",
   "rights": "own",
   "rights_note": "화면은 직접 만든 그래픽(글자·숫자·막대). 순위·점수는 Microsoft Research 'Working with AI' 논문 최신판(arXiv v7, 2026-10-23)과 공개 데이터 v1.1 ai_applicability_scores.csv의 785개 직업 점수 상위 10개를 그대로 옮김(값x100, 소수 첫째 자리 반올림). 2025년 7월 첫 판(v1, 데이터 v1.0)과는 순위가 다름. 평균 15.9는 785개 직업의 단순 평균. 직업 이름은 미국 직업 분류(SOC) 이름을 한국어로 옮김. 배경음악·효과음은 agent/music_gen.py 코드 생성",
   "title": "AI에 가장 먼저\n흔들릴 직업 TOP 10",
