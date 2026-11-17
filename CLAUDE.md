@@ -1,6 +1,6 @@
 # 토큰전쟁 인스타 자동화 — Claude Code 작업 안내
 
-이 저장소는 인스타그램 **@tokenwar_ai (토큰전쟁 | AI 뉴스)** 를 자동으로 운영한다. AI 소식 카드뉴스(하루 1개)와 인용 영상 릴스(하루 1개)를 만들어 올린다. 계정을 키운 뒤 운영자의 SF 소설 「토큰 전쟁」을 알리는 것이 최종 목표다. **지금 목표: 2026-12-16까지 인스타 팔로워 1만 명** (운영자 결정 2026-11-16). 주제·형식·칸을 고를 때 팔로워 증가를 가장 먼저 본다. 진행률은 data/trends.md 맨 위. 운영자와는 한국어로 대화한다.
+이 저장소는 인스타그램 **@tokenwar_ai (토큰전쟁 | AI 뉴스)** 를 자동으로 운영한다. AI 소식 카드뉴스(하루 1개)와 인용 영상 릴스(하루 1개)를 만들어 올린다. 계정을 키운 뒤 운영자의 SF 소설 「토큰 전쟁」을 알리는 것이 최종 목표다. **채널 정체성 (운영자 결정 2026-11-17): 3D 캐릭터 대화 릴스.** 회사 로고·색을 본뜬 AI 회사 캐릭터들(클로드·챗GPT·제미나이 등) + 초록 슬라임 진행자 + 화면 밖 '나'(Deok 목소리)가 대화하며 실제 AI 소식·용어·기능을 공감 개그로 전한다 (@canwebuildthis 형식 참고, 캐릭터·개그는 우리 것, `agent/dialogue_reel.py`). 글자·UI는 검정 + 형광 초록. **지금 목표: 2026-12-16까지 인스타 팔로워 1만 명** (운영자 결정 2026-11-16). 주제·형식·칸을 고를 때 팔로워 증가를 가장 먼저 본다. 진행률은 data/trends.md 맨 위. 운영자와는 한국어로 대화한다.
 
 이 파일은 기능을 추가하거나 고칠 때 먼저 읽는 안내서다. **진행 중인 일과 운영자 답을 기다리는 것은 `NEXT.md`에 있다. 대화를 시작하면 그것부터 읽는다.** 매일 게시물을 만드는 절차는 `LOCAL.md`(이 컴퓨터), `AGENT.md`, `CLIPS.md`에 있다.
 
@@ -48,7 +48,7 @@
 | `agent/tighten.py` | 받아쓰기 단어 시각 → 말 사이 틈을 자른 keep 목록 |
 | `agent/analyze.py` | 영상 분석: 장면 전환, 말소리 구간, 받아쓰기, 시트 이미지 |
 | `agent/gen_images.py` | 실물 이미지 받기(`url`) → 없으면 AI 그림(`prompt`, Cloudflare) |
-| `agent/image_quota.py` / `data/image_gen_count.json` | AI 그림 하루 상한(config `image_gen.daily_limit`, 지금 200장(운영자 2026-11-17, 60→120→200), UTC 날짜별로 셈). 넘으면 그 게시물만 대기, 다음 날 00:07 UTC 정기 render가 이어서. Cloudflare Workers Paid(월 $5, 운영자 결제 2026-11-17, Cloudflare 사용량 한도 $5) |
+| `agent/image_quota.py` / `data/image_gen_count.json` | AI 그림 하루 상한(config `image_gen.daily_limit`, 지금 300장(운영자 2026-11-17, 60→120→200→300), UTC 날짜별로 셈). 넘으면 그 게시물만 대기, 다음 날 00:07 UTC 정기 render가 이어서. Cloudflare Workers Paid(월 $5, 운영자 결제 2026-11-17, Cloudflare 사용량 한도 $5) |
 | `agent/build.py` | 그림 + 렌더링 + `.render_hash`(publish가 렌더링 끝난 것만 올리게) |
 | `agent/publish.py` | 인스타 게시 (Graph API, graph.facebook.com, 페이지 토큰). 미디어는 `docs/media/`에 복사·push해 GitHub Pages 주소로 넘기고, 게시 뒤 비운다. 게시된 폴더의 `clips/source.mp4`는 지운다. dm 게시물은 게시 직후 'Zorcha 설정 필요' 이슈 + `data/zorcha_todo.md` → 'Zorcha 담당' 세션이 `ZORCHA.md` 절차로 설정. `DRY_RUN=1`로 시험 |
 | `ZORCHA.md` | Zorcha 댓글 자동 DM 설정 절차 (게시물마다 브라우저로 자동화 생성, 'Zorcha 담당' 세션이 따름) |
