@@ -11,7 +11,7 @@ rankreel.py와 같은 rank 데이터(items: label·sub·quote·desc·source·src
               머무는 동안에도 카드가 천천히 흐름(DRIFT). 층마다 속도가 달라 시차(사진 0.35배, 이름 1.1, 발언 1.25, 단서 1.4).
     사진      항목마다 다른 화풍(items[].style: duo, halftone, scan, poster, pixel, ink). 다음 사진이 확대된 채 밀려 들어오며
               겹쳐 바뀌고(뚝 끊는 전환 없음), 늘 천천히 확대·이동.
-    숫자판    큰 초록 연도(도착 예상 해 target, 없으면 발언 해)가 자리마다 주행 거리계처럼 굴러 넘어간다(카메라와 같은 곡선).
+    숫자판    큰 초록 연도 + '년'(대략이면 '년쯤', 물결표 안 씀)(도착 예상 해 target, 없으면 발언 해)가 자리마다 주행 거리계처럼 굴러 넘어간다(카메라와 같은 곡선).
     글        이름·자리 미끄러져 들어옴 → 한 줄 제목(녹색 면) 부드럽게 커졌다 자리 → 발언이 단어마다 떠오름(key는 녹색) → note.
     아래      연표 띠: 항목 점·해 이름·눈금이 카메라와 같이 흐르고 가운데 삼각이 지금 자리, 지나온 구간 녹색.
     소리      0초 쿵 + 제목 줄 타격, 이동마다 부드러운 휙, 한 줄 제목 톡, 단어마다 작은 뽁, 숫자판 째깍 (음악 아래, 높은 소리 깎음).
@@ -69,6 +69,20 @@ def target_year(it):
     import re as _re
     m = _re.search(r"(\d{4})", str(it.get("target") or ""))
     return float(m.group(1)) if m else None
+
+
+def is_approx(it):
+    """도착 예상 해가 대략인지: target이 '2029년쯤'(권장) 또는 예전 '~2029'."""
+    t = str(it.get("target") or "").strip()
+    return t.startswith("~") or t.endswith("쯤")
+
+
+def target_text(it):
+    """연표 띠에 쓰는 해 글자: 물결표(~2029) 대신 쉬운 말 '2029년쯤' (운영자 2026-11-17 "~2029 이런 게 뭘 의미하는지 모르겠어")."""
+    ty = target_year(it)
+    if ty is None:
+        return f"{_d(it['date']).year}년"
+    return f"{int(ty)}년쯤" if is_approx(it) else f"{int(ty)}년"
 
 
 def order_problems(post):
@@ -160,7 +174,7 @@ def page_html(post, cfg, tl, folder):
         "items": [{"label": it.get("label", ""), "sub": it.get("sub", ""), "who": it.get("who", ""), "quote": it.get("quote", ""),
                    "key": it.get("key", ""), "note": it.get("note", ""), "img": img(it), "pos": it.get("img_pos", "50% 22%"),
                    "style": it.get("style") or STYLES[j % len(STYLES)], "y": ds[j].year, "m": ds[j].month,
-                   "target": str(it.get("target") or ""), "yv": mp["years"][j], "tilde": 1 if str(it.get("target") or "").startswith("~") else 0,
+                   "target": str(it.get("target") or ""), "yv": mp["years"][j], "tilde": 1 if is_approx(it) else 0, "tlabel": target_text(it),
                    "srcline": it.get("src_line", ""), "per": mp["per"][j]} for j, it in enumerate(items)],
         "title_end": tl["scenes"][1]["start"] if len(tl["scenes"]) > 1 and R.get("title_first_only", True) else 1e9,
         "srcline": R.get("source_line", ""), "cuts": mp["cuts"], "arrive": mp["arrive"], "leave": mp["leave"],
@@ -193,7 +207,8 @@ def page_html(post, cfg, tl, folder):
 #top .hl.fill{{background:{b['accent']};color:#000;box-shadow:0 0 0 .06em {b['accent']}}}
 #top .cl{{font-family:'Wanted';font-weight:700;font-size:36px;line-height:1.2;margin-top:10px;text-align:center;white-space:nowrap}}
 #yc{{position:absolute;left:{SIDE}px;z-index:4;font-family:'Black Han Sans';font-size:118px;line-height:1;color:{b['accent']};display:flex;height:1em;overflow:hidden}}
-#yc .tl{{display:inline-block;width:.5em}}
+#yc .yn,#yc .tl{{display:inline-block;font-size:.5em;line-height:1;align-self:flex-end;padding-bottom:.12em;white-space:nowrap;overflow:hidden}}
+#yc .yn{{margin-left:.08em}}
 #yc .dg{{display:inline-block;width:.6em;height:1em;overflow:hidden;text-align:center}}
 #yc .col{{display:flex;flex-direction:column;will-change:transform}} #yc .col span{{height:1em;display:block}}
 .cd{{position:absolute;left:{SIDE}px;width:{W - 2 * SIDE}px;z-index:3;display:none;will-change:transform}}
@@ -205,16 +220,16 @@ def page_html(post, cfg, tl, folder):
 .cd .q span{{display:inline-block;margin-right:.24em;transform-origin:50% 80%}}
 .cd .q span.k{{color:{b['accent']}}}
 .cd .note{{margin-top:16px;font-family:'Pretendard';font-weight:700;font-size:30px;color:{b['text']};border-left:6px solid {b['accent']};padding-left:14px}}
-#strip{{position:absolute;left:{SIDE}px;width:{STACK_RIGHT - SIDE}px;top:{SAFE_BOTTOM - 96}px;height:84px;z-index:3;overflow:hidden}}
+#strip{{position:absolute;left:{SIDE}px;width:{STACK_RIGHT - SIDE}px;top:{SAFE_BOTTOM - 124}px;height:112px;z-index:3;overflow:hidden}}
 #src{{position:absolute;left:0;right:0;top:0;font-family:'Pretendard';font-weight:700;font-size:23px;color:{b['muted']};white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
-#rail{{position:absolute;left:50%;top:54px;height:4px;will-change:transform}}
+#rail{{position:absolute;left:50%;top:82px;height:4px;will-change:transform}}
 #rbg{{position:absolute;left:0;top:0;height:4px;background:#39443F}}
 #rfill{{position:absolute;left:0;top:0;height:4px;background:{b['accent']}}}
 .dot{{position:absolute;top:-8px;width:20px;height:20px;margin-left:-10px;background:#39443F}}
 .dot.on{{background:{b['accent']}}}
 .yr{{position:absolute;top:-36px;font-family:'Pretendard';font-weight:700;font-size:21px;color:{b['muted']};transform:translateX(-50%);white-space:nowrap}}
 .mt{{position:absolute;top:-3px;width:2px;height:10px;background:#39443F}}
-#ph{{position:absolute;left:50%;top:44px;width:0;height:0;margin-left:-11px;border-left:11px solid transparent;border-right:11px solid transparent;border-top:12px solid {b['accent']}}}
+#ph{{position:absolute;left:50%;top:72px;width:0;height:0;margin-left:-11px;border-left:11px solid transparent;border-right:11px solid transparent;border-top:12px solid {b['accent']}}}
 </style></head><body><div id="f">
 <svg width="0" height="0" style="position:absolute"><defs>
 <filter id="duo"><feColorMatrix type="matrix" values="0.25 0.6 0.15 0 0  0.25 0.6 0.15 0 0  0.25 0.6 0.15 0 0  0 0 0 1 0"/>
@@ -226,7 +241,7 @@ def page_html(post, cfg, tl, folder):
 </defs></svg>
 <div id="phs"></div><div id="dim"></div>
 <div id="top"><div class="t">{"".join(spans)}</div>{f'<div class="cl">{cl_html}</div>' if cl else ""}</div>
-<div id="yc"><span class="tl">~</span></div><div id="cds"></div>
+<div id="yc"></div><div id="cds"></div>
 <div id="strip"><div id="src">{esc(R.get("source_line", ""))}</div><div id="rail"><div id="rbg"></div><div id="rfill"></div></div><div id="ph"></div></div>
 </div><script>
 const D = {json.dumps(data, ensure_ascii=False)};
@@ -265,6 +280,7 @@ window.twSetup = async () => {{
   // 연도 숫자판: 네 자리, 자리마다 0~9,0 세로 띠
   for (let k = 0; k < 4; k++) {{ const dg = document.createElement('span'); dg.className = 'dg'; const col = document.createElement('span'); col.className = 'col';
     col.innerHTML = [0,1,2,3,4,5,6,7,8,9,0].map(x => `<span>${{x}}</span>`).join(''); dg.appendChild(col); $('yc').appendChild(dg); COLS.unshift(col); }}
+  $('yc').insertAdjacentHTML('beforeend', '<span class="yn">년</span><span class="tl">쯤</span>');  // 물결표 대신 쉬운 말
   YCH = $('yc').getBoundingClientRect().height;
   // 연표 띠: 항목 점 + 해 이름 + 사이 눈금
   const rail = $('rail');
@@ -272,7 +288,7 @@ window.twSetup = async () => {{
   D.items.forEach((it, j) => {{
     const d = document.createElement('div'); d.className = 'dot'; d.id = 'dot' + j; d.style.left = (j * D.tg) + 'px'; rail.appendChild(d);
     const y = document.createElement('div'); y.className = 'yr'; y.style.left = (j * D.tg) + 'px';
-    y.textContent = it.target || String(it.y); rail.appendChild(y);
+    y.textContent = it.tlabel; rail.appendChild(y);
     if (j < N - 1) for (let s = 1; s < 4; s++) {{ const m = document.createElement('div'); m.className = 'mt'; m.style.left = (j * D.tg + s * D.tg / 4) + 'px'; rail.appendChild(m); }}
   }});
   // 넘침 검사: 첫 항목은 제목이 있을 때, 나머지는 제목이 접힌 뒤
@@ -318,7 +334,7 @@ function odo(v, tl) {{
     const f = k === 0 ? v - Math.floor(v + 1e-9) : Math.max(0, (v % pw) - (pw - 1));
     col.style.transform = `translateY(${{(-(dg + clamp(f, 0, 1)) * 100 / 11).toFixed(3)}}%)`;
   }});
-  const te = $('yc').querySelector('.tl'); te.style.opacity = tl.toFixed(3); te.style.width = (0.5 * tl).toFixed(3) + 'em';
+  const te = $('yc').querySelector('.tl'); te.style.opacity = tl.toFixed(3); te.style.width = (1.0 * tl).toFixed(3) + 'em';
 }}
 function drawPhoto(j, t, p) {{
   const d = PH[j], e = clamp(p - j + 1, 0, 1), ee = S5(e);
