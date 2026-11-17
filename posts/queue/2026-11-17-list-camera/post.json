@@ -6,7 +6,7 @@
   "length": "short",
   "series": "생존 가이드",
   "date": "2026-11-17",
-  "publish_at": "2026-11-18T11:13:00+09:00",
+  "publish_at": "2026-11-17T21:13:00+09:00",
   "rights": "own",
   "rights_note": "결과 그림은 토큰전쟁 마스코트 기준 이미지(assets/mascot/slime-base.jpg)를 참고 이미지로 넣어 FLUX.2 [klein] 4B(Cloudflare Workers AI)로 만든 AI 그림. 배경음악은 agent/music_gen.py가 코드로 만든 음악. 영어 용어 읽기 목소리는 Kokoro-82M(Apache-2.0, hexgrad/Kokoro-82M) af_heart로 이 컴퓨터에서 만든 음성(agent/tts.py)",
   "title": "AI 영상 제작자에게\n반드시 필요한\n카메라 용어 15가지",
@@ -71,7 +71,7 @@
         "type": "image",
         "src": "img/list/05.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: low angle shot from near the ground looking up at the slime, the slime looks big and heroic. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "prompt": "Completely change the camera position and lens; do not keep the reference framing, the reference is only for the slime's look and the place. New camera: extreme low angle. The camera lies on the wet pavement right in front of the slime and points steeply upward. The slime towers over the viewer and looks huge and heroic, its bottom very close and large, its head far above. Above and behind it the cafe signs, the building edges and the dark night sky fill the top half of the frame. Strong upward perspective, building lines converging toward the sky. Keep the same slime character shape and color, same narrow Seoul alley with the small cafe at night, warm cafe light, wet pavement. Photorealistic 3D render, vertical 4:5, no text, no letters.",
         "ref": "img/list/scene.jpg",
         "ai_generated": true
       },
@@ -82,7 +82,7 @@
         "type": "image",
         "src": "img/list/06.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: high angle shot looking down at the slime from above, the slime looks small. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "prompt": "Completely change the camera position and lens; do not keep the reference framing, the reference is only for the slime's look and the place. New camera: high angle. The camera is high up, about two floors above the alley, pointing down at about 45 degrees. The slime looks small and alone on the step, seen from above, the top of its head and ears visible. Much of the frame is the wet pavement around it. The cafe window and signs are only at the top edge, seen from above. Keep the same slime character shape and color, same narrow Seoul alley with the small cafe at night, warm cafe light, wet pavement. Photorealistic 3D render, vertical 4:5, no text, no letters.",
         "ref": "img/list/scene.jpg",
         "ai_generated": true
       },
@@ -93,7 +93,7 @@
         "type": "image",
         "src": "img/list/07.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: bird's-eye view, the camera directly overhead looking straight down at the slime and the alley. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "prompt": "Completely change the camera position and lens; do not keep the reference framing, the reference is only for the slime's look and the place. New camera: bird's-eye view, the camera directly overhead pointing straight down, perfectly vertical top-down view. The slime is seen from the very top: only the top of its round head and two ears, small in the middle of the frame. The frame is filled with the pattern of wet paving stones of the alley, the edge of the cafe step and the warm light spilling from the door onto the ground. No walls or sky visible, flat map-like view. Keep the same slime character shape and color, same narrow Seoul alley with the small cafe at night, warm cafe light, wet pavement. Photorealistic 3D render, vertical 4:5, no text, no letters.",
         "ref": "img/list/scene.jpg",
         "ai_generated": true
       },
@@ -104,7 +104,7 @@
         "type": "image",
         "src": "img/list/08.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: Dutch angle, the camera tilted about 25 degrees, tilted horizon, uneasy mood. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "prompt": "Completely change the camera position and lens; do not keep the reference framing, the reference is only for the slime's look and the place. New camera: Dutch angle. The whole image is rotated 25 degrees clockwise: the horizon, the cafe door frame, the building edges and the slime are all strongly tilted diagonally across the frame. No vertical line in the image is upright. Tense, uneasy mood. Keep the same slime character shape and color, same narrow Seoul alley with the small cafe at night, warm cafe light, wet pavement. Photorealistic 3D render, vertical 4:5, no text, no letters.",
         "ref": "img/list/scene.jpg",
         "ai_generated": true
       },
@@ -115,7 +115,7 @@
         "type": "image",
         "src": "img/list/09.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: over-the-shoulder shot from behind the blurred shoulder of a person in a dark coat in the foreground, looking at the slime. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "prompt": "Completely change the camera position and lens; do not keep the reference framing, the reference is only for the slime's look and the place. New camera: over-the-shoulder shot. A large dark out-of-focus shoulder and the back of the head of a person in a dark coat fill the left third and the bottom of the frame in the foreground, very close to the camera. Past that shoulder, the slime faces the camera in sharp focus on the cafe step, looking at the person, as if in a conversation. Keep the same slime character shape and color, same narrow Seoul alley with the small cafe at night, warm cafe light, wet pavement. Photorealistic 3D render, vertical 4:5, no text, no letters.",
         "ref": "img/list/scene.jpg",
         "ai_generated": true
       },
@@ -126,7 +126,7 @@
         "type": "image",
         "src": "img/list/10.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: shallow depth of field, the slime in sharp focus, the cafe lights behind turned into large soft bokeh circles. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "prompt": "Completely change the camera position and lens; do not keep the reference framing, the reference is only for the slime's look and the place. New camera: 85mm lens at f/1.2, extremely shallow depth of field. The camera is close to the slime at its eye level. Only the slime is razor sharp. Everything behind it is completely melted into a smooth blur: the cafe, the signs and the alley become large soft round bokeh circles of warm orange and white light filling the background. No background details readable at all, the wet ground in front is also blurred. Keep the same slime character shape and color, same narrow Seoul alley with the small cafe at night, warm cafe light, wet pavement. Photorealistic 3D render, vertical 4:5, no text, no letters.",
         "ref": "img/list/scene.jpg",
         "ai_generated": true
       },
@@ -148,7 +148,7 @@
         "type": "image",
         "src": "img/list/12.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: shot on 35mm film, visible film grain, slightly faded film colors, cinematic. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "prompt": "Completely change the camera position and lens; do not keep the reference framing, the reference is only for the slime's look and the place. New camera: shot on 35mm Kodak Portra 400 film with an old film camera, slightly off-center framing from a little to the side. Heavy visible film grain all over the image, faded warm film colors, slightly lifted blacks, soft halation glow around the lights, a light leak of orange on one edge, a little softness like a real 1990s analog photo, not a clean digital render. Keep the same slime character shape and color, same narrow Seoul alley with the small cafe at night, warm cafe light, wet pavement. Photorealistic 3D render, vertical 4:5, no text, no letters.",
         "ref": "img/list/scene.jpg",
         "ai_generated": true
       },
@@ -159,7 +159,7 @@
         "type": "image",
         "src": "img/list/13.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: fisheye lens, strong barrel distortion, the slime close to the lens in the center, the alley curving around the edges. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "prompt": "Completely change the camera position and lens; do not keep the reference framing, the reference is only for the slime's look and the place. New camera: 8mm circular fisheye lens held very close to the slime, almost touching it. Extreme barrel distortion: the slime's face bulges big and round in the center, the alley walls, the cafe front and the signs bend into strong curves around the edges of a round image, the street lines curve like a bubble. Black corners outside the circular fisheye image. Keep the same slime character shape and color, same narrow Seoul alley with the small cafe at night, warm cafe light, wet pavement. Photorealistic 3D render, vertical 4:5, no text, no letters.",
         "ref": "img/list/scene.jpg",
         "ai_generated": true
       },
@@ -170,7 +170,7 @@
         "type": "image",
         "src": "img/list/14.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: tilt-shift photography, miniature effect, a narrow band of focus on the slime, top and bottom strongly blurred, seen from slightly above. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "prompt": "Completely change the camera position and lens; do not keep the reference framing, the reference is only for the slime's look and the place. New camera: tilt-shift miniature photo. The camera is high up and far away, looking down diagonally at the whole alley from a rooftop. The alley, the cafe, the doors and the tiny slime on the step look like a toy miniature model. Only a thin horizontal band in the middle where the slime sits is sharp. The top third and the bottom third of the image are heavily blurred. Saturated colors, toy-like look. Keep the same slime character shape and color, same narrow Seoul alley with the small cafe at night, warm cafe light, wet pavement. Photorealistic 3D render, vertical 4:5, no text, no letters.",
         "ref": "img/list/scene.jpg",
         "ai_generated": true
       },
@@ -181,7 +181,7 @@
         "type": "image",
         "src": "img/list/15.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: silhouette, the slime as a dark silhouette against the bright cafe window behind it. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+        "prompt": "Completely change the camera position and lens; do not keep the reference framing, the reference is only for the slime's look and the place. New camera and light: silhouette. The camera is low and the slime sits directly in front of the brightly lit cafe window, which fills most of the frame behind it and glows very bright, almost white. The slime is completely backlit and appears as a pure black silhouette: only its outline with the two cat ears is visible, no green color, no face, no details on the slime. The rest of the alley is dark. Keep the same slime character shape and color, same narrow Seoul alley with the small cafe at night, warm cafe light, wet pavement. Photorealistic 3D render, vertical 4:5, no text, no letters.",
         "ref": "img/list/scene.jpg",
         "ai_generated": true
       }
