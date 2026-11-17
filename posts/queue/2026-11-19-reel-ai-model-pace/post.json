@@ -390,7 +390,8 @@
           "size": [
             1344,
             1088
-          ]
+          ],
+          "ai_generated": true
         }
       },
       {
@@ -403,7 +404,8 @@
           "size": [
             1344,
             1088
-          ]
+          ],
+          "ai_generated": true
         }
       },
       {
@@ -416,7 +418,8 @@
           "size": [
             1344,
             1088
-          ]
+          ],
+          "ai_generated": true
         }
       },
       {
@@ -429,7 +432,8 @@
           "size": [
             1344,
             1088
-          ]
+          ],
+          "ai_generated": true
         }
       },
       {
@@ -442,7 +446,8 @@
           "size": [
             1344,
             1088
-          ]
+          ],
+          "ai_generated": true
         }
       },
       {
@@ -455,7 +460,8 @@
           "size": [
             1344,
             1088
-          ]
+          ],
+          "ai_generated": true
         }
       }
     ]
@@ -534,5 +540,6 @@
     ]
   },
   "format": "news",
-  "end_cta": "팔로우하면\n매일 AI 소식"
+  "end_cta": "팔로우하면\n매일 AI 소식",
+  "ai_image": true
 }
