@@ -128,16 +128,16 @@
     "folder": "2026-11-17-video-claude-of-duty",
     "title": "프롬프트 3문단으로 FPS 게임이 나왔습니다",
     "duration": 21.5,
-    "views": 0,
-    "reach": 0,
+    "views": 151,
+    "reach": 85,
     "saved": 0,
-    "shares": 0,
-    "total_interactions": 0,
+    "shares": 1,
+    "total_interactions": 1,
     "likes": 0,
     "comments": 0,
-    "ig_reels_avg_watch_time": 0,
-    "ig_reels_video_view_total_time": 0,
-    "reels_skip_rate": 0
+    "ig_reels_avg_watch_time": 3685,
+    "ig_reels_video_view_total_time": 316967,
+    "reels_skip_rate": 41.8
    },
    "18106928459457054": {
     "timestamp": "2026-11-17T10:51:54+0000",
@@ -146,15 +146,15 @@
     "title": "칩을 중국에 팔 거면 차라리 북한에 핵을 팔아라",
     "duration": 65.3,
     "views": 140,
-    "reach": 131,
+    "reach": 132,
     "saved": 1,
     "shares": 0,
     "total_interactions": 2,
     "likes": 1,
     "comments": 0,
-    "ig_reels_avg_watch_time": 8747,
-    "ig_reels_video_view_total_time": 1154696,
-    "reels_skip_rate": 44.3
+    "ig_reels_avg_watch_time": 10050,
+    "ig_reels_video_view_total_time": 1336655,
+    "reels_skip_rate": 45
    },
    "17886021090628832": {
     "timestamp": "2026-11-17T09:21:32+0000",
@@ -355,5 +355,5 @@
   "total_interactions",
   "views"
  ],
- "updated": "2026-11-17T21:36+09:00"
+ "updated": "2026-11-17T22:25+09:00"
 }
