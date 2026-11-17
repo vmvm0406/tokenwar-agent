@@ -173,10 +173,13 @@ def clap(n, rng):
     return (x - lowpass(x, 5)) * 0.5
 
 
-def make_hook_music(out_path, bpm, total, accents=(), seed=7):
+def make_hook_music(out_path, bpm, total, accents=(), seed=7, drop_at=None):
     """bpm 고정, 0초가 첫 박. accents: 강한 박자(크래시)를 넣을 시각 목록(초). 끝 1.5초 페이드아웃.
+    drop_at(초, 선택): 그 전까지는 킥(첫 박)·클랩·하이햇만 두고 베이스·패드·멜로디를 빼며, 바로 앞 반 박은 비운다.
+    drop_at에서 전부 들어온다(비트 드롭, 목록형 릴스 첫 화면 후킹 list.hook_anim). 멜로디는 드롭에서 처음부터.
     반환 {"bpm", "beat", "seconds", "accents"}."""
     rng = np.random.default_rng(seed)
+    drop_beat = int(round(drop_at / (60.0 / bpm))) if drop_at else 0
     beat = 60.0 / bpm
     n = int((total + 0.5) * SR)
     L = np.zeros(n)
@@ -193,7 +196,18 @@ def make_hook_music(out_path, bpm, total, accents=(), seed=7):
     nb = int(total / beat) + 1
     for b in range(nb):
         t0 = b * beat
-        bar, pos = divmod(b, 4)
+        if b < drop_beat:                                             # 드롭 전: 비운 소리(빌드업)
+            if b == drop_beat - 1:
+                add(hat(int(0.04 * SR), rng) * 0.6, t0)
+                continue                                              # 드롭 바로 앞 한 박의 뒤쪽은 비운다
+            if b == 0:
+                add(kick(int(0.32 * SR)) * 1.0, t0)
+            if b % 2 == 1:
+                add(clap(int(0.2 * SR), rng) * 0.6, t0, 0.9, 1.0)
+            for k in range(2):
+                add(hat(int(0.04 * SR), rng) * (0.8 if k else 0.4), t0 + k * beat / 2, 0.8, 1.0)
+            continue
+        bar, pos = divmod(b - drop_beat, 4)
         chord = CHORDS[bar % 4]
         add(kick(int(0.32 * SR)) * 1.0, t0)                          # 킥: 매 박 (0초부터)
         if pos in (1, 3):                                             # 스네어 + 클랩: 2·4박
@@ -235,6 +249,95 @@ def make_hook_music(out_path, bpm, total, accents=(), seed=7):
         w.setframerate(SR)
         w.writeframes(pcm.tobytes())
     return {"bpm": bpm, "beat": beat, "seconds": total, "accents": list(accents)}
+
+
+# ---------- 첫 화면 후킹 효과음 (목록형 릴스 list.hook_anim, 운영자 요청 2026-11-17 "소리도 집중시킬 수 있게") ----------
+# 샘플 없이 numpy로 합성: 쿵(0초), 제목 줄마다 짧은 타격 + 그 직전 휙(whoosh), 목록 시작 앞 상승음(riser) → 드롭(낮은 붐),
+# 끝의 이름 쏟아지기(list.flood) 동안 커지는 스웰과 이름마다 작은 틱. 시각은 부르는 쪽이 프레임 시각으로 준다.
+
+def _sweep_noise(n, f0, f1, rng):
+    """잡음을 한 극 저역 필터로 거르며 차단 주파수를 f0→f1로 옮긴다 (휙 소리, 상승음)."""
+    x = rng.standard_normal(n)
+    fc = np.geomspace(f0, f1, n)
+    a = 1 - np.exp(-2 * np.pi * fc / SR)
+    y = np.empty(n)
+    z = 0.0
+    for i in range(n):
+        z += a[i] * (x[i] - z)
+        y[i] = z
+    return y - lowpass(y, 40) * 0.5
+
+
+def _boom(n, f0, f1, decay, click=0.4, rng=None):
+    t = np.arange(n) / SR
+    f = f1 + (f0 - f1) * np.exp(-t * 18)
+    x = np.sin(2 * np.pi * np.cumsum(f) / SR) * env(n, 0.001, decay)
+    if rng is not None and click:
+        c = rng.standard_normal(n) * env(n, 0.0005, 0.012) * click
+        x = x + (c - lowpass(c, 4))
+    return x
+
+
+def make_hook_sfx(total, impacts=(), hits=(), whooshes=(), riser_to=None, riser_len=1.0, drop=None,
+                  flood=None, ticks=(), seed=3):
+    """효과음 트랙(44.1kHz 스테레오 float, 길이 total초). 크기는 부르는 쪽이 맞춘다(피크 1 기준으로 만든다).
+    impacts: 큰 쿵 시각, hits: 작은 타격 시각, whooshes: 이 시각에 끝나는 휙(0.18초),
+    riser_to: 이 시각에 끝나는 상승음(riser_len초, 끝에서 뚝 끊김), drop: 드롭 붐 시각,
+    flood: (시작, 끝) 커지는 스웰, ticks: 이름 하나 떨어질 때마다 작은 틱.
+    반환 (배열, {"onsets": {종류: [시각...]}})."""
+    rng = np.random.default_rng(seed)
+    n = int(round(total * SR))
+    L = np.zeros(n)
+    R = np.zeros(n)
+
+    def add(sig, t0, gl=1.0, gr=1.0):
+        i = int(round(t0 * SR))
+        if i >= n or i + len(sig) <= 0:
+            return
+        if i < 0:
+            sig, i = sig[-i:], 0
+        m = min(len(sig), n - i)
+        L[i:i + m] += sig[:m] * gl
+        R[i:i + m] += sig[:m] * gr
+
+    for t0 in impacts:
+        add(_boom(int(1.1 * SR), 120, 38, 0.55, 0.9, rng) * 1.0, t0)
+        c = rng.standard_normal(int(0.4 * SR))
+        add((c - lowpass(c, 3)) * env(len(c), 0.0005, 0.08) * 0.45, t0, 1.0, 0.9)
+    for t0 in hits:
+        add(_boom(int(0.4 * SR), 180, 60, 0.16, 0.7, rng) * 0.6, t0)
+    for t0 in whooshes:
+        m = int(0.18 * SR)
+        w = _sweep_noise(m, 400, 7000, rng) * np.linspace(0, 1, m) ** 2
+        add(w / (np.max(np.abs(w)) or 1) * 0.35, t0 - m / SR, 0.8, 1.0)
+    if riser_to is not None:
+        m = int(riser_len * SR)
+        r = _sweep_noise(m, 250, 9000, rng)
+        r = r / (np.max(np.abs(r)) or 1)
+        t = np.arange(m) / SR
+        tone_ = np.sin(2 * np.pi * np.cumsum(np.geomspace(180, 900, m)) / SR) * 0.25
+        add((r * 0.45 + tone_) * np.linspace(0, 1, m) ** 2.2, riser_to - riser_len, 0.9, 1.0)
+    if drop is not None:
+        add(_boom(int(1.2 * SR), 90, 34, 0.7, 0.5, rng) * 0.9, drop)
+    if flood:
+        t0, t1 = flood
+        m = int((t1 - t0) * SR)
+        s = _sweep_noise(m, 300, 6000, rng)
+        s = s / (np.max(np.abs(s)) or 1)
+        add(s * np.linspace(0.1, 1, m) ** 1.6 * 0.4, t0, 1.0, 0.9)
+        add(_boom(int(0.9 * SR), 110, 40, 0.4, 0.6, rng) * 0.7, t0)
+    for k, t0 in enumerate(ticks):
+        m = int(0.05 * SR)
+        f = 1400 + 500 * ((k * 7) % 5)
+        tk = np.sin(2 * np.pi * f * np.arange(m) / SR) * env(m, 0.0005, 0.015) * 0.18
+        pan = 0.6 + 0.4 * ((k * 3) % 4) / 3
+        add(tk, t0, pan, 1.6 - pan)
+    st = np.stack([L, R], axis=1)
+    peak = np.max(np.abs(st)) or 1.0
+    onsets = {"impact": list(impacts), "hit": list(hits), "whoosh_end": list(whooshes),
+              "riser_end": [riser_to] if riser_to is not None else [], "drop": [drop] if drop is not None else [],
+              "flood": list(flood) if flood else [], "ticks": len(ticks)}
+    return st / peak, {"onsets": onsets}
 
 
 # ---------- 긴장감 배경음 (게임·액션 화면 밑에 작게 까는 곡, 운영자 요청 2026-11-17 "배경에 작게 음악") ----------

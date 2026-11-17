@@ -770,6 +770,24 @@ def check_hashtags(tags):
 # ---- 인스타 추천 체크리스트 (STYLE_GUIDE 9장) ----
 REEL_REC_MAX_SECONDS = 180      # 3분이 넘는 릴스는 추천(둘러보기·릴스 탭)에 못 나간다 (Instagram for Creators)
 CAPTION_FOLD = 125              # 피드에서 '더 보기' 전에 보이는 첫 부분
+KEYWORD_LEAD = 30               # 캡션 첫 줄은 이 글자 수 안에서 검색어(주제어)로 시작 (운영자 결정 2026-11-17)
+_TITLE_JOSA = re.compile(r"(에게|에서|으로|까지|부터|처럼|보다|이란|란|의|을|를|이|가|은|는|로|와|과|도|만)$")
+
+
+def topic_keywords(post):
+    """검색어 후보: post.keywords(선택) → 없으면 해시태그(#토큰전쟁 빼고) → 없으면 제목 명사(2자 이상, 조사 뗌)."""
+    kws = [str(k).lstrip("#") for k in (post.get("keywords") or []) if str(k).strip()]
+    if kws:
+        return kws, "keywords"
+    tags = [str(t).lstrip("#") for t in (post.get("hashtags") or []) if str(t) != TAG_BRAND]
+    if tags:
+        return tags, "hashtags"
+    words = []
+    for w in re.split(r"[\s,·!?.]+", str(post.get("title", ""))):
+        w = _TITLE_JOSA.sub("", w.strip("'\"“”‘’()[]"))
+        if len(w) >= 2 and not re.fullmatch(r"[\d]+(가지|개|명|년|억|조|%)?", w):
+            words.append(w)
+    return words, "제목"
 HASHTAG_RE = re.compile(r"(?<![\w&])#[0-9A-Za-z가-힣_]+")
 # 다른 플랫폼·다른 인스타 계정의 영상: 재업로드는 '원본 아님'으로 추천에서 빠진다
 REPOST_HOSTS = ("instagram.com", "tiktok.com", "facebook.com/reel", "fb.watch")
@@ -791,6 +809,7 @@ def check_reach(post):
     - 릴스 3분 초과 오류 (추천 대상 아님)
     - 인용 원본이 인스타·틱톡 등 다른 계정 영상이면 오류 (재업로드 = 원본 아님)
     - 캡션 첫 125자에 주제 이름(해시태그 주제어)이 없으면 경고 (검색은 캡션 키워드로 찾는다)
+    - 캡션 첫 줄이 검색어로 시작하지 않으면(첫 KEYWORD_LEAD자 안에 주제어 없음) 경고 (운영자 결정 2026-11-17)
     - 좋아요·공유·태그 구걸 문구 경고"""
     errors, warnings = [], []
     cap = post.get("caption", "")
@@ -816,17 +835,22 @@ def check_reach(post):
             errors.append(f"인용 원본이 다른 SNS 계정 영상({bad[0][:60]}): 재업로드는 '원본 아님'으로 추천에서 빠지고 "
                           "워터마크가 남는다. 공식 유튜브·공식 사이트 원본에서 받을 것 (STYLE_GUIDE 9장)")
     first = cap.strip()[:CAPTION_FOLD]
-    topics = [t.lstrip("#") for t in tags if str(t) != TAG_BRAND]
+    topics, src = topic_keywords(post)
     if first and topics:
         f = _norm(first)
+        lead = _norm(cap.strip().splitlines()[0][:KEYWORD_LEAD]) if cap.strip() else ""
         names = set()
         for t in topics:
             n = _norm(t)
             names.add(n)
             names.update(TOPIC_ALIAS.get(n, []))
         if not any(n and n in f for n in names):
-            warnings.append(f"캡션 첫 {CAPTION_FOLD}자에 주제 이름이 없음 (해시태그 {topics} 중 하나라도): "
+            warnings.append(f"캡션 첫 {CAPTION_FOLD}자에 주제 이름이 없음 ({src} {topics} 중 하나라도): "
                             "인스타 검색은 캡션 키워드로 찾는다. 첫 줄에 서비스·회사·인물 이름을 (STYLE_GUIDE 9장)")
+        elif not any(n and n in lead for n in names):
+            warnings.append(f"캡션 첫 줄이 검색어로 시작하지 않음 (첫 {KEYWORD_LEAD}자에 {src} {topics} 중 하나도 없음): "
+                            "사람들이 검색창에 치는 말(서비스 이름 + 할 일, 예: 'AI 영상 프롬프트', '챗GPT 사진 변환')로 시작하고 "
+                            "제목 문장은 그 뒤에 (STYLE_GUIDE 9장)")
     hit = [w for w in BAIT if w in cap]
     if hit:
         warnings.append(f"반응 구걸 문구 {hit}: 좋아요·공유·태그를 조르지 말고, 보낼 이유를 구체적으로 (예: '다음 주 회의 전에 팀에 보내 두세요') (STYLE_GUIDE 9장)")
