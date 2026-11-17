@@ -1802,7 +1802,33 @@
    "tries": 0,
    "breaking": true,
    "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMiW0FVX3lxTFBkV1NHTkRhVkVITWFEVTQ3UVRzRDRWX1pHWkhiT05jNmFsTHR3TlFWX1E4cEdhSXBWQmttMlRFdkR6V0NESUpUeEx3OTJ4eTdhSkUzVTN1cDRBNFnSAWBBVV95cUxOQ2ptX0o4YXlOY3kySTBjTXhXdUZQYWNSRWhsZ0xiOHF1aC1Ea3NMZlVJR2Q0OHVIMExVQ1BqNW5NRHhvYkFOMTdZOUFuNEltY1hmLTEyWDgtZ0RXNFkyS3I?oc=5": {
+   "source": "news",
+   "company": "앤트로픽",
+   "entities": [
+    "앤트로픽"
+   ],
+   "tok": [
+    "ipo",
+    "관투",
+    "기관",
+    "배제",
+    "약에",
+    "자자",
+    "중국",
+    "청약",
+    "투자",
+    "홍콩"
+   ],
+   "title": "[업계 속보: 주요 매체 3곳(KBS, YTN, 연합뉴스) · 규제·상장·투자] \"앤트로픽 IPO 청약에 중국·홍콩 기관투자자 배제\"",
+   "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFBkV1NHTkRhVkVITWFEVTQ3UVRzRDRWX1pHWkhiT05jNmFsTHR3TlFWX1E4cEdhSXBWQmttMlRFdkR6V0NESUpUeEx3OTJ4eTdhSkUzVTN1cDRBNFnSAWBBVV95cUxOQ2ptX0o4YXlOY3kySTBjTXhXdUZQYWNSRWhsZ0xiOHF1aC1Ea3NMZlVJR2Q0OHVIMExVQ1BqNW5NRHhvYkFOMTdZOUFuNEltY1hmLTEyWDgtZ0RXNFkyS3I?oc=5",
+   "first_seen": "2026-11-17T13:49:20+09:00",
+   "why": "48시간 안에 같은 회사·인물 게시물 있음: 2026-11-17-video-amodei-chips-north-korea (앤트로픽)",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
   }
  },
- "updated": "2026-11-17T13:34:19+09:00"
+ "updated": "2026-11-17T13:49:20+09:00"
 }
