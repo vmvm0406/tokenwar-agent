@@ -209,6 +209,9 @@ def title_sentence(title, where, no_question=True):
     # 유형 B '큰 의미를 던지는 짧은 질문' (운영자 결정 2026-11-17, 'AI로 의학 대체 가능?'): 15자 안팎 짧은 물음표 제목은 허용
     if one.endswith("?") and len(one.replace(" ", "")) <= 15 and not re.search(r"(까요|까)\?$", one):
         return []
+    # 유형 B 구어체 되묻기 (운영자 결정 2026-11-17, 'AI 영상으로 돈 버는데 이것도 몰라?'): 20자 안이면 허용
+    if re.search(r"(몰라|몰랐어|모르지|알아|알지)\?$", one) and len(one.replace(" ", "")) <= 20:
+        return []
     if no_question and is_real_question(one):   # 카드 표지("토큰, 정확히 뭘까")는 설명형 질문을 허용
         return [f"{where}이 질문형: '{one}' → 답을 미루는 질문 대신 단정이나 구어체 반박으로 "
                 "(예: '컴공은 끝났을까요?' 대신 '아니 컴공 안 죽었다니까?', STYLE_GUIDE 3-3)"]
@@ -722,14 +725,18 @@ def check_dm(post):
     for x in pg.get("extra") or []:
         if not x.get("prompt") or not x.get("title"):
             errors.append("dm.page.extra 항목은 title과 prompt 필요")
-    if f"'{kw}'" not in post.get("caption", "") and f"‘{kw}’" not in post.get("caption", ""):
+    if f"'{kw}'" not in post.get("caption", "") and f"‘{kw}’" not in post.get("caption", "") and not re.search(r"댓글(을)?\s*남기시면", post.get("caption", "")):
         warnings.append(f"캡션에 댓글 키워드 안내가 없음 (예: \"댓글에 '{kw}' 남기면 프롬프트 전체를 DM으로 보내 드려요\")")
     else:
         # 앞쪽 안내 (운영자 결정 2026-11-16, 평균 시청 비율 12%): 캡션 첫 줄이나 둘째 줄에도 키워드 안내 (끝에만 두지 않기)
         head = [l for l in post.get("caption", "").splitlines() if l.strip()][:2]
-        if not any(f"'{kw}'" in l or f"‘{kw}’" in l for l in head):
+        if not any(f"'{kw}'" in l or f"‘{kw}’" in l or re.search(r"댓글(을)?\s*남기시면", l) for l in head):
             warnings.append(f"캡션 첫 줄이나 둘째 줄에 '{kw}' 안내가 없음 → \"댓글에 '{kw}' 남기면 …을 DM으로 보내 드려요(팔로우한 분께)\" (캡션 끝에만 두지 않기, STYLE_GUIDE 7-1)")
-    if post.get("type") in ("reel", "video") and not (d.get("banner") or "").strip():
+    import sys as _s0
+    if str(Path(__file__).resolve().parent) not in _s0.path:
+        _s0.path.insert(0, str(Path(__file__).resolve().parent))
+    from banner import cta_line as _cta_line   # 목록형·순위 릴스는 0초 제목 아래 안내 줄이 3초 띠를 대신한다 (2026-11-17)
+    if post.get("type") in ("reel", "video") and not (d.get("banner") or "").strip() and not _cta_line(post):
         warnings.append(f"참여형 릴스에 dm.banner(앞쪽 안내 띠) 없음 → 예: \"댓글에 '{kw}'라고 남기면\\n프롬프트를 DM으로 보내 드립니다\" (3초부터 본편 끝까지, STYLE_GUIDE 7-1)")
     elif (d.get("banner") or "").strip():
         b = d["banner"].strip()

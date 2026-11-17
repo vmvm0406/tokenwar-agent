@@ -36,6 +36,7 @@ import asyncio
 import html
 import json
 import random
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -59,7 +60,8 @@ ACCENT_EVERY = 8        # 크래시(강한 박자) 넣는 항목 간격
 ANIM_FRAMES = 8         # 이름 띠 등장 모션 (8프레임 = 0.27초)
 EN_FONT, EN_MIN = 92, 52        # 큰 영어 이름 (Pretendard Black, 대문자)
 KO_BIG, KO_BIG_MIN = 96, 60     # list.label "ko"일 때 큰 한국어 이름 (검은고딕)
-TITLE_FONT = 80         # 첫 화면 제목
+TITLE_FONT = 80         # 첫 화면 제목 (list.intro)
+TITLE_TOP_FONT = 56     # 0초부터 위쪽 제목 띠 (기본, intro 없음)
 CROP_W = 765            # 1360 높이에서 9:16로 남길 너비 (1360 x 9/16)
 HOOK_SCALE = 1.3        # 첫 화면 제목 줄이 박히기 시작하는 배율 (한 줄이 양옆 안전 영역을 넘으면 그만큼 줄인다)
 HOOK_STEP = (0.15, 0.27)  # 제목 줄 사이 간격(초): 8분음표가 이 안이면 8분, 아니면 16분
@@ -73,6 +75,9 @@ def opts(post):
     L = post.get("list") or {}
     more = (((post.get("dm") or {}).get("page") or {}).get("more")) or []
     return {"hook_anim": L.get("hook_anim", True) is not False,
+            # list.intro(기본 false): true면 예전처럼 제목만 있는 첫 화면(4박). 기본은 0초부터 1번 항목 + 위쪽 제목 띠
+            # (운영자 결정 2026-11-17: 제목 첫 화면 2초 → 3초 안 건너뛰기 69%, 내용부터 보여 준 릴스 약 25%)
+            "intro": L.get("intro", False) is True,
             "stack": L.get("stack", True) is not False,
             "flood": L.get("flood", True) is not False and bool(more),
             "stack_more": len(more) if (L.get("stack", True) is not False and L.get("stack_more", True) is not False) else 0}
@@ -115,9 +120,9 @@ def _hook_row(post, rows):
     return idx[min(max(h, 1), len(idx)) - 1]
 
 
-def _beats(rows, k, flood=False):
-    """장면마다 박 수: 첫 화면 HOOK_BEATS, 원본 줄 k+1, 항목 k, 마지막 항목 k+END_BEATS(쏟아지기가 있으면 k), (쏟아지기 FLOOD_BEATS)."""
-    out = [HOOK_BEATS]
+def _beats(rows, k, flood=False, intro=False):
+    """장면마다 박 수: (첫 화면 HOOK_BEATS, list.intro일 때만), 원본 줄 k+1, 항목 k, 마지막 항목 k+END_BEATS(쏟아지기가 있으면 k), (쏟아지기 FLOOD_BEATS)."""
+    out = [HOOK_BEATS] if intro else []
     for r, row in enumerate(rows):
         b = k + 1 if row["base"] else k
         if r == len(rows) - 1 and not flood:   # 쏟아지기가 있으면 마지막 항목 뒤 쉼 없이 바로 (운영자 2026-11-17 "실루엣 다음에 쉬는 시간 없이")
@@ -137,6 +142,7 @@ def timeline(post):
     L = post.get("list") or {}
     rows = rows_of(post)
     flood = opts(post)["flood"]
+    intro = opts(post)["intro"]
     cta = CTA_SECONDS if (post.get("dm") or {}).get("cta") else 0.0
     if L.get("bpm"):
         cands = [(float(L["bpm"]), int(L.get("beats_per_item", 2)))]
@@ -148,15 +154,15 @@ def timeline(post):
     for bpm, k in cands:
         beat = 60.0 / bpm
         item = k * beat
-        total = sum(_beats(rows, k, flood)) * beat + cta
+        total = sum(_beats(rows, k, flood, intro)) * beat + cta
         bad = 0 if ITEM_RANGE[0] <= item <= ITEM_RANGE[1] else 100
         score = bad + abs(total - TARGET_TOTAL) + (k - 2) * 0.5   # 2박을 먼저
         if best is None or score < best[0]:
             best = (score, bpm, k)
     _, bpm, k = best
     beat = 60.0 / bpm
-    beats = _beats(rows, k, flood)
-    states = [("hook", _hook_row(post, rows))] + [("row", r) for r in range(len(rows))]
+    beats = _beats(rows, k, flood, intro)
+    states = ([("hook", _hook_row(post, rows))] if intro else []) + [("row", r) for r in range(len(rows))]
     if flood:
         states.append(("flood", len(rows) - 1))
     # 장면 경계(박 번호 누적)를 프레임으로 반올림: 쌓이는 오차 없이 각 경계가 박 시각에서 1/60초 안
@@ -181,7 +187,8 @@ def hook_plan(post, tl):
     hw = post.get("highlight")
     hl_line = next((i for i, ln in enumerate(lines) if hw and hw in ln), -1)
     fill = (starts[hl_line], round((starts[hl_line] + beat) * FPS) / FPS) if hl_line >= 0 else (0, 0)
-    return {"starts": starts, "hl_line": hl_line, "fill": fill, "step": step, "drop": tl["starts"][1]}
+    drop = tl["starts"][1] if tl["states"][0][0] == "hook" else None   # 첫 화면이 없으면 0초부터 전부(드롭 없음)
+    return {"starts": starts, "hl_line": hl_line, "fill": fill, "step": step, "drop": drop}
 
 
 def flood_plan(post, tl):
@@ -468,7 +475,7 @@ def page_html(post, imgs, cfg, tl=None):
             used = True
         else:
             spans.append(f'<span class="ln">{esc(ln)}</span>')
-    title_html = "".join(spans)
+    title_html = " ".join(spans)
     fonts = (ROOT / "assets" / "fonts").as_uri()
     L = post["list"]
     rows = rows_of(post)
@@ -488,10 +495,14 @@ def page_html(post, imgs, cfg, tl=None):
         flood_html = "".join(
             f'<div class="fd{" dim" if d_["dim"] else ""}{" g" if d_["green"] else ""}" '
             f'style="left:{d_["x"]}px;top:{d_["y"]}px;font-size:{d_["fs"]}px">{esc(d_["text"])}</div>' for d_ in fp["drops"])
-    from banner import banner_text, banner_height
-    bt = banner_text(post)
-    label_top = SAFE_TOP + (banner_height(bt) + 16 if bt else 15)   # 이름 띠: '자료' 안내 띠 바로 아래
-    title_top = SAFE_TOP + 15                                       # 제목 띠: 첫 화면(안내 띠는 3초부터)
+    from banner import banner_text, banner_height, cta_line
+    intro = op["intro"]
+    cl = None if intro else cta_line(post)
+    bt = banner_text(post) if (intro or not cl) else None
+    label_top = SAFE_TOP + (banner_height(bt) + 16 if bt else 15)   # 이름 띠: '자료' 안내 띠 바로 아래 (intro 없으면 JS가 제목 띠 아래로)
+    title_top = SAFE_TOP + (0 if not intro else 15)                 # 제목 띠: intro면 첫 화면, 아니면 0초부터 끝까지 위쪽
+    m_ = re.search(r"전체 [0-9]+\S*", cl or "")
+    cta_html = f'<div class="cl">{hl(cl, m_.group(0) if m_ else None)}</div>' if cl else ""
     return f"""<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>
 @import url('{fonts}/black-han-sans/index.css');
 @font-face{{font-family:'Wanted';src:url('{fonts}/WantedSans-Bold.otf');font-weight:700}}
@@ -506,7 +517,11 @@ def page_html(post, imgs, cfg, tl=None):
 .band{{position:absolute;left:0;right:0;background:rgba(6,7,6,.62);
   padding:30px {SIDE}px 28px;text-align:center;display:none;text-shadow:0 2px 12px rgba(0,0,0,.55)}}
 .inner{{will-change:transform,opacity}}
-#title .t{{font-family:'Black Han Sans';font-weight:400;font-size:{TITLE_FONT}px;line-height:1.16;letter-spacing:-.01em}}
+#title .t{{font-family:'Black Han Sans';font-weight:400;font-size:{TITLE_FONT if intro else TITLE_TOP_FONT}px;line-height:1.16;letter-spacing:-.01em}}
+#title{{z-index:5}} #title.top{{padding:14px {SIDE}px 12px;background:rgba(6,7,6,.72)}}
+/* intro 없음(기본): 제목 줄은 inline-block으로 두 줄 안에 흘려 넣고, 이름 띠의 번호는 목록 쌓기(지금 줄 녹색)에만 */
+#f.cp #title .ln{{display:inline-block}} #f.cp #label{{padding:16px {SIDE}px 14px}} #f.cp #label .num{{display:none}}
+#title .cl{{font-family:'Wanted';font-weight:700;font-size:34px;line-height:1.2;margin-top:8px;color:#fff;white-space:nowrap}}
 .num{{font-family:'Black Han Sans';font-size:40px;line-height:1;color:{b['accent']};letter-spacing:.18em;margin-bottom:16px}}
 .en{{font-family:'Pretendard';font-weight:900;font-size:{EN_FONT}px;line-height:1.04;white-space:nowrap}}
 .ko{{font-family:'Wanted';font-weight:700;font-size:46px;line-height:1.2;margin-top:14px;color:#E8EDEA}}
@@ -535,9 +550,9 @@ def page_html(post, imgs, cfg, tl=None):
 .fd.dim{{color:rgba(255,255,255,.3)}} .fd.g{{color:rgba(0,255,102,.6)}}
 #more{{position:absolute;left:0;right:0;top:820px;display:none;text-align:center;background:rgba(6,7,6,.82);padding:34px {SIDE}px}}
 #more .m{{font-family:'Black Han Sans';font-size:104px;line-height:1.05;color:#fff;display:inline-block}}
-</style></head><body><div id="f">
+</style></head><body><div id="f"{"" if intro else ' class="cp"'}>
 <img id="img" src="">
-<div class="band" id="title"><div class="inner"><div class="t">{title_html}</div></div></div>
+<div class="band{"" if intro else " top"}" id="title"><div class="inner"><div class="t">{title_html}</div>{cta_html}</div></div>
 <div id="dim"></div><div id="flood">{flood_html}</div>
 <div id="stack"></div>
 <div id="more"><div class="m">{esc(fp["text"]) if fp else ""}</div></div>
@@ -551,6 +566,7 @@ const STACK_ON = {'true' if op['stack'] else 'false'};
 const STACK_MORE = {op['stack_more']};
 const SAFE_BOTTOM = {SAFE_BOTTOM};
 const KO_BIG = {'true' if ko_big else 'false'};
+const INTRO = {'true' if intro else 'false'};
 const lab = document.getElementById('label'), ttl = document.getElementById('title');
 const maxW = {W - 2 * SIDE};
 const fits = {{}};   // 줄마다 큰 이름 글씨 크기 (한 줄에 들어가게)
@@ -563,6 +579,18 @@ const set = (r) => {{
 const bigEl = () => document.getElementById(KO_BIG ? 'lk' : 'le');
 window.twProblems = () => {{
   const out = [];
+  if (!INTRO) {{
+    // 0초부터 남는 위쪽 제목 띠(+안내 한 줄): 이름 띠는 그 바로 아래
+    ttl.style.display = 'block';
+    const t0 = ttl.querySelector('.t'); let f0 = {TITLE_TOP_FONT};
+    const ln0 = () => Math.round(t0.clientHeight / parseFloat(getComputedStyle(t0).lineHeight));
+    while (ln0() > 2 && f0 > 44) {{ f0 -= 2; t0.style.fontSize = f0 + 'px'; }}
+    if (ln0() > 2) out.push('위쪽 제목 띠가 2줄을 넘음');
+    const cl = ttl.querySelector('.cl');
+    if (cl && cl.scrollWidth > maxW) out.push('제목 아래 안내 줄이 양옆 안전 영역 밖');
+    lab.style.top = Math.round(ttl.getBoundingClientRect().bottom + 10) + 'px';
+    ttl.style.display = 'none';
+  }}
   lab.style.display = 'block';
   ROWS.forEach((row, r) => {{
     set(r);
@@ -586,7 +614,7 @@ window.twProblems = () => {{
   ttl.style.display = 'block';
   const t = ttl.querySelector('.t'); let tfs = {TITLE_FONT};
   const lines = () => Math.round(t.clientHeight / parseFloat(getComputedStyle(t).lineHeight));
-  while (lines() > {title_lines} && tfs > 56) {{ tfs -= 2; t.style.fontSize = tfs + 'px'; }}
+  if (INTRO) while (lines() > {title_lines} && tfs > 56) {{ tfs -= 2; t.style.fontSize = tfs + 'px'; }}
   if (lines() > {title_lines}) out.push('제목이 {title_lines}줄을 넘음');
   if (ttl.getBoundingClientRect().bottom > {SAFE_BOTTOM}) out.push('제목 띠가 안전 영역 밖');
   // 박히는 시작 배율: 줄 너비 x 배율이 양옆 안전 영역({SIDE}px) 안에 들어가게
@@ -663,7 +691,7 @@ const reset = () => {{
   document.getElementById('flood').style.display = 'none';
   document.getElementById('more').style.display = 'none';
   ttl.querySelectorAll('.ln').forEach(el => {{ el.style.transform = ''; el.style.opacity = ''; }});
-  ttl.querySelectorAll('.hl').forEach(el => el.classList.remove('fill'));
+  ttl.querySelectorAll('.t .hl').forEach(el => el.classList.remove('fill'));
 }};
 // 첫 화면 후킹 (list.hook_anim): t = 장면 안 초
 window.twHook = (r, t) => {{
@@ -685,14 +713,29 @@ window.twHook = (r, t) => {{
       dx += a * Math.sin(u * 95 + i * 1.7); dy += a * Math.cos(u * 83 + i * 2.3); z += 0.015 * Math.exp(-u / 0.08); }}
   }});
   imgEl.style.transform = `translate(${{dx.toFixed(1)}}px, ${{dy.toFixed(1)}}px) scale(${{z.toFixed(4)}})`;
-  ttl.querySelectorAll('.hl').forEach(el => el.classList.toggle('fill', t >= HK.fill[0] - 1e-6 && t < HK.fill[1] - 1e-6));
+  ttl.querySelectorAll('.t .hl').forEach(el => el.classList.toggle('fill', t >= HK.fill[0] - 1e-6 && t < HK.fill[1] - 1e-6));
   return Promise.all([...document.images].filter(i => i.src).map(i => i.decode().catch(() => null)));
+}};
+// intro 없을 때 0초 제목 줄 쾅 (첫 항목 그림·이름은 0초부터 보인다): twState 뒤에 부른다
+window.twSlam = (t) => {{
+  let dx = 0, dy = 0;
+  ttl.querySelectorAll('.ln').forEach((el, i) => {{
+    const u = t - HK.starts[i] + 1e-6;
+    if (u < 0) {{ el.style.opacity = '0'; return; }}
+    const S0 = window.hkScale[i]; let s = 1;
+    if (u < 0.1) s = S0 - (S0 - 0.95) * Math.pow(u / 0.1, 2);
+    else if (u < 0.234) {{ const q = (u - 0.1) / 0.134; s = 0.95 + 0.05 * (1 - Math.pow(1 - q, 2)); }}
+    el.style.opacity = '1'; el.style.transform = `scale(${{s.toFixed(4)}})`;
+    if (u < 0.3) {{ const a = (i === 0 ? 14 : 9) * Math.exp(-u / 0.07); dx += a * Math.sin(u * 95 + i * 1.7); dy += a * Math.cos(u * 83 + i * 2.3); }}
+  }});
+  imgEl.style.transform = `translate(${{dx.toFixed(1)}}px, ${{dy.toFixed(1)}}px) scale(${{(1.02 + 0.03 * Math.exp(-t / 0.35)).toFixed(4)}})`;
+  ttl.querySelectorAll('.t .hl').forEach(el => el.classList.toggle('fill', t >= HK.fill[0] - 1e-6 && t < HK.fill[1] - 1e-6));
 }};
 // 끝 쏟아지기 (list.flood): t = 장면 안 초
 window.twFlood = (r, t) => {{
   reset();
   imgEl.src = ROWS[r].img;
-  ttl.style.display = 'none'; lab.style.display = 'none';
+  ttl.style.display = INTRO ? 'none' : 'block'; lab.style.display = 'none';
   drawStack(r, 1, 'flood', t);
   const dim = document.getElementById('dim'); dim.style.display = 'block'; dim.style.opacity = (0.62 * Math.min(1, t / 0.3)).toFixed(3);
   const fl = document.getElementById('flood'); fl.style.display = 'block';
@@ -717,10 +760,11 @@ window.twState = (kind, r, p) => {{
   const e = 1 - Math.pow(1 - p, 3);
   reset();
   document.getElementById('img').src = ROWS[r].img;
-  ttl.style.display = kind === 'hook' ? 'block' : 'none';
+  ttl.style.display = (kind === 'hook' || !INTRO) ? 'block' : 'none';
   lab.style.display = kind === 'row' ? 'block' : 'none';
   const band = kind === 'hook' ? ttl : lab;
   const inner = band.querySelector('.inner');
+  if (!INTRO) {{ const ti = ttl.querySelector('.inner'); ti.style.transform = ''; ti.style.opacity = '1'; }}
   inner.style.transform = `translateY(${{(1 - e) * 36}}px)`;
   inner.style.opacity = String(e);
   if (kind === 'row') {{
@@ -763,6 +807,19 @@ async def shoot_states(post, imgs, cfg, work):
                     png = work / f"s{i:03d}_{k:03d}.png"
                     await el.screenshot(path=str(png))
                     shots.append((png, 1 / FPS))
+                continue
+            if i == 0 and kind == "row" and op["hook_anim"] and not op["intro"]:
+                # 0초부터 첫 항목 그대로(이름 띠도 바로 보임) + 제목 줄 쾅: 0.6초만 프레임마다, 그 뒤 정지 화면
+                n_sl = min(int(round(d * FPS)) - 1, 18)
+                for k in range(n_sl):
+                    await pg.evaluate(f"twState('row', {r}, 1); twSlam({k / FPS:.5f})")
+                    png = work / f"s{i:03d}_{k:03d}.png"
+                    await el.screenshot(path=str(png))
+                    shots.append((png, 1 / FPS))
+                await pg.evaluate(f"twState('row', {r}, 1); twSlam(9)")
+                png = work / f"s{i:03d}.png"
+                await el.screenshot(path=str(png))
+                shots.append((png, d - n_sl / FPS))
                 continue
             n_anim = min(ANIM_FRAMES, int(round(d * FPS)) - 1)
             for k in range(n_anim):
@@ -981,8 +1038,8 @@ def make_list_reel(post, folder, cfg):
         from music_gen import make_hook_music
         music = work / "music.wav"
         acc = accents(post, tl)
-        make_hook_music(music, tl["bpm"], dur, acc, seed=int(pm.get("seed", 7)),
-                        drop_at=tl["starts"][1] if opts(post)["hook_anim"] else None)
+        make_hook_music(music, tl["bpm"], dur, acc, seed=int(pm.get("seed", 7)), style=pm.get("style"),
+                        drop_at=tl["starts"][1] if (opts(post)["hook_anim"] and opts(post)["intro"]) else None)
         print(f"배경음악: 후킹 비트 BPM {tl['bpm']:g} (박 {tl['beat']:.4f}초, 항목 {tl['k']}박 = {tl['item']:.3f}초), "
               f"크래시 {len(acc)}곳, 장면 전환과 박의 최대 차이 {beat_check(tl) * 1000:.1f}ms")
     # 3) 목소리 (선택, voice/<번호>.wav, agent/tts.py로 이 컴퓨터에서 미리 만든다)
@@ -1001,8 +1058,8 @@ def make_list_reel(post, folder, cfg):
                     "-map", "0:v:0", "-map", "1:a:0", "-t", f"{dur:.3f}", "-c:v", "copy",
                     "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", str(out)], check=True)
     # 4) 앞쪽 '자료' 안내 띠 (dm.banner): 안전 영역 맨 위, 3초부터 본편 끝까지
-    from banner import banner_text, make_banner_png, apply_banner, banner_height
-    bt = banner_text(post)
+    from banner import banner_text, make_banner_png, apply_banner, banner_height, cta_line
+    bt = banner_text(post) if (opts(post)["intro"] or not cta_line(post)) else None   # 0초 안내 줄이 있으면 3초 띠는 겹쳐서 뺀다
     if bt:
         png = make_banner_png(bt, cfg, W - 2 * SIDE, work / "banner.png")
         apply_banner(out, png, SIDE, SAFE_TOP, dur)
@@ -1036,8 +1093,9 @@ def make_sfx(post, tl, total):
     kw = {}
     if op["hook_anim"]:
         hp = hook_plan(post, tl)
-        kw.update(impacts=[hp["starts"][0]], hits=hp["starts"][1:], whooshes=hp["starts"][1:],
-                  riser_to=hp["drop"], riser_len=max(0.4, min(1.0, hp["drop"] - hp["starts"][-1] - 0.25)), drop=hp["drop"])
+        kw.update(impacts=[hp["starts"][0]], hits=hp["starts"][1:], whooshes=hp["starts"][1:])
+        if hp["drop"]:
+            kw.update(riser_to=hp["drop"], riser_len=max(0.4, min(1.0, hp["drop"] - hp["starts"][-1] - 0.25)), drop=hp["drop"])
     if op["flood"]:
         fp = flood_plan(post, tl)
         kw.update(flood=(fp["start"], fp["start"] + fp["dur"]),

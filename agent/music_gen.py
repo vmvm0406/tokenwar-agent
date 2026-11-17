@@ -155,6 +155,21 @@ HOOK = [76, None, 76, 79, 81, None, 79, 76,   # 1마디 (8분음표): E5 . E5 G5
         74, None, 72, 74, 76, None, None, None]  # 2마디: D5 . C5 D5 E5 . . .
 HOOK_END = [74, None, 72, 74, 69, None, None, None]  # 4마디째는 A4로 끝맺음
 
+# 릴스마다 다른 곡 (운영자 요청 2026-11-17 "노래도 바꾸고": 키·코드·멜로디·악기를 바꾼다). post.music.style = 아래 id.
+# 모두 코드로 합성 (샘플·저작권 없음). 코드·멜로디는 A단조 기준으로 적고 tr(반음)만큼 옮긴다. lead/octave: 멜로디 악기, lp: 부드럽게(클수록 둥근 소리).
+MUSIC_STYLES = {
+    "h1-am-square": {"tr": 0, "chords": CHORDS, "hook": HOOK, "end": HOOK_END, "lead": "square", "lp": 3, "octave": "sine"},
+    "h2-dm-saw": {"tr": 5, "chords": [(57, 60, 64), (53, 57, 60), (50, 53, 57), (52, 56, 59)],   # Am F Dm E → Dm Bb Gm A
+                  "hook": [81, 79, 76, None, 76, 79, 81, 84, 83, None, 81, 79, 76, None, None, None],
+                  "end": [83, None, 81, 79, 76, None, 74, None], "lead": "saw", "lp": 6, "octave": "square"},
+    "h3-em-bell": {"tr": 7, "chords": [(57, 60, 64), (55, 59, 62), (53, 57, 60), (55, 59, 62)],   # Am G F G → Em D C D
+                   "hook": [69, 72, 76, 72, 74, None, 72, 69, 67, 69, None, 72, 69, None, None, None],
+                   "end": [67, 69, 72, 71, 69, None, None, None], "lead": "sine", "lp": 1, "octave": "sine"},
+    "h4-cm-synco": {"tr": 3, "chords": [(57, 60, 64), (60, 64, 67), (55, 59, 62), (53, 57, 60)],   # Am C G F → Cm Eb Bb Ab
+                    "hook": [None, 76, None, 76, 79, None, 76, 74, None, 72, None, 72, 74, 76, None, None],
+                    "end": [None, 74, None, 72, 69, None, None, None], "lead": "square", "lp": 8, "octave": "saw"},
+}
+
 
 def snare(n, rng):
     t = np.arange(n) / SR
@@ -173,12 +188,14 @@ def clap(n, rng):
     return (x - lowpass(x, 5)) * 0.5
 
 
-def make_hook_music(out_path, bpm, total, accents=(), seed=7, drop_at=None):
+def make_hook_music(out_path, bpm, total, accents=(), seed=7, drop_at=None, style=None):
     """bpm 고정, 0초가 첫 박. accents: 강한 박자(크래시)를 넣을 시각 목록(초). 끝 1.5초 페이드아웃.
     drop_at(초, 선택): 그 전까지는 킥(첫 박)·클랩·하이햇만 두고 베이스·패드·멜로디를 빼며, 바로 앞 반 박은 비운다.
     drop_at에서 전부 들어온다(비트 드롭, 목록형 릴스 첫 화면 후킹 list.hook_anim). 멜로디는 드롭에서 처음부터.
     반환 {"bpm", "beat", "seconds", "accents"}."""
     rng = np.random.default_rng(seed)
+    S = MUSIC_STYLES.get(style or "h1-am-square", MUSIC_STYLES["h1-am-square"])
+    tr = S["tr"]
     drop_beat = int(round(drop_at / (60.0 / bpm))) if drop_at else 0
     beat = 60.0 / bpm
     n = int((total + 0.5) * SR)
@@ -208,7 +225,7 @@ def make_hook_music(out_path, bpm, total, accents=(), seed=7, drop_at=None):
                 add(hat(int(0.04 * SR), rng) * (0.8 if k else 0.4), t0 + k * beat / 2, 0.8, 1.0)
             continue
         bar, pos = divmod(b - drop_beat, 4)
-        chord = CHORDS[bar % 4]
+        chord = [c + tr for c in S["chords"][bar % 4]]
         add(kick(int(0.32 * SR)) * 1.0, t0)                          # 킥: 매 박 (0초부터)
         if pos in (1, 3):                                             # 스네어 + 클랩: 2·4박
             add(snare(int(0.25 * SR), rng) * 0.75, t0)
@@ -223,16 +240,17 @@ def make_hook_music(out_path, bpm, total, accents=(), seed=7, drop_at=None):
             add(pad * 0.16, t0, 1.0, 0.8)
             add(pad * 0.16, t0 + 0.012, 0.8, 1.0)
         # 멜로디 훅: 2마디 모티프, 4마디째는 끝맺음. 첫 박부터 바로
-        motif = HOOK if bar % 4 != 3 else HOOK[:8] + HOOK_END
+        motif = S["hook"] if bar % 4 != 3 else S["hook"][:8] + S["end"]
         half = (bar % 2) * 8
         for k in range(2):
             note = motif[half + pos * 2 + k]
             if note is None:
                 continue
-            pl = tone(hz(note), int(beat / 2 * SR * 0.95), "square", r=0.16, a=0.004)
-            pl += tone(hz(note + 12), int(beat / 2 * SR * 0.95), "sine", r=0.12, a=0.004) * 0.35
-            add(lowpass(pl, 3) * 0.2, t0 + k * beat / 2, 0.85, 1.0)
-            add(lowpass(pl, 3) * 0.07, t0 + k * beat / 2 + beat * 0.75, 1.0, 0.6)  # 짧은 메아리
+            note += tr
+            pl = tone(hz(note), int(beat / 2 * SR * 0.95), S["lead"], r=0.16, a=0.004)
+            pl += tone(hz(note + 12), int(beat / 2 * SR * 0.95), S["octave"], r=0.12, a=0.004) * 0.35
+            add(lowpass(pl, S["lp"]) * 0.2, t0 + k * beat / 2, 0.85, 1.0)
+            add(lowpass(pl, S["lp"]) * 0.07, t0 + k * beat / 2 + beat * 0.75, 1.0, 0.6)  # 짧은 메아리
     for t0 in accents:                                                # 크래시: 강한 박
         x = rng.standard_normal(int(1.2 * SR))
         x = (x - lowpass(x, 4)) * env(len(x), 0.001, 0.45) * 0.35

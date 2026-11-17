@@ -13,10 +13,15 @@
                 뒤: 아주 흐린 거대한 순위 숫자가 천천히 흘러간다. 순위 숫자는 박마다 살짝 뛴다(박자 맞춤).
     1위         rank.reveal_beats(기본 1박 = 0.5초) 동안 이름 자리에 '?'(떨림) + 점수 막대는 먼저 차오름 → 박 위에서 이름이 쾅 박힘
                 (녹색 면 한 박 + 흔들림 + 쿵). 그 뒤 순위표가 10위 → 1위로 한 줄씩 번쩍 훑고 끝 화면.
-    3초~본편 끝 '자료' 안내 띠(dm.banner, 안전 영역 맨 위)
+    3초~본편 끝 '자료' 안내 띠(dm.banner, 안전 영역 맨 위). rank.intro가 없으면(기본) 아래 '0초부터'로 대신한다.
     작은 출처 줄 rank.source_line (점수 줄 아래, 안전 영역 안)
     끝          dm.cta 끝 화면 2.5초 (video.py append_cta_card)
 
+0초부터(기본, 운영자 결정 2026-11-17: 제목만 있는 첫 화면 → 3초 안 건너뛰기 69%): 위의 '첫 화면'(rank.intro: true일 때만)을 빼고
+    0초에 바로 10위 장면. 맨 위에 제목 띠(2줄, 0초에 줄마다 쾅) + 그 아래 안내 한 줄(banner.cta_line, rank.cta_line)이 끝까지 남고,
+    순위 카드·순위표는 그 아래. 3초 '자료' 띠는 붙이지 않는다.
+그림(선택, rank.items[].src): 순위마다 사진 한 장이 화면 전체 뒤에 깔린다(어둡게 덮어 글자가 읽히게, 장면 안에서 천천히 확대,
+    바뀔 때 0.2초 겹쳐 바뀜). 1위는 '?' 동안 흐리게 가렸다가 공개 박에 선명해진다. 출처·라이선스는 items[].credit (캡션 끝 한 줄).
 박자: BPM 기본 120 (한 박 = 15프레임, 장면 전환이 박과 0ms 차이). 순위 하나 = rank.beats_per_item(기본 4박 = 2초).
 소리: music_gen.make_hook_music(첫 순위에서 비트 드롭, 1위 공개 박에 크래시) + 효과음(코드 합성: 0초 쿵, 제목 줄 타격,
       순위가 바뀔 때마다 휙 + 타격, 순위표 칸이 생기고 박힐 때마다 틱, 1위 앞 스웰 → 공개 쿵) → -14 LUFS.
@@ -44,6 +49,7 @@ HOOK_BEATS = 4                # 첫 화면 2초
 REVEAL_BEATS = 1              # 1위 '?' 시간 (0.5초, "너무 오래 끌지 않게")
 TOP_BEATS = 5                 # 1위 장면 전체 (공개 앞 1박 + 뒤 4박)
 TITLE_FONT = 104
+TOP_FONT = 60                 # 0초부터 위쪽 제목 띠 (rank.intro 없을 때)
 HOOK_SCALE = 1.3
 STACK_RIGHT = 840             # 순위표 오른쪽 끝 (오른쪽 아래 버튼 줄 x 850~ 안쪽)
 LABEL_MAX, LABEL_MIN = 84, 52
@@ -62,7 +68,7 @@ def opts(post):
     R = post.get("rank") or {}
     return {"bpm": float(R.get("bpm", BPM)), "k": int(R.get("beats_per_item", BEATS_PER_ITEM)),
             "hook": int(R.get("hook_beats", HOOK_BEATS)), "reveal": int(R.get("reveal_beats", REVEAL_BEATS)),
-            "top": int(R.get("top_beats", TOP_BEATS))}
+            "top": int(R.get("top_beats", TOP_BEATS)), "intro": R.get("intro", False) is True}
 
 
 def timeline(post):
@@ -72,7 +78,7 @@ def timeline(post):
     o = opts(post)
     n = len(rank_items(post))
     beat = 60.0 / o["bpm"]
-    plan = [("hook", None, o["hook"])] + [("rank", i, o["k"]) for i in range(n - 1, 0, -1)] + [("top", 0, o["top"])]
+    plan = ([("hook", None, o["hook"])] if o["intro"] else []) + [("rank", i, o["k"]) for i in range(n - 1, 0, -1)] + [("top", 0, o["top"])]
     acc, bounds = 0, [0]
     for _, _, b in plan:
         acc += b
@@ -98,15 +104,17 @@ def fmt_value(v, dec):
     return f"{float(v):.{dec}f}"
 
 
-def page_html(post, cfg, tl):
+def page_html(post, cfg, tl, folder=None):
     b = cfg["brand"]
     R = post["rank"]
     items = rank_items(post)
     n = len(items)
     fonts = (ROOT / "assets" / "fonts").as_uri()
-    from banner import banner_text, banner_height
-    bt = banner_text(post)
-    card_top = SAFE_TOP + (banner_height(bt) + 26 if bt else 20)
+    from banner import banner_text, banner_height, cta_line
+    intro = opts(post)["intro"]
+    cl = None if intro else cta_line(post)
+    bt = banner_text(post) if (intro or not cl) else None
+    card_top = SAFE_TOP + (banner_height(bt) + 26 if bt else 20)   # intro 없으면 JS가 위쪽 제목 띠 아래로 옮긴다
     dec = int(R.get("value_decimals", 1))
     vmax = float(R.get("value_max") or max([float(x["value"]) for x in items if x.get("value") is not None] or [1]))
     hw = post.get("highlight")
@@ -118,8 +126,12 @@ def page_html(post, cfg, tl):
             t = t.replace(esc(hw), f'<span class="hl">{esc(hw)}</span>', 1)
             used = True
         spans.append(f'<span class="ln">{t}</span>')
+    def _img(it):
+        p = (Path(folder) / it["src"]) if (folder and it.get("src")) else None
+        return p.resolve().as_uri() if p and p.exists() else None
     data = {
-        "items": [{"label": it.get("label", ""), "sub": it.get("sub", ""),
+        "intro": intro,
+        "items": [{"label": it.get("label", ""), "sub": it.get("sub", ""), "img": _img(it), "imgx": it.get("img_x", 50),
                    "value": (None if it.get("value") is None else float(it["value"])),
                    "quote": it.get("quote") or ""} for it in items],
         "scenes": tl["scenes"], "beat": tl["beat"], "reveal": tl["reveal"], "main": tl["main"],
@@ -134,6 +146,12 @@ def page_html(post, cfg, tl):
     if R.get("hook_count") is not None:
         pre, _, post_t = ht.partition("{n}") if "{n}" in ht else ("", "", ht)
         count_html = f'<div id="count">{esc(pre)}<b id="cnum">0</b>{esc(post_t)}</div>'
+    m_ = __import__("re").search(r"[0-9]+위까지|전체 [0-9]+\S*", cl or "")
+    cl_html = esc(cl or "")
+    if m_:
+        cl_html = cl_html.replace(esc(m_.group(0)), f'<span class="hl">{esc(m_.group(0))}</span>', 1)
+    top_html = (f'<div id="top"><div class="t">{"".join(spans)}</div>' + (f'<div class="cl">{cl_html}</div>' if cl else "") + '</div>'
+                if not intro else "")
     return f"""<!doctype html><html lang="ko"><head><meta charset="utf-8"><style>
 @import url('{fonts}/black-han-sans/index.css');
 @font-face{{font-family:'Wanted';src:url('{fonts}/WantedSans-Bold.otf');font-weight:700}}
@@ -144,6 +162,17 @@ def page_html(post, cfg, tl):
 #f{{width:{W}px;height:{H}px;position:relative;overflow:hidden;background:{b['bg']};color:{b['text']};word-break:keep-all}}
 .hl{{color:{b['accent']}}}
 /* 뒤의 거대한 순위 숫자: 단색(녹색 7%), 글로우·그라데이션 없음 */
+#ph{{position:absolute;inset:0;overflow:hidden;background:{b['bg']}}}
+#ph img{{position:absolute;inset:0;width:{W}px;height:{H}px;object-fit:cover;display:none;will-change:transform,opacity,filter}}
+#shade{{position:absolute;inset:0;background:rgba(4,5,4,.66)}}
+#top{{position:absolute;left:0;right:0;top:{SAFE_TOP}px;padding:18px {SIDE}px 16px;background:rgba(6,7,6,.78);z-index:5}}
+#top .t{{font-family:'Black Han Sans';font-size:{TOP_FONT}px;line-height:1.12;letter-spacing:-.01em;text-align:center}}
+#top .ln{{display:block;transform-origin:50% 55%;will-change:transform}}
+#top .hl.fill{{background:{b['accent']};color:#000;box-shadow:0 0 0 .06em {b['accent']}}}
+#top .cl{{font-family:'Wanted';font-weight:700;font-size:36px;line-height:1.2;margin-top:10px;text-align:center;color:{b['text']};white-space:nowrap}}
+#f.cp #rowA,#f.cp #rk,#f.cp #lab{{height:180px}} #f.cp .rkn{{font-size:180px;line-height:180px}} #f.cp #rk{{width:220px}} #f.cp #lab{{left:232px}}
+#f.cp #val{{margin-top:14px;height:128px}}
+#f.cp #lt,#f.cp #ls,#f.cp #vl,#f.cp #src,#f.cp .r{{text-shadow:0 2px 10px rgba(0,0,0,.8)}}
 #bg{{position:absolute;right:-40px;top:300px;font-family:'Black Han Sans';font-size:1180px;line-height:1;color:rgba(0,255,102,.07);
   white-space:nowrap;will-change:transform;transform-origin:70% 50%}}
 #hook{{position:absolute;left:{SIDE}px;right:{SIDE}px;top:{SAFE_TOP + 15}px;text-align:left}}
@@ -187,8 +216,10 @@ def page_html(post, cfg, tl):
 .r.q .nm{{color:rgba(242,245,243,.85)}} .r.q b{{color:rgba(242,245,243,.7)}}
 .r.cur .nm,.r.cur b,.r.cur .vv{{color:{b['accent']}}} .r.cur .mb i{{background:{b['accent']}}}
 .r.fl{{background:{b['accent']};}} .r.fl .nm,.r.fl b,.r.fl .vv{{color:#000}} .r.fl .mb i{{background:#000}}
-</style></head><body><div id="f">
+</style></head><body><div id="f"{"" if intro else ' class="cp"'}>
+<div id="ph"><img id="phB"><img id="phA"><div id="shade"></div></div>
 <div id="bg"></div>
+{top_html}
 <div id="hook"><div class="t">{"".join(spans)}</div>{count_html}</div>
 <div id="card">
   <div id="rowA"><div id="rk"><div class="rkn" id="rk0"></div><div class="rkn" id="rk1"></div></div>
@@ -212,6 +243,17 @@ let FIT = [], RH = 36, STACK_TOP = 0;
 window.twSetup = () => {{
   const out = [];
   const card = $('card'); card.style.display = 'block';
+  if (!D.intro) {{
+    $('hook').style.display = 'none';
+    const tp = $('top');
+    if (tp) {{
+      const cl = tp.querySelector('.cl');
+      if (cl && cl.scrollWidth > {W} - 2 * SIDE) out.push('제목 아래 안내 줄이 양옆 안전 영역 밖');
+      const tl_ = tp.querySelector('.t');
+      if (Math.round(tl_.clientHeight / parseFloat(getComputedStyle(tl_).lineHeight)) > 2) out.push('위쪽 제목이 2줄을 넘음');
+      card.style.top = Math.round(tp.getBoundingClientRect().bottom + 22) + 'px';
+    }}
+  }}
   const lt = $('lt'), lab = $('lab');
   D.items.forEach((it, i) => {{
     lt.textContent = it.label; let fs = {LABEL_MAX}; lt.style.fontSize = fs + 'px';
@@ -255,9 +297,9 @@ window.twSetup = () => {{
   // 가장 긴 순위표 줄이 오른쪽 끝을 넘는지
   D.items.forEach((it, i) => {{ const r = $('r' + i); if (r.scrollWidth > r.clientWidth + 1) out.push('순위표 줄이 넘침: ' + it.label); }});
   if ($('stack').getBoundingClientRect().bottom > SAFE_BOTTOM) out.push('순위표가 안전 영역 밖');
-  const hk = $('hook').getBoundingClientRect(); if (hk.bottom > STACK_TOP - 10) out.push('첫 화면 제목이 순위표와 겹침');
+  if (D.intro) {{ const hk = $('hook').getBoundingClientRect(); if (hk.bottom > STACK_TOP - 10) out.push('첫 화면 제목이 순위표와 겹침'); }}
   // 박히는 시작 배율: 줄 너비 x 배율이 양옆 안전 영역 안
-  window.hkScale = [...document.querySelectorAll('#hook .ln')].map(el => {{
+  window.hkScale = [...document.querySelectorAll(D.intro ? '#hook .ln' : '#top .ln')].map(el => {{
     const rg = document.createRange(); rg.selectNodeContents(el); const w = rg.getBoundingClientRect().width;
     return Math.max(1, Math.min(D.hook.scale, ({W} - 2 * SIDE) / Math.max(1, w)));
   }});
@@ -284,8 +326,53 @@ const landedBefore = (i, t) => {{
   const at = s.kind === 'top' ? s.start + D.reveal : s.start + LAND;
   return t + 1e-6 >= at;
 }};
+// 뒤 사진: 순위마다 한 장, 장면 안에서 천천히 확대, 바뀔 때 0.2초 겹침. 1위는 '?' 동안 흐림
+const photo = (s, u) => {{
+  const A = $('phA'), B = $('phB');
+  const it = s.kind === 'hook' ? null : D.items[s.i];
+  const want = it && it.img;
+  const prevS = D.scenes[D.scenes.indexOf(s) - 1];
+  const prev = prevS && prevS.kind !== 'hook' ? D.items[prevS.i].img : null;
+  const ps = [];
+  const setSrc = (el, src) => {{ if (el.getAttribute('src') !== src) {{ el.setAttribute('src', src); ps.push(el.decode().catch(() => null)); }} }};
+  if (!want) {{ A.style.display = 'none'; B.style.display = 'none'; return ps; }}
+  setSrc(A, want); A.style.display = 'block';
+  A.style.objectPosition = (it.imgx ?? 50) + '% 50%';
+  const z = 1.04 + 0.06 * (u / s.dur);
+  A.style.transform = `scale(${{z.toFixed(4)}})`;
+  const x = Math.min(1, u / 0.2);
+  A.style.opacity = prev ? x.toFixed(3) : '1';
+  if (s.kind === 'top' && u < D.reveal) A.style.filter = 'blur(38px) brightness(.7)';
+  else if (s.kind === 'top' && u < D.reveal + 0.25) A.style.filter = `blur(${{(38 * (1 - (u - D.reveal) / 0.25)).toFixed(1)}}px)`;
+  else A.style.filter = '';
+  if (prev && x < 1) {{
+    setSrc(B, prev); B.style.display = 'block'; B.style.filter = '';
+    B.style.objectPosition = (D.items[prevS.i].imgx ?? 50) + '% 50%'; B.style.transform = 'scale(1.1)'; B.style.opacity = '1';
+  }} else B.style.display = 'none';
+  return ps;
+}};
+// 위쪽 제목 띠 (rank.intro 없을 때): 0초에 줄마다 쾅 + 강조어 녹색 한 박
+const topSlam = (t) => {{
+  const tp = $('top'); if (!tp) return;
+  let dx = 0, dy = 0;
+  tp.querySelectorAll('.ln').forEach((el, i) => {{
+    const v = t - D.hook.starts[i] + 1e-6;
+    if (v < 0) {{ el.style.opacity = '0'; return; }}
+    const S0 = window.hkScale[i]; let k = 1;
+    if (v < 0.1) k = S0 - (S0 - 0.95) * Math.pow(v / 0.1, 2);
+    else if (v < 0.234) {{ const q = (v - 0.1) / 0.134; k = 0.95 + 0.05 * (1 - Math.pow(1 - q, 2)); }}
+    el.style.opacity = '1'; el.style.transform = `scale(${{k.toFixed(4)}})`;
+    if (v < 0.3) {{ const a = (i === 0 ? 12 : 8) * Math.exp(-v / 0.07); dx += a * Math.sin(v * 95 + i); dy += a * Math.cos(v * 83 + i * 2); }}
+  }});
+  tp.style.transform = `translate(${{dx.toFixed(1)}}px, ${{dy.toFixed(1)}}px)`;
+  const hs = D.hook.starts, last = hs[hs.length - 1];
+  tp.querySelectorAll('.hl').forEach(el => el.classList.toggle('fill', t >= last - 1e-6 && t < last + D.beat - 1e-6 && el.closest('.t')));
+}};
 window.twFrame = (t) => {{
   const s = sceneAt(t), u = t - s.start;
+  const ps = photo(s, u);
+  if (!D.intro) topSlam(t);
+  const done = () => Promise.all(ps);
   const beatPhase = ((t / D.beat) % 1) * D.beat;     // 박 뒤 지난 초
   // 뒤 숫자
   const bg = $('bg');
@@ -346,7 +433,7 @@ window.twFrame = (t) => {{
       $('cnum').textContent = Math.round(D.hook.count * k).toLocaleString('ko-KR');
       $('count').style.opacity = u < 0.3 ? '0' : '1';
     }}
-    return;
+    return done();
   }}
   hook.style.display = 'none'; card.style.display = 'block';
   const it = D.items[s.i], top = s.kind === 'top';
@@ -403,15 +490,16 @@ window.twFrame = (t) => {{
       q.textContent = it.quote.slice(0, nch);
     }} else q.style.display = 'none';
   }}
+  return done();
 }};
 </script></body></html>"""
 
 
-async def shoot(post, cfg, work, tl):
+async def shoot(post, cfg, work, tl, folder=None):
     """프레임마다 그린다 (모든 장면이 움직인다). 반환: 문제 목록."""
     from playwright.async_api import async_playwright
     page_file = work / "rank.html"
-    page_file.write_text(page_html(post, cfg, tl), encoding="utf-8")
+    page_file.write_text(page_html(post, cfg, tl, folder), encoding="utf-8")
     fr = work / "fr"
     fr.mkdir(exist_ok=True)
     async with async_playwright() as p:
@@ -438,11 +526,15 @@ def sfx_plan(post, tl):
     n = len(rank_items(post))
     hs = hook_starts(post, tl)
     changes = [s["start"] for s in sc if s["kind"] != "hook"]
+    intro = sc[0]["kind"] == "hook"
     rows_in = [0.25 + (n - 1 - i) * (1.1 / n) for i in range(n)]
     lands = [s["start"] + 0.95 for s in sc if s["kind"] == "rank"]
     top = sc[-1]
+    if not intro:   # 0초부터 10위: 첫 화면 '?' 칸 틱·상승음·드롭 없음
+        rows_in = []
     return {"impacts": [0.0], "hits": hs[1:] + changes[1:], "whooshes": hs[1:] + changes[1:],
-            "riser_to": changes[0], "riser_len": max(0.4, min(0.8, changes[0] - hs[-1] - 0.25)), "drop": changes[0],
+            "riser_to": changes[0] if intro else None,
+            "riser_len": max(0.4, min(0.8, changes[0] - hs[-1] - 0.25)) if intro else 1.0, "drop": changes[0] if intro else None,
             "ticks": sorted(rows_in + lands), "top": (top["start"], top["start"] + tl["reveal"])}
 
 
@@ -479,7 +571,7 @@ def make_rank_reel(post, folder, cfg):
         shutil.rmtree(work)
     work.mkdir()
     tl = timeline(post)
-    problems = asyncio.run(shoot(post, cfg, work, tl))
+    problems = asyncio.run(shoot(post, cfg, work, tl, folder))
     if problems:
         shutil.rmtree(work)
         raise ValueError("\n".join(problems))
@@ -496,7 +588,9 @@ def make_rank_reel(post, folder, cfg):
         music = work / "music.wav"
         first = tl["scenes"][1]["start"]
         reveal = tl["scenes"][-1]["start"] + tl["reveal"]
-        make_hook_music(music, tl["bpm"], dur, [first, reveal], seed=int(pm.get("seed", 7)), drop_at=first)
+        intro = tl["scenes"][0]["kind"] == "hook"
+        first = tl["scenes"][1]["start"] if intro else 0.0
+        make_hook_music(music, tl["bpm"], dur, [first, reveal], seed=int(pm.get("seed", 7)), drop_at=first if intro else None)
         print(f"배경음악: 후킹 비트 BPM {tl['bpm']:g} (박 {tl['beat']:.3f}초), 드롭 {first:.2f}초, 1위 공개 크래시 {reveal:.2f}초")
     from listreel import mix_audio
     sfx, info = make_sfx(post, tl, dur)
@@ -509,8 +603,8 @@ def make_rank_reel(post, folder, cfg):
     subprocess.run(["ffmpeg", "-nostdin", "-y", "-loglevel", "error", "-i", str(silent), "-i", str(mixed),
                     "-map", "0:v:0", "-map", "1:a:0", "-t", f"{dur:.3f}", "-c:v", "copy",
                     "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", str(out)], check=True)
-    from banner import banner_text, make_banner_png, apply_banner
-    bt = banner_text(post)
+    from banner import banner_text, make_banner_png, apply_banner, cta_line
+    bt = banner_text(post) if (opts(post)["intro"] or not cta_line(post)) else None   # 0초 안내 줄이 있으면 3초 띠는 뺀다
     if bt:
         png = make_banner_png(bt, cfg, W - 2 * SIDE, work / "banner.png")
         apply_banner(out, png, SIDE, SAFE_TOP, dur)
@@ -529,7 +623,7 @@ def make_rank_reel(post, folder, cfg):
                         "-frames:v", "1", "-q:v", "2", str(frames / f"{k:02d}.jpg")], check=True)
     # 커버: 첫 화면 끝(제목이 다 박히고 순위표가 '?'로 찬 순간). thumb가 있으면 render.py가 thumb.py로 덮어쓴다
     hook = tl["scenes"][0]
-    cover_t = hook["start"] + hook["dur"] - 2 / FPS
+    cover_t = hook["start"] + hook["dur"] - 2 / FPS if hook["kind"] == "hook" else 0.9
     shutil.copy(work / "fr" / f"{int(round(cover_t * FPS)):05d}.jpg", folder / "cover.jpg")
     shutil.rmtree(work)
     print(f"순위 {len(rank_items(post))}개, 순위당 {tl['scenes'][1]['dur']:.2f}초, 1위 '?' {tl['reveal']:.2f}초, "

@@ -29,6 +29,21 @@ def banner_height(text):
     return BANNER_H + BANNER_LINE * (n - 1)
 
 
+def cta_line(post):
+    """0초부터 제목 띠 바로 아래에 남는 한 줄 안내 (목록형·순위 릴스, 운영자 결정 2026-11-17: 제목만 있는 첫 화면에서
+    3초 안 건너뛰기 69% → 첫 화면부터 내용 + 안내). dm.cta가 있을 때만. list/rank.cta_line: 문자열이면 그대로, false면 없음.
+    기본 "댓글 남기시면 전체 N개 DM으로" (N = 영상 항목 + dm.page.more). 이 줄이 있으면 3초 '자료' 띠(dm.banner)는 붙이지 않는다."""
+    d = post.get("dm") or {}
+    sec = post.get("list") or post.get("rank") or {}
+    v = sec.get("cta_line")
+    if not d.get("cta") or v is False or sec.get("intro") is True:
+        return None
+    if isinstance(v, str) and v.strip():
+        return v.strip()
+    n = len(sec.get("items") or []) + len((d.get("page") or {}).get("more") or [])
+    return f"댓글 남기시면 전체 {n}개 DM으로"
+
+
 def banner_text(post):
     d = post.get("dm") or {}
     return (d.get("banner") or "").strip() or None
