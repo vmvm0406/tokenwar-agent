@@ -1,4 +1,6 @@
 {
+  "approved": true,
+  "approved_at": "2026-11-17T10:36:50+09:00",
  "id": "2026-11-17-carousel-meta-photo-ai-v2",
  "replaces": "2026-11-17-carousel-meta-photo-ai",
  "type": "carousel",
