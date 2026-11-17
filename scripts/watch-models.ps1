@@ -174,6 +174,8 @@ try {
     if ((Git-Log pull --ff-only --quiet origin main) -ne 0) { Note "git pull 실패: main이 origin/main과 갈라짐. 건너뜀"; exit 1 }
 
     if ($CheckOnly) { py -3.12 agent/model_watch.py --dry-run -v; exit $LASTEXITCODE }
+    # 제작 멈춤 (config.json production_paused): 속보 게시물 만들기(Claude)는 하지 않는다. 위의 publish.yml 깨우기는 그대로
+    if ((Get-Content config.json -Raw -Encoding utf8 | ConvertFrom-Json).production_paused -eq $true) { Note "제작 멈춤 (config production_paused): 속보 감시·제작 건너뜀"; exit 0 }
     $all = @(py -3.12 agent/model_watch.py 2>&1)
     $code = $LASTEXITCODE
     $all | Where-Object { $_ -is [System.Management.Automation.ErrorRecord] } | ForEach-Object { Note "$_" }

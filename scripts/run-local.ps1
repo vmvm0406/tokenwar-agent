@@ -48,6 +48,11 @@ try {
         [void](Git-Log checkout --quiet main)
         [void](Git-Log pull --ff-only --quiet origin main)
     }
+    # 제작 멈춤 (config.json production_paused, 운영자 2026-11-17 "three.js 테스트 될 때까지 더이상 제작하지 말자"): 승인된 것 게시는 그대로
+    if ((Get-Content config.json -Raw -Encoding utf8 | ConvertFrom-Json).production_paused -eq $true) {
+        "제작 멈춤 (config production_paused): 새 게시물을 만들지 않음" | Out-File -Append -FilePath $start -Encoding utf8
+        exit 0
+    }
     # 게시 칸(config.json slots): 오늘부터 모레까지 날짜별 몫(daily_target)에서 이미 예약된 것을 뺀 만큼만 만든다
     # slots.py need 출력: 날짜별 "2026-11-18 carousel=1 reel=5" 줄들 + 마지막 줄 합계 "carousel=1 reel=5"
     $needOut = @(py -3.12 agent/slots.py need --days 2 2>$null | ForEach-Object { "$_".Trim() } | Where-Object { $_ })

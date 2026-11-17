@@ -53,6 +53,7 @@ try {
     $log = Join-Path $LogDir ("{0}-make-r{1}-c{2}.log" -f (Get-Date -Format "yyyy-MM-dd-HHmm"), $Reels, $Cards)
     $prompt = "Follow LOCAL.md section 5 (미리 만들기·바로 올리기). Work and write in Korean. Make $Reels reel(s) and $Cards carousel(s). $mode. One PR for the whole batch."
     Write-Host "만드는 중: 릴스 $Reels, 카드뉴스 $Cards (기록: $log)"
+    if ((Get-Content config.json -Raw -Encoding utf8 | ConvertFrom-Json).production_paused -eq $true) { Write-Host "제작 멈춤 (config production_paused): 만들지 않음"; exit 0 }
     claude -p $prompt --permission-mode auto --max-turns 600 2>&1 | Out-File -FilePath $log -Encoding utf8
     Write-Host "끝. 기록: $log"
 }
