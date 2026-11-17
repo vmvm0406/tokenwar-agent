@@ -122,22 +122,39 @@
    }
   },
   "2026-11-17": {
+   "18049669823831337": {
+    "timestamp": "2026-11-17T02:21:15+0000",
+    "permalink": "https://www.instagram.com/reel/Df02CTVgaJb/",
+    "folder": "2026-11-17-list-lighting",
+    "title": "AI 영상 제작자에게 반드시 필요한 조명 용어 20가지",
+    "duration": 28.6,
+    "views": 43,
+    "reach": 17,
+    "saved": 0,
+    "shares": 0,
+    "total_interactions": 0,
+    "likes": 0,
+    "comments": 0,
+    "ig_reels_avg_watch_time": 8369,
+    "ig_reels_video_view_total_time": 150649,
+    "reels_skip_rate": 36.8
+   },
    "17882767407553907": {
     "timestamp": "2026-11-16T13:27:46+0000",
     "permalink": "https://www.instagram.com/reel/Dfzdhackgip/",
     "folder": "2026-11-16-howto-claude-video",
     "title": "영상 편집, 필요 없다",
     "duration": 22.5,
-    "views": 148,
+    "views": 149,
     "reach": 130,
     "saved": 1,
     "shares": 0,
     "total_interactions": 2,
     "likes": 1,
     "comments": 0,
-    "ig_reels_avg_watch_time": 4490,
-    "ig_reels_video_view_total_time": 588221,
-    "reels_skip_rate": 63.1
+    "ig_reels_avg_watch_time": 4408,
+    "ig_reels_video_view_total_time": 590736,
+    "reels_skip_rate": 63.4
    },
    "18112593002190549": {
     "timestamp": "2026-11-16T11:51:33+0000",
@@ -254,8 +271,8 @@
     "total_interactions": 6,
     "likes": 2,
     "comments": 0,
-    "ig_reels_avg_watch_time": 8747,
-    "ig_reels_video_view_total_time": 2606693,
+    "ig_reels_avg_watch_time": 8723,
+    "ig_reels_video_view_total_time": 2608190,
     "reels_skip_rate": 61.6
    }
   }
@@ -268,7 +285,8 @@
   "18163250107546991": 56.9,
   "17958768750292888": 67.9,
   "18112593002190549": 62.7,
-  "17882767407553907": 22.5
+  "17882767407553907": 22.5,
+  "18049669823831337": 28.6
  },
  "unsupported": {},
  "metrics_returned": [
@@ -283,5 +301,5 @@
   "total_interactions",
   "views"
  ],
- "updated": "2026-11-17T10:26+09:00"
+ "updated": "2026-11-17T12:08+09:00"
 }
