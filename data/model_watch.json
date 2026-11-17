@@ -1977,7 +1977,43 @@
    "tries": 0,
    "breaking": true,
    "status": "skipped"
+  },
+  "https://openai.com/index/introducing-openai-for-chile": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Introducing OpenAI for Chile",
+   "first_seen": "2026-11-17T23:07:40+09:00",
+   "why": "모델·기능 발표 아님",
+   "tries": 0,
+   "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMiW0FVX3lxTE90VlVkOWpwRjJoUFpRaHd0eVpTRi03WEVESWQ3LUNLZVA5YmcxNGowQmhSRVRmanZBUVF2ajkyQW5Ya3FpaTRhQmNSNzhEaG9VM2I1cGk0THY4WVHSAWBBVV95cUxQNnhGWnFJMHZTZXl5YnRMenpzb1N5b2xGbXp3R254b2hUdmswdjZUZEpaTjNETURNa3N3MzlSZVl0a3FiRTZKb2xYZHRDS0ZGM0JCRl9zSDBGTVZHWVRsaVk?oc=5": {
+   "source": "news",
+   "company": "엔비디아",
+   "entities": [
+    "엔비디아"
+   ],
+   "tok": [
+    "5천",
+    "9개",
+    "개월",
+    "격에",
+    "결국",
+    "만에",
+    "붕괴",
+    "월여",
+    "천피",
+    "최저",
+    "충격"
+   ],
+   "title": "[업계 속보: 주요 매체 3곳(MBC, 매일경제, 연합뉴스) · 상장·투자] 젠슨황 충격에 결국 '5천피' 붕괴…9개월여 만에 최저(종합)",
+   "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE90VlVkOWpwRjJoUFpRaHd0eVpTRi03WEVESWQ3LUNLZVA5YmcxNGowQmhSRVRmanZBUVF2ajkyQW5Ya3FpaTRhQmNSNzhEaG9VM2I1cGk0THY4WVHSAWBBVV95cUxQNnhGWnFJMHZTZXl5YnRMenpzb1N5b2xGbXp3R254b2hUdmswdjZUZEpaTjNETURNa3N3MzlSZVl0a3FiRTZKb2xYZHRDS0ZGM0JCRl9zSDBGTVZHWVRsaVk?oc=5",
+   "first_seen": "2026-11-17T23:07:40+09:00",
+   "why": "48시간 안에 같은 회사·인물 게시물 있음: 2026-11-16-carousel-huang-return (엔비디아)",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
   }
  },
- "updated": "2026-11-17T22:50:18+09:00"
+ "updated": "2026-11-17T23:07:40+09:00"
 }
