@@ -136,11 +136,13 @@ powershell -ExecutionPolicy Bypass -File "$env:USERPROFILE\tokenwar-agent\script
 | Claude Code | 2.1.281 | `claude --version` |
 | pip 패키지 | requests 2.34.2, pillow 13.0.0, numpy 2.5.4, playwright 1.65.2, faster-whisper 1.2.1 (ctranslate2 4.9.0, av 19.0.2), curl_cffi 0.17.0 | `py -3.12 -m pip list` |
 | Playwright 브라우저 | chromium-1255 | `Get-ChildItem $env:LOCALAPPDATA\ms-playwright` |
+| Blender | 5.3.0 (winget `BlenderFoundation.Blender`, 2026-11-18, 3D 캐릭터 제작용) | `& "C:\Program Files\Blender Foundation\Blender 5.3\blender.exe" --background --version` |
 
 참고:
 - 옛 노트북의 Claude Code는 npm으로 깔려 있었다(`%APPDATA%\npm\claude.ps1`). 새 노트북은 setup-local.ps1의 공식 설치 방법을 쓰면 된다. 어느 쪽이든 `claude`가 PATH에서 찾아지면 된다.
 - 받아쓰기 모델(faster-whisper)은 처음 쓸 때 저절로 받는다 (`%USERPROFILE%\.cache\huggingface`). 따로 할 일 없음.
 - 글꼴은 저장소 `assets/fonts/`에 있어서 윈도우에 설치하지 않는다 (`agent/render.py`가 그 폴더를 직접 읽음).
+- 3D 캐릭터 대화 릴스용 Blender는 setup-local.ps1에 없다. 따로: `winget install -e --id BlenderFoundation.Blender --silent --accept-package-agreements --accept-source-agreements` (관리자 권한 창이 뜸, 약 1GB).
 - (선택) 유니티 따라 하기용: 옛 노트북에 Unity Editor 6000.5.3f1이 있었다. 그 형식을 만들 때만 Unity Hub로 설치한다.
 
 명령 하나씩 따로 설치하고 싶으면:
