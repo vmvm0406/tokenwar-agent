@@ -1,19 +1,29 @@
-"""목록형 자료 릴스의 영어 용어 읽기 목소리 만들기 (운영자 결정 2026-11-17: "그림이 바뀔 때 그 영어 용어를 목소리로").
+"""목소리(TTS) 만들기: 목록형 자료 릴스의 영어 용어 읽기(운영자 결정 2026-11-17) + 한국어 내레이션.
 
-엔진: Kokoro-82M (Apache-2.0). pip 패키지 `kokoro`(PyPI) + 모델·음성은 Hugging Face hexgrad/Kokoro-82M에서 처음 쓸 때 자동으로 받는다.
-       출처·라이선스 기록: assets/voice/README.md. 유료 API·계정 없음.
-GitHub Actions에는 Kokoro가 없다. 그래서 이 컴퓨터에서 미리 만들어 게시물 폴더 voice/<번호>.wav(24kHz 모노, 작게)로 넣고,
+엔진(영어): Kokoro-82M (Apache-2.0). pip 패키지 `kokoro`(PyPI) + 모델·음성은 Hugging Face hexgrad/Kokoro-82M에서 처음 쓸 때 자동으로 받는다.
+엔진(한국어): MeloTTS 한국어 (코드·모델 MIT, myshell-ai). 코드 github.com/myshell-ai/MeloTTS, 모델 Hugging Face myshell-ai/MeloTTS-Korean,
+       단어 분석용 BERT kykim/bert-kor-base(Apache-2.0)도 처음 쓸 때 자동으로 받는다. 여자 목소리 하나, 44.1kHz.
+       출처·라이선스 기록: assets/voice/README.md. 설치: MIGRATION.md. 유료 API·계정 없음.
+GitHub Actions에는 두 엔진 다 없다. 그래서 이 컴퓨터에서 미리 만들어 게시물 폴더 voice/<번호>.wav(목록형은 24kHz 모노, 작게)로 넣고,
 listreel.py는 그 파일을 박자에 맞춰 섞기만 한다. voice/가 없으면 목소리 없이 예전처럼 동작한다.
 
 사용법:
     py -3.12 agent/tts.py posts/queue/<폴더> [--voice af_heart] [--force]
+    py -3.12 agent/tts.py --text "만약 AI에게 내 돈을 맡겨 투자시킨다면, 어떤 일이 벌어질까요?" --out <폴더>/voice/01.wav [--lang ko] [--speed 1.1]
   - list.items[].en(영어 용어)을 읽는다. list.voice(선택)에 {"voice": "af_heart", "speed": 1.0, "say": {"07": "split lighting"}}로
     목소리·빠르기·읽을 문장을 바꿀 수 있다 (say: 번호별로 화면 글자와 다르게 읽을 때, 예: 약자).
+  - list.voice.lang = "ko"(선택, 없으면 "en" 예전 그대로)면 MeloTTS로 한국어를 읽는다. 읽는 글은 say > 항목 name.
+  - --text: 문장 하나를 바로 wav로 (내레이션 릴스용). --lang 기본 ko, en이면 Kokoro. 한국어는 44.1kHz.
+  - 한국어 글: 숫자·%·연도는 그대로 써도 된다(10% → 십 퍼센트). 영어는 아는 이름(챗GPT, 오픈AI 등)과 약자만 한글로 바꾸고,
+    모르는 영어 단어는 글자 하나씩 읽으니 대본에 한글로 쓴다 (예: "Sora" 대신 "소라").
   - 말 앞뒤 무음을 잘라 그림이 바뀌는 박에 바로 말이 시작되게 하고, 항목 길이보다 길면 빠르기를 올려 다시 만든다.
 """
 import argparse
+import importlib.util
 import json
+import re
 import sys
+import types
 import wave
 from pathlib import Path
 
@@ -26,49 +36,176 @@ DEFAULT_VOICE = "af_heart"      # 차분하고 또렷한 미국 영어 여성 �
 MAX_SPEED = 1.4
 
 
-def trim(x, thr=0.012, pad=0.01):
+def trim(x, thr=0.012, pad=0.01, sr=SR):
     idx = np.where(np.abs(x) > thr)[0]
     if not len(idx):
         return x
-    a = max(0, idx[0] - int(pad * SR))
-    z = min(len(x), idx[-1] + int(0.06 * SR))
+    a = max(0, idx[0] - int(pad * sr))
+    z = min(len(x), idx[-1] + int(0.06 * sr))
     y = x[a:z].copy()
-    f = int(0.008 * SR)
+    f = int(0.008 * sr)
     y[:f] *= np.linspace(0, 1, f)
     y[-f * 3:] *= np.linspace(1, 0, f * 3)
     return y
 
 
-def save(path, x):
+def save(path, x, sr=SR):
     path.parent.mkdir(parents=True, exist_ok=True)
     x = x / (np.max(np.abs(x)) or 1) * 0.9
     with wave.open(str(path), "wb") as w:
         w.setnchannels(1)
         w.setsampwidth(2)
-        w.setframerate(SR)
+        w.setframerate(sr)
         w.writeframes((x * 32767).astype(np.int16).tobytes())
+
+
+# ---------------- 한국어 (MeloTTS) ----------------
+KO_SR = 44100
+# 영어 이름 → 한글 읽기 (대소문자 무시). 없으면 MeloTTS 사전(AI, CEO 등) → 그래도 없으면 글자 하나씩.
+KO_WORDS = {
+    "chatgpt": "챗지피티", "gpt": "지피티", "openai": "오픈에이아이", "google": "구글", "gemini": "제미나이",
+    "claude": "클로드", "anthropic": "앤트로픽", "nvidia": "엔비디아", "samsung": "삼성", "naver": "네이버",
+    "kakao": "카카오", "apple": "애플", "iphone": "아이폰", "microsoft": "마이크로소프트", "meta": "메타",
+    "tesla": "테슬라", "youtube": "유튜브", "instagram": "인스타그램", "grok": "그록", "sora": "소라",
+    "copilot": "코파일럿", "deepseek": "딥시크", "app": "앱", "pro": "프로", "max": "맥스", "mini": "미니",
+}
+_LETTERS = dict(zip("ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+                    "에이 비 씨 디 이 에프 지 에이치 아이 제이 케이 엘 엠 엔 오 피 큐 알 에스 티 유 브이 더블유 엑스 와이 제트".split()))
+
+
+def ko_text(text):
+    """MeloTTS가 못 읽거나 잘못 읽는 것을 한글로: 영어 낱말, 소수점(3.5 → 3 점 5)."""
+    text = re.sub(r"(\d)\.(\d)", r"\1 점 \2", text)
+
+    def word(m):
+        w = m.group()
+        if w.lower() in KO_WORDS:
+            return KO_WORDS[w.lower()]
+        try:
+            from melo.text.ko_dictionary import english_dictionary
+            if len(w) > 1 and w.upper() in english_dictionary:
+                return english_dictionary[w.upper()]
+        except ImportError:
+            pass
+        if len(w) > 4 and not w.isupper():
+            print(f"  ! 모르는 영어 단어 {w!r}: 글자 하나씩 읽음. 대본에 한글로 쓰세요", file=sys.stderr)
+        return "".join(_LETTERS[c] for c in w.upper())
+    return re.sub(r"[A-Za-z]+", word, text)
+
+
+def _melo_shims():
+    """MeloTTS는 import할 때 모든 언어(중국어·일본어 등) 모듈을 불러 무거운 패키지를 요구한다.
+    한국어만 쓰므로 다른 언어 모듈은 빈 모듈로 막고, 윈도우에서 g2pkk가 찾는 eunjeon(빌드 안 됨)은 python-mecab-ko로 대신한다
+    (g2pkk는 eunjeon이 없으면 스스로 pip install을 돌리므로 반드시 먼저 넣는다)."""
+    from importlib.machinery import ModuleSpec
+
+    def stub(name, **attrs):
+        m = types.ModuleType(name)
+        m.__spec__ = ModuleSpec(name, None)
+        m.__dict__.update(attrs)
+        sys.modules.setdefault(name, m)
+    for n in ["chinese", "japanese", "english", "chinese_mix", "french", "spanish",
+              "chinese_bert", "english_bert", "spanish_bert", "french_bert"]:
+        stub("melo.text." + n, get_bert_feature=None)
+    for n in ["torchaudio", "cached_path"]:          # 한국어 합성에서는 쓰지 않는다
+        if importlib.util.find_spec(n) is None:
+            stub(n, cached_path=None)
+    if sys.platform == "win32" and importlib.util.find_spec("eunjeon") is None:
+        import mecab
+
+        class Mecab:
+            def __init__(self):
+                self.m = mecab.MeCab()
+
+            def pos(self, s):
+                return self.m.pos(s)
+        stub("eunjeon", Mecab=Mecab)
+
+
+_ko = None
+
+
+def ko_engine():
+    global _ko
+    if _ko is None:
+        _melo_shims()
+        import logging
+        import warnings
+        logging.getLogger("transformers").setLevel(logging.ERROR)
+        warnings.filterwarnings("ignore")
+        from melo.api import TTS
+        _ko = TTS(language="KR", device="cpu")
+    return _ko
+
+
+def synth_ko(text, speed=1.0):
+    """한국어 문장 → 44.1kHz float32 (앞뒤 무음은 그대로)."""
+    tts = ko_engine()
+    x = tts.tts_to_file(ko_text(text), tts.hps.data.spk2id["KR"], None, speed=speed, quiet=True)
+    return np.asarray(x, dtype=np.float32)
+
+
+def to_sr(x, sr_from, sr_to):
+    if sr_from == sr_to:
+        return x
+    import librosa
+    return librosa.resample(x, orig_sr=sr_from, target_sr=sr_to).astype(np.float32)
+
+
+def kokoro_pipe():
+    from kokoro import KPipeline
+    return KPipeline(lang_code="a", repo_id="hexgrad/Kokoro-82M")
+
+
+def kokoro_synth(pipe, text, voice, speed):
+    return np.concatenate([np.asarray(audio, dtype=np.float32) for _, _, audio in pipe(text, voice=voice, speed=speed)])
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("folder")
+    ap.add_argument("folder", nargs="?")
     ap.add_argument("--voice")
     ap.add_argument("--force", action="store_true", help="이미 있는 파일도 다시 만든다")
+    ap.add_argument("--text", help="문장 하나를 바로 --out 파일로")
+    ap.add_argument("--out", help="--text의 출력 wav")
+    ap.add_argument("--lang", choices=["ko", "en"], help="--text의 언어 (기본 ko)")
+    ap.add_argument("--speed", type=float, default=1.0, help="--text의 빠르기")
     a = ap.parse_args()
+    if a.text:
+        if not a.out:
+            ap.error("--text에는 --out이 필요하다")
+        if (a.lang or "ko") == "ko":
+            x, sr = trim(synth_ko(a.text, a.speed), sr=KO_SR), KO_SR
+        else:
+            x, sr = trim(kokoro_synth(kokoro_pipe(), a.text, a.voice or DEFAULT_VOICE, a.speed)), SR
+        save(Path(a.out), x, sr)
+        print(f"{a.out}: {len(x) / sr:.2f}초, {sr}Hz, 빠르기 {a.speed:g}")
+        return
+    if not a.folder:
+        ap.error("게시물 폴더나 --text가 필요하다")
     folder = Path(a.folder)
     post = json.loads((folder / "post.json").read_text(encoding="utf-8"))
     from listreel import rows_of, timeline
     tl = timeline(post)
     cfg = (post.get("list") or {}).get("voice") or {}
-    voice = a.voice or cfg.get("voice", DEFAULT_VOICE)
+    lang = cfg.get("lang", "en")
     speed0 = float(cfg.get("speed", 1.0))
     say = cfg.get("say") or {}
-    from kokoro import KPipeline
-    pipe = KPipeline(lang_code="a", repo_id="hexgrad/Kokoro-82M")
+    if lang == "ko":
+        voice = "MeloTTS KR"
+
+        def gen(text, speed):
+            return to_sr(synth_ko(text, speed), KO_SR, SR)     # listreel은 24kHz 파일을 섞는다
+    else:
+        voice = a.voice or cfg.get("voice", DEFAULT_VOICE)
+        pipe = kokoro_pipe()
+
+        def gen(text, speed):
+            return kokoro_synth(pipe, text, voice, speed)
     limit = tl["item"] - 0.15     # 다음 그림 전에 말이 끝나게
     report = []
     for row in rows_of(post):
-        text = say.get(row["num"]) or row["en"]
+        text = say.get(row["num"]) or (row["name"] if lang == "ko" else row["en"])
         if row["base"] or not text:
             continue
         out = folder / "voice" / f"{row['num']}.wav"
@@ -76,8 +213,7 @@ def main():
             continue
         speed = speed0
         while True:
-            chunks = [np.asarray(audio, dtype=np.float32) for _, _, audio in pipe(text, voice=voice, speed=speed)]
-            x = trim(np.concatenate(chunks))
+            x = trim(gen(text, speed))
             secs = len(x) / SR
             if secs <= limit or speed >= MAX_SPEED:
                 break

@@ -152,6 +152,11 @@ py -3.12 -m pip install --upgrade pip
 py -3.12 -m pip install requests pillow numpy playwright faster-whisper "yt-dlp[default,curl-cffi]"
 py -3.12 -m playwright install chromium
 py -3.12 -m pip install "kokoro==0.9.4" soundfile   # 목록형 릴스 영어 용어 목소리 (agent/tts.py, Kokoro-82M Apache-2.0, 2026-11-17 설치. 모델은 처음 쓸 때 Hugging Face에서 자동으로 받음, assets/voice/README.md)
+# 한국어 내레이션 목소리 (agent/tts.py --lang ko, MeloTTS 한국어 MIT, 2026-11-17 설치). melotts는 PyPI에 공식판이 없어 공식 GitHub 커밋을 고정해 의존성 없이 깔고,
+# 한국어에 필요한 것만 따로 깐다 (원래 requirements는 transformers 4.27 등 옛 버전 고정이라 파이썬 3.12에서 안 깔림. 중국어·일본어 패키지는 tts.py가 빈 모듈로 막음)
+py -3.12 -m pip install "librosa==1.0.1" "jamo==0.4.1" "anyascii==0.3.3" "g2pkk==0.1.2" "txtsplit==1.0.0" "python-mecab-ko==1.3.7"
+py -3.12 -m pip install --no-deps "git+https://github.com/myshell-ai/MeloTTS.git@209145371cff8fc3bd60d7be902ea69cbdb7965a"
+py -3.12 agent/tts.py --text "시험입니다" --out $env:TEMP\ko-test.wav   # 처음 한 번: 모델(MeloTTS-Korean 약 200MB, bert-kor-base 약 450MB)을 Hugging Face에서 받고 nltk cmudict를 %APPDATA%\nltk_data에 받음
 ```
 
 ---
