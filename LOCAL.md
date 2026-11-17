@@ -63,6 +63,7 @@
 `config.json` `require_approval`이 `true`면 `agent/publish.py`는 post.json에 `"approved": true`가 있는 게시물만 올린다. 승인 없는 게시물은 게시 시각이 지나도 "승인 대기: <폴더>"로 건너뛴다 (실패·error.log로 치지 않음, PR이 main에 병합돼 있어도 같다). `approval_exempt_before`보다 이른 `publish_at`은 관문에서 뺀다 (도입 전 예약분, 지나면 지워도 됨). `require_approval`을 `false`로 바꾸면 예전처럼 자동으로 올라간다.
 
 - **흐름:** 만들기(매일 작업·make-posts·속보, approved 없이) → 검토 세션(검토 페이지·PR) → 운영자 OK → 지휘 세션이 `py -3.12 agent/approve.py posts/queue/<폴더> --edits N` → main에 커밋·push. **속보(`breaking`)도 승인이 있어야 올라간다.** 고칠 점이 있으면 고친 뒤 다시 보여 주고 OK를 받은 뒤 승인한다.
+- **승인 요청에는 박자표를 붙인다 (운영자 결정 2026-11-17, STYLE_GUIDE 6장 '릴스 기본 대본 5박자'):** 릴스마다 후킹·딜레이①·리후킹·딜레이②·답의 시각(초)과 한 줄 내용을 PR 본문 표·승인 요청에 적는다(review-post 보고에서 옮김). 답이 일찍 공개되거나 리후킹이 없으면 승인 요청 전에 고친다.
 - `approve.py`는 post.json 맨 위에 `"approved": true`, `"approved_at"`(한국 시간 ISO)을 넣고(LF로 씀), 렌더링이 최신이었으면 `.render_hash`를 맞춘다. 승인 줄은 렌더링 지문에서 빠지므로 승인만 넣었을 때 영상·카드를 다시 만들지 않는다. post.json의 다른 곳은 손대지 않는다.
 - `--edits N` = 승인 전에 운영자 지적으로 고친 횟수 (없으면 0).
 - **기록 `data/approvals.csv`** (approve.py가 한 줄씩 붙임): `date`(승인한 날, 한국), `post_id`(게시물 폴더 이름), `edits_before_approval`, `approved_at`.
