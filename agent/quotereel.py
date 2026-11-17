@@ -85,6 +85,24 @@ def target_text(it):
     return f"{int(ty)}년쯤" if is_approx(it) else f"{int(ty)}년"
 
 
+# 화면 발언·한 줄 제목에 '10년 뒤', '5년 안에', '18개월' 같은 상대 시점을 쓰지 않는다: 큰 연도(target)가 시점을 맡고
+# 작은 줄은 '<발언 해>년 발언' (운영자 2026-11-17 "2030년쯤이라 해 놓고 내용엔 10년 뒤라고 써 있으면 언제인지 애매").
+RELATIVE_TIME_RE = re.compile(r"\d+\s*(?:~\s*\d+\s*)?(?:년|개월|달|주|일)\s*(?:뒤|후|안|내|만에|쯤|이내|동안)|\d+\s*(?:~\s*\d+\s*)?개월")
+
+
+def time_word_problems(post):
+    """도착 예상 해(target)가 있는 항목의 quote·label에 상대 시점 말이 있으면 문제."""
+    out = []
+    for it in rank_items(post):
+        if not it.get("target"):
+            continue
+        for f in ("quote", "label"):
+            m = RELATIVE_TIME_RE.search(str(it.get(f) or ""))
+            if m:
+                out.append(f"rank.mode intro: {it.get('who', '')} {f}에 상대 시점 '{m.group(0)}' (큰 연도가 시점을 맡는다. 시점 부분을 뺀 원문 발췌로)")
+    return out
+
+
 def order_problems(post):
     """첫 항목 뒤는 도착 예상 해(target)가 있으면 그 순서(같으면 발언 날짜 순), 없으면 발언 날짜 순."""
     its = rank_items(post)[1:]
@@ -270,7 +288,7 @@ window.twSetup = async () => {{
     const c = document.createElement('div'); c.className = 'cd';
     const words = it.quote.split(/\\s+/).filter(Boolean);
     const esc_ = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
-    c.innerHTML = `<div class="who">${{esc_(it.who)}}</div><div class="sub">${{esc_((it.target ? it.y + '.' + String(it.m).padStart(2, '0') + ' · ' : '') + it.sub)}}</div>` +
+    c.innerHTML = `<div class="who">${{esc_(it.who)}}</div><div class="sub">${{esc_(it.y + '년 발언' + (it.sub ? ' · ' + it.sub : ''))}}</div>` +
       `<div class="lab">${{esc_(it.label)}}</div><div class="q">` +
       words.map(w => `<span class="${{it.key && it.key.split(' ').some(k => w.includes(k)) ? 'k' : ''}}">${{esc_(w)}}</span>`).join('') + '</div>' +
       (it.note ? `<div class="note">${{esc_(it.note)}}</div>` : '');
@@ -489,7 +507,7 @@ def make_sfx(post, tl, total):
 def make_quote_reel(post, folder, cfg):
     """reel.mp4 (본편 + 끝 화면, -14 LUFS), frames/*.jpg, cover.jpg. 전체 길이(초) 반환."""
     folder = Path(folder)
-    probs = order_problems(post)
+    probs = order_problems(post) + time_word_problems(post)
     if probs:
         raise ValueError("\n".join(probs))
     work = folder / "_quote"

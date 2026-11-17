@@ -8,7 +8,7 @@
   "date": "2026-11-19",
   "publish_at": "2026-11-19T19:43:00+09:00",
   "rights": "own",
-  "rights_note": "화면은 직접 짠 코드 그래픽(화풍 효과도 CSS/SVG로 직접 구현, 외부 화풍 라이브러리 소재 안 씀) + 항목마다 인물 사진(위키미디어 공용 CC BY/CC BY-SA, 통신사·언론사 사진 아님, 저작자·라이선스는 캡션과 item.credit). 발언은 각 원문(공식 영상·블로그·인터뷰 녹취·원문을 인용한 기사)에서 확인해 한국어로 옮김. 게이츠는 Tonight Show 공식 유튜브 자막(8:01~8:07), 힌턴은 CBS Mornings 녹취, 머스크는 다보스 2026 대담 기사, 손정의 금붕어 발언은 AFP 기사(RTHK·Daily Tribune). 아모데이는 기사 요약이라 따옴표 없이 씀. 순위 없음: 첫 항목(머스크 2019 침팬지 비유, 보도 기준 문장) 뒤는 본인이 말한 실현 시점 순. '2029년쯤'처럼 '쯤'이 붙은 해는 발언 시점 + 말한 기간으로 셈함(손정의는 2024년 '10년 안' 기준). 화면에 물결표(~) 연도는 쓰지 않음(운영자 2026-11-17). 제목 '곧 원숭이'는 침팬지 비유를 살짝 비튼 우리 제목(STYLE_GUIDE 4 유형 A). 배경음악은 'Red Eyed Beast' by SkyeJordan (ccmixter.org/files/SkyeJordan/64884), CC BY 3.0 조각(agent/music_fit.py)·효과음은 agent/music_gen.py 코드 생성.",
+  "rights_note": "화면은 직접 짠 코드 그래픽(화풍 효과도 CSS/SVG로 직접 구현, 외부 화풍 라이브러리 소재 안 씀) + 항목마다 인물 사진(위키미디어 공용 CC BY/CC BY-SA, 통신사·언론사 사진 아님, 저작자·라이선스는 캡션과 item.credit). 발언은 각 원문(공식 영상·블로그·인터뷰 녹취·원문을 인용한 기사)에서 확인해 한국어로 옮김. 게이츠는 Tonight Show 공식 유튜브 자막(8:01~8:07), 힌턴은 CBS Mornings 녹취, 머스크는 다보스 2026 대담 기사, 손정의 금붕어 발언은 AFP 기사(RTHK·Daily Tribune). 아모데이는 기사 요약이라 따옴표 없이 씀. 순위 없음: 첫 항목(머스크 2019 침팬지 비유, 보도 기준 문장) 뒤는 본인이 말한 실현 시점 순. '2029년쯤'처럼 '쯤'이 붙은 해는 발언 시점 + 말한 기간으로 셈함(손정의는 2024년 '10년 안' 기준). 화면에 물결표(~) 연도는 쓰지 않고, 화면 발언은 시점 부분('10년 안에', '5년 뒤' 등)을 뺀 원문 발췌로 써서 큰 연도와 겹치지 않게 함(전체 원문과 시점은 desc·자료 페이지, 운영자 2026-11-17). 제목 '곧 원숭이'는 침팬지 비유를 살짝 비튼 우리 제목(STYLE_GUIDE 4 유형 A). 배경음악은 'Red Eyed Beast' by SkyeJordan (ccmixter.org/files/SkyeJordan/64884), CC BY 3.0 조각(agent/music_fit.py)·효과음은 agent/music_gen.py 코드 생성.",
   "title": "인간\n곧 원숭이 된다",
   "highlight": "원숭이",
   "rank": {
@@ -16,7 +16,7 @@
       {
         "label": "AI에게 인간은 침팬지",
         "who": "일론 머스크",
-        "sub": "2019 상하이 세계AI대회 · 마윈과 대담",
+        "sub": "상하이 세계AI대회 · 마윈과 대담",
         "date": "2019-08-29",
         "quote": "“침팬지가 인간을 정말 이해할 수 있을까요? 아니죠. 우리는 그저 이상한 외계인처럼 보일 뿐입니다.”",
         "key": "침팬지가 외계인처럼",
@@ -32,9 +32,9 @@
         "photo_page": "https://commons.wikimedia.org/wiki/File:Elon_Musk_-_54820081119_(3x4_cropped,_Rule_of_thirds).jpg"
       },
       {
-        "label": "2027년, 로봇이 일한다",
+        "label": "로봇이 현실에서 일한다",
         "sub": "오픈AI CEO · 블로그 글",
-        "quote": "“2027년에는 현실에서 일을 해내는 로봇이 나올 수 있습니다.”",
+        "quote": "“현실에서 일을 해내는 로봇이 나올 수 있습니다.”",
         "desc": "원문: \"2026 will likely see the arrival of systems that can figure out novel insights. 2027 may see the arrival of robots that can do tasks in the real world.\" 오픈AI CEO 올트먼이 블로그 글 '부드러운 특이점'에서 2026년엔 새로운 통찰을 찾는 AI, 2027년엔 현실에서 일하는 로봇이 나올 수 있다고 썼어요. 2025년 6월 10일.",
         "source": {
           "name": "Sam Altman, The Gentle Singularity (2025-06-10)",
@@ -46,14 +46,14 @@
         "photo_page": "https://commons.wikimedia.org/wiki/File:%E2%80%9CSam_Altman%E2%80%9D_by_Village_Global_(Cropped).jpg",
         "who": "샘 올트먼",
         "date": "2025-06-10",
-        "key": "2027년에는 로봇이",
+        "key": "현실에서 로봇이",
         "style": "scan",
         "target": "2027년"
       },
       {
-        "label": "18개월 뒤 사무 자동화",
+        "label": "사무직 업무 자동화",
         "sub": "마이크로소프트 AI CEO · FT 인터뷰",
-        "quote": "“변호사·회계사 같은 사무직 업무 대부분이 12~18개월 안에 완전히 자동화될 겁니다.”",
+        "quote": "“변호사·회계사 같은 사무직 업무 대부분이 AI로 완전히 자동화될 겁니다.”",
         "desc": "원문: \"white-collar work, where you're sitting down at a computer, being a lawyer or an accountant or a project manager or a marketing person — most of those tasks will be fully automated by an AI within the next 12 to 18 months.\" 마이크로소프트 AI CEO가 파이낸셜타임스 인터뷰에서 한 말이에요. 직업이 아니라 '업무(tasks)'가 자동화된다는 말이에요. 2026년 2월.",
         "source": {
           "name": "eWeek, Microsoft AI CEO: AI to Automate Most Office Work Within 12–18 Months (FT 인터뷰 인용, 2026-02-16)",
@@ -65,14 +65,14 @@
         "photo_page": "https://commons.wikimedia.org/wiki/File:Mustafa_Suleyman_photo_(cropped).jpg",
         "who": "무스타파 술레이만",
         "date": "2026-02-16",
-        "key": "12~18개월 자동화될",
+        "key": "사무직 자동화될",
         "style": "poster",
         "target": "2027년쯤"
       },
       {
         "label": "AI, 모든 시험 통과",
         "sub": "엔비디아 CEO · 스탠퍼드 포럼",
-        "quote": "“5년 뒤면 사람이 내는 시험을 하나도 빠짐없이 잘 풀 겁니다.”",
+        "quote": "“사람이 내는 시험을 하나도 빠짐없이 잘 풀 겁니다.”",
         "desc": "원문: \"in five years time, we'll do well on every single one\". 엔비디아 CEO 젠슨 황이 스탠퍼드 경제 포럼에서 '사람 수준 AI(AGI)'를 시험 통과로 정의한다면 5년 안에 모든 시험을 잘 풀 거라고 했어요. 다른 정의로는 더 멀 수 있다고 함께 밝혔어요. 2024년 3월 1일.",
         "source": {
           "name": "Verdict(로이터 인용), AI could pass human tests in five years (2024-03)",
@@ -84,14 +84,14 @@
         "photo_page": "https://commons.wikimedia.org/wiki/File:Jensen_Huang_Stanford_2026-04-30_010_(cropped).jpg",
         "who": "젠슨 황",
         "date": "2024-03-01",
-        "key": "5년 빠짐없이",
+        "key": "빠짐없이",
         "style": "halftone",
         "target": "2029년쯤"
       },
       {
-        "label": "챗GPT식 AI, 5년 뒤 끝",
+        "label": "LLM은 밀려난다",
         "sub": "메타 수석 AI 과학자(당시) · 다보스",
-        "quote": "“5년 안에 제정신이면 아무도 LLM을 핵심으로 쓰지 않을 겁니다.”",
+        "quote": "“제정신이면 아무도 LLM을 핵심으로 쓰지 않을 겁니다.”",
         "desc": "원문: \"within five years, nobody in their right mind would use them anymore, at least not as the central component of an AI system.\" 메타 수석 AI 과학자였던 르쿤이 챗GPT 같은 대형 언어 모델(LLM) 방식은 수명이 3~5년이고, 새 방식의 AI가 나올 거라고 했어요. AI가 끝난다는 말이 아니라 지금 방식이 바뀐다는 말이에요. 2025년 1월 23일 다보스.",
         "source": {
           "name": "TechCrunch, Meta's Yann LeCun predicts a new AI architecture paradigm within 5 years (2025-01-23)",
@@ -103,14 +103,14 @@
         "photo_page": "https://commons.wikimedia.org/wiki/File:Laura_Chaubard_%26_Yann_Le_Cun_-_2024_(53814052697)_(cropped).jpg",
         "who": "얀 르쿤",
         "date": "2025-01-23",
-        "key": "5년 LLM을",
+        "key": "LLM을",
         "style": "pixel",
         "target": "2030년쯤"
       },
       {
         "label": "신입 사무직 절반 위험",
         "sub": "앤트로픽 CEO · Axios 인터뷰",
-        "quote": "1~5년 안에 신입 사무직 절반이 사라지고 실업률이 10~20%까지 오를 수 있다고 경고",
+        "quote": "신입 사무직 절반이 사라지고 실업률이 10~20%까지 오를 수 있다고 경고",
         "desc": "앤트로픽 CEO 아모데이가 Axios 인터뷰에서 AI가 1~5년 안에 신입 사무직 일자리의 절반을 없애고 미국 실업률을 10~20%까지 끌어올릴 수 있다고 경고했어요. 기사가 정리한 내용이라 화면에는 따옴표 없이 썼어요. 2025년 5월 28일.",
         "source": {
           "name": "Axios, Behind the Curtain: AI white-collar bloodbath (2025-05-28)",
@@ -129,7 +129,7 @@
       {
         "label": "AI, 인류 전체 추월",
         "sub": "테슬라 CEO · 다보스 대담",
-        "quote": "“2030년이면 AI가 인류 전체를 합친 것보다 똑똑할 겁니다.”",
+        "quote": "“AI가 인류 전체를 합친 것보다 똑똑할 겁니다.”",
         "desc": "원문: \"We may have AI smarter than any human by the end of this year. Definitely by next year. And by 2030, AI will likely be smarter than all of humanity combined.\" 올해 말엔 어떤 사람보다 똑똑한 AI, 내년엔 확실히, 2030년엔 인류 전체를 합친 것보다 똑똑할 거라는 말이에요. 2026년 1월 22일 세계경제포럼(다보스) 블랙록 래리 핑크와의 대담.",
         "source": {
           "name": "Business Today, 다보스 2026 머스크 대담 (2026-01-22)",
@@ -141,7 +141,7 @@
         "photo_page": "https://commons.wikimedia.org/wiki/File:Elon_Musk_-_54820081119_(3x4_cropped,_Rule_of_thirds).jpg",
         "who": "일론 머스크",
         "date": "2026-01-22",
-        "key": "2030년이면 인류",
+        "key": "인류",
         "style": "halftone",
         "target": "2030년"
       },
@@ -184,9 +184,9 @@
         "target": "2035년쯤"
       },
       {
-        "label": "질병 끝, 10년 안에",
+        "label": "질병 끝이 손에 닿는다",
         "sub": "구글 딥마인드 CEO · CBS 60 Minutes",
-        "quote": "“모든 질병을 끝내는 것, 손에 닿는 거리입니다. 어쩌면 10년쯤 안에요.”",
+        "quote": "“모든 질병을 끝내는 것, 손에 닿는 거리입니다.”",
         "desc": "\"The end of disease?\"(질병의 끝이요?)라는 질문에 구글 딥마인드 CEO 허사비스가 \"I think that's within reach. Maybe within the next decade or so, I don't see why not.\"이라고 답했어요. '어쩌면'이라는 단서를 붙인 전망이에요. 2025년 4월 20일 CBS '60 Minutes'.",
         "source": {
           "name": "CBS 60 Minutes, Demis Hassabis 인터뷰 녹취 (2025-04-20)",
@@ -198,14 +198,14 @@
         "photo_page": "https://commons.wikimedia.org/wiki/File:Demis_Hassabis,_2024_Nobel_Prize_Laureate_in_Chemistry_7_(cropped).jpg",
         "who": "데미스 허사비스",
         "date": "2025-04-20",
-        "key": "질병을 10년쯤",
+        "key": "질병을 손에",
         "style": "poster",
         "target": "2035년쯤"
       },
       {
-        "label": "10년 안 초지능 온다",
+        "label": "초지능이 온다",
         "sub": "'AI 대부', 노벨상 수상자 · CBS",
-        "quote": "“(초지능은) 10년 안에, 아니 더 빨리 올 가능성이 꽤 높습니다.”",
+        "quote": "“(초지능이) 올 가능성이 꽤 높습니다.”",
         "desc": "원문: \"there's a good chance it'll be here in 10 years or less now.\" 'AI의 대부'로 불리는 노벨상 수상자 힌턴이 사람보다 똑똑한 초지능이 오는 시기를 두고 한 말이에요. 1년 전에는 5~20년으로 봤는데 더 앞당겼어요. 2025년 4월 CBS Mornings 인터뷰.",
         "source": {
           "name": "CBS Mornings, Geoffrey Hinton 인터뷰 (2025-04)",
@@ -217,7 +217,7 @@
         "photo_page": "https://commons.wikimedia.org/wiki/File:Geoffrey_Hinton_in_2026.jpg",
         "who": "제프리 힌턴",
         "date": "2025-04-26",
-        "key": "10년 초지능은",
+        "key": "초지능이",
         "style": "pixel",
         "target": "2035년쯤"
       }
