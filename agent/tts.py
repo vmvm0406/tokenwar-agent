@@ -168,14 +168,19 @@ def to_sr(x, sr_from, sr_to):
 ELEVEN_API = "https://api.elevenlabs.io/v1"
 ELEVEN_MODEL = "eleven_multilingual_v2"
 ELEVEN_FORMAT = "mp3_44100_128"
-# 운영자가 고른 기본 목소리 (assets/voice/README.md "쓰는 목소리"). 라이브러리 목소리는 ID로 바로 부른다.
+# 목소리 별칭 (assets/voice/README.md "쓰는 목소리"). 라이브러리 목소리는 ID로 바로 부른다.
+# 운영자 2026-11-17: "어그로가 잘 끌리는 목소리" → 쇼츠형 후킹 목소리 2차 후보(deok·gapdragon·kangjun). 1차(hyuk·krys·kyle)는 반려.
 ELEVEN_VOICES = {
-    "hyuk": "ZJCNdZEjYwkOElxugmW2",     # Hyuk - Cold and Clear: 차분한 중년 내레이터
-    "krys": "1W00IGEmNmwmsDeYy7ag",     # Krys - Cheerful, Clear and Measured: 밝고 힘찬 젊은 목소리
-    "kyle": "RU7aSi6lT4uQBXMLgDxK",     # Kyle - Friendly, Natural and Guttural: 낮고 굵은 목소리
+    "deok": "wisKdlUQEBMjkKqNAa3c",       # Deok - Energetic Korean Narrator: 예능 자막 톤, 첫마디부터 높고 빠름
+    "gapdragon": "VwlplMyq7s8eoNKYEgcd",  # GapDragon - Social media: 썰 쇼츠 이야기꾼, 친근하고 몰입시키는 톤
+    "kangjun": "sIyywe2M6JEImQgP1LTX",    # Kang Jun - Powerful Announcer: 힘 있는 아나운서·예고편 톤
+    "hyuk": "ZJCNdZEjYwkOElxugmW2",       # (반려) Hyuk - Cold and Clear: 차분한 중년 내레이터
+    "krys": "1W00IGEmNmwmsDeYy7ag",       # (반려) Krys - Cheerful, Clear and Measured
+    "kyle": "RU7aSi6lT4uQBXMLgDxK",       # (반려) Kyle - Friendly, Natural and Guttural
 }
-ELEVEN_DEFAULT_VOICE = ELEVEN_VOICES["hyuk"]
-ELEVEN_SETTINGS = {"stability": 0.5, "similarity_boost": 0.75, "style": 0.0, "use_speaker_boost": True}
+ELEVEN_DEFAULT_VOICE = ELEVEN_VOICES["deok"]   # 운영자가 고를 때까지 임시
+# 쇼츠 후킹용: 안정성 낮게(억양 출렁), 스타일 높게(과장), 조금 빠르게 (speed 0.7~1.2, ElevenLabs가 직접 조절)
+ELEVEN_SETTINGS = {"stability": 0.35, "similarity_boost": 0.75, "style": 0.6, "use_speaker_boost": True, "speed": 1.1}
 ELEVEN_CACHE = Path.home() / ".cache" / "tokenwar-tts" / "elevenlabs"
 
 
@@ -298,6 +303,7 @@ def main():
     ap.add_argument("--engine", choices=["melo", "kokoro", "elevenlabs"],
                     help="--text 엔진 (기본: ko는 melo, en은 kokoro). elevenlabs는 --voice에 이름(Hyuk/Krys/Kyle) 또는 ID")
     ap.add_argument("--list-voices", action="store_true", help="ElevenLabs 목소리 목록")
+    ap.add_argument("--settings", help="ElevenLabs voice_settings 덮어쓰기 JSON, 예: {\"stability\": 0.3, \"style\": 0.7}")
     a = ap.parse_args()
     if a.list_voices:
         list_eleven_voices()
@@ -307,7 +313,7 @@ def main():
             ap.error("--text에는 --out이 필요하다")
         out = Path(a.out)
         vid = eleven_voice_id(a.voice)
-        mp3 = eleven_mp3(a.text, vid)
+        mp3 = eleven_mp3(a.text, vid, json.loads(a.settings) if a.settings else None)
         out.parent.mkdir(parents=True, exist_ok=True)
         if out.suffix.lower() == ".mp3" and abs(a.speed - 1.0) < 1e-3:
             shutil.copyfile(mp3, out)

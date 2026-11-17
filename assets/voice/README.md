@@ -49,22 +49,28 @@
 
 목소리 라이브러리(Voice Library)의 한국어 목소리도 Starter에서 ID로 바로 부를 수 있다(계정에 추가하지 않아도 됨, 2026-11-17 확인). 라이브러리 목소리는 만든 사람이 정한 조건이 있을 수 있어 쓰기 전 라이브러리 화면의 설명을 본다. 기본 제공(premade) 목소리(Adam, Brian 등)는 영어 원어민이라 한국어 억양이 어색해 쓰지 않는다.
 
-### 후보 남자 목소리 (2026-11-17, 운영자가 듣고 하나를 고른다)
+### 후보 남자 목소리 2차: 후킹형 (2026-11-17, 운영자가 듣고 하나를 고른다)
 
-| 이름 (tts.py 별칭) | voice_id | 느낌 |
+운영자: "목소리는 좀 어그로가 잘 끌리는 목소리여야해" (1차 차분한 내레이터 3개는 반려). 한국 쇼츠·릴스에서 잘 끌리는 목소리는
+첫마디부터 높고 빠른 예능 자막 톤, 친구가 썰 푸는 듯한 이야기꾼 톤, 힘 있게 내리꽂는 아나운서·예고편 톤이다. 셋 다 문장 끝을 올려 다음 말을 기다리게 한다.
+설정(tts.py `ELEVEN_SETTINGS` 기본): stability 0.35(억양을 출렁이게), style 0.6(과장), speed 1.1, similarity_boost 0.75, speaker boost.
+
+| 이름 (tts.py 별칭) | voice_id | 왜 끌리나 |
 |---|---|---|
-| Hyuk - Cold and Clear (`hyuk`, 지금 기본) | `ZJCNdZEjYwkOElxugmW2` | 차분한 중년 내레이터, 라이브러리 한국어 남자 목소리 중 가장 많이 쓰임 |
-| Krys - Cheerful, Clear and Measured (`krys`) | `1W00IGEmNmwmsDeYy7ag` | 밝고 힘찬 젊은 목소리, 영상 내레이션·쇼츠용 |
-| Kyle - Friendly, Natural and Guttural (`kyle`) | `RU7aSi6lT4uQBXMLgDxK` | 낮고 굵은 목소리, 강의용 |
+| Deok - Energetic Korean Narrator (`deok`, 임시 기본) | `wisKdlUQEBMjkKqNAa3c` | 한국 예능 내레이션 톤, 첫 1초부터 텐션이 높아 넘기던 손을 멈추게 함 |
+| GapDragon - Social media (`gapdragon`) | `VwlplMyq7s8eoNKYEgcd` | 바이럴 썰 쇼츠용 이야기꾼, 친구가 말해 주는 듯해 끝까지 듣게 함 |
+| Kang Jun - Powerful Announcer (`kangjun`) | `sIyywe2M6JEImQgP1LTX` | 힘 있는 아나운서 톤, 숫자·결과를 속보처럼 무게 있게 꽂음 |
 
-운영자가 고르면 tts.py `ELEVEN_DEFAULT_VOICE`를 그 목소리로 바꾼다. 다른 목소리 찾기: `py -3.12 agent/tts.py --engine elevenlabs --list-voices`.
+1차 반려: Hyuk(`ZJCNdZEjYwkOElxugmW2`), Krys(`1W00IGEmNmwmsDeYy7ag`), Kyle(`RU7aSi6lT4uQBXMLgDxK`), 너무 차분함.
+
+운영자가 고르면 tts.py `ELEVEN_DEFAULT_VOICE`를 그 목소리로 바꾼다. 설정만 바꿔 보기: `--settings '{"stability": 0.3, "style": 0.7}'`. 다른 목소리 찾기: `py -3.12 agent/tts.py --engine elevenlabs --list-voices`.
 
 ## 이 컴퓨터에서만 만든다
 
 GitHub Actions에는 세 엔진(키 포함)이 없다. 이 컴퓨터에서 만들어 게시물 폴더에 함께 커밋한다.
 
 - 목록형: `py -3.12 agent/tts.py posts/queue/<폴더>` → `voice/<번호>.wav`(24kHz 모노, 한 개 수십 KB). listreel.py는 그 파일을 박자에 맞춰 섞기만 하고, 파일이 없으면 목소리 없이 렌더링한다.
-- 한국어 내레이션: `py -3.12 agent/tts.py --engine elevenlabs --voice hyuk --text "만약 AI에게 내 돈을 맡겨 투자시킨다면, 어떤 일이 벌어질까요?" --out <폴더>/voice/01.mp3`
+- 한국어 내레이션: `py -3.12 agent/tts.py --engine elevenlabs --voice deok --text "만약 AI에게 내 돈을 맡겨 투자시킨다면, 어떤 일이 벌어질까요?" --out <폴더>/voice/01.mp3`
 - 문장 하나(예전 MeloTTS): `py -3.12 agent/tts.py --text "만약 AI에게 내 돈을 맡겨 투자시킨다면, 어떤 일이 벌어질까요?" --out <폴더>/voice/01.wav --speed 1.1`
 
 설치 명령은 MIGRATION.md 2장 (Kokoro: `py -3.12 -m pip install "kokoro==0.9.4" soundfile`, MeloTTS: 공식 GitHub 커밋 고정 + 한국어 의존성만). 관리자 권한 필요 없음.
