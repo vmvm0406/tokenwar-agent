@@ -21,6 +21,8 @@ listreel.py는 그 파일을 박자에 맞춰 섞기만 한다. voice/가 없으
   - --text: 문장 하나를 바로 wav로 (내레이션 릴스용). --lang 기본 ko, en이면 Kokoro. 한국어는 44.1kHz.
     py -3.12 agent/tts.py --engine elevenlabs --voice Hyuk --text "..." --out <폴더>/voice/01.mp3   (.mp3면 받은 그대로, .wav면 무음 자르고 44.1kHz)
     py -3.12 agent/tts.py --engine elevenlabs --list-voices     # 계정 목소리 + 라이브러리 한국어 남자 목소리
+    ElevenLabs는 보내기 전에 agent/tts_ko_norm.py로 숫자·영어를 읽는 그대로의 한글로 바꾼다(2주 → 이 주, GPT-5 → 지피티 파이브).
+    끄기 --no-norm / voice.normalize: false, 게시물별 추가 사전 --words / voice.words. --verify [--gate]: 받아써서 대본과 비교.
   - list.voice.engine = "elevenlabs"(선택)면 ElevenLabs로 읽는다: {"engine": "elevenlabs", "voice_id": "...", "settings": {"stability": 0.5}}.
     voice_id가 없으면 ELEVEN_DEFAULT_VOICE. 게시물 맨 위 "voice"(같은 모양, 선택)도 기본값으로 읽는다.
   - 한국어 글: 숫자·%·연도는 그대로 써도 된다(10% → 십 퍼센트). 영어는 아는 이름(챗GPT, 오픈AI 등)과 약자만 한글로 바꾸고,
@@ -237,8 +239,23 @@ def eleven_voice_id(name_or_id, key=None):
     sys.exit(f"ElevenLabs 목소리 {name_or_id!r}를 못 찾음 (--list-voices로 확인)")
 
 
-def eleven_mp3(text, voice_id=None, settings=None, model=ELEVEN_MODEL):
-    """문장 → mp3 파일 경로. 같은 글·목소리·설정·모델이면 캐시를 쓴다 (다시 과금되지 않게)."""
+def eleven_text(text, normalize=True, words=None):
+    """ElevenLabs에 보낼 글. 기본으로 tts_ko_norm 정규화(숫자 읽기·영어 → 말하는 그대로의 한글, STYLE_GUIDE 6장 'TTS 읽기')."""
+    if not normalize:
+        return text
+    from tts_ko_norm import normalize as ko_norm
+    unknown = []
+    out = ko_norm(text, words, warn=unknown)
+    if unknown:
+        print(f"  ! 사전에 없는 영어(그대로 읽음): {', '.join(sorted(set(unknown)))} "
+              f"→ assets/voice/ko_words.json이나 voice.words에 추가", file=sys.stderr)
+    return out
+
+
+def eleven_mp3(text, voice_id=None, settings=None, model=ELEVEN_MODEL, normalize=True, words=None):
+    """문장 → mp3 파일 경로. 같은 글·목소리·설정·모델이면 캐시를 쓴다 (다시 과금되지 않게).
+    normalize(기본 켬): tts_ko_norm으로 읽을 글로 바꾼 뒤 보내고, 캐시 키도 바꾼 글로 잡는다. words: 추가 사전."""
+    text = eleven_text(text, normalize, words)
     vs = dict(ELEVEN_SETTINGS, **(settings or {}))
     voice_id = voice_id or ELEVEN_DEFAULT_VOICE
     h = hashlib.sha256(json.dumps([text, voice_id, vs, model, ELEVEN_FORMAT], ensure_ascii=False,
@@ -266,8 +283,8 @@ def decode(path, sr, tempo=1.0):
     return np.frombuffer(raw, dtype=np.float32).copy()
 
 
-def synth_eleven(text, sr, voice_id=None, settings=None, speed=1.0):
-    return decode(eleven_mp3(text, voice_id, settings), sr, tempo=speed)
+def synth_eleven(text, sr, voice_id=None, settings=None, speed=1.0, normalize=True, words=None):
+    return decode(eleven_mp3(text, voice_id, settings, normalize=normalize, words=words), sr, tempo=speed)
 
 
 def list_eleven_voices():
@@ -304,6 +321,10 @@ def main():
                     help="--text 엔진 (기본: ko는 melo, en은 kokoro). elevenlabs는 --voice에 이름(Hyuk/Krys/Kyle) 또는 ID")
     ap.add_argument("--list-voices", action="store_true", help="ElevenLabs 목소리 목록")
     ap.add_argument("--settings", help="ElevenLabs voice_settings 덮어쓰기 JSON, 예: {\"stability\": 0.3, \"style\": 0.7}")
+    ap.add_argument("--no-norm", action="store_true", help="ElevenLabs에 보내기 전 읽기 정규화(tts_ko_norm)를 끈다")
+    ap.add_argument("--words", help="읽기 추가 사전 JSON, 예: {\"Foobar\": \"푸바\"}")
+    ap.add_argument("--verify", action="store_true", help="만든 음성을 faster-whisper로 받아써 대본과 비교 (ElevenLabs --text)")
+    ap.add_argument("--gate", action="store_true", help="--verify에서 다르면 종료 코드 1")
     a = ap.parse_args()
     if a.list_voices:
         list_eleven_voices()
@@ -313,7 +334,9 @@ def main():
             ap.error("--text에는 --out이 필요하다")
         out = Path(a.out)
         vid = eleven_voice_id(a.voice)
-        mp3 = eleven_mp3(a.text, vid, json.loads(a.settings) if a.settings else None)
+        words = json.loads(a.words) if a.words else None
+        mp3 = eleven_mp3(a.text, vid, json.loads(a.settings) if a.settings else None,
+                         normalize=not a.no_norm, words=words)
         out.parent.mkdir(parents=True, exist_ok=True)
         if out.suffix.lower() == ".mp3" and abs(a.speed - 1.0) < 1e-3:
             shutil.copyfile(mp3, out)
@@ -322,6 +345,12 @@ def main():
             x, sr = trim(decode(mp3, KO_SR, tempo=a.speed), sr=KO_SR), KO_SR
             save(out, x, sr)
         print(f"{a.out}: {len(x) / sr:.2f}초, ElevenLabs {vid}, 빠르기 {a.speed:g}")
+        if a.verify:
+            from tts_ko_norm import print_verify, verify_audio
+            r = verify_audio(out, a.text, words)
+            print_verify(r)
+            if a.gate and not r["ok"]:
+                sys.exit(1)
         return
     if a.text:
         if not a.out:
@@ -349,7 +378,8 @@ def main():
         voice = f"ElevenLabs {vid}"
 
         def gen(text, speed):      # 빠르기를 올려도 다시 합성하지 않는다 (캐시 + atempo)
-            return synth_eleven(text, SR, vid, cfg.get("settings"), speed)
+            return synth_eleven(text, SR, vid, cfg.get("settings"), speed,
+                                normalize=cfg.get("normalize", True) and not a.no_norm, words=cfg.get("words"))
     elif lang == "ko":
         voice = "MeloTTS KR"
 
