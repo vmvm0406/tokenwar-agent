@@ -1,6 +1,6 @@
 {
-  "media_id": null,
+  "media_id": "18083610074378341",
   "permalink": "https://www.instagram.com/reel/Df16b-oEnTA/",
   "published_at": "2026-11-17T12:19:07+00:00",
-  "note": "2026-11-17 중복 게시: 첫 실행(run 44081673001)이 Df16b-oEnTA를 올렸으나 게시 기록 push가 거절돼 다음 실행(run 44082034566)이 Df16vxejrXX를 또 올림. 운영자가 나중 것(Df16vxejrXX, media_id 18102437741400710, Zorcha 이슈 #15)을 지움. 남은 것의 Zorcha 이슈는 #14. 남은 것은 Df16b-oEnTA. media_id는 실행 로그에 없어 비워 둠, 다음 publish 실행이 permalink로 채움(publish.py fill_missing_ids). published_at은 첫 실행 로그 기준 대략."
+  "note": "2026-11-17 중복 게시: 첫 실행(run 44081673001)이 Df16b-oEnTA를 올렸으나 게시 기록 push가 거절돼 다음 실행(run 44082034566)이 Df16vxejrXX를 또 올림. 운영자가 나중 것(Df16vxejrXX, media_id 18102437741400710, Zorcha 이슈 #15)을 지움. 남은 것의 Zorcha 이슈는 #14. 남은 것은 Df16b-oEnTA. media_id는 지휘 세션이 확인한 값. published_at은 첫 실행 로그 기준 대략."
 }
