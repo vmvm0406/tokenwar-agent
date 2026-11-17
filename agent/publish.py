@@ -712,6 +712,10 @@ def main():
         print("IG_ACCESS_TOKEN이 없음. GitHub 저장소 Settings › Secrets에 넣었는지 확인.")
         sys.exit(1)
     now = datetime.now(timezone.utc)
+    if CONFIG.get("publish_paused"):
+        # 운영자 2026-11-18 "릴스 자동으로 올리기는 잠깐 멈추자. 계정을 리뉴얼 할거야": 인스타·스레드 게시 전부 멈춤
+        print("게시 멈춤 (config.json publish_paused true). 아무것도 올리지 않음.")
+        return
     folders = sorted(p for p in QUEUE.iterdir() if p.is_dir())
     todo = []
     for f in folders:
