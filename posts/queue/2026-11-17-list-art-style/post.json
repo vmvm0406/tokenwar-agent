@@ -8,7 +8,7 @@
   "date": "2026-11-17",
   "publish_at": "2026-11-17T22:43:00+09:00",
   "rights": "own",
-  "rights_note": "결과 그림은 토큰전쟁 마스코트 기준 이미지(assets/mascot/slime-base.jpg)를 참고 이미지로 넣어 FLUX.2 [klein] 4B(Cloudflare Workers AI)로 만든 AI 그림. 배경음악은 agent/music_gen.py가 코드로 만든 음악",
+  "rights_note": "결과 그림은 토큰전쟁 마스코트 기준 이미지(assets/mascot/slime-base.jpg)를 참고 이미지로 넣어 FLUX.2 [klein] 4B(Cloudflare Workers AI)로 만든 AI 그림. 배경음악은 'Straight To The Light' by Alex Beroza (ccmixter.org/files/AlexBeroza/29630), CC BY 3.0 조각(agent/music_fit.py).",
   "title": "AI 그림으로\n돈 버는데\n이것도 몰라?",
   "highlight": "돈 버는데",
   "list": {
@@ -235,10 +235,14 @@
     "bpm": 120.0
   },
   "music": {
-    "generate": true,
-    "style": "h3-em-bell",
-    "seed": 33,
-    "note": "새 곡 h3-em-bell: 코드 합성 후킹 비트(저작권 없음), E단조 Em-D-C-D, 사인파 벨 리드, 120 BPM, 0초부터 킥·멜로디 (조명 h1-am-square·카메라 h2-dm-saw와 다른 곡)"
+    "src": "music.m4a",
+    "title": "Straight To The Light",
+    "artist": "Alex Beroza",
+    "url": "https://ccmixter.org/files/AlexBeroza/29630",
+    "license": "CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/), 곡 페이지에서 확인 2026-11-17",
+    "credit": "'Straight To The Light' by Alex Beroza (ccmixter.org/files/AlexBeroza/29630), CC BY 3.0",
+    "genre": "house",
+    "note": "agent/music_fit.py로 릴스 120 BPM에 맞춘 38초 조각 (원곡 약 120 BPM, 45초부터). 곡 전체는 저장소에 넣지 않음"
   },
   "thumb": {
     "title": "AI 그림으로\n돈 버는데\n이것도 몰라?",
@@ -261,7 +265,7 @@
       "kind": "tool"
     }
   ],
-  "caption": "AI 사진 그림체 변환 20가지, 사진 한 장에 그림체 이름 하나만 바꿔 넣으면 전혀 다른 그림이 됩니다.\n댓글 남기시면 그림체 전체 40개를 DM으로 보내 드려요.\n\n맨 앞이 원본 사진이고, 뒤의 20장은 같은 사진에 그림체 이름만 바꿔 넣은 결과입니다.\n수채화와 유화 같은 익숙한 그림부터 픽셀 아트, 클레이 인형, 한국 웹툰까지 담았어요.\n한 줄 라인 아트처럼 단순한 그림체도 이름 하나면 됩니다.\n\n가족사진으로 그림 선물을 만들고 싶은 친구에게 보내 주세요.\n\n팔로우하고 댓글 남기시면 그림체 40개의 뜻과 사용법을 DM으로 보내 드려요. (팔로우한 분께 보내집니다)",
+  "caption": "AI 사진 그림체 변환 20가지, 사진 한 장에 그림체 이름 하나만 바꿔 넣으면 전혀 다른 그림이 됩니다.\n댓글 남기시면 그림체 전체 40개를 DM으로 보내 드려요.\n\n맨 앞이 원본 사진이고, 뒤의 20장은 같은 사진에 그림체 이름만 바꿔 넣은 결과입니다.\n수채화와 유화 같은 익숙한 그림부터 픽셀 아트, 클레이 인형, 한국 웹툰까지 담았어요.\n한 줄 라인 아트처럼 단순한 그림체도 이름 하나면 됩니다.\n\n가족사진으로 그림 선물을 만들고 싶은 친구에게 보내 주세요.\n\n음악: 'Straight To The Light' by Alex Beroza (ccmixter.org/files/AlexBeroza/29630), CC BY 3.0\n\n팔로우하고 댓글 남기시면 그림체 40개의 뜻과 사용법을 DM으로 보내 드려요. (팔로우한 분께 보내집니다)",
   "hashtags": [
     "#AI그림",
     "#그림체",

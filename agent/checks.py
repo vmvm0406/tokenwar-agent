@@ -457,8 +457,8 @@ def check_rank(post):
             errors.append(f"1위 '?' 시간 {tl['reveal']:.1f}초: 2초 안 (운영자 2026-11-17 '너무 오래 끌지 않게')")
     if post.get("length") not in (None, "short"):
         warnings.append("순위 카운트다운 릴스는 20~35초라 length는 'short'")
-    if not post.get("dm"):
-        warnings.append("순위 릴스에 dm이 없음: 전체 순위·출처는 DM 자료 페이지에 둔다 (STYLE_GUIDE 6장)")
+    if not post.get("dm") and not post.get("end_cta"):
+        warnings.append("순위 릴스에 dm도 end_cta도 없음: 다시 쓸 자료면 dm, 소식·이야기면 팔로우 끝 화면 end_cta (STYLE_GUIDE 0 원칙 8)")
     return errors, warnings
 
 

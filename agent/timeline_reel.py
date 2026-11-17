@@ -324,8 +324,12 @@ def make_timeline_reel(post, folder, cfg):
                     "-r", str(FPS), str(silent)], check=True)
     # 소리: 패드 + 효과음(심장 박동·쾅·휙·상승음) → listreel.mix_audio (효과음은 음악보다 3dB 크게)
     from listreel import mix_audio
-    music = work / "music.wav"
-    make_pad(music, main, rise=(p["tl_start"], p["tl_end"]))
+    pm = post.get("music") or {}
+    if pm.get("src") and (folder / pm["src"]).exists():     # 실제 음원 조각 (agent/music_fit.py, STYLE_GUIDE 0 원칙)
+        music = folder / pm["src"]
+    else:                                                    # 대체: 코드로 만든 패드
+        music = work / "music.wav"
+        make_pad(music, main, rise=(p["tl_start"], p["tl_end"]))
     sfx, info = make_sfx(p, main)
     mixed = work / "mix.wav"
     mix_audio(music, [], main, mixed, sfx)
@@ -410,7 +414,7 @@ def check_timeline(post):
     if ts and (post.get("thumb") or {}).get("image", {}).get("src") != ts:
         warnings.append("timeline.thumb_src와 thumb.image.src가 다름 (렌더링이 그린 그림을 썸네일로 쓰려면 같게)")
     if not errors and ev:
-        total = TL_START + TL_LEN + CURVE_LEN + END_LEN + (2.5 if (post.get("dm") or {}).get("cta") else 0)
+        total = TL_START + TL_LEN + CURVE_LEN + END_LEN + (2.5 if ((post.get("dm") or {}).get("cta") or post.get("end_cta")) else 0)
         if not LENGTH_RANGE[0] <= total <= LENGTH_RANGE[1]:
             errors.append(f"연표 릴스 길이 {total:.1f}초 ({LENGTH_RANGE[0]:g}~{LENGTH_RANGE[1]:g}초)")
     return errors, warnings

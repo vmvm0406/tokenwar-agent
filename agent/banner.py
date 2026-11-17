@@ -36,10 +36,12 @@ def cta_line(post):
     d = post.get("dm") or {}
     sec = post.get("list") or post.get("rank") or {}
     v = sec.get("cta_line")
-    if not d.get("cta") or v is False or sec.get("intro") is True:
+    if v is False or sec.get("intro") is True:
         return None
     if isinstance(v, str) and v.strip():
-        return v.strip()
+        return v.strip()          # dm 없이도 됨: 소식·이야기 릴스의 양자택일 질문·팔로우 한 줄 (STYLE_GUIDE 0 원칙 8)
+    if not d.get("cta"):
+        return None
     topic = (sec.get("topic") or "").strip()
     if topic:
         return f"댓글 달고 {topic} 모음집 받아가세요"

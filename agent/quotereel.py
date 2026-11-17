@@ -58,7 +58,7 @@ def timeline(post):
         bounds.append(acc)
     frames = [int(round(x * beat * FPS)) for x in bounds]
     scenes = [{"kind": "item", "i": j, "start": frames[j] / FPS, "dur": (frames[j + 1] - frames[j]) / FPS} for j in range(n)]
-    cta = CTA_SECONDS if (post.get("dm") or {}).get("cta") else 0.0
+    cta = CTA_SECONDS if ((post.get("dm") or {}).get("cta") or post.get("end_cta")) else 0.0
     main = frames[-1] / FPS
     return {"scenes": scenes, "bpm": float(R.get("bpm", BPM)), "beat": beat, "main": main, "cta": cta, "total": main + cta,
             "reveal": 0.0, "n_frames": frames[-1]}

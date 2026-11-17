@@ -56,9 +56,11 @@ FADE_END = 2.5  # 끝 화면 앞에서 음악을 자연스럽게 줄인다 (뚝 
 
 
 def dm_cta(post):
-    """참여형(dm 있음) 게시물 화면 안 '자료' 안내 문구 (운영자 결정 2026-11-16). dm.cta 또는 없으면 None."""
+    """끝 화면 문구. 참여형(dm 있음)은 dm.cta('자료' 안내, 운영자 결정 2026-11-16), 소식·이야기 릴스는 post.end_cta
+    (팔로우 안내, 예: "팔로우하면
+매일 AI 소식", 운영자 결정 2026-11-17 STYLE_GUIDE 0 원칙 8). 없으면 None."""
     d = post.get("dm") or {}
-    return (d.get("cta") or "").strip() or None
+    return (d.get("cta") or post.get("end_cta") or "").strip() or None
 
 
 def cta_html(text, cfg, fonts_uri):

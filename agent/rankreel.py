@@ -90,7 +90,7 @@ def timeline(post):
     frames = [int(round(x * beat * FPS)) for x in bounds]
     scenes = [{"kind": k, "i": i, "start": frames[j] / FPS, "dur": (frames[j + 1] - frames[j]) / FPS, "beat_at": bounds[j]}
               for j, (k, i, _) in enumerate(plan)]
-    cta = CTA_SECONDS if (post.get("dm") or {}).get("cta") else 0.0
+    cta = CTA_SECONDS if ((post.get("dm") or {}).get("cta") or post.get("end_cta")) else 0.0
     main = frames[-1] / FPS
     reveal = round(o["reveal"] * beat * FPS) / FPS
     return {"scenes": scenes, "bpm": o["bpm"], "beat": beat, "main": main, "cta": cta, "total": main + cta,

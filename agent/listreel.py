@@ -143,7 +143,7 @@ def timeline(post):
     rows = rows_of(post)
     flood = opts(post)["flood"]
     intro = opts(post)["intro"]
-    cta = CTA_SECONDS if (post.get("dm") or {}).get("cta") else 0.0
+    cta = CTA_SECONDS if ((post.get("dm") or {}).get("cta") or post.get("end_cta")) else 0.0
     if L.get("bpm"):
         cands = [(float(L["bpm"]), int(L.get("beats_per_item", 2)))]
     else:
