@@ -1408,7 +1408,174 @@
    "tries": 0,
    "status": "skipped",
    "updated": "2026-11-17T09:50:46+09:00"
+  },
+  "news:https://news.google.com/rss/articles/CBMie0FVX3lxTFA3M3plemQ2SHBfdWZaTERYakxMNURwT3d0YjVJWFU3TVl1NTQyQjhZbEpDRFJvNGc2ZFNtVjBmbk1nR0p5a2d2UHhJelJPSXg5ZlpKY1dKODUtUWF2UkNZNlhRTUxub0dWek8zRk5WenBDcW9EaDZWeHFHUdIBgAFBVV95cUxOMlcxTkRKLXpNZTlBMW01ZHFVWmoxX1c1TWY4Wk15VmhkRTlzTkVnMlI2R1NUSzNwb0xnZUtHNGVTRlRWWFRoNndaekJMbjNhTmtVeldYMEJuLXVBUTdib3JOUHhmOGJ5MDlHbllhU0F6MUdQMGxmdzR6RE1SX19OMA?oc=5": {
+   "source": "news",
+   "company": "오픈AI",
+   "entities": [
+    "오픈AI"
+   ],
+   "tok": [
+    "california",
+    "control",
+    "face",
+    "hugging",
+    "loss",
+    "model",
+    "other",
+    "sues"
+   ],
+   "title": "[업계 속보: 주요 매체 5곳(AP News, CNBC, Financial Times, New York Times) · 규제] California sues OpenAI over Hugging Face, other AI model loss of control",
+   "url": "https://news.google.com/rss/articles/CBMie0FVX3lxTFA3M3plemQ2SHBfdWZaTERYakxMNURwT3d0YjVJWFU3TVl1NTQyQjhZbEpDRFJvNGc2ZFNtVjBmbk1nR0p5a2d2UHhJelJPSXg5ZlpKY1dKODUtUWF2UkNZNlhRTUxub0dWek8zRk5WenBDcW9EaDZWeHFHUdIBgAFBVV95cUxOMlcxTkRKLXpNZTlBMW01ZHFVWmoxX1c1TWY4Wk15VmhkRTlzTkVnMlI2R1NUSzNwb0xnZUtHNGVTRlRWWFRoNndaekJMbjNhTmtVeldYMEJuLXVBUTdib3JOUHhmOGJ5MDlHbllhU0F6MUdQMGxmdzR6RE1SX19OMA?oc=5",
+   "first_seen": "2026-11-17T10:04:22+09:00",
+   "why": "48시간 안에 같은 회사·인물 게시물 있음: 2026-11-16-carousel-chatgpt-wallet (오픈AI)",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMiYEFVX3lxTE5Dam1fSjhheU5jeTJJMGNNeFd1RlBhY1JFaGxnTGI4cXVoLURrc0xmVUlHZDQ4dUgwTFVDUGo1bk1EeG9iQU4xN1k5QW40SW1jWGYtMTJYOC1nRFc0WTJLctIBYEFVX3lxTE5Dam1fSjhheU5jeTJJMGNNeFd1RlBhY1JFaGxnTGI4cXVoLURrc0xmVUlHZDQ4dUgwTFVDUGo1bk1EeG9iQU4xN1k5QW40SW1jWGYtMTJYOC1nRFc0WTJLcg?oc=5": {
+   "source": "news",
+   "company": "앤트로픽",
+   "entities": [
+    "앤트로픽"
+   ],
+   "tok": [
+    "ipo",
+    "관투",
+    "기관",
+    "배제",
+    "약에",
+    "자자",
+    "중국",
+    "청약",
+    "투자",
+    "홍콩"
+   ],
+   "title": "[업계 속보: 주요 매체 4곳(KBS, YTN, 서울경제, 연합뉴스) · 상장·투자] \"앤트로픽 IPO 청약에 중국·홍콩 기관투자자 배제\"",
+   "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE5Dam1fSjhheU5jeTJJMGNNeFd1RlBhY1JFaGxnTGI4cXVoLURrc0xmVUlHZDQ4dUgwTFVDUGo1bk1EeG9iQU4xN1k5QW40SW1jWGYtMTJYOC1nRFc0WTJLctIBYEFVX3lxTE5Dam1fSjhheU5jeTJJMGNNeFd1RlBhY1JFaGxnTGI4cXVoLURrc0xmVUlHZDQ4dUgwTFVDUGo1bk1EeG9iQU4xN1k5QW40SW1jWGYtMTJYOC1nRFc0WTJLcg?oc=5",
+   "first_seen": "2026-11-17T10:04:22+09:00",
+   "why": "48시간 안에 같은 회사·인물 게시물 있음: 2026-11-17-video-amodei-chips-north-korea (앤트로픽)",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMimAFBVV95cUxQTmhTdE56clQ5WG5iSlZjLVFWWXRsTzNOd2FIbGMtLTloaXVKb1ZmRHFMUXM2eU9rY2Nwa3lPMV85UndyYjFJNnQ2dWtIc0c0bU42aXh3dGZiTTFaMUdMN1U1b0VnQUtfSDJwVGlycmFQRjlnd0lBb3dvTU4xOUJYS3lPUmxPYVBwWVFzNWxfeWpxck55VG9HWA?oc=5": {
+   "source": "news",
+   "company": "오픈AI",
+   "entities": [
+    "오픈AI"
+   ],
+   "tok": [
+    "ag",
+    "agent",
+    "california",
+    "incidents",
+    "rogue",
+    "state",
+    "sues"
+   ],
+   "title": "[업계 속보: 주요 매체 3곳(Axios, TechCrunch, The Verge) · 규제] California state AG sues OpenAI over rogue agent incidents",
+   "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxQTmhTdE56clQ5WG5iSlZjLVFWWXRsTzNOd2FIbGMtLTloaXVKb1ZmRHFMUXM2eU9rY2Nwa3lPMV85UndyYjFJNnQ2dWtIc0c0bU42aXh3dGZiTTFaMUdMN1U1b0VnQUtfSDJwVGlycmFQRjlnd0lBb3dvTU4xOUJYS3lPUmxPYVBwWVFzNWxfeWpxck55VG9HWA?oc=5",
+   "first_seen": "2026-11-17T10:04:22+09:00",
+   "why": "48시간 안에 같은 회사·인물 게시물 있음: 2026-11-16-carousel-chatgpt-wallet (오픈AI)",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMidEFVX3lxTFBHNkxueWVTQzEtX0V3V2Q2OG82YTV3aUZYdUdLQkJ4S0xLNUNwWjkxajE2SXR6T1pDUDBwczZxRWNEdjE3MU8tNDl1RDNqQnBsUzFuODVIVWNWRWpwaDdUT2hrcFhlbEhkN0g4NlpfeHR4SDMw0gF0QVVfeXFMUFdtQldGbXU0QmtaNktHRnhuelFnaEdvSmE3eWltLVhtYkQwMVlyQ2NMUVhLUnI3ZEtNTGE5bE5QUU1pTzFuZ0J0RWVPVFN6RWt3WmVWdjdSMEQwWG1xU1M2Tk80T2xERjZzRWZNR1U5U3ZINTY?oc=5": {
+   "source": "news",
+   "company": "엔비디아",
+   "entities": [
+    "엔비디아"
+   ],
+   "tok": [
+    "고려",
+    "문제",
+    "보문",
+    "복귀",
+    "사회",
+    "안보",
+    "이사",
+    "조사",
+    "집중"
+   ],
+   "title": "[업계 속보: 주요 매체 3곳(MBC, 경향신문, 서울경제) · 인사] \"엔비디아 이사회, 젠슨황 복귀 고려 안 해‥안보문제 조사 집중\"",
+   "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTFBHNkxueWVTQzEtX0V3V2Q2OG82YTV3aUZYdUdLQkJ4S0xLNUNwWjkxajE2SXR6T1pDUDBwczZxRWNEdjE3MU8tNDl1RDNqQnBsUzFuODVIVWNWRWpwaDdUT2hrcFhlbEhkN0g4NlpfeHR4SDMw0gF0QVVfeXFMUFdtQldGbXU0QmtaNktHRnhuelFnaEdvSmE3eWltLVhtYkQwMVlyQ2NMUVhLUnI3ZEtNTGE5bE5QUU1pTzFuZ0J0RWVPVFN6RWt3WmVWdjdSMEQwWG1xU1M2Tk80T2xERjZzRWZNR1U5U3ZINTY?oc=5",
+   "first_seen": "2026-11-17T10:04:22+09:00",
+   "why": "48시간 안에 같은 회사·인물 게시물 있음: 2026-11-17-video-amodei-chips-north-korea (엔비디아)",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMiVkFVX3lxTE5DV25Jd3lpYjdqR09fM3hfUVNSZTRfM3p4Mks4dzVaZWkzMFJjVG1RcTlGOTAxdDZ0TjF0LWhXaHBPZ1VUTXU4bXVCVmhIR3ZDQ09JWEx3?oc=5": {
+   "source": "news",
+   "company": "엔비디아",
+   "entities": [
+    "엔비디아"
+   ],
+   "tok": [
+    "긍정",
+    "논의",
+    "럼프",
+    "복귀",
+    "사회",
+    "이사",
+    "정적",
+    "트럼",
+    "프는"
+   ],
+   "title": "[업계 속보: 주요 매체 3곳(매일경제, 중앙일보, 한겨레) · 인사] “엔비디아 이사회, 젠슨 황 복귀 논의 안 해”…트럼프는 긍정적",
+   "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE5DV25Jd3lpYjdqR09fM3hfUVNSZTRfM3p4Mks4dzVaZWkzMFJjVG1RcTlGOTAxdDZ0TjF0LWhXaHBPZ1VUTXU4bXVCVmhIR3ZDQ09JWEx3?oc=5",
+   "first_seen": "2026-11-17T10:04:22+09:00",
+   "why": "48시간 안에 같은 회사·인물 게시물 있음: 2026-11-17-video-amodei-chips-north-korea (엔비디아)",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMirwFBVV95cUxOOXlLTW9ld2U2cjRMU3pVOFBtOEhlQzE2TnlxazhiOHltQU9icEhwRmhvUFRhWC1uQzJ0bldzQmhJcnNsMmVFVHJhY1hEcWdNcG9KLWJoWlVKSlNHOEZvREdCQjhsQTl5cm5FdXVFNmk4VGFSOHh6ZVlaZUh4NVE0MXUyMVNmNHhvbm1mLTlyR3VGQ25uM094OTdsUDJQNGFfaGxST0VyanJCdENNS213?oc=5": {
+   "source": "news",
+   "company": "엔비디아",
+   "entities": [
+    "엔비디아"
+   ],
+   "tok": [
+    "backs",
+    "potential",
+    "return",
+    "trump"
+   ],
+   "title": "[업계 속보: 주요 매체 3곳(AP News, Bloomberg, Reuters) · 인사·규제] Trump backs potential return of Jensen Huang as Nvidia CEO",
+   "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOOXlLTW9ld2U2cjRMU3pVOFBtOEhlQzE2TnlxazhiOHltQU9icEhwRmhvUFRhWC1uQzJ0bldzQmhJcnNsMmVFVHJhY1hEcWdNcG9KLWJoWlVKSlNHOEZvREdCQjhsQTl5cm5FdXVFNmk4VGFSOHh6ZVlaZUh4NVE0MXUyMVNmNHhvbm1mLTlyR3VGQ25uM094OTdsUDJQNGFfaGxST0VyanJCdENNS213?oc=5",
+   "first_seen": "2026-11-17T10:04:22+09:00",
+   "why": "48시간 안에 같은 회사·인물 게시물 있음: 2026-11-17-video-amodei-chips-north-korea (엔비디아)",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMic0FVX3lxTE9EMUxqMWsycVp0eVBRNEZ5TE9PTXNKOXhWMEdpd3hFT0Fiajk1ZXVPa1FmejVKb0ZoT2xuSlRuZkxfYnpFdXo0MjFvMGJtNUdiRUJVaW5qYkJJSlVGdVIwYU5ONTVLN01RT25CcTh0UHgxeW_SAWZBVV95cUxQUWZqMjVjNzNCQ2NYbEZ1LVRMano2OGphZ3phRmd6YnB1U2R0VGl4RkRxVFBXTVlNX2NWWXhtNWtKTF9YUTJpZWdBUDF4N09kRzJvNWloZy1CVFRIemlreU9PX0U1VkE?oc=5": {
+   "source": "news",
+   "company": "엔비디아",
+   "entities": [
+    "엔비디아"
+   ],
+   "tok": [
+    "격화",
+    "복귀",
+    "본격",
+    "사회",
+    "서한",
+    "요구",
+    "이사",
+    "회에"
+   ],
+   "title": "[업계 속보: 주요 매체 3곳(동아일보, 연합뉴스, 전자신문) · 인사] ‘젠슨 황 복귀’ 요구 본격화…머스크 등 엔비디아 이사회에 서한",
+   "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTE9EMUxqMWsycVp0eVBRNEZ5TE9PTXNKOXhWMEdpd3hFT0Fiajk1ZXVPa1FmejVKb0ZoT2xuSlRuZkxfYnpFdXo0MjFvMGJtNUdiRUJVaW5qYkJJSlVGdVIwYU5ONTVLN01RT25CcTh0UHgxeW_SAWZBVV95cUxQUWZqMjVjNzNCQ2NYbEZ1LVRMano2OGphZ3phRmd6YnB1U2R0VGl4RkRxVFBXTVlNX2NWWXhtNWtKTF9YUTJpZWdBUDF4N09kRzJvNWloZy1CVFRIemlreU9PX0U1VkE?oc=5",
+   "first_seen": "2026-11-17T10:04:22+09:00",
+   "why": "48시간 안에 같은 회사·인물 게시물 있음: 2026-11-17-video-amodei-chips-north-korea (엔비디아)",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
   }
  },
- "updated": "2026-11-17T09:50:46+09:00"
+ "updated": "2026-11-17T10:04:22+09:00"
 }
