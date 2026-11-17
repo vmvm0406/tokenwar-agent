@@ -1389,7 +1389,25 @@
    "why": "모델·기능 발표 아님",
    "tries": 0,
    "status": "skipped"
+  },
+  "https://openai.com/business/customer-stories/holiday-extras-dots": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "At Holiday Extras, dots get to work before anyone asks",
+   "first_seen": "2026-11-17T09:49:26+09:00",
+   "why": "기업·연구·정책 주소",
+   "tries": 0,
+   "status": "skipped"
+  },
+  "https://blog.google/innovation-and-ai/products/gemini-app/regional-voices/": {
+   "source": "구글 블로그 제미나이",
+   "company": "구글",
+   "title": "Regional voices are rolling out in the Gemini app.",
+   "first_seen": "2026-11-17T09:49:26+09:00",
+   "why": "큰 기능",
+   "tries": 0,
+   "status": "pending"
   }
  },
- "updated": "2026-11-17T02:34:22+09:00"
+ "updated": "2026-11-17T09:49:26+09:00"
 }
