@@ -48,6 +48,7 @@ BEATS_PER_ITEM = 4            # 순위 하나 2초
 HOOK_BEATS = 4                # 첫 화면 2초
 REVEAL_BEATS = 1              # 1위 '?' 시간 (0.5초, "너무 오래 끌지 않게")
 TOP_BEATS = 5                 # 1위 장면 전체 (공개 앞 1박 + 뒤 4박)
+RESULT_AT = 2.0               # items[].result(결과 한 줄)가 순위 장면(1위는 공개 박) 뒤 몇 초에 쾅 박히는지 (화면이 2초 안에 바뀌게)
 TITLE_FONT = 104
 TOP_FONT = 60                 # 0초부터 위쪽 제목 띠 (rank.intro 없을 때)
 HOOK_SCALE = 1.3
@@ -136,7 +137,8 @@ def page_html(post, cfg, tl, folder=None):
         "intro": intro,
         "items": [{"label": it.get("label", ""), "sub": it.get("sub", ""), "img": _img(it), "imgx": it.get("img_x", 50),
                    "value": (None if it.get("value") is None else float(it["value"])),
-                   "quote": it.get("quote") or ""} for it in items],
+                   "quote": it.get("quote") or "", "result": it.get("result") or ""} for it in items],
+        "res_at": RESULT_AT, "has_res": any(it.get("result") for it in items),
         "scenes": tl["scenes"], "beat": tl["beat"], "reveal": tl["reveal"], "main": tl["main"],
         "hook": {"starts": hook_starts(post, tl), "scale": HOOK_SCALE,
                  "count": R.get("hook_count"), "count_text": R.get("hook_text", "")},
@@ -207,6 +209,9 @@ def page_html(post, cfg, tl, folder=None):
 #axis{{position:absolute;left:0;right:0;bottom:0;height:26px;font-family:'Pretendard';font-weight:700;font-size:22px;color:{b['muted']}}}
 #axis span{{position:absolute;top:0;white-space:nowrap}}
 #q{{position:absolute;left:0;right:0;top:0;font-family:'Wanted';font-weight:800;font-size:42px;line-height:1.35;color:{b['text']};display:none}}
+#res{{margin-top:6px;height:76px;font-family:'Black Han Sans';font-size:58px;line-height:76px;color:{b['accent']};white-space:nowrap;
+  transform-origin:0% 60%;align-self:flex-start;display:inline-block;padding:0 .1em;margin-left:-.1em}}
+#res.fill{{background:{b['accent']};color:#000}}
 #src{{margin-top:14px;font-family:'Pretendard';font-weight:700;font-size:23px;color:{b['muted']};white-space:nowrap;overflow:hidden;
   text-overflow:ellipsis;max-width:{STACK_RIGHT - SIDE}px}}
 #stack{{position:absolute;left:{SIDE}px;width:{STACK_RIGHT - SIDE}px;font-family:'Wanted';font-weight:700;white-space:nowrap}}
@@ -230,6 +235,7 @@ def page_html(post, cfg, tl, folder=None):
   <div id="val"><div id="vl">{esc(R.get("value_label", ""))}</div><div id="vn"></div>
     <div id="track"><div id="bar"></div><div id="avg"></div></div><div id="axis"></div>
     <div id="q"></div></div>
+  <div id="resw" style="display:{'block' if any(it.get('result') for it in items) else 'none'}"><div id="res"></div></div>
   <div id="src">{esc(R.get("source_line", ""))}</div>
 </div>
 <div id="stack"></div>
@@ -493,6 +499,17 @@ window.twFrame = (t) => {{
       q.textContent = it.quote.slice(0, nch);
     }} else q.style.display = 'none';
   }}
+  // 결과 한 줄(items[].result): 장면 2초 뒤 쾅 + 녹색 면 한 박 (화면이 2초 안에 한 번 더 바뀐다)
+  const rs = $('res');
+  if (D.has_res) {{
+    const v = u - (top ? D.reveal : 0) - D.res_at + 1e-6;
+    if (it.result && v >= 0) {{
+      rs.textContent = it.result; let k = 1;
+      if (v < 0.1) k = 1.3 - 0.35 * Math.pow(v / 0.1, 2); else if (v < 0.234) {{ const q2 = (v - 0.1) / 0.134; k = 0.95 + 0.05 * (1 - Math.pow(1 - q2, 2)); }}
+      rs.style.transform = `scale(${{k.toFixed(4)}})`; rs.style.opacity = '1'; rs.classList.toggle('fill', v < D.beat);
+      if (rs.scrollWidth > {STACK_RIGHT - SIDE} + 4) window.__resOver = it.result;
+    }} else {{ rs.textContent = ''; rs.style.opacity = '0'; rs.classList.remove('fill'); }}
+  }}
   return done();
 }};
 </script></body></html>"""
@@ -535,7 +552,10 @@ def sfx_plan(post, tl):
     top = sc[-1]
     if not intro:   # 0초부터 10위: 첫 화면 '?' 칸 틱·상승음·드롭 없음
         rows_in = []
-    return {"impacts": [0.0], "hits": hs[1:] + changes[1:], "whooshes": hs[1:] + changes[1:],
+    items = rank_items(post)
+    res = [round((s["start"] + (tl["reveal"] if s["kind"] == "top" else 0) + RESULT_AT) * FPS) / FPS
+           for s in sc if s["kind"] != "hook" and items[s["i"]].get("result")]
+    return {"impacts": [0.0], "hits": sorted(hs[1:] + changes[1:] + res), "whooshes": hs[1:] + changes[1:],
             "riser_to": changes[0] if intro else None,
             "riser_len": max(0.4, min(0.8, changes[0] - hs[-1] - 0.25)) if intro else 1.0, "drop": changes[0] if intro else None,
             "ticks": sorted(rows_in + lands), "top": (top["start"], top["start"] + tl["reveal"])}
@@ -596,7 +616,8 @@ def make_rank_reel(post, folder, cfg):
         reveal = tl["scenes"][-1]["start"] + tl["reveal"]
         intro = tl["scenes"][0]["kind"] == "hook"
         first = tl["scenes"][1]["start"] if intro else 0.0
-        make_hook_music(music, tl["bpm"], dur, [first, reveal], seed=int(pm.get("seed", 7)), drop_at=first if intro else None)
+        make_hook_music(music, tl["bpm"], dur, [first, reveal], seed=int(pm.get("seed", 7)), drop_at=first if intro else None,
+                        style=pm.get("style"))
         print(f"배경음악: 후킹 비트 BPM {tl['bpm']:g} (박 {tl['beat']:.3f}초), 드롭 {first:.2f}초, 1위 공개 크래시 {reveal:.2f}초")
     from listreel import mix_audio
     sfx, info = make_sfx(post, tl, dur)

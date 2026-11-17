@@ -171,6 +171,10 @@ MUSIC_STYLES = {
     "h5-fm-arp": {"tr": 8, "chords": [(57, 60, 64), (53, 57, 60), (55, 59, 62), (52, 55, 59)],   # Am F G Em → Fm Db Eb Cm (발언 소개 릴스, 2026-11-17)
                   "hook": [69, 72, 76, 81, None, 76, 72, None, 71, 74, 79, 83, None, 79, 74, None],
                   "end": [72, 76, 81, None, 79, None, None, None], "lead": "square", "lp": 2, "octave": "saw"},
+    # 긴장감 있는 경보풍: 같은 음 연타 + 반음 위로 찌르기 (사고·경고 주제)
+    "h5-gm-alarm": {"tr": -2, "chords": [(57, 60, 64), (53, 57, 60), (60, 64, 67), (55, 59, 62)],   # Am F C G → Gm Eb Bb F
+                    "hook": [76, 76, None, 77, 76, None, 72, None, 76, 76, None, 79, 77, 76, None, None],
+                    "end": [74, 74, None, 72, 69, None, None, None], "lead": "saw", "lp": 2, "octave": "square"},
 }
 
 
