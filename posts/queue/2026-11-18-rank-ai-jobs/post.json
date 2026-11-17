@@ -8,7 +8,7 @@
   "date": "2026-11-18",
   "publish_at": "2026-11-18T18:13:00+09:00",
   "rights": "own",
-  "rights_note": "화면은 직접 만든 그래픽(글자·숫자·막대). 순위·점수는 Microsoft Research 'Working with AI' 논문 최신판(arXiv v7, 2026-10-23)과 공개 데이터 v1.1 ai_applicability_scores.csv의 785개 직업 점수 상위 10개를 그대로 옮김(값x100, 소수 첫째 자리 반올림). 2025년 7월 첫 판(v1, 데이터 v1.0)과는 순위가 다름. 평균 15.9는 785개 직업의 단순 평균. 직업 이름은 미국 직업 분류(SOC) 이름을 한국어로 옮김. 배경음악·효과음은 agent/music_gen.py 코드 생성",
+  "rights_note": "화면은 직접 만든 그래픽(글자·숫자·막대). 순위·점수는 Microsoft Research 'Working with AI' 논문 최신판(arXiv v7, 2026-10-23)과 공개 데이터 v1.1 ai_applicability_scores.csv의 785개 직업 점수 상위 10개를 그대로 옮김(값x100, 소수 첫째 자리 반올림). 2025년 7월 첫 판(v1, 데이터 v1.0)과는 순위가 다름. 평균 15.9는 785개 직업의 단순 평균. 직업 이름은 미국 직업 분류(SOC) 이름을 한국어로 옮김. 배경음악은 'pROgraM vs. Us3R' by morgantj (ccmixter.org/files/morgantj/30328), CC BY 3.0 조각(agent/music_fit.py)·효과음은 agent/music_gen.py 코드 생성.",
   "title": "AI에 가장 먼저\n흔들릴 직업 TOP 10",
   "highlight": "TOP 10",
   "rank": {
@@ -85,7 +85,14 @@
     "cta_line": "댓글 남기시면 30위까지 전체 DM으로"
   },
   "music": {
-    "generate": true
+    "src": "music.m4a",
+    "title": "pROgraM vs. Us3R",
+    "artist": "morgantj",
+    "url": "https://ccmixter.org/files/morgantj/30328",
+    "license": "CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/), 곡 페이지에서 확인 2026-11-17",
+    "credit": "'pROgraM vs. Us3R' by morgantj (ccmixter.org/files/morgantj/30328), CC BY 3.0",
+    "genre": "electronic house",
+    "note": "agent/music_fit.py로 릴스 120 BPM에 맞춘 38초 조각 (원곡 약 130 BPM을 0.93배, 40초부터). 곡 전체는 저장소에 넣지 않음"
   },
   "topic": [
     "AI 일자리",
@@ -107,7 +114,7 @@
       "url": "https://github.com/microsoft/working-with-ai"
     }
   ],
-  "caption": "AI 대체 직업 순위 TOP 10, 마이크로소프트 연구팀이 785개 직업에 매긴 'AI 적용 점수'로 10위부터 1위까지 정리했습니다.\n댓글 남기시면 30위까지 전체 순위를 DM으로 보내 드려요.\n\n📊 빙 코파일럿 대화 약 20만 건을 분석해, AI가 실제로 해낸 일이 직업마다 업무와 얼마나 겹치는지 점수로 매겼습니다.\n📍 1위는 통역사·번역가(49.2점)이고, 작가와 고객 상담원도 10위 안에 들었어요. 785개 직업 평균은 15.9점입니다.\n💡 연구팀은 점수가 높다고 일자리가 줄어든다는 뜻은 아니라고 밝혔어요. AI가 일하는 방식부터 바꿀 직업에 가깝습니다.\n👉 출처: Microsoft Research 'Working with AI' 논문·공개 데이터 (2026년 10월 개정판)\n\n번역이나 고객 상담 일을 하는 친구에게 보내 주세요.\n\n팔로우하고 댓글 남기시면 30위까지 전체 순위를 DM으로 보내 드려요.",
+  "caption": "AI 대체 직업 순위 TOP 10, 마이크로소프트 연구팀이 785개 직업에 매긴 'AI 적용 점수'로 10위부터 1위까지 정리했습니다.\n댓글 남기시면 30위까지 전체 순위를 DM으로 보내 드려요.\n\n📊 빙 코파일럿 대화 약 20만 건을 분석해, AI가 실제로 해낸 일이 직업마다 업무와 얼마나 겹치는지 점수로 매겼습니다.\n📍 1위는 통역사·번역가(49.2점)이고, 작가와 고객 상담원도 10위 안에 들었어요. 785개 직업 평균은 15.9점입니다.\n💡 연구팀은 점수가 높다고 일자리가 줄어든다는 뜻은 아니라고 밝혔어요. AI가 일하는 방식부터 바꿀 직업에 가깝습니다.\n👉 출처: Microsoft Research 'Working with AI' 논문·공개 데이터 (2026년 10월 개정판)\n\n번역이나 고객 상담 일을 하는 친구에게 보내 주세요.\n\n음악: 'pROgraM vs. Us3R' by morgantj (ccmixter.org/files/morgantj/30328), CC BY 3.0\n\n팔로우하고 댓글 남기시면 30위까지 전체 순위를 DM으로 보내 드려요.",
   "hashtags": [
     "#AI일자리",
     "#인공지능",

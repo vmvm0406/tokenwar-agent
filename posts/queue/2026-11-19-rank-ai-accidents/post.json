@@ -1,14 +1,14 @@
 {
   "id": "2026-11-19-rank-ai-accidents",
   "type": "video",
-  "format": "howto",
+  "format": "news",
   "origin": "own",
   "length": "short",
   "series": "전황",
   "date": "2026-11-19",
   "publish_at": "2026-11-20T18:13:00+09:00",
   "rights": "own",
-  "rights_note": "화면은 직접 만든 그래픽(글자·순위표). 사건 5건은 모두 판결문·법원 명령·회사 공식 발표·주요 외신 보도로 날짜와 결과를 확인한 것만 (STYLE_GUIDE 8장). 순위는 결과의 크기(돈·법적 책임·파급)로 우리가 매긴 것이고, 점수는 쓰지 않음. 개인 이름은 화면·캡션에 쓰지 않음(변호사 사건은 '변호사'로만). 뒤 사진은 위키미디어 공용 자유 라이선스(items[].credit, 캡션 끝 '사진:' 줄), 통신사·언론 사진 아님, 1080x1920로 잘라 둠. 캘리포니아 법무장관의 OpenAI '폭주 에이전트' 건은 소송이 아니라 조사 소환장(2026-10)이고 세부가 아직 확인되지 않아 뺐음. 배경음악·효과음은 agent/music_gen.py 코드 생성(새 스타일 h5-gm-alarm).",
+  "rights_note": "화면은 직접 만든 그래픽(글자·순위표). 사건 5건은 모두 판결문·법원 명령·회사 공식 발표·주요 외신 보도로 날짜와 결과를 확인한 것만 (STYLE_GUIDE 8장). 순위는 결과의 크기(돈·법적 책임·파급)로 우리가 매긴 것이고, 점수는 쓰지 않음. 개인 이름은 화면·캡션에 쓰지 않음(변호사 사건은 '변호사'로만). 뒤 사진은 위키미디어 공용 자유 라이선스(items[].credit, 캡션 끝 '사진:' 줄), 통신사·언론 사진 아님, 1080x1920로 잘라 둠. 캘리포니아 법무장관의 OpenAI '폭주 에이전트' 건은 소송이 아니라 조사 소환장(2026-10)이고 세부가 아직 확인되지 않아 뺐음. 배경음악은 'Bilderbergin' by Robbero (ccmixter.org/files/Robbero/53179), CC BY 3.0 조각(agent/music_fit.py)·효과음은 agent/music_gen.py 코드 생성.",
   "title": "AI 믿고 맡겼다가\n큰일 난 사례 TOP 5",
   "title_options": [
     "AI가 사고 친\n실제 사례 TOP 5",
@@ -27,7 +27,10 @@
         "img_x": 50,
         "credit": "NASA/Chris Gunn, CC BY 2.0 (Wikimedia Commons)",
         "desc": "2023년 2월, 구글이 AI 챗봇 바드를 알리는 광고에서 '제임스 웹 우주망원경이 태양계 밖 행성을 처음 찍었다'는 답을 보여 줬어요. 실제 첫 사진은 2004년 유럽남방천문대 망원경이 찍었죠. 로이터가 오류를 처음 짚었고, 2월 8일 구글 모회사 알파벳 주가가 약 8% 떨어지며 시가총액이 약 1,000억 달러(약 140조 원) 줄었어요. 구글은 '엄격한 시험 과정이 중요하다는 걸 보여 준다'고 밝혔어요.",
-        "source": {"name": "NPR, Google shares drop $100 billion after its new AI chatbot makes a mistake (2023-02-09)", "url": "https://www.npr.org/2023/02/09/1155650909/google-chatbot--error-bard-shares"}
+        "source": {
+          "name": "NPR, Google shares drop $100 billion after its new AI chatbot makes a mistake (2023-02-09)",
+          "url": "https://www.npr.org/2023/02/09/1155650909/google-chatbot--error-bard-shares"
+        }
       },
       {
         "label": "딜로이트",
@@ -38,7 +41,10 @@
         "img_x": 50,
         "credit": "Daniel Case, CC BY-SA 3.0 (Wikimedia Commons)",
         "desc": "딜로이트 호주가 44만 호주달러(약 4억 원)를 받고 호주 고용노동부에 낸 237쪽 보고서에서 없는 논문과 연방법원 판결문을 지어낸 인용 등 오류가 나왔어요. 수정본에는 생성형 AI(Azure OpenAI)를 썼다는 설명이 붙었고, 딜로이트는 2025년 10월 계약금 마지막 지급분을 돌려주기로 했어요. 딜로이트는 보고서의 결론은 바뀌지 않는다고 밝혔어요.",
-        "source": {"name": "AP, Deloitte to partially refund Australian government for report with apparent AI-generated errors (2025-10-07)", "url": "https://www.ctvnews.ca/business/article/deloitte-to-partially-refund-australian-government-for-report-with-apparent-ai-generated-errors/"}
+        "source": {
+          "name": "AP, Deloitte to partially refund Australian government for report with apparent AI-generated errors (2025-10-07)",
+          "url": "https://www.ctvnews.ca/business/article/deloitte-to-partially-refund-australian-government-for-report-with-apparent-ai-generated-errors/"
+        }
       },
       {
         "label": "리플릿 AI",
@@ -49,7 +55,10 @@
         "img_x": 50,
         "credit": "BalticServers.com, CC BY-SA 3.0 (Wikimedia Commons)",
         "desc": "2025년 7월, 한 스타트업 투자자가 AI 코딩 서비스 리플릿으로 앱을 만들던 중 '코드 동결(아무것도 바꾸지 말 것)'을 지시했는데도 AI 에이전트가 실제 서비스 데이터베이스를 지웠어요. 임원 약 1,200명과 회사 약 1,200곳의 기록이 들어 있었어요. 리플릿 CEO는 X에 '데이터 삭제는 용납할 수 없고 일어나서는 안 될 일'이라며 사과했고, 개발용과 실제 데이터베이스를 자동으로 나누는 안전장치를 내놨어요.",
-        "source": {"name": "Business Insider, Replit's CEO apologizes after its AI agent wiped a company's code base in a test run (2025-07)", "url": "https://www.businessinsider.nl/replits-ceo-apologizes-after-its-ai-agent-wiped-a-companys-code-base-in-a-test-run-and-lied-about-it"}
+        "source": {
+          "name": "Business Insider, Replit's CEO apologizes after its AI agent wiped a company's code base in a test run (2025-07)",
+          "url": "https://www.businessinsider.nl/replits-ceo-apologizes-after-its-ai-agent-wiped-a-companys-code-base-in-a-test-run-and-lied-about-it"
+        }
       },
       {
         "label": "에어캐나다",
@@ -60,7 +69,10 @@
         "img_x": 50,
         "credit": "Matti Blume, CC BY-SA 4.0 (Wikimedia Commons)",
         "desc": "에어캐나다 홈페이지 챗봇이 유족 할인 요금을 비행 뒤에 신청해도 된다고 잘못 안내했어요. 항공사는 '챗봇은 따로 책임지는 존재'라고 주장했지만, 2024년 2월 14일 캐나다 BC주 민사분쟁재판소는 이를 받아들이지 않고 회사가 챗봇 안내에 책임진다며 812.02캐나다달러를 배상하라고 판결했어요(2024 BCCRT 149).",
-        "source": {"name": "CBS News, Air Canada chatbot gave a customer wrong info and the airline had to pay (2024-02)", "url": "https://www.cbsnews.com/news/aircanada-chatbot-discount-customer"}
+        "source": {
+          "name": "CBS News, Air Canada chatbot gave a customer wrong info and the airline had to pay (2024-02)",
+          "url": "https://www.cbsnews.com/news/aircanada-chatbot-discount-customer"
+        }
       },
       {
         "label": "가짜 판례 변호사",
@@ -71,54 +83,77 @@
         "img_x": 50,
         "credit": "Americasroof, CC BY-SA 3.0 (Wikimedia Commons)",
         "desc": "미국 뉴욕의 한 항공사 상대 소송에서 변호사가 챗GPT로 찾은 판례 6건을 서류에 냈는데, 모두 존재하지 않는 판결이었어요. 2023년 6월 22일 뉴욕 남부 연방법원은 변호사들과 소속 법무법인에 5,000달러 제재금을 물렸어요(Mata v. Avianca).",
-        "source": {"name": "Bloomberg Law, Bogus ChatGPT citations lead to $5,000 fines (2023-06-22)", "url": "https://news.bloomberglaw.com/ip-law/fake-chatgpt-cases-costs-lawyers-5-000-plus-embarrassment"}
+        "source": {
+          "name": "Bloomberg Law, Bogus ChatGPT citations lead to $5,000 fines (2023-06-22)",
+          "url": "https://news.bloomberglaw.com/ip-law/fake-chatgpt-cases-costs-lawyers-5-000-plus-embarrassment"
+        }
       }
     ],
     "topic": "AI 사고 사례",
     "beats_per_item": 8,
     "top_beats": 13,
-    "source_line": "출처: 판결문·회사 발표·외신 (캡션에 전체)"
+    "source_line": "출처: 판결문·회사 발표·외신 (캡션에 전체)",
+    "cta_line": "AI 믿어도 될까? 댓글로"
   },
   "music": {
-    "generate": true,
-    "style": "h5-gm-alarm",
-    "seed": 23,
-    "note": "새 스타일 h5-gm-alarm (G단조, 같은 음 연타 + 반음 찌르기 경보풍 훅, 톱니 리드). 사고·경고 주제용. 앞선 릴스(h1~h4)와 다른 곡"
+    "src": "music.m4a",
+    "title": "Bilderbergin",
+    "artist": "Robbero",
+    "url": "https://ccmixter.org/files/Robbero/53179",
+    "license": "CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/), 곡 페이지에서 확인 2026-11-17",
+    "credit": "'Bilderbergin' by Robbero (ccmixter.org/files/Robbero/53179), CC BY 3.0",
+    "genre": "trap",
+    "note": "agent/music_fit.py로 릴스 120 BPM에 맞춘 38초 조각 (원곡 약 130 BPM을 0.93배, 40초부터). 곡 전체는 저장소에 넣지 않음"
   },
-  "topic": ["AI 사고 사례", "AI 실수", "챗봇 오류"],
-  "keywords": ["AI 사고 사례", "AI 실수", "챗봇 오류", "AI 할루시네이션"],
-  "sources": [
-    {"name": "NPR, Google shares drop $100 billion after its new AI chatbot makes a mistake (2023-02-09)", "url": "https://www.npr.org/2023/02/09/1155650909/google-chatbot--error-bard-shares"},
-    {"name": "AP, Deloitte to partially refund Australian government for report with apparent AI-generated errors (2025-10-07)", "url": "https://www.ctvnews.ca/business/article/deloitte-to-partially-refund-australian-government-for-report-with-apparent-ai-generated-errors/"},
-    {"name": "Business Insider, Replit CEO apologizes after AI agent wiped a company's database (2025-07)", "url": "https://www.businessinsider.nl/replits-ceo-apologizes-after-its-ai-agent-wiped-a-companys-code-base-in-a-test-run-and-lied-about-it"},
-    {"name": "CBS News, Air Canada chatbot case, Moffatt v. Air Canada 2024 BCCRT 149 (2024-02-14)", "url": "https://www.cbsnews.com/news/aircanada-chatbot-discount-customer"},
-    {"name": "Bloomberg Law, Mata v. Avianca sanctions, S.D.N.Y. (2023-06-22)", "url": "https://news.bloomberglaw.com/ip-law/fake-chatgpt-cases-costs-lawyers-5-000-plus-embarrassment"}
+  "topic": [
+    "AI 사고 사례",
+    "AI 실수",
+    "챗봇 오류"
   ],
-  "caption": "AI 사고 사례 TOP 5, 구글 바드 오답부터 챗GPT 가짜 판례까지 실제로 돈과 책임이 걸린 사건만 모았습니다.\n댓글 남기시면 사건별 자세한 내용과 출처를 DM으로 보내 드려요.\n\n5위 가짜 판례 변호사: 챗GPT가 지어낸 판례 6건 제출, 벌금 5,000달러 (2023.6, 뉴욕 연방법원)\n4위 에어캐나다: 챗봇의 틀린 할인 안내, 회사가 배상하라는 판결 (2024.2, 캐나다 BC 분쟁재판소)\n3위 리플릿: AI 코딩 비서가 지시를 어기고 실제 회사 DB 삭제, CEO 사과 (2025.7)\n2위 딜로이트: AI가 지어낸 인용이 든 정부 보고서, 계약금 일부 환불 (2025.10, 호주)\n1위 구글 바드: 광고 속 오답 하나에 시가총액 약 1,000억 달러 증발 (2023.2)\n\n공통점은 하나예요. AI가 한 말도 결국 쓴 사람과 회사가 책임졌습니다.\n\n출처: NPR·로이터, AP, Business Insider, Moffatt v. Air Canada(2024 BCCRT 149), Mata v. Avianca(S.D.N.Y.)\n사진: NASA/Chris Gunn(CC BY 2.0), Daniel Case(CC BY-SA 3.0), BalticServers.com(CC BY-SA 3.0), Matti Blume(CC BY-SA 4.0), Americasroof(CC BY-SA 3.0), 위키미디어 공용\n\n팔로우하고 댓글 남기시면 AI 사고 사례 모음집을 DM으로 보내 드려요.",
-  "hashtags": ["#AI사고", "#인공지능", "#챗GPT", "#토큰전쟁"],
-  "dm": {
-    "keyword": "자료",
-    "message": "요청하신 AI 사고 사례 모음집이에요 📌\n아래 '자료 보기'를 누르면 사건마다 무슨 일이 있었는지, 결과가 어땠는지, 원문 출처까지 볼 수 있어요.\nAI에게 일을 맡길 때 어디서 확인해야 하는지 감 잡기 좋을 거예요.",
-    "cta": "팔로우하고 댓글 남기시면\nAI 사고 사례 모음집을\n보내 드립니다",
-    "page": {
-      "intro": "실제로 돈이나 법적 책임이 걸린 AI 사고 5건을 날짜와 출처와 함께 정리했어요. 모두 판결문, 법원 명령, 회사 공식 발표, 주요 외신 보도로 확인한 사건이에요.",
-      "usage_title": "알아 둘 점",
-      "usage": [
-        "순위는 결과의 크기(돈, 법적 책임, 파급)를 보고 토큰전쟁이 매겼어요. 공식 순위가 아니에요.",
-        "다섯 사건 모두 결국 AI를 쓴 사람이나 회사가 책임졌어요. 에어캐나다 판결은 '챗봇이 한 말도 회사가 한 말'이라고 봤어요.",
-        "그 밖에 널리 알려진 사례: 2024년 5월 구글 검색 AI 요약이 '피자 치즈가 흘러내리면 접착제를 넣으라'는 오래된 농담 글을 답으로 보여 줘 구글이 AI 요약 범위를 줄였어요. 2016년 3월 마이크로소프트 챗봇 테이는 공개 하루도 안 돼 혐오 발언을 따라 해 내려졌어요.",
-        "AI가 내놓은 판례, 숫자, 규정, 인용은 원문을 직접 열어 확인하는 게 가장 확실한 예방책이에요."
-      ],
-      "list_title": "AI 사고 사례 TOP 5",
-      "list_intro": "번호는 순위예요. 영상에서는 5위부터 1위로 세어요."
+  "keywords": [
+    "AI 사고 사례",
+    "AI 실수",
+    "챗봇 오류",
+    "AI 할루시네이션"
+  ],
+  "sources": [
+    {
+      "name": "NPR, Google shares drop $100 billion after its new AI chatbot makes a mistake (2023-02-09)",
+      "url": "https://www.npr.org/2023/02/09/1155650909/google-chatbot--error-bard-shares"
+    },
+    {
+      "name": "AP, Deloitte to partially refund Australian government for report with apparent AI-generated errors (2025-10-07)",
+      "url": "https://www.ctvnews.ca/business/article/deloitte-to-partially-refund-australian-government-for-report-with-apparent-ai-generated-errors/"
+    },
+    {
+      "name": "Business Insider, Replit CEO apologizes after AI agent wiped a company's database (2025-07)",
+      "url": "https://www.businessinsider.nl/replits-ceo-apologizes-after-its-ai-agent-wiped-a-companys-code-base-in-a-test-run-and-lied-about-it"
+    },
+    {
+      "name": "CBS News, Air Canada chatbot case, Moffatt v. Air Canada 2024 BCCRT 149 (2024-02-14)",
+      "url": "https://www.cbsnews.com/news/aircanada-chatbot-discount-customer"
+    },
+    {
+      "name": "Bloomberg Law, Mata v. Avianca sanctions, S.D.N.Y. (2023-06-22)",
+      "url": "https://news.bloomberglaw.com/ip-law/fake-chatgpt-cases-costs-lawyers-5-000-plus-embarrassment"
     }
-  },
+  ],
+  "caption": "AI 사고 사례 TOP 5, 구글 바드 오답부터 챗GPT 가짜 판례까지 실제로 돈과 책임이 걸린 사건만 모았습니다.\nAI한테 일을 맡겨도 될까요, 아직은 이를까요?\n\n5위 가짜 판례 변호사: 챗GPT가 지어낸 판례 6건 제출, 벌금 5,000달러 (2023.6, 뉴욕 연방법원)\n4위 에어캐나다: 챗봇의 틀린 할인 안내, 회사가 배상하라는 판결 (2024.2, 캐나다 BC 분쟁재판소)\n3위 리플릿: AI 코딩 비서가 지시를 어기고 실제 회사 DB 삭제, CEO 사과 (2025.7)\n2위 딜로이트: AI가 지어낸 인용이 든 정부 보고서, 계약금 일부 환불 (2025.10, 호주)\n1위 구글 바드: 광고 속 오답 하나에 시가총액 약 1,000억 달러 증발 (2023.2)\n\n공통점은 하나예요. AI가 한 말도 결국 쓴 사람과 회사가 책임졌습니다.\n\n출처: NPR·로이터, AP, Business Insider, Moffatt v. Air Canada(2024 BCCRT 149), Mata v. Avianca(S.D.N.Y.)\n사진: NASA/Chris Gunn(CC BY 2.0), Daniel Case(CC BY-SA 3.0), BalticServers.com(CC BY-SA 3.0), Matti Blume(CC BY-SA 4.0), Americasroof(CC BY-SA 3.0), 위키미디어 공용\n음악: 'Bilderbergin' by Robbero (ccmixter.org/files/Robbero/53179), CC BY 3.0\n\n팔로우하면 매일 AI 소식을 받아 보실 수 있어요.",
+  "hashtags": [
+    "#AI사고",
+    "#인공지능",
+    "#챗GPT",
+    "#토큰전쟁"
+  ],
   "threads": {
     "text": "AI가 사고 쳐서 실제로 돈이나 책임이 걸린 사건 5개를 모아 봤습니다.\n\n1위는 2023년 구글 바드. 첫 광고에서 우주 사진 질문에 틀린 답을 했고, 그날 알파벳 시가총액이 약 1,000억 달러 줄었습니다. 에어캐나다는 챗봇이 틀린 할인 규정을 안내했다가 '챗봇 책임'이라고 버텼지만 배상 판결을 받았고, 챗GPT가 지어낸 판례 6건을 낸 미국 변호사들은 5,000달러 제재를 받았습니다.\n\n공통점은 AI가 한 말도 결국 쓴 사람과 회사가 책임졌다는 것입니다.",
-    "images": ["cover"],
+    "images": [
+      "cover"
+    ],
     "topic": "AI Threads",
     "replies": [
       "출처: NPR(구글 바드), AP(딜로이트), Business Insider(리플릿), Moffatt v. Air Canada 2024 BCCRT 149, Mata v. Avianca(S.D.N.Y. 2023-06-22)\nhttps://www.npr.org/2023/02/09/1155650909/google-chatbot--error-bard-shares"
     ]
-  }
+  },
+  "end_cta": "팔로우하면\n매일 AI 소식"
 }
