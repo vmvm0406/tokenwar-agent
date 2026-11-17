@@ -11,10 +11,12 @@
                 list.hook_anim(기본 true, 운영자 요청 2026-11-17 "처음 자막을 확 강조하면서 시작"): 제목 줄마다 1.3배에서
                 쾅 박히며(0.95 넘침 → 1.0) 8분음표 간격으로 차례로 들어오고, 강조어(highlight)는 녹색 면으로 한 박 번쩍,
                 그림은 줄이 박힐 때마다 짧게 흔들린다. 소리: 0초 쿵, 줄마다 휙+타격, 목록 시작 앞 상승음 → 비트 드롭.
-    목록 쌓기   list.stack(기본 true, 운영자 요청 2026-11-17 "다음은? 궁금증"): 지나간 이름이 이름 띠 아래 왼쪽에 작게 쌓이고
-                (지난 것 흐리게, 지금 것 녹색), 다음 자리는 "?"로 비워 둔다.
-    쏟아지기    list.flood(기본 true, dm.page.more가 있을 때): 끝 화면 앞 4박 동안 추가 용어 이름이 화면 가득 쏟아지고
-                가운데 "그리고 N개 더"가 박힌다 (커지는 스웰 + 이름마다 틱).
+    목록 쌓기   list.stack(기본 true, 운영자 요청 2026-11-17 "다음은? 궁금증", "목록에 ?로 15개 더"): 이름 띠 아래에
+                번호 목록. 왼쪽 열 = 영상 항목(지난 것 흐리게, 지금 것 녹색, 아직 안 나온 것 "NN ?"), 오른쪽 열 = 자료 페이지
+                추가 용어 자리 "16 ?" … (dm.page.more 수, list.stack_more false면 뺌).
+    쏟아지기    list.flood(기본 true, dm.page.more가 있을 때): 끝 화면 앞 4박 동안 화면이 어두워지고 추가 용어 이름이 뒤에
+                흐리게 쏟아지며, 오른쪽 열 "?" 자리가 빠르게 차례로 녹색으로 번쩍 채워진다(스웰 + 자리마다 틱). 그 뒤 바로 끝 화면.
+                가운데 문구는 기본 없음 (list.flood_text로 한 줄 넣을 수 있음. '15개 더'처럼 개수 문구는 쓰지 않는다, 운영자 2026-11-17).
     항목 화면   그림 + 이름 띠: 작은 녹색 번호 / 큰 영어 이름(대문자, 자간 넓게). 한국어 이름은 DM 자료 페이지에만
                 (운영자 결정 2026-11-17). list.label "ko"면 한국어 크게 + 영어 작게, "both"면 영어 크게 + 한국어 작게.
                 띠는 단색 반투명 검정, 위쪽('자료' 안내 띠 바로 아래). 마스코트(화면 가운데~아래)를 가리지 않게.
@@ -63,6 +65,7 @@ HOOK_SCALE = 1.3        # 첫 화면 제목 줄이 박히기 시작하는 배율
 HOOK_STEP = (0.15, 0.27)  # 제목 줄 사이 간격(초): 8분음표가 이 안이면 8분, 아니면 16분
 FLOOD_BEATS = 4         # 끝의 이름 쏟아지기 박 수
 FLOOD_REPEAT = 2        # 쏟아지는 이름을 몇 번 돌려 쏟나 (둘째부터는 작고 흐리게)
+STACK_C2_RIGHT = 840    # 목록 쌓기 오른쪽 열('?' 자리)의 오른쪽 끝 x: 오른쪽 아래 버튼 줄(x 850~)보다 안쪽
 
 
 def opts(post):
@@ -71,7 +74,8 @@ def opts(post):
     more = (((post.get("dm") or {}).get("page") or {}).get("more")) or []
     return {"hook_anim": L.get("hook_anim", True) is not False,
             "stack": L.get("stack", True) is not False,
-            "flood": L.get("flood", True) is not False and bool(more)}
+            "flood": L.get("flood", True) is not False and bool(more),
+            "stack_more": len(more) if (L.get("stack", True) is not False and L.get("stack_more", True) is not False) else 0}
 
 
 def flood_names(post):
@@ -200,8 +204,12 @@ def flood_plan(post, tl):
         drops.append({"t": t, "x": rnd.randint(-120, 860), "y": rnd.randint(140, 1800), "fs": fs,
                       "dim": rep_ > 0, "green": rnd.random() < 0.22, "text": name})
     more_t = round(d * 0.4 * FPS) / FPS
-    text = (post.get("list") or {}).get("flood_text") or f"그리고 {len(names)}개 더"
-    return {"drops": drops, "more_t": more_t, "text": text, "start": tl["starts"][i], "dur": d}
+    text = (post.get("list") or {}).get("flood_text") or ""
+    # 오른쪽 열 "?" 자리가 차례로 번쩍 채워지는 시각 (장면 앞 60% 안, 프레임에 맞춤)
+    n_items = len([r for r in rows_of(post) if not r["base"]])
+    slots = [{"num": f"{n_items + 1 + j:02d}", "t": round(j * d * 0.6 / max(1, len(names)) * FPS) / FPS}
+             for j in range(len(names))]
+    return {"drops": drops, "more_t": more_t, "text": text, "start": tl["starts"][i], "dur": d, "slots": slots}
 
 
 # ---------- 그림: 4:5 → 세로 9:16 꽉 채우기 ----------
@@ -510,24 +518,28 @@ def page_html(post, imgs, cfg, tl=None):
 /* 강조어 번쩍: 글자 범위에 딱 맞는 녹색 면(모서리 각짐), 글자는 검정. 자리(너비)는 그대로 */
 #title .hl.fill{{background:{b['accent']};color:#000;text-shadow:none;box-shadow:0 0 0 .06em {b['accent']}}}
 /* 목록 쌓기: 이름 띠 아래 왼쪽, 작은 글씨. 지난 것 흐리게, 지금 것 녹색, 다음은 '?' */
-#stack{{position:absolute;left:{SIDE}px;display:none;font-family:'Pretendard';font-weight:700;letter-spacing:.06em;
+#stack{{position:absolute;left:0;right:0;display:none;font-family:'Pretendard';font-weight:700;letter-spacing:.06em;
   text-shadow:0 2px 8px rgba(0,0,0,.85),0 0 2px rgba(0,0,0,.9);white-space:nowrap}}
+#stack .c1{{position:absolute;left:{SIDE}px;top:0}} #stack .c2{{position:absolute;right:{W - STACK_C2_RIGHT}px;top:0}}
+#stack .s.ex{{color:rgba(255,255,255,.5)}} #stack .s.ex b{{color:rgba(255,255,255,.5)}}
+#stack .s.ex.on, #stack .s.ex.on b{{color:{b['accent']}}}
+#stack .s.ex.fl{{background:{b['accent']};color:#000;text-shadow:none;padding:0 .2em;margin:0 -.2em}} #stack .s.ex.fl b{{color:#000}}
 #stack .s{{color:rgba(255,255,255,.62)}} #stack .s b{{font-family:'Black Han Sans';font-weight:400;color:rgba(0,255,102,.55);margin-right:.5em}}
 #stack .s.cur{{color:{b['accent']}}} #stack .s.cur b{{color:{b['accent']}}}
-#stack .s.nx{{color:#fff}} #stack .s.nx b{{color:rgba(255,255,255,.7)}}
+#stack .s.nx{{color:rgba(255,255,255,.85)}} #stack .s.nx b{{color:rgba(255,255,255,.7)}}
 /* 쏟아지기: 단색 어둡게 + 이름이 화면 가득 (가장자리 넘쳐도 됨). 가운데 "그리고 N개 더"는 안전 영역 안 */
 #dim{{position:absolute;inset:0;background:#000;opacity:0;display:none}}
 #flood{{position:absolute;inset:0;display:none}}
 .fd{{position:absolute;font-family:'Pretendard';font-weight:900;color:#fff;white-space:nowrap;letter-spacing:.06em;line-height:1;
   text-shadow:0 3px 14px rgba(0,0,0,.7);opacity:0}}
-.fd.dim{{color:rgba(255,255,255,.45)}} .fd.g{{color:{b['accent']}}}
+.fd.dim{{color:rgba(255,255,255,.3)}} .fd.g{{color:rgba(0,255,102,.6)}}
 #more{{position:absolute;left:0;right:0;top:820px;display:none;text-align:center;background:rgba(6,7,6,.82);padding:34px {SIDE}px}}
 #more .m{{font-family:'Black Han Sans';font-size:104px;line-height:1.05;color:#fff;display:inline-block}}
 </style></head><body><div id="f">
 <img id="img" src="">
 <div class="band" id="title"><div class="inner"><div class="t">{title_html}</div></div></div>
-<div id="stack"></div>
 <div id="dim"></div><div id="flood">{flood_html}</div>
+<div id="stack"></div>
 <div id="more"><div class="m">{esc(fp["text"]) if fp else ""}</div></div>
 <div class="band {cls}" id="label"><div class="inner">
   <div class="num" id="ln"></div><div class="en" id="le"></div><div class="ko" id="lk"></div></div></div>
@@ -536,6 +548,7 @@ const ROWS = {js_rows};
 const HK = {js_hook};
 const FL = {js_flood};
 const STACK_ON = {'true' if op['stack'] else 'false'};
+const STACK_MORE = {op['stack_more']};
 const SAFE_BOTTOM = {SAFE_BOTTOM};
 const KO_BIG = {'true' if ko_big else 'false'};
 const lab = document.getElementById('label'), ttl = document.getElementById('title');
@@ -588,9 +601,22 @@ window.twProblems = () => {{
   ROWS.forEach((row, r) => {{ set(r); const el = bigEl(); el.style.fontSize = fits[r][0] + 'px';
     el.style.whiteSpace = fits[r][1] ? 'normal' : ''; labBottom = Math.max(labBottom, lab.getBoundingClientRect().bottom); }});
   lab.style.display = 'none';
-  const nStack = ROWS.filter(x => !x.base).length + 1;
+  const nReal = ROWS.filter(x => !x.base).length;
+  const nStack = Math.max(nReal, STACK_MORE);
   window.stackTop = labBottom + 22;
-  window.stackLH = Math.min(42, Math.floor((SAFE_BOTTOM - 8 - window.stackTop) / nStack));
+  window.stackLH = Math.min(48, Math.floor((SAFE_BOTTOM - 8 - window.stackTop) / nStack));
+  // 두 열이 겹치면(왼쪽 열 긴 이름) 글씨를 줄인다
+  if (STACK_ON) {{
+    const last = ROWS.length - 1;
+    for (;;) {{
+      drawStack(last, 1, 'flood', 99);
+      const c1 = stackEl.querySelector('.c1'), c2 = stackEl.querySelector('.c2');
+      const over = c2 && c1.getBoundingClientRect().right > c2.getBoundingClientRect().left - 24;
+      if (!over || window.stackLH <= 24) break;
+      window.stackLH -= 1;
+    }}
+    stackEl.style.display = 'none';
+  }}
   if (STACK_ON && window.stackLH < 26) out.push('목록 쌓기 글씨가 너무 작음 (줄 높이 ' + window.stackLH + 'px)');
   if (FL.text) {{ const mo = document.getElementById('more'); mo.style.display = 'block';
     const b2 = mo.getBoundingClientRect(); if (b2.top < {SAFE_TOP} || b2.bottom > SAFE_BOTTOM) out.push('"더" 띠가 안전 영역 밖');
@@ -599,16 +625,31 @@ window.twProblems = () => {{
   return out;
 }};
 const stackEl = document.getElementById('stack');
-const drawStack = (r, e) => {{
+// mode 'row': 지금 줄 r까지 이름, 나머지 '?'. mode 'flood': 모든 이름 + 오른쪽 열 '?' 자리가 t에 따라 번쩍 채워짐
+const drawStack = (r, e, mode, t) => {{
   if (!STACK_ON || ROWS[r].base) {{ stackEl.style.display = 'none'; return; }}
   const items = ROWS.map((x, i) => [x, i]).filter(([x]) => !x.base);
-  const k = items.findIndex(([, i]) => i === r);
-  let h = '';
-  items.slice(0, k + 1).forEach(([x, i], j) => {{
+  const k = mode === 'flood' ? items.length : items.findIndex(([, i]) => i === r);
+  let h = '<div class="c1">';
+  items.forEach(([x, i], j) => {{
     const cur = j === k;
+    if (j > k) {{ h += `<div class="s nx"><b>${{x.num}}</b>?</div>`; return; }}
     h += `<div class="s${{cur ? ' cur' : ''}}" style="${{cur ? 'opacity:' + e.toFixed(3) + ';transform:translateX(' + ((1 - e) * -24).toFixed(1) + 'px)' : ''}}"><b>${{x.num}}</b>${{x.en || x.name}}</div>`;
   }});
-  if (k < items.length - 1) h += `<div class="s nx"><b>${{items[k + 1][0].num}}</b>?</div>`;
+  h += '</div>';
+  if (STACK_MORE) {{
+    h += '<div class="c2">';
+    for (let j = 0; j < STACK_MORE; j++) {{
+      const num = String(items.length + 1 + j).padStart(2, '0');
+      let c = '';
+      if (mode === 'flood' && FL.slots && FL.slots[j]) {{
+        const u = t - FL.slots[j].t + 1e-6;
+        if (u >= 0) c = u < 0.134 ? ' fl' : ' on';
+      }}
+      h += `<div class="s ex${{c}}"><b>${{num}}</b>?</div>`;
+    }}
+    h += '</div>';
+  }}
   stackEl.innerHTML = h;
   stackEl.style.top = window.stackTop + 'px';
   stackEl.style.fontSize = Math.round(window.stackLH * 0.74) + 'px';
@@ -651,19 +692,20 @@ window.twHook = (r, t) => {{
 window.twFlood = (r, t) => {{
   reset();
   imgEl.src = ROWS[r].img;
-  ttl.style.display = 'none'; lab.style.display = 'none'; stackEl.style.display = 'none';
-  const dim = document.getElementById('dim'); dim.style.display = 'block'; dim.style.opacity = (0.6 * Math.min(1, t / 0.3)).toFixed(3);
+  ttl.style.display = 'none'; lab.style.display = 'none';
+  drawStack(r, 1, 'flood', t);
+  const dim = document.getElementById('dim'); dim.style.display = 'block'; dim.style.opacity = (0.62 * Math.min(1, t / 0.3)).toFixed(3);
   const fl = document.getElementById('flood'); fl.style.display = 'block';
   fl.querySelectorAll('.fd').forEach((el, j) => {{
     const v = (t - FL.drops[j].t + 1e-6) / 0.17;
     if (v < 0) {{ el.style.opacity = '0'; return; }}
     const e = 1 - Math.pow(1 - Math.min(1, v), 3);
-    el.style.opacity = String(Math.min(1, v * 2.5));
+    el.style.opacity = String(Math.min(0.55, v * 1.5));
     el.style.transform = `translateY(${{((1 - e) * -220).toFixed(1)}}px)`;
   }});
   const mo = document.getElementById('more');
   const u = t - FL.more_t + 1e-6;
-  if (u >= 0) {{
+  if (FL.text && u >= 0) {{
     mo.style.display = 'block';
     let s = 1; if (u < 0.1) s = 1.3 - 0.35 * Math.pow(u / 0.1, 2); else if (u < 0.234) {{ const q = (u - 0.1) / 0.134; s = 0.95 + 0.05 * (1 - Math.pow(1 - q, 2)); }}
     mo.querySelector('.m').style.transform = `scale(${{s.toFixed(4)}})`;
@@ -686,7 +728,7 @@ window.twState = (kind, r, p) => {{
     const el = bigEl(); el.style.fontSize = fits[r][0] + 'px';
     el.style.whiteSpace = fits[r][1] ? 'normal' : ''; el.style.maxWidth = fits[r][1] ? maxW + 'px' : ''; el.style.margin = fits[r][1] ? '0 auto' : '';
     if (!KO_BIG) el.style.letterSpacing = (0.12 + 0.18 * (1 - e)).toFixed(3) + 'em';
-    drawStack(r, e);
+    drawStack(r, e, 'row', 0);
   }} else {{
     stackEl.style.display = 'none';
   }}
@@ -999,8 +1041,10 @@ def make_sfx(post, tl, total):
     if op["flood"]:
         fp = flood_plan(post, tl)
         kw.update(flood=(fp["start"], fp["start"] + fp["dur"]),
-                  ticks=[fp["start"] + d["t"] for d in fp["drops"] if not d["dim"]],
-                  hits=list(kw.get("hits", [])) + [fp["start"] + fp["more_t"]])
+                  ticks=[fp["start"] + sl["t"] for sl in fp["slots"]] if op["stack_more"]
+                  else [fp["start"] + d["t"] for d in fp["drops"] if not d["dim"]])
+        if fp["text"]:
+            kw["hits"] = list(kw.get("hits", [])) + [fp["start"] + fp["more_t"]]
     return make_hook_sfx(total, **kw)
 
 
