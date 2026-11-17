@@ -424,6 +424,18 @@ def check_narrated(post):
                     errors.append(f"narrated.scenes {i}: 막대 '{b.get('label')}' at '{b['at']}'이 say 안에 없음")
                 if len(str(b.get("label", ""))) > 12:
                     errors.append(f"narrated.scenes {i}: 막대 이름은 12자 이하: '{b.get('label')}'")
+        pops = s.get("pops") or []
+        if len(pops) > 6:
+            errors.append(f"narrated.scenes {i}: pops는 6개까지 (3열 2줄)")
+        if not pops:
+            warnings.append(f"narrated.scenes {i}: pops 없음 → 화면 아래 절반이 빈다 (로고·숫자·말 칩 2~6개)")
+        for q in pops:
+            if q.get("at") and q["at"] not in say:
+                errors.append(f"narrated.scenes {i}: pops at '{q['at']}'이 say 안에 없음")
+            if q.get("logo") and not (ROOT / "assets" / "logos" / f"{q['logo']}.svg").exists():
+                errors.append(f"narrated.scenes {i}: 로고 파일 없음 assets/logos/{q['logo']}.svg")
+            if re.search(r"\d\.\d{3}(?!\d)", str(q.get("num", ""))):
+                errors.append(f"narrated.scenes {i}: 숫자 '{q['num']}' 천 단위는 쉼표나 '만'으로 (예: 1만 달러)")
         if kind == "big" and not str(s.get("big", "")).strip():
             errors.append(f"narrated.scenes {i}: big(큰 숫자) 필요")
         if s.get("big_at") and s["big_at"] not in say:
