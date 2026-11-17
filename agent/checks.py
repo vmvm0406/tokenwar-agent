@@ -694,7 +694,8 @@ def check_dm(post):
     if not cta:
         (errors if str(post.get("date", "")) >= "2026-11-16" else warnings).append(f"dm.cta(화면 안 '{kw}' 안내) 필요: 얻는 것을 구체적으로, 예: \"팔로우하고 댓글에 '{kw}' 남기면 화풍 스킬 적용법 보내 드립니다\" "
                       "(릴스는 끝 화면 2.5초, 카드는 마지막 장. STYLE_GUIDE 7-1)")
-    elif f"'{kw}'" not in cta and f"‘{kw}’" not in cta:
+    # 반응 조건이 '아무 댓글'이라 키워드 없이 '댓글 남기시면'도 된다 (운영자 결정 2026-11-17)
+    elif f"'{kw}'" not in cta and f"‘{kw}’" not in cta and not re.search(r"댓글(을)?\s*남기시면", cta):
         errors.append(f"dm.cta에 댓글 키워드 '{kw}'가 따옴표로 들어가야 함: '{cta}'")
     elif len(cta.replace("\n", "")) > 48:
         warnings.append(f"dm.cta는 48자 안으로 짧게: '{cta}'")
