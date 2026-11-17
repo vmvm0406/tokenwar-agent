@@ -128,16 +128,16 @@
     "folder": "2026-11-17-list-lighting",
     "title": "AI 영상 제작자에게 반드시 필요한 조명 용어 20가지",
     "duration": 28.6,
-    "views": 45,
-    "reach": 17,
-    "saved": 0,
+    "views": 106,
+    "reach": 86,
+    "saved": 3,
     "shares": 0,
-    "total_interactions": 0,
+    "total_interactions": 3,
     "likes": 0,
     "comments": 0,
-    "ig_reels_avg_watch_time": 8369,
-    "ig_reels_video_view_total_time": 150649,
-    "reels_skip_rate": 35
+    "ig_reels_avg_watch_time": 5096,
+    "ig_reels_video_view_total_time": 438290,
+    "reels_skip_rate": 69
    },
    "17882767407553907": {
     "timestamp": "2026-11-16T13:27:46+0000",
@@ -152,8 +152,8 @@
     "total_interactions": 2,
     "likes": 1,
     "comments": 0,
-    "ig_reels_avg_watch_time": 4408,
-    "ig_reels_video_view_total_time": 590736,
+    "ig_reels_avg_watch_time": 4421,
+    "ig_reels_video_view_total_time": 592497,
     "reels_skip_rate": 63.4
    },
    "18112593002190549": {
@@ -169,8 +169,8 @@
     "total_interactions": 3,
     "likes": 1,
     "comments": 0,
-    "ig_reels_avg_watch_time": 3071,
-    "ig_reels_video_view_total_time": 387026,
+    "ig_reels_avg_watch_time": 3054,
+    "ig_reels_video_view_total_time": 387967,
     "reels_skip_rate": 84.6
    },
    "18029250590705353": {
@@ -186,8 +186,8 @@
     "total_interactions": 3,
     "likes": 1,
     "comments": 0,
-    "ig_reels_avg_watch_time": 4347,
-    "ig_reels_video_view_total_time": 721606,
+    "ig_reels_avg_watch_time": 4326,
+    "ig_reels_video_view_total_time": 722551,
     "reels_skip_rate": 75.9
    },
    "17902612866655526": {
@@ -203,8 +203,8 @@
     "total_interactions": 0,
     "likes": 0,
     "comments": 0,
-    "ig_reels_avg_watch_time": 13103,
-    "ig_reels_video_view_total_time": 1886895,
+    "ig_reels_avg_watch_time": 13029,
+    "ig_reels_video_view_total_time": 1889305,
     "reels_skip_rate": 55.4
    },
    "18114177902183166": {
@@ -220,8 +220,8 @@
     "total_interactions": 0,
     "likes": 0,
     "comments": 0,
-    "ig_reels_avg_watch_time": 2786,
-    "ig_reels_video_view_total_time": 376210,
+    "ig_reels_avg_watch_time": 2775,
+    "ig_reels_video_view_total_time": 377522,
     "reels_skip_rate": 74.8
    },
    "18108996644269058": {
@@ -237,8 +237,8 @@
     "total_interactions": 0,
     "likes": 0,
     "comments": 0,
-    "ig_reels_avg_watch_time": 5091,
-    "ig_reels_video_view_total_time": 840123,
+    "ig_reels_avg_watch_time": 5067,
+    "ig_reels_video_view_total_time": 841144,
     "reels_skip_rate": 57.7
    },
    "18163250107546991": {
@@ -254,8 +254,8 @@
     "total_interactions": 0,
     "likes": 0,
     "comments": 0,
-    "ig_reels_avg_watch_time": 14980,
-    "ig_reels_video_view_total_time": 2441794,
+    "ig_reels_avg_watch_time": 14904,
+    "ig_reels_video_view_total_time": 2444389,
     "reels_skip_rate": 25
    },
    "17958768750292888": {
@@ -271,8 +271,8 @@
     "total_interactions": 6,
     "likes": 2,
     "comments": 0,
-    "ig_reels_avg_watch_time": 8723,
-    "ig_reels_video_view_total_time": 2608190,
+    "ig_reels_avg_watch_time": 8700,
+    "ig_reels_video_view_total_time": 2610032,
     "reels_skip_rate": 61.6
    }
   }
@@ -301,5 +301,5 @@
   "total_interactions",
   "views"
  ],
- "updated": "2026-11-17T12:11+09:00"
+ "updated": "2026-11-17T12:43+09:00"
 }
