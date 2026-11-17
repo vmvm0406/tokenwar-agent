@@ -122,6 +122,23 @@
    }
   },
   "2026-11-17": {
+   "18134401189749389": {
+    "timestamp": "2026-11-17T13:54:52+0000",
+    "permalink": "https://www.instagram.com/reel/Df2FavCCkEs/",
+    "folder": "2026-11-17-list-art-style",
+    "title": "AI 그림으로 돈 버는데 이것도 몰라?",
+    "duration": 26.0,
+    "views": 0,
+    "reach": 0,
+    "saved": 0,
+    "shares": 0,
+    "total_interactions": 0,
+    "likes": 0,
+    "comments": 0,
+    "ig_reels_avg_watch_time": 0,
+    "ig_reels_video_view_total_time": 0,
+    "reels_skip_rate": 0
+   },
    "18083610074378341": {
     "timestamp": "2026-11-17T12:18:58+0000",
     "permalink": "https://www.instagram.com/reel/Df16b-oEnTA/",
@@ -129,7 +146,7 @@
     "title": "프롬프트 3문단으로 FPS 게임이 나왔습니다",
     "duration": 21.5,
     "views": 158,
-    "reach": 147,
+    "reach": 149,
     "saved": 0,
     "shares": 2,
     "total_interactions": 2,
@@ -137,7 +154,7 @@
     "comments": 0,
     "ig_reels_avg_watch_time": 3979,
     "ig_reels_video_view_total_time": 596993,
-    "reels_skip_rate": 65.5
+    "reels_skip_rate": 66.2
    },
    "18106928459457054": {
     "timestamp": "2026-11-17T10:51:54+0000",
@@ -152,8 +169,8 @@
     "total_interactions": 2,
     "likes": 1,
     "comments": 0,
-    "ig_reels_avg_watch_time": 9993,
-    "ig_reels_video_view_total_time": 1339076,
+    "ig_reels_avg_watch_time": 10012,
+    "ig_reels_video_view_total_time": 1341697,
     "reels_skip_rate": 45
    },
    "17886021090628832": {
@@ -340,7 +357,8 @@
   "18049669823831337": 28.6,
   "18083610074378341": 21.5,
   "18106928459457054": 65.3,
-  "17886021090628832": 21.8
+  "17886021090628832": 21.8,
+  "18134401189749389": 26.0
  },
  "unsupported": {},
  "metrics_returned": [
@@ -355,5 +373,5 @@
   "total_interactions",
   "views"
  ],
- "updated": "2026-11-17T22:54+09:00"
+ "updated": "2026-11-17T23:01+09:00"
 }
