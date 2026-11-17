@@ -1575,7 +1575,62 @@
    "tries": 0,
    "breaking": true,
    "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMiWkFVX3lxTFB5ckhuWGU5VXFoWG9oZTNFMkVGOHROWmYxaEhmVV9xeDBRUGdjR3BwZXppNHBBdGM3Y2diN3F1TmZtUGtfY2ttTWpXTWxTOHNhb1FlQ3VNbGxwdw?oc=5": {
+   "source": "news",
+   "company": "엔비디아",
+   "entities": [
+    "엔비디아"
+   ],
+   "tok": [
+    "견조",
+    "긍정",
+    "도체",
+    "메모",
+    "모리",
+    "반도",
+    "산업",
+    "수요",
+    "에도",
+    "정적",
+    "진에",
+    "퇴진",
+    "한화"
+   ],
+   "title": "[업계 속보: 주요 매체 3곳(연합뉴스, 중앙일보, 한국경제) · 인사·규제] \"젠슨 황 퇴진에도 메모리 수요 견조…韓 반도체 산업 긍정적\"-한화",
+   "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTFB5ckhuWGU5VXFoWG9oZTNFMkVGOHROWmYxaEhmVV9xeDBRUGdjR3BwZXppNHBBdGM3Y2diN3F1TmZtUGtfY2ttTWpXTWxTOHNhb1FlQ3VNbGxwdw?oc=5",
+   "first_seen": "2026-11-17T10:34:26+09:00",
+   "why": "48시간 안에 같은 회사·인물 게시물 있음: 2026-11-17-video-amodei-chips-north-korea (엔비디아)",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMiZEFVX3lxTE0wMFpuZFFoMy1uVVpwdElRdFVPajRuOTR1N1pRd3hsSHZVZ3JJaF9nRnE2Yjd4cmRoZVpVYjZuR1pNUU82VE9qRjRGU05DVW9wTzlWVHRyeFl2VU1MWWVTS1AtVW8?oc=5": {
+   "source": "news",
+   "company": "엔비디아",
+   "entities": [
+    "삼성",
+    "엔비디아"
+   ],
+   "tok": [
+    "00",
+    "0선",
+    "50",
+    "공방",
+    "사임",
+    "스피",
+    "여파",
+    "코스",
+    "파에"
+   ],
+   "title": "[업계 속보: 주요 매체 1곳(서울경제) · 인사] 코스피, 젠슨 황 사임 여파에 5000선 공방",
+   "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE0wMFpuZFFoMy1uVVpwdElRdFVPajRuOTR1N1pRd3hsSHZVZ3JJaF9nRnE2Yjd4cmRoZVpVYjZuR1pNUU82VE9qRjRGU05DVW9wTzlWVHRyeFl2VU1MWWVTS1AtVW8?oc=5",
+   "first_seen": "2026-11-17T10:34:26+09:00",
+   "why": "48시간 안에 같은 회사·인물 게시물 있음: 2026-11-17-video-amodei-chips-north-korea (엔비디아)",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
   }
  },
- "updated": "2026-11-17T10:19:23+09:00"
+ "updated": "2026-11-17T10:34:26+09:00"
 }
