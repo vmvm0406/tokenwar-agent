@@ -85,6 +85,8 @@ MEDIA_KEEP_MIN = int(CONFIG.get("media_keep_min", 120))  # 이보다 늦어진 �
 GH_TOKEN = os.environ.get("GITHUB_TOKEN", "")
 ZORCHA_TODO = ROOT / "data" / "zorcha_todo.md"
 ZORCHA_LABEL = "zorcha"
+# 스토리 켜기/끄기 (config.json stories_enabled, 기본 꺼짐). 운영자 2026-11-17 "스토리는 다 내려": 끔.
+STORIES_ON = bool(CONFIG.get("stories_enabled", False))
 STORY_MAX_SEC = 60    # 스토리 영상 최대 길이 (Graph API). 넘으면 앞부분만
 STORY_TMP = Path(tempfile.gettempdir()) / "tokenwar-story"
 DEDUP_HOURS = 12      # 이 시간 안에 캡션 첫 줄이 같은 게시물이 있으면 다시 올리지 않는다
@@ -377,6 +379,8 @@ _story_cache = {}
 
 def story_media(folder, post):
     """스토리에 쓸 미디어 (docs/media 안 상대 이름, 원본 경로, "VIDEO"|"IMAGE"). 올리지 않으면 None."""
+    if not STORIES_ON:
+        return None
     if post.get("story") is False:
         return None
     key = folder.name
@@ -437,6 +441,8 @@ def publish_story(ig_id, folder, post):
 def add_story(ig_id, folder, post, state):
     """피드 게시가 끝난 게시물을 스토리로도 올리고 state(published.json 내용)에 기록한다.
     예외를 밖으로 내지 않는다 (피드 게시는 이미 성공). 올렸으면 True."""
+    if not STORIES_ON:
+        return False
     if state.get("story_id"):
         return False
     if post.get("story") is False:
@@ -840,6 +846,9 @@ def live_media_ids(ig_id):
 def backfill_stories():
     """지금 올라가 있는 게시물 중 스토리가 없는 것을 오래된 것부터 스토리로 (STORY_GAP_MIN분 간격, 기본 2).
     STORY_LIMIT: 앞에서부터 이 개수만 (0이면 전부)."""
+    if not STORIES_ON:
+        print("스토리 꺼짐 (config.json stories_enabled false). 아무것도 올리지 않음.")
+        return
     if not TOKEN and not DRY:
         print("IG_ACCESS_TOKEN이 없음.")
         sys.exit(1)

@@ -303,5 +303,6 @@
     "followers": 10000,
     "date": "2026-12-16",
     "note": "운영자 목표 (2026-11-16): 2026-12-16까지 팔로워 1만 명. agent/benchmarks.py가 매일 data/followers.csv에 기록하고 data/trends.md 맨 위 '목표 진행' 줄을 계산한다."
-  }
+  },
+  "stories_enabled": false
 }
