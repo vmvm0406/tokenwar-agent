@@ -35,7 +35,9 @@ function text(s, x, y, px, color, opt) {
   g.textBaseline = 'alphabetic';
   const a0 = g.globalAlpha;
   g.globalAlpha = a0 * (opt.alpha === undefined ? 1 : opt.alpha);
+  g.shadowColor = 'rgba(0,0,0,0.75)'; g.shadowBlur = 10;   // 사진 위에서 읽히게
   g.fillText(s, x, y);
+  g.shadowBlur = 0; g.shadowColor = 'transparent';
   g.globalAlpha = a0;
 }
 function width(s, px, bhs, w) { g.font = font(px, bhs, w); return g.measureText(s).width; }
@@ -290,7 +292,56 @@ function nameLines(name) {
   return { lines, px };
 }
 
-function rcInit() {
+// ---------- 사진 배경 (STYLE_GUIDE 0장 원칙 0: 막대는 사진 위에) ----------
+const IMG = {};
+const SPOT = P.spot || [];
+const DIM = 0.6;           // 사진 위 단색 어둡게 (그라데이션 없이)
+function cover(im, x, y, w, h, fx, fy, zoom) {
+  const s = Math.max(w / im.width, h / im.height) * zoom;
+  const dw = im.width * s, dh = im.height * s;
+  const ox = x + (w - dw) * fx / 100, oy = y + (h - dh) * fy / 100;
+  g.save(); g.beginPath(); g.rect(x, y, w, h); g.clip();
+  g.drawImage(im, ox, oy, dw, dh);
+  g.restore();
+}
+function drawPhoto(i, alpha, since) {
+  const e = IMG[i];
+  if (!e || alpha <= 0) return;
+  g.globalAlpha = alpha;
+  cover(e.im, 0, 0, W, H, e.x, e.y, 1.04 + 0.05 * clamp(since / 6, 0, 1));   // 천천히 다가감
+  g.globalAlpha = alpha * Math.max(0, e.dim - DIM) / (1 - DIM);   // 밝은 화면 캡처는 더 어둡게 (아래 공통 DIM과 합쳐 e.dim)
+  g.fillStyle = C.bg; g.fillRect(0, 0, W, H);
+  g.globalAlpha = 1;
+}
+function drawBG(t) {
+  g.fillStyle = C.bg; g.fillRect(0, 0, W, H);
+  const hookOn = P.hook_strip && P.hook_strip.length && P.hook.length && t < P.hook_until + 0.35;
+  if (SPOT.length && t >= SPOT[0][0]) {
+    let k = 0;
+    for (let j = 0; j < SPOT.length; j++) if (SPOT[j][0] <= t) k = j;
+    const q = ease((t - SPOT[k][0]) / 0.35);
+    if (k > 0 && q < 1) drawPhoto(SPOT[k - 1][1], 1, t - SPOT[k - 1][0]);
+    drawPhoto(SPOT[k][1], (k > 0 || hookOn) ? q : 1, t - SPOT[k][0]);
+  }
+  if (hookOn) {     // 후킹: 경쟁 회사 사진 세로 세 칸 (누가 1위일까?)
+    const a = t < P.hook_until ? 1 : 1 - ease((t - P.hook_until) / 0.35);
+    const n = P.hook_strip.length, sw = W / n;
+    g.globalAlpha = a;
+    P.hook_strip.forEach((i, j) => {
+      const e = IMG[i];
+      if (!e) return;
+      cover(e.im, j * sw, 0, sw, H, e.x, e.y, 1.0 + 0.06 * clamp(t / 3, 0, 1));
+      if (j > 0) { g.fillStyle = C.bg; g.fillRect(j * sw - 3, 0, 6, H); }
+    });
+    g.globalAlpha = 1;
+  }
+  g.globalAlpha = DIM; g.fillStyle = C.bg; g.fillRect(0, 0, W, H); g.globalAlpha = 1;
+}
+
+async function rcInit() {
+  await Promise.all(Object.entries(P.imgs || {}).map(([k, v]) => new Promise(res => {
+    const im = new Image(); im.onload = () => { IMG[+k] = { im, x: v.x, y: v.y, dim: v.dim === undefined ? DIM : v.dim }; res(); }; im.onerror = res; im.src = v.uri;
+  })));
   // 막대 최대 길이: 가장 넓은 값 글자가 오른쪽 여백(W - SIDE) 안에 들어가게
   let vw = 0;
   P.ser.forEach((s, i) => s.pts.forEach(p => { vw = Math.max(vw, valueW(i, p.v)); }));
@@ -300,7 +351,7 @@ function rcInit() {
 
 function rcFrame(t) {
   g.setTransform(1, 0, 0, 1, 0, 0);
-  g.fillStyle = C.bg; g.fillRect(0, 0, W, H);
+  drawBG(t);
   const [sx, sy] = shake(t);
   g.translate(sx, sy);
   drawBars(t);
@@ -315,6 +366,16 @@ function rcFrame(t) {
 function rcThumb() {
   g.setTransform(1, 0, 0, 1, 0, 0);
   g.fillStyle = C.bg; g.fillRect(0, 0, W, H);
+  if (IMG[P.winner]) {   // 1위 회사 사진 + 아래쪽 끝 순위 막대
+    const e = IMG[P.winner];
+    cover(e.im, 0, 0, W, H, e.x, e.y, 1.0);
+    const top = P.ser.map((s, i) => [s.pts[s.pts.length - 1].v, i]).sort((a, b) => b[0] - a[0]).slice(0, 4);
+    top.forEach(([v, i], r) => {
+      g.fillStyle = i === P.winner ? C.accent : P.ser[i].color;
+      g.fillRect(0, 1400 + r * 115, Math.max(80, v / top[0][0] * (W - 160)), 90);
+    });
+    return cv.toDataURL('image/jpeg', 0.93);
+  }
   const last = P.ser.map((s, i) => [s.pts[s.pts.length - 1].v, i]).sort((a, b) => b[0] - a[0]);
   const pitch = H / last.length, bh = pitch * 0.82, top = (pitch - bh) / 2;
   last.forEach(([v, i], r) => {

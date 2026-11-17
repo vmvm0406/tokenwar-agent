@@ -8,7 +8,7 @@
   "date": "2026-11-18",
   "publish_at": "2026-11-18T19:43:00+09:00",
   "rights": "own",
-  "rights_note": "화면은 직접 그린 막대 경주 그래프(글자·막대, 로고 없이 회사 이름 글자). 수치는 모두 회사가 직접 밝힌 사용자 수(CEO 발표·실적 발표·공식 블로그·증권신고서)만, 값은 발표가 나온 날에만 바뀌고 발표 사이를 지어내지 않음. 마지막 발표 뒤에는 그 값을 유지(Meta AI는 2025-05 10억 뒤 새 숫자 발표 없음, Copilot은 2025-10 뒤 월간 사용자 발표 없음). ChatGPT는 OpenAI가 주간 사용자(WAU)만 발표해 주간, 나머지는 월간(MAU)으로 화면 근거 줄·막대 옆 '주간' 표시. Copilot은 Microsoft가 밝힌 'Copilot 앱 제품군' 월간 사용자. Grok은 SpaceX 증권신고서(S-1)의 2026-03-31 기준 월간 사용자(X 안에서 쓴 Grok 포함), 보도 날짜 2026-05-27로 넣음. 뤼튼 700만은 2026-01 기준 회사 설명(AI타임스 2026-03-06 보도). Gemini 3.5억은 2025-03 기준 구글 내부 자료가 반독점 재판(2025-04-23)에서 공개된 것. ChatGPT 12억은 DevDay 2026(2026-09-29) 발표(OpenAI 2026-11-13 ChatGPT Wallet 글도 '매주 12억 명'). 점마다 출처는 race.series[].points[].url. 제외: Claude·DeepSeek·Perplexity(공식 사용자 수 없음, 제3자 추정만), 네이버(공식 문서 미확인), ChatGPT '7억 돌파 예정'(예정치). 배경음악 'Trap Monopoly (Instrumental)' by Robbero (ccmixter.org/files/Robbero/51732), CC BY 3.0 조각(agent/music_fit.py), 효과음은 agent/music_gen.py 코드 생성.",
+  "rights_note": "화면은 직접 그린 막대 경주 그래프(글자·막대, 로고 없이 회사 이름 글자). 수치는 모두 회사가 직접 밝힌 사용자 수(CEO 발표·실적 발표·공식 블로그·증권신고서)만, 값은 발표가 나온 날에만 바뀌고 발표 사이를 지어내지 않음. 마지막 발표 뒤에는 그 값을 유지(Meta AI는 2025-05 10억 뒤 새 숫자 발표 없음, Copilot은 2025-10 뒤 월간 사용자 발표 없음). ChatGPT는 OpenAI가 주간 사용자(WAU)만 발표해 주간, 나머지는 월간(MAU)으로 화면 근거 줄·막대 옆 '주간' 표시. Copilot은 Microsoft가 밝힌 'Copilot 앱 제품군' 월간 사용자. Grok은 SpaceX 증권신고서(S-1)의 2026-03-31 기준 월간 사용자(X 안에서 쓴 Grok 포함), 보도 날짜 2026-05-27로 넣음. 뤼튼 700만은 2026-01 기준 회사 설명(AI타임스 2026-03-06 보도). Gemini 3.5억은 2025-03 기준 구글 내부 자료가 반독점 재판(2025-04-23)에서 공개된 것. ChatGPT 12억은 DevDay 2026(2026-09-29) 발표(OpenAI 2026-11-13 ChatGPT Wallet 글도 '매주 12억 명'). 점마다 출처는 race.series[].points[].url. 제외: Claude·DeepSeek·Perplexity(공식 사용자 수 없음, 제3자 추정만), 네이버(공식 문서 미확인), ChatGPT '7억 돌파 예정'(예정치). 배경음악 'Trap Monopoly (Instrumental)' by Robbero (ccmixter.org/files/Robbero/51732), CC BY 3.0 조각(agent/music_fit.py), 효과음은 agent/music_gen.py 코드 생성. 배경 사진: 회사 대표 인물 사진은 위키미디어 공용 자유 라이선스(CC BY·CC BY-SA·퍼블릭 도메인, race.images[].credit·url, 캡션 '사진:' 줄), 통신사·언론 사진 아님. 사진이 없는 회사는 공식 사이트 화면을 agent/shot.py로 캡처(2026-11-17). 막대는 사진 위에 겹침(STYLE_GUIDE 0장 원칙 0).",
   "title": "AI 사용자 1위,\n주인이 두 번 바뀌었다",
   "title_options": [
     "ChatGPT, 사용자 1위\n다시 되찾았다",
@@ -63,7 +63,7 @@
       "url": "https://www.microsoft.com/en-us/investor/events/fy-2026/earnings-fy-2026-q1"
     }
   ],
-  "caption": "ChatGPT 사용자 수 12억 명, Gemini·Meta AI와 벌인 AI 챗봇 1위 다툼 3년 기록입니다.\n\n2024년 10월, 왓츠앱·인스타그램에 들어간 Meta AI가 월간 5억 명으로 먼저 1위.\nGemini는 2026년 7월 월간 9.5억 명으로 2위까지 올라왔고, 8월에 10억 명을 넘겼습니다.\n9월 OpenAI 개발자 행사에서는 ChatGPT가 주간 12억 명을 발표하며 1위를 되찾았습니다.\nChatGPT만 주간 사용자, 나머지는 월간 사용자 기준. 주간이 더 엄격한 숫자입니다.\n\nChatGPT와 Gemini, 어느 쪽을 더 많이 쓰시나요?\n\n출처: OpenAI(DevDay·투자 발표), Alphabet·Meta·Microsoft 실적 발표, Meta 주주총회, SpaceX 증권신고서(Grok), 뤼튼 발표 (2023년 11월~2026년 10월)\n음악: 'Trap Monopoly (Instrumental)' by Robbero (ccmixter.org/files/Robbero/51732), CC BY 3.0\n\n팔로우하면 매일 AI 소식을 받아 볼 수 있어요.",
+  "caption": "ChatGPT 사용자 수 12억 명, Gemini·Meta AI와 벌인 AI 챗봇 1위 다툼 3년 기록입니다.\n\n2024년 10월, 왓츠앱·인스타그램에 들어간 Meta AI가 월간 5억 명으로 먼저 1위.\nGemini는 2026년 7월 월간 9.5억 명으로 2위까지 올라왔고, 8월에 10억 명을 넘겼습니다.\n9월 OpenAI 개발자 행사에서는 ChatGPT가 주간 12억 명을 발표하며 1위를 되찾았습니다.\nChatGPT만 주간 사용자, 나머지는 월간 사용자 기준. 주간이 더 엄격한 숫자입니다.\n\nChatGPT와 Gemini, 어느 쪽을 더 많이 쓰시나요?\n\n출처: OpenAI(DevDay·투자 발표), Alphabet·Meta·Microsoft 실적 발표, Meta 주주총회, SpaceX 증권신고서(Grok), 뤼튼 발표 (2023년 11월~2026년 10월)\n사진: 샘 올트먼(Village Global, CC BY 2.0), 마크 저커버그(Anthony Quintano, CC BY 2.0), 순다르 피차이(Lukasz Kobus/European Commission, CC BY 4.0), 사티아 나델라(Brian Smale and Microsoft, CC BY-SA 4.0), 일론 머스크(U.S. Air Force/Trevor Cokley, 퍼블릭 도메인), 위키미디어 공용 / 화면: 뤼튼 공식 사이트\n음악: 'Trap Monopoly (Instrumental)' by Robbero (ccmixter.org/files/Robbero/51732), CC BY 3.0\n\n팔로우하면 매일 AI 소식을 받아 볼 수 있어요.",
   "hashtags": [
     "#챗GPT",
     "#제미나이",
@@ -323,6 +323,57 @@
         "text": "1위 자리,\n또 뒤집힐까?",
         "from": 15.0
       }
-    }
+    },
+    "images": [
+      {
+        "series": "ChatGPT",
+        "src": "img/altman.jpg",
+        "x": 50,
+        "y": 40,
+        "credit": "Village Global, CC BY 2.0 (Wikimedia Commons)",
+        "url": "https://commons.wikimedia.org/wiki/File:Sam_Altman_November_2022.jpg"
+      },
+      {
+        "series": "Meta AI",
+        "src": "img/zuck.jpg",
+        "x": 50,
+        "y": 40,
+        "credit": "Anthony Quintano, CC BY 2.0 (Wikimedia Commons)",
+        "url": "https://commons.wikimedia.org/wiki/File:Mark_Zuckerberg_2019_(cropped).jpg"
+      },
+      {
+        "series": "Gemini",
+        "src": "img/pichai.jpg",
+        "x": 50,
+        "y": 40,
+        "credit": "Lukasz Kobus/European Commission, CC BY 4.0 (Wikimedia Commons)",
+        "url": "https://commons.wikimedia.org/wiki/File:Sundar_Pichai_-_2023_(cropped).jpg"
+      },
+      {
+        "series": "Copilot",
+        "src": "img/nadella.jpg",
+        "x": 50,
+        "y": 40,
+        "credit": "Brian Smale and Microsoft, CC BY-SA 4.0 (Wikimedia Commons)",
+        "url": "https://commons.wikimedia.org/wiki/File:MS-Exec-Nadella-Satya-2017-08-31-22_(cropped).jpg"
+      },
+      {
+        "series": "Grok",
+        "src": "img/musk.jpg",
+        "x": 50,
+        "y": 40,
+        "credit": "U.S. Air Force/Trevor Cokley, 퍼블릭 도메인 (Wikimedia Commons)",
+        "url": "https://commons.wikimedia.org/wiki/File:Elon_Musk_Colorado_2022_(cropped2).jpg"
+      },
+      {
+        "series": "뤼튼",
+        "src": "img/wrtn.jpg",
+        "x": 50,
+        "y": 40,
+        "credit": "화면: 뤼튼 공식 사이트",
+        "url": "https://wrtn.ai",
+        "dim": 0.86
+      }
+    ]
   }
 }

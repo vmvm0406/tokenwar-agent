@@ -159,7 +159,64 @@ def plan(post):
     vals = [(s["pts"][-1]["v"], i) for i, s in enumerate(ser)]
     p["winner"] = max(vals)[1]
     p["event_times"] = sorted({pt["t"] for s in ser for pt in s["pts"] if pt["t"] > 0})
+    p["spot"], p["hook_strip"] = spotlight(p, images_of(post))
     return p
+
+
+def images_of(post):
+    """race.images (사진 필수, STYLE_GUIDE 0장 원칙 0): [{series, src, x, y, dim, credit, url}] (dim: 사진 위 어둡게 0~1, 기본 0.6, 밝은 화면 캡처는 0.85) → {막대 번호: 항목}."""
+    names = [s["name"] for s in post["race"]["series"]]
+    out = {}
+    for im in post["race"].get("images") or []:
+        if im.get("series") in names and im.get("src"):
+            out[names.index(im["series"])] = im
+    return out
+
+
+SPOT_HOLD = 1.6        # 배경 사진은 이 시간 안에 다시 바뀌지 않는다 (앞지르기는 0.6초)
+
+
+def spotlight(p, imgs):
+    """배경 사진 순서 [(시각, 막대 번호)]: 발표가 난 회사 사진으로 바뀌고(1.6초 이상 유지), 앞지르기·반전은 바로,
+    답(마지막 순위 바뀜)부터는 1위 사진 고정. 후킹 동안은 경쟁 회사 사진 세 장을 세로로 나눠 보여 준다(끝 1위를 홀로 드러내지 않음)."""
+    if not imgs:
+        return [], []
+    start = p["hook_until"] if p["hook"] else 0.0
+    evs = sorted([(pt["t"], i, False) for i, s in enumerate(p["ser"]) for pt in s["pts"] if pt["t"] > 0] +
+                 [(o["t"], o["i"], True) for o in p["overtakes"] if o["i"] >= 0])
+    first = next((i for t, i, _ in reversed(evs) if t <= start and i in imgs), None)
+    if first is None:
+        first = next(i for i in range(len(p["ser"])) if i in imgs)
+    spot = [(start, first)]
+    for t, i, strong in evs:
+        if t < start or i not in imgs or i == spot[-1][1] or t >= p["answer_t"] - 1e-6:
+            continue
+        if t - spot[-1][0] >= (0.6 if strong else SPOT_HOLD):
+            spot.append((t, i))
+    w = p["winner"]
+    end = p["answer_t"]
+    # 4초 넘게 같은 사진이면 그때 상위 3개 회사 사진을 2.4초마다 돌린다 (질문 구간에서 '누가?' 긴장)
+    filled = []
+    for k, (t0, i0) in enumerate(spot):
+        filled.append((t0, i0))
+        t1 = spot[k + 1][0] if k + 1 < len(spot) else end
+        t = t0 + 2.4
+        last = i0
+        while t1 - t >= 1.6:
+            top = [j for j in _order(p, t)[:3] if j in imgs and j != last]
+            if not top:
+                break
+            last = top[0]
+            filled.append((t, last))
+            t += 2.4
+    spot = filled
+    if w in imgs and spot[-1][1] != w:
+        spot.append((max(end, spot[-1][0] + 0.4), w))
+    strip = []
+    if p["hook"]:
+        order = sorted(range(len(p["ser"])), key=lambda i: -max(pt["v"] for pt in p["ser"][i]["pts"]))
+        strip = [i for i in order if i in imgs][:3]
+    return [[round(t, 3), i] for t, i in spot], strip
 
 
 def _ease_io(x):
@@ -240,7 +297,7 @@ async def _shoot(html_file, times, out_dir, thumb_png=None):
         await pg.evaluate("""async () => { await document.fonts.load('96px "Black Han Sans"', '가A1');
             await document.fonts.load('700 30px Wanted', '가A1'); await document.fonts.load('600 30px Wanted', '가A1');
             await document.fonts.ready; }""")
-        await pg.evaluate("rcInit()")
+        await pg.evaluate("rcInit()")   # 사진을 다 읽을 때까지 기다린다
         problems = await pg.evaluate("rcProblems()")
         if not problems:
             for k, t in enumerate(times):
@@ -272,6 +329,14 @@ def make_race_reel(post, folder, cfg):
         shutil.rmtree(work)
     work.mkdir()
     html_file = work / "race.html"
+    missing = [im["src"] for im in images_of(post).values() if not (folder / im["src"]).exists()]
+    if missing:
+        shutil.rmtree(work)
+        raise ValueError("race.images 파일 없음: " + ", ".join(missing))
+    # data URI로 넣는다 (file:// 그림은 캔버스를 오염시켜 toDataURL이 막힘)
+    p["imgs"] = {str(i): {"uri": "data:image/jpeg;base64," + base64.b64encode((folder / im["src"]).read_bytes()).decode(),
+                          "x": im.get("x", 50), "y": im.get("y", 40), "dim": float(im.get("dim", 0.6))}
+                 for i, im in images_of(post).items()}
     html_file.write_text(page_html(p, cfg), encoding="utf-8")
     main = p["win_end"]
     nfr = int(round(main * FPS))
@@ -326,6 +391,8 @@ def make_race_reel(post, folder, cfg):
           ", ".join(f"{o['label']} {o['t']:.1f}초" for o in p["overtakes"]))
     print("효과음: " + ", ".join(f"{k} {len(v) if isinstance(v, (list, tuple)) else v}" for k, v in on.items()))
     print("박자: " + " → ".join(beats(p)))
+    print("배경 사진: " + ", ".join(f"{t:.1f}초 {p['ser'][i]['name']}" for t, i in p["spot"]) +
+          (f" (후킹: {', '.join(p['ser'][i]['name'] for i in p['hook_strip'])})" if p["hook_strip"] else ""))
     print(f"1위: {p['ser'][p['winner']]['name']} {fmt_value(p['ser'][p['winner']]['pts'][-1]['v'], p['fmt'])}, "
           f"본편 {main:.1f}초")
     return dur
@@ -415,6 +482,13 @@ def check_race(post):
         txt = v.get("text", "") if isinstance(v, dict) else (v or "")
         if any(len(l) > 14 for l in str(txt).splitlines()):
             errors.append(f"race.beats.{k} 한 줄 14자 이하: {txt!r}")
+    names = [s.get("name") for s in ser]
+    imgs = R.get("images") or []
+    for im in imgs:
+        if im.get("series") not in names:
+            errors.append(f"race.images: series '{im.get('series')}'가 race.series 이름에 없음")
+        if not im.get("src") or not str(im.get("credit", "")).strip():
+            errors.append(f"race.images {im.get('series')}: src와 credit(저작자·라이선스) 필요")
     ts = R.get("thumb_src")
     if ts and (post.get("thumb") or {}).get("image", {}).get("src") != ts:
         warnings.append("race.thumb_src와 thumb.image.src가 다름 (렌더링이 그린 그림을 썸네일로 쓰려면 같게)")
