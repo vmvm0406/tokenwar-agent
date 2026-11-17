@@ -47,7 +47,7 @@
 | `agent/tighten.py` | 받아쓰기 단어 시각 → 말 사이 틈을 자른 keep 목록 |
 | `agent/analyze.py` | 영상 분석: 장면 전환, 말소리 구간, 받아쓰기, 시트 이미지 |
 | `agent/gen_images.py` | 실물 이미지 받기(`url`) → 없으면 AI 그림(`prompt`, Cloudflare) |
-| `agent/image_quota.py` / `data/image_gen_count.json` | AI 그림 하루 상한(config `image_gen.daily_limit`, 기본 60장, UTC 날짜별로 셈). 넘으면 그 게시물만 대기, 다음 날 00:07 UTC 정기 render가 이어서. Cloudflare Workers Paid(월 $5, 운영자 결제 2026-11-17, Cloudflare 사용량 한도 $5) |
+| `agent/image_quota.py` / `data/image_gen_count.json` | AI 그림 하루 상한(config `image_gen.daily_limit`, 지금 200장(운영자 2026-11-17, 60→120→200), UTC 날짜별로 셈). 넘으면 그 게시물만 대기, 다음 날 00:07 UTC 정기 render가 이어서. Cloudflare Workers Paid(월 $5, 운영자 결제 2026-11-17, Cloudflare 사용량 한도 $5) |
 | `agent/build.py` | 그림 + 렌더링 + `.render_hash`(publish가 렌더링 끝난 것만 올리게) |
 | `agent/publish.py` | 인스타 게시 (Graph API, graph.facebook.com, 페이지 토큰). 미디어는 `docs/media/`에 복사·push해 GitHub Pages 주소로 넘기고, 게시 뒤 비운다. 게시된 폴더의 `clips/source.mp4`는 지운다. dm 게시물은 게시 직후 'Zorcha 설정 필요' 이슈 + `data/zorcha_todo.md` → 'Zorcha 담당' 세션이 `ZORCHA.md` 절차로 설정. `DRY_RUN=1`로 시험 |
 | `ZORCHA.md` | Zorcha 댓글 자동 DM 설정 절차 (게시물마다 브라우저로 자동화 생성, 'Zorcha 담당' 세션이 따름) |
