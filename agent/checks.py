@@ -1304,11 +1304,68 @@ def screen_now(post):
     return w
 
 
+PHOTO_RULE_FROM = "2026-11-18"   # 이 날짜부터 사진 없는 장면은 오류, 전에는 경고 (운영자 2026-11-17 "사진은 무조건 넣어")
+
+
+def scene_image_gaps(post):
+    """장면마다 사진·그림이 있는지 본다: 글자·그래프만 있는 장면 금지 (STYLE_GUIDE 0장 원칙 0).
+    (오류 목록, 경고 목록) 반환. 오류/경고 구분은 호출한 쪽에서 날짜로."""
+    gaps, notes = [], []
+    t = post.get("type")
+
+    def has(v):
+        return bool(isinstance(v, dict) and (v.get("src") or v.get("prompt") or v.get("shot")))
+
+    if t == "carousel":
+        return gaps, notes   # 카드뉴스는 check_images(표지 포함 2장 이상)가 따로 본다
+    if t == "reel":
+        for i, s in enumerate(post.get("slides") or [], 1):
+            v = s.get("visual") or {}
+            if not (v.get("type") == "image" and has(v)):
+                gaps.append(f"slides {i}({s.get('kind')}): 사진 없음")
+        return gaps, notes
+    if post.get("list"):
+        for i, it in enumerate((post["list"].get("items") or []), 1):
+            if not it.get("src"):
+                gaps.append(f"list.items {i}: 사진 없음")
+    elif post.get("rank"):
+        for i, it in enumerate((post["rank"].get("items") or []), 1):
+            if not it.get("src"):
+                gaps.append(f"rank.items {i}({it.get('label')}): 사진 없음")
+    elif post.get("timeline"):
+        for i, b in enumerate((post["timeline"].get("beats") or []), 1):
+            if not has(b.get("image")):
+                gaps.append(f"timeline.beats {i}({b.get('name')}): 사진 없음")
+    elif post.get("race"):
+        R = post["race"]
+        beats = R.get("beats") or {}
+        imgs = [x for x in (R.get("images") or []) if has(x)] + [x for x in (beats.get("images") or []) if has(x)]
+        if not imgs:
+            notes.append("race: 사진 필드(race.images)가 아직 없음 → 경고만. 막대 그래프는 사진 위에 겹쳐야 함 (STYLE_GUIDE 0장 원칙 0)")
+    else:   # 일반 영상 릴스: 원본 영상(video.src)이 사진을 대신한다
+        v = post.get("video") or {}
+        if not v.get("src"):
+            gaps.append("video.src(원본 영상) 없음")
+    return gaps, notes
+
+
+def check_scene_images(post):
+    errors, warnings = [], []
+    gaps, notes = scene_image_gaps(post)
+    hard = str(post.get("date", "")) >= PHOTO_RULE_FROM
+    for g in gaps:
+        (errors if hard else warnings).append(f"사진 필수(STYLE_GUIDE 0장): {g}")
+    warnings += [f"사진 필수(STYLE_GUIDE 0장): {n}" for n in notes]
+    return errors, warnings
+
+
 def check_post(post):
     """(errors, warnings) 반환."""
     e, w = _check_post(post)
     w = w + writing_rules(post) + our_story(post) + deixis(post) + hedging(post) + screen_now(post)
     e = e + check_length_field(post)
+    e_i, w_i = check_scene_images(post)
+    e, w = e + e_i, w + w_i
     e_t, w_t = check_threads(post)
     return e + check_license(post) + e_t, w + awkward_titles(post) + w_t
 
