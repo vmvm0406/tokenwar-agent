@@ -1,0 +1,328 @@
+{
+  "id": "2026-11-18-race-ai-users",
+  "type": "video",
+  "format": "news",
+  "origin": "own",
+  "length": "short",
+  "series": "전황",
+  "date": "2026-11-18",
+  "publish_at": "2026-11-18T19:43:00+09:00",
+  "rights": "own",
+  "rights_note": "화면은 직접 그린 막대 경주 그래프(글자·막대, 로고 없이 회사 이름 글자). 수치는 모두 회사가 직접 밝힌 사용자 수(CEO 발표·실적 발표·공식 블로그·증권신고서)만, 값은 발표가 나온 날에만 바뀌고 발표 사이를 지어내지 않음. 마지막 발표 뒤에는 그 값을 유지(Meta AI는 2025-05 10억 뒤 새 숫자 발표 없음, Copilot은 2025-10 뒤 월간 사용자 발표 없음). ChatGPT는 OpenAI가 주간 사용자(WAU)만 발표해 주간, 나머지는 월간(MAU)으로 화면 근거 줄·막대 옆 '주간' 표시. Copilot은 Microsoft가 밝힌 'Copilot 앱 제품군' 월간 사용자. Grok은 SpaceX 증권신고서(S-1)의 2026-03-31 기준 월간 사용자(X 안에서 쓴 Grok 포함), 보도 날짜 2026-05-27로 넣음. 뤼튼 700만은 2026-01 기준 회사 설명(AI타임스 2026-03-06 보도). Gemini 3.5억은 2025-03 기준 구글 내부 자료가 반독점 재판(2025-04-23)에서 공개된 것. ChatGPT 12억은 DevDay 2026(2026-09-29) 발표(OpenAI 2026-11-13 ChatGPT Wallet 글도 '매주 12억 명'). 점마다 출처는 race.series[].points[].url. 제외: Claude·DeepSeek·Perplexity(공식 사용자 수 없음, 제3자 추정만), 네이버(공식 문서 미확인), ChatGPT '7억 돌파 예정'(예정치). 배경음악 'Trap Monopoly (Instrumental)' by Robbero (ccmixter.org/files/Robbero/51732), CC BY 3.0 조각(agent/music_fit.py), 효과음은 agent/music_gen.py 코드 생성.",
+  "title": "AI 사용자 1위,\n주인이 두 번 바뀌었다",
+  "title_options": [
+    "ChatGPT, 사용자 1위\n다시 되찾았다",
+    "AI 사용자 1위,\n주인이 두 번 바뀌었다",
+    "AI 챗봇 왕좌,\n결국 ChatGPT다"
+  ],
+  "highlight": "두 번",
+  "music": {
+    "src": "music.m4a",
+    "title": "Trap Monopoly (Instrumental)",
+    "artist": "Robbero",
+    "url": "https://ccmixter.org/files/Robbero/51732",
+    "license": "CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/), 곡 페이지에서 확인 2026-11-17",
+    "credit": "'Trap Monopoly (Instrumental)' by Robbero (ccmixter.org/files/Robbero/51732), CC BY 3.0",
+    "genre": "trap",
+    "note": "agent/music_fit.py로 릴스 120 BPM에 맞춘 30초 조각. 곡 전체는 저장소에 넣지 않음"
+  },
+  "topic": [
+    "AI 챗봇 사용자 수",
+    "ChatGPT 사용자",
+    "AI 챗봇 순위"
+  ],
+  "keywords": [
+    "ChatGPT 사용자 수",
+    "Gemini 사용자 수",
+    "Meta AI",
+    "AI 챗봇 순위"
+  ],
+  "sources": [
+    {
+      "name": "TechCrunch, Altman: ChatGPT 100M weekly active users, DevDay (2023-11-06)",
+      "url": "https://techcrunch.com/2023/11/06/openais-chatgpt-now-has-100-million-weekly-active-users/"
+    },
+    {
+      "name": "TechCrunch, Altman: ChatGPT 800M weekly active users, DevDay (2025-10-06)",
+      "url": "https://techcrunch.com/2025/10/06/sam-altman-says-chatgpt-has-hit-800m-weekly-active-users/"
+    },
+    {
+      "name": "Engadget, OpenAI DevDay 2026 live blog: ChatGPT 1.2B weekly users (2026-09-29)",
+      "url": "https://www.engadget.com/2271985/openai-dev-day-live-blog-chatgpt-news/"
+    },
+    {
+      "name": "Google, Alphabet Q3 2026 earnings: Gemini app 1B+ monthly users (2026-10-28)",
+      "url": "https://blog.google/company-news/inside-google/message-ceo/alphabet-earnings-q3-2026/"
+    },
+    {
+      "name": "TechCrunch, Meta AI 1B monthly active users (2025-05-29)",
+      "url": "https://techcrunch.com/2025/05/29/meta-ai-now-has-1b-monthly-active-users/"
+    },
+    {
+      "name": "Microsoft FY26 Q1 earnings: family of Copilot apps 150M+ MAU (2025-10-29)",
+      "url": "https://www.microsoft.com/en-us/investor/events/fy-2026/earnings-fy-2026-q1"
+    }
+  ],
+  "caption": "ChatGPT 사용자 수 12억 명, Gemini·Meta AI와 벌인 AI 챗봇 1위 다툼 3년 기록입니다.\n\n2024년 10월, 왓츠앱·인스타그램에 들어간 Meta AI가 월간 5억 명으로 먼저 1위.\nGemini는 2026년 7월 월간 9.5억 명으로 2위까지 올라왔고, 8월에 10억 명을 넘겼습니다.\n9월 OpenAI 개발자 행사에서는 ChatGPT가 주간 12억 명을 발표하며 1위를 되찾았습니다.\nChatGPT만 주간 사용자, 나머지는 월간 사용자 기준. 주간이 더 엄격한 숫자입니다.\n\nChatGPT와 Gemini, 어느 쪽을 더 많이 쓰시나요?\n\n출처: OpenAI(DevDay·투자 발표), Alphabet·Meta·Microsoft 실적 발표, Meta 주주총회, SpaceX 증권신고서(Grok), 뤼튼 발표 (2023년 11월~2026년 10월)\n음악: 'Trap Monopoly (Instrumental)' by Robbero (ccmixter.org/files/Robbero/51732), CC BY 3.0\n\n팔로우하면 매일 AI 소식을 받아 볼 수 있어요.",
+  "hashtags": [
+    "#챗GPT",
+    "#제미나이",
+    "#AI뉴스",
+    "#토큰전쟁"
+  ],
+  "end_cta": "팔로우하면\n매일 AI 소식",
+  "thumb": {
+    "title": "AI 사용자 1위,\n두 번 바뀌었다",
+    "highlight": "두 번",
+    "image": {
+      "type": "image",
+      "src": "img/thumb.jpg",
+      "position": "center 30%"
+    }
+  },
+  "race": {
+    "format": "people_m",
+    "end": "2026-11-17",
+    "basis_line": "회사 공식 발표 · ChatGPT는 주간, 나머지는 월간 사용자",
+    "cta_line": "ChatGPT vs Gemini, 뭐 쓰세요?",
+    "punch": "일주일에 12억 명이\nChatGPT를 씁니다",
+    "thumb_src": "img/thumb.jpg",
+    "series": [
+      {
+        "name": "ChatGPT",
+        "color": "#10A37F",
+        "tag": "주간",
+        "points": [
+          {
+            "date": "2023-11-06",
+            "value": 100,
+            "kind": "official",
+            "src": "Sam Altman, OpenAI DevDay 2023",
+            "url": "https://techcrunch.com/2023/11/06/openais-chatgpt-now-has-100-million-weekly-active-users/"
+          },
+          {
+            "date": "2024-08-29",
+            "value": 200,
+            "kind": "official",
+            "src": "OpenAI가 Axios에 밝힘",
+            "url": "https://simonwillison.net/2024/Aug/31/openai-says-chatgpt-usage-has-doubled-since-last-year"
+          },
+          {
+            "date": "2024-12-04",
+            "value": 300,
+            "kind": "official",
+            "src": "Sam Altman, NYT DealBook·OpenAI 뉴스룸",
+            "url": "https://www.pymnts.com/news/artificial-intelligence/2024/chatgpt-reaches-300-million-weekly-active-users/"
+          },
+          {
+            "date": "2025-02-20",
+            "value": 400,
+            "kind": "official",
+            "src": "OpenAI COO Brad Lightcap, CNBC",
+            "url": "https://www.engadget.com/ai/chatgpt-reaches-400m-weekly-active-users-203635884.html"
+          },
+          {
+            "date": "2025-03-31",
+            "value": 500,
+            "kind": "official",
+            "src": "OpenAI 400억 달러 투자 발표",
+            "url": "https://techcrunch.com/2025/10/06/sam-altman-says-chatgpt-has-hit-800m-weekly-active-users/"
+          },
+          {
+            "date": "2025-10-06",
+            "value": 800,
+            "kind": "official",
+            "src": "Sam Altman, OpenAI DevDay 2025",
+            "url": "https://techcrunch.com/2025/10/06/sam-altman-says-chatgpt-has-hit-800m-weekly-active-users/"
+          },
+          {
+            "date": "2026-02-27",
+            "value": 900,
+            "kind": "official",
+            "src": "OpenAI 1,100억 달러 투자 발표",
+            "url": "https://searchengineland.com/chatgpt-900-million-weekly-active-users-470492"
+          },
+          {
+            "date": "2026-09-29",
+            "value": 1200,
+            "kind": "official",
+            "src": "Sam Altman, OpenAI DevDay 2026",
+            "url": "https://www.engadget.com/2271985/openai-dev-day-live-blog-chatgpt-news/"
+          }
+        ]
+      },
+      {
+        "name": "Meta AI",
+        "color": "#0A7CFF",
+        "points": [
+          {
+            "date": "2024-10-30",
+            "value": 500,
+            "kind": "official",
+            "src": "Mark Zuckerberg, Meta 2024년 3분기 실적 발표",
+            "url": "https://telecomtalk.info/meta-ai-500million-monthly-users-mark-zuckerberg/984187"
+          },
+          {
+            "date": "2025-01-29",
+            "value": 700,
+            "kind": "official",
+            "src": "Meta CFO Susan Li, 2024년 4분기 실적 발표",
+            "url": "https://www.constellationr.com/insights/news/meta-deepseek-custom-silicon-ai-optimizing-engineering-and-business"
+          },
+          {
+            "date": "2025-05-28",
+            "value": 1000,
+            "kind": "official",
+            "src": "Mark Zuckerberg, Meta 주주총회",
+            "url": "https://techcrunch.com/2025/05/29/meta-ai-now-has-1b-monthly-active-users/"
+          }
+        ]
+      },
+      {
+        "name": "Gemini",
+        "color": "#9B72CB",
+        "points": [
+          {
+            "date": "2025-04-23",
+            "value": 350,
+            "kind": "official",
+            "src": "구글 내부 자료(2025-03 기준), 미국 반독점 재판 공개",
+            "url": "https://www.wgbh.org/news/2025-04-29/why-googles-search-engine-trial-is-about-ai"
+          },
+          {
+            "date": "2025-05-20",
+            "value": 400,
+            "kind": "official",
+            "src": "Sundar Pichai, Google I/O 2025",
+            "url": "https://blog.google/innovation-and-ai/sundar-pichai-io-2026/"
+          },
+          {
+            "date": "2025-07-23",
+            "value": 450,
+            "kind": "official",
+            "src": "Sundar Pichai, Alphabet 2025년 2분기 실적 발표",
+            "url": "https://blog.google/inside-google/message-ceo/alphabet-earnings-q2-2025/"
+          },
+          {
+            "date": "2025-10-29",
+            "value": 650,
+            "kind": "official",
+            "src": "Sundar Pichai, Alphabet 2025년 3분기 실적 발표",
+            "url": "https://blog.google/inside-google/message-ceo/alphabet-earnings-q3-2025/"
+          },
+          {
+            "date": "2026-02-04",
+            "value": 750,
+            "kind": "official",
+            "src": "Sundar Pichai, Alphabet 2025년 4분기 실적 발표",
+            "url": "https://blog.google/company-news/inside-google/message-ceo/alphabet-earnings-q4-2025/"
+          },
+          {
+            "date": "2026-05-19",
+            "value": 900,
+            "kind": "official",
+            "src": "Sundar Pichai, Google I/O 2026",
+            "url": "https://blog.google/innovation-and-ai/sundar-pichai-io-2026/"
+          },
+          {
+            "date": "2026-07-22",
+            "value": 950,
+            "kind": "official",
+            "src": "Sundar Pichai, Alphabet 2026년 2분기 실적 발표",
+            "url": "https://blog.google/company-news/inside-google/message-ceo/alphabet-earnings-q2-2026/"
+          },
+          {
+            "date": "2026-08-11",
+            "value": 1000,
+            "kind": "official",
+            "src": "구글 공식 블로그·Sundar Pichai (10월 3분기 실적 발표에서도 10억 명 이상)",
+            "url": "https://9to5google.com/2026/08/11/gemini-app-1-billion/"
+          }
+        ]
+      },
+      {
+        "name": "Copilot",
+        "color": "#F2A900",
+        "points": [
+          {
+            "date": "2025-07-30",
+            "value": 100,
+            "kind": "official",
+            "src": "Satya Nadella, Microsoft FY25 4분기 실적 발표 (Copilot 앱 제품군)",
+            "url": "https://www.marketbeat.com/earnings/reports/2025-7-30-microsoft-co-stock/"
+          },
+          {
+            "date": "2025-10-29",
+            "value": 150,
+            "kind": "official",
+            "src": "Satya Nadella, Microsoft FY26 1분기 실적 발표 (Copilot 제품군)",
+            "url": "https://www.microsoft.com/en-us/investor/events/fy-2026/earnings-fy-2026-q1"
+          }
+        ]
+      },
+      {
+        "name": "Grok",
+        "color": "#D9D9D9",
+        "points": [
+          {
+            "date": "2026-05-27",
+            "value": 117,
+            "kind": "official",
+            "src": "SpaceX 증권신고서(S-1), 2026-03-31 기준, X 안의 Grok 포함",
+            "url": "https://pulse2.com/spacex-grok-reaches-117-million-users-as-ai-push-accelerates/"
+          }
+        ]
+      },
+      {
+        "name": "뤼튼",
+        "color": "#8B5CF6",
+        "points": [
+          {
+            "date": "2024-10-31",
+            "value": 5,
+            "kind": "official",
+            "src": "뤼튼테크놀로지스 보도자료",
+            "url": "https://www.edaily.co.kr/News/Read?mediaCodeNo=257&newsId=05225046639058496"
+          },
+          {
+            "date": "2026-03-06",
+            "value": 7,
+            "kind": "official",
+            "src": "뤼튼 회사 설명(2026-01 기준), AI타임스",
+            "url": "https://www.aitimes.com/news/articleView.html?idxno=207606"
+          }
+        ]
+      }
+    ],
+    "beats": {
+      "hook": "AI 사용자 1위,\n지금은 누구?",
+      "hook_until": 3,
+      "anchors": [
+        [
+          "2024-08-29",
+          3.0
+        ],
+        [
+          "2026-02-04",
+          12.0
+        ],
+        [
+          "2026-07-22",
+          13.6
+        ],
+        [
+          "2026-09-29",
+          23.5
+        ]
+      ],
+      "rehook": {
+        "date": "2026-07-22",
+        "text": "ChatGPT 3위로"
+      },
+      "ask": {
+        "text": "1위 자리,\n또 뒤집힐까?",
+        "from": 15.0
+      }
+    }
+  }
+}

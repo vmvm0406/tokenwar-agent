@@ -242,6 +242,7 @@ def check_thumb(post):
         errs.append("썸네일 image.src 필요")
     list_srcs = {x.get("src") for x in ((post.get("list") or {}).get("items") or []) + [(post.get("list") or {}).get("base") or {}]}
     list_srcs.add((post.get("timeline") or {}).get("thumb_src"))   # 연표 릴스: 렌더링이 그린 썸네일 바탕 (timeline_reel.py)
+    list_srcs.add((post.get("race") or {}).get("thumb_src"))       # 막대 경주 릴스: 렌더링이 그린 썸네일 바탕 (racereel.py)
     if not (im.get("url") or im.get("prompt")) and im.get("src") not in list_srcs:
         errs.append("썸네일 image에 url(실물 이미지) 또는 prompt(AI 생성) 중 하나는 있어야 함 (직접 넣은 파일이면 url에 원본 주소)")
     return errs
@@ -254,7 +255,8 @@ def check_video(post):
     is_list = bool(post.get("list"))   # 목록형 자료 릴스 (listreel.py): video 대신 list
     is_rank = bool(post.get("rank"))   # 순위 카운트다운 릴스 (rankreel.py): video 대신 rank
     is_tl = bool(post.get("timeline")) and not is_list and not is_rank   # 연표 릴스 (timeline_reel.py): video 대신 timeline
-    main_key = "rank" if is_rank else "list" if is_list else "timeline" if is_tl else "video"
+    is_race = bool(post.get("race")) and not is_list and not is_rank and not is_tl   # 막대 경주 릴스 (racereel.py): video 대신 race
+    main_key = "rank" if is_rank else "list" if is_list else "timeline" if is_tl else "race" if is_race else "video"
     for key in ["id", "series", "date", "publish_at", main_key, "title", "rights", "sources", "caption"]:
         if key not in post:
             errors.append(f"필수 항목 없음: {key}")
@@ -268,6 +270,11 @@ def check_video(post):
         e_k, w_k = check_rank(post)
         errors += e_k
         warnings += w_k
+    if is_race:
+        from racereel import check_race
+        e_r, w_r = check_race(post)
+        errors += e_r
+        warnings += w_r
     if is_tl:
         from timeline_reel import check_timeline
         e_l, w_l = check_timeline(post)
@@ -330,7 +337,7 @@ def check_video(post):
     if not is_rank or post.get("thumb"):   # 순위 릴스는 thumb가 없으면 첫 화면이 커버 (rankreel.py)
         errors += check_thumb(post)
     v = post.get("video") or {}
-    if not is_list and not is_rank and not is_tl and not v.get("src"):
+    if not is_list and not is_rank and not is_tl and not is_race and not v.get("src"):
         errors.append("video.src 필요")
     prev_end = -1
     texts = [post["title"]]
@@ -1255,9 +1262,9 @@ def hedging(post):
     """캡션·화면 글의 중립·변명 문장 경고 (예: '~라는 뜻은 아닙니다', '물론 ~도 있습니다', '단정할 수는 없지만')."""
     w = []
     texts = [("캡션", post.get("caption")), ("제목", post.get("title")), ("썸네일 제목", (post.get("thumb") or {}).get("title"))]
-    for sec in ("rank", "list"):
+    for sec in ("rank", "list", "race"):
         R = post.get(sec) or {}
-        texts += [(f"{sec}.{k}", R.get(k)) for k in ("source_line", "note_line", "cta_line") if isinstance(R.get(k), str)]
+        texts += [(f"{sec}.{k}", R.get(k)) for k in ("source_line", "note_line", "cta_line", "basis_line", "punch") if isinstance(R.get(k), str)]
         for i, it in enumerate(R.get("items") or [], 1):
             texts += [(f"{sec}.items {i}", it.get(k)) for k in ("claim", "result", "quote", "label")]
     for i, s in enumerate(post.get("subtitles") or [], 1):

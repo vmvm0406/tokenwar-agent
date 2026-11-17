@@ -1,0 +1,371 @@
+{
+  "id": "2026-11-18-race-ai-valuation",
+  "type": "video",
+  "format": "news",
+  "origin": "own",
+  "length": "short",
+  "series": "전황",
+  "date": "2026-11-18",
+  "publish_at": "2026-11-18T12:43:00+09:00",
+  "rights": "own",
+  "rights_note": "화면은 직접 그린 막대 경주 그래프(글자·막대, 로고 없이 회사 이름 글자). 기업가치는 투자 유치 때 매겨진 값(대부분 투자 후 기준)만, 값은 발표·보도가 나온 날에만 바뀌고 사이를 지어내지 않음. 회사 공식 발표: OpenAI 1,570억(2024-10)·3,000억(2025-03)·8,520억(2026-03), Anthropic 615억·1,830억·3,800억·9,650억, Mistral 117억 유로·210억 유로. 언론 보도(회사 확인 없음): OpenAI 290억(2023-01 WSJ)·800억(2024-02 직원 주식 매각, NYT. Bloomberg는 860억 → 낮은 쪽)·5,000억(2025-10 직원 주식 매각, Reuters)·1조 2,500억(2026-11-06 Bloomberg, 1차 110억 달러 마감, CNBC 확인, 라운드 진행 중·투자 전/후 기준 보도마다 다름), Anthropic 41억·184억·3,500억, xAI 240억·800억(머스크 X 게시 X 합병)·2,300억·2,500억(2026-02 SpaceX 합병 때, 그 뒤 독립 가치 없음 → 2,500억 유지), Perplexity 전부, SSI 전부, Thinking Machines 120억. 유로는 그날 환율로 달러 환산(Mistral 2억 유로·58억 유로·117억 유로·210억 유로 → 22억·62억·137억·240억 달러, Reuters 240억 달러). 제외: OpenAI 2021년 140억(원문 확인 못 함), Mistral 2023-06 시드(원문 확인 못 함), xAI 2024-12 500억·2025-09 2,000억(보도마다 다르거나 머스크 부인), Perplexity 30억·140억(날짜 확인 못 함), 진행 중인 협상 값(Thinking Machines 400억, Perplexity 300억 이상). 제목 43배 = OpenAI 290억(2023-01) → 1조 2,500억(2026-11), 3년 10개월. 점마다 출처는 race.series[].points[].url. 배경음악 'Put The Needle Down' by AlexBeroza (ccmixter.org/files/AlexBeroza/28062), CC BY 3.0 조각(agent/music_fit.py), 효과음은 agent/music_gen.py 코드 생성.",
+  "title": "OpenAI 몸값,\n4년 만에 43배 뛰었다",
+  "title_options": [
+    "OpenAI 몸값,\n4년 만에 43배 뛰었다",
+    "AI 몸값 1위,\n두 번 뒤집혔다",
+    "1조 달러 AI,\n1위 싸움이 붙었다"
+  ],
+  "highlight": "43배",
+  "music": {
+    "src": "music.m4a",
+    "title": "Put The Needle Down",
+    "artist": "AlexBeroza",
+    "url": "https://ccmixter.org/files/AlexBeroza/28062",
+    "license": "CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/), 곡 페이지에서 확인 2026-11-17",
+    "credit": "'Put The Needle Down' by AlexBeroza (ccmixter.org/files/AlexBeroza/28062), CC BY 3.0",
+    "genre": "house",
+    "note": "agent/music_fit.py로 원곡 템포 그대로 박에 맞춘 30초 조각. 곡 전체는 저장소에 넣지 않음"
+  },
+  "topic": [
+    "AI 기업가치",
+    "OpenAI 기업가치",
+    "Anthropic"
+  ],
+  "keywords": [
+    "OpenAI 기업가치",
+    "Anthropic 기업가치",
+    "AI 회사 몸값",
+    "xAI"
+  ],
+  "sources": [
+    {
+      "name": "Anthropic, Series G $30B at $380B post-money (2026-02-12)",
+      "url": "https://www.anthropic.com/news/anthropic-raises-30-billion-series-g-funding-380-billion-post-money-valuation"
+    },
+    {
+      "name": "SiliconANGLE, OpenAI closes $122B round at $852B (2026-03-31)",
+      "url": "https://siliconangle.com/2026/03/31/openai-just-closed-record-breaking-122b-funding-round-brings-value-852b/"
+    },
+    {
+      "name": "Bloomberg via Let's Data Science, OpenAI first close $11B at $1.25T (2026-11-06)",
+      "url": "https://letsdatascience.com/news/openai-reportedly-closes-11-billion-first-portion-of-round-a-43b7bec2"
+    },
+    {
+      "name": "CNBC, OpenAI raises at $157 billion valuation (2024-10-02)",
+      "url": "https://www.cnbc.com/2024/10/02/openai-raises-at-157-billion-valuation-microsoft-nvidia-join-round.html"
+    },
+    {
+      "name": "Mistral AI, Series D (2026-09-08)",
+      "url": "https://mistral.ai/news/mistral-makes-sovereign-open-weight-ai-to-frontier/"
+    }
+  ],
+  "caption": "OpenAI 기업가치 1조 2,500억 달러, Anthropic·xAI와 벌인 AI 회사 몸값 1위 다툼 4년 기록입니다.\n\n2023년 1월 290억 달러였던 OpenAI는 3년 10개월 만에 43배가 됐습니다.\n2026년 5월에는 Anthropic이 9,650억 달러 투자를 받으며 처음 1위.\n11월 OpenAI가 1조 2,500억 달러에 1차 투자를 마감하며 5개월 만에 1위를 되찾았다고 블룸버그가 보도했습니다.\n2위 다툼은 xAI와 Anthropic이 네 번 주고받았습니다.\n\nOpenAI와 Anthropic, 다음 1위는 어디일까요?\n\n출처: OpenAI·Anthropic·Mistral 투자 발표, Bloomberg·Reuters·CNBC·WSJ 보도 (2023년 1월~2026년 11월)\n음악: 'Put The Needle Down' by AlexBeroza (ccmixter.org/files/AlexBeroza/28062), CC BY 3.0\n\n팔로우하면 매일 AI 소식을 받아 볼 수 있어요.",
+  "hashtags": [
+    "#오픈AI",
+    "#앤트로픽",
+    "#AI뉴스",
+    "#토큰전쟁"
+  ],
+  "end_cta": "팔로우하면\n매일 AI 소식",
+  "thumb": {
+    "title": "OpenAI 몸값,\n4년 만에 43배 뛰었다",
+    "highlight": "43배",
+    "image": {
+      "type": "image",
+      "src": "img/thumb.jpg",
+      "position": "center 30%"
+    }
+  },
+  "race": {
+    "format": "usd_b",
+    "end": "2026-11-17",
+    "basis_line": "투자 유치 때 매겨진 기업가치 · 회사 발표·주요 언론 보도",
+    "cta_line": "OpenAI vs Anthropic, 다음 1위는?",
+    "punch": "OpenAI가 5개월 만에\n1위를 되찾았다",
+    "thumb_src": "img/thumb.jpg",
+    "series": [
+      {
+        "name": "OpenAI",
+        "color": "#10A37F",
+        "points": [
+          {
+            "date": "2023-01-05",
+            "value": 29,
+            "kind": "reported",
+            "src": "WSJ 보도 (주식 매각 협상, 290억 달러, Crunchbase 인용)",
+            "url": "https://news.crunchbase.com/ai-robotics/openai-chatgpt-tender-offer"
+          },
+          {
+            "date": "2024-02-16",
+            "value": 80,
+            "kind": "reported",
+            "src": "NYT 보도 (Thrive 주도 직원 주식 매각, 800억 달러 이상)",
+            "url": "https://business.inquirer.net/445926/openai-valued-at-80b-after-deal-nyt-reports"
+          },
+          {
+            "date": "2024-10-02",
+            "value": 157,
+            "kind": "official",
+            "src": "OpenAI 66억 달러 투자 유치, 투자 후 1,570억 달러",
+            "url": "https://www.cnbc.com/2024/10/02/openai-raises-at-157-billion-valuation-microsoft-nvidia-join-round.html"
+          },
+          {
+            "date": "2025-03-31",
+            "value": 300,
+            "kind": "official",
+            "src": "OpenAI 400억 달러 투자 유치, 투자 후 3,000억 달러",
+            "url": "https://www.cnbc.com/2025/03/31/openai-closes-40-billion-in-funding-the-largest-private-fundraise-in-history-softbank-chatgpt.html"
+          },
+          {
+            "date": "2025-10-02",
+            "value": 500,
+            "kind": "reported",
+            "src": "Reuters·Fortune 보도 (66억 달러 직원 주식 매각, 5,000억 달러)",
+            "url": "https://fortune.com/2025/10/02/openai-valuation-reaches-500-billion-topping-musks-spacex/"
+          },
+          {
+            "date": "2026-03-31",
+            "value": 852,
+            "kind": "official",
+            "src": "OpenAI 1,220억 달러 투자 마감, 투자 후 8,520억 달러",
+            "url": "https://siliconangle.com/2026/03/31/openai-just-closed-record-breaking-122b-funding-round-brings-value-852b/"
+          },
+          {
+            "date": "2026-11-06",
+            "value": 1250,
+            "kind": "reported",
+            "src": "Bloomberg 보도·CNBC 확인 (1차 110억 달러 마감, 1조 2,500억 달러)",
+            "url": "https://letsdatascience.com/news/openai-reportedly-closes-11-billion-first-portion-of-round-a-43b7bec2"
+          }
+        ]
+      },
+      {
+        "name": "Anthropic",
+        "color": "#D97757",
+        "points": [
+          {
+            "date": "2023-03-08",
+            "value": 4.1,
+            "kind": "reported",
+            "src": "The Information 보도 (Spark 투자, 41억 달러)",
+            "url": "https://siliconangle.com/2023/03/08/generative-ai-startup-anthropic-raises-another-300m-bringing-value-4-1b/"
+          },
+          {
+            "date": "2023-12-21",
+            "value": 18.4,
+            "kind": "reported",
+            "src": "The Information·Reuters 보도 (Menlo 투자, 184억 달러)",
+            "url": "https://www.thestar.com.my/tech/tech-news/2023/12/21/anthropic-to-raise-750-million-in-menlo-ventures-led-funding-round--the-information"
+          },
+          {
+            "date": "2025-03-03",
+            "value": 61.5,
+            "kind": "official",
+            "src": "Anthropic 시리즈 E, 투자 후 615억 달러",
+            "url": "https://www.anthropic.com/news/anthropic-raises-series-e-at-usd61-5b-post-money-valuation"
+          },
+          {
+            "date": "2025-09-02",
+            "value": 183,
+            "kind": "official",
+            "src": "Anthropic 시리즈 F, 투자 후 1,830억 달러",
+            "url": "https://www.anthropic.com/news/anthropic-raises-series-f-at-usd183b-post-money-valuation"
+          },
+          {
+            "date": "2025-11-18",
+            "value": 350,
+            "kind": "reported",
+            "src": "CNBC 보도 (Microsoft·NVIDIA 투자, 약 3,500억 달러)",
+            "url": "https://www.theregister.com/2025/11/18/anthropic_microsoft_nvidia_ai_deals/"
+          },
+          {
+            "date": "2026-02-12",
+            "value": 380,
+            "kind": "official",
+            "src": "Anthropic 시리즈 G, 투자 후 3,800억 달러",
+            "url": "https://www.anthropic.com/news/anthropic-raises-30-billion-series-g-funding-380-billion-post-money-valuation"
+          },
+          {
+            "date": "2026-05-28",
+            "value": 965,
+            "kind": "official",
+            "src": "Anthropic 시리즈 H, 투자 후 9,650억 달러",
+            "url": "https://www.anthropic.com/news/series-h"
+          }
+        ]
+      },
+      {
+        "name": "xAI",
+        "color": "#D9D9D9",
+        "points": [
+          {
+            "date": "2024-05-27",
+            "value": 24,
+            "kind": "reported",
+            "src": "Reuters 보도 (시리즈 B, 투자 후 240억 달러)",
+            "url": "https://www.malaymail.com/news/money/2024/05/27/elon-musks-xai-valued-at-us24b-after-fresh-funding/136708"
+          },
+          {
+            "date": "2025-03-28",
+            "value": 80,
+            "kind": "official",
+            "src": "일론 머스크 X 게시 (X 인수, xAI 800억 달러)",
+            "url": "https://techcrunch.com/2025/03/29/elon-musk-says-xai-acquired-x/"
+          },
+          {
+            "date": "2026-01-06",
+            "value": 230,
+            "kind": "reported",
+            "src": "NYT·CNBC 보도 (시리즈 E, 약 2,300억 달러)",
+            "url": "https://x.ai/news/series-e"
+          },
+          {
+            "date": "2026-02-02",
+            "value": 250,
+            "kind": "reported",
+            "src": "Bloomberg 보도 (SpaceX 합병, xAI 2,500억 달러)",
+            "url": "https://news.bloomberglaw.com/ip-law/elon-musks-spacex-said-to-combine-with-xai-ahead-of-mega-ipo"
+          }
+        ]
+      },
+      {
+        "name": "SSI",
+        "color": "#6E7BFF",
+        "points": [
+          {
+            "date": "2024-09-04",
+            "value": 5,
+            "kind": "reported",
+            "src": "Reuters 보도 (10억 달러 투자, 50억 달러)",
+            "url": "https://techcrunch.com/2024/09/04/ilya-sutskevers-startup-safe-super-intelligence-raises-1b"
+          },
+          {
+            "date": "2025-04-14",
+            "value": 32,
+            "kind": "reported",
+            "src": "Reuters·WSJ 보도 (20억 달러 투자, 320억 달러)",
+            "url": "https://www.timesofisrael.com/google-and-nvidia-said-to-back-openai-co-founder-sutskevers-safety-startup/"
+          }
+        ]
+      },
+      {
+        "name": "Perplexity",
+        "color": "#20B8CD",
+        "points": [
+          {
+            "date": "2024-01-04",
+            "value": 0.52,
+            "kind": "reported",
+            "src": "시리즈 B 보도 (5억 2,000만 달러)",
+            "url": "https://www.perplexity.ai/hub/blog/perplexity-raises-series-b-funding-round"
+          },
+          {
+            "date": "2024-04-23",
+            "value": 1,
+            "kind": "reported",
+            "src": "Bloomberg 보도 (10억 달러)",
+            "url": "https://techcrunch.com/2024/04/23/perplexity-is-raising-250m-at-2-point-5-3b-valuation-ai-search-sources-say/"
+          },
+          {
+            "date": "2024-12-18",
+            "value": 9,
+            "kind": "reported",
+            "src": "Bloomberg 보도 (90억 달러)",
+            "url": "https://news.bloomberglaw.com/artificial-intelligence/ai-startup-perplexity-closes-funding-round-at-9-billion-value"
+          },
+          {
+            "date": "2025-07-17",
+            "value": 18,
+            "kind": "reported",
+            "src": "Bloomberg 보도 (180억 달러)",
+            "url": "https://techcrunch.com/2025/09/10/perplexity-reportedly-raised-200m-at-20b-valuation/"
+          },
+          {
+            "date": "2025-09-10",
+            "value": 20,
+            "kind": "reported",
+            "src": "The Information 보도 (200억 달러)",
+            "url": "https://techcrunch.com/2025/09/10/perplexity-reportedly-raised-200m-at-20b-valuation/"
+          }
+        ]
+      },
+      {
+        "name": "Mistral",
+        "color": "#FFAF00",
+        "points": [
+          {
+            "date": "2023-12-11",
+            "value": 2.2,
+            "kind": "reported",
+            "src": "AFP 보도 (20억 유로)",
+            "url": "https://techxplore.com/news/2023-12-french-ai-start-up-mistral-mn.html"
+          },
+          {
+            "date": "2024-06-11",
+            "value": 6.2,
+            "kind": "reported",
+            "src": "Bloomberg 보도 (58억 유로)",
+            "url": "https://uk.finance.yahoo.com/news/mistral-fundraises-5-8-billion-133519229.html"
+          },
+          {
+            "date": "2025-09-09",
+            "value": 13.7,
+            "kind": "official",
+            "src": "Mistral 시리즈 C, 투자 후 117억 유로",
+            "url": "https://mistral.ai/news/mistral-ai-raises-1-7-b-to-accelerate-technological-progress-with-ai/"
+          },
+          {
+            "date": "2026-09-08",
+            "value": 24,
+            "kind": "official",
+            "src": "Mistral 시리즈 D, 투자 후 210억 유로 이상 (Reuters 240억 달러)",
+            "url": "https://www.thestar.com.my/tech/tech-news/2026/09/08/french-ai-company-mistral-hits-24-billion-valuation-in-funding-round"
+          }
+        ]
+      },
+      {
+        "name": "Thinking Machines",
+        "color": "#B9B9B9",
+        "points": [
+          {
+            "date": "2025-07-15",
+            "value": 12,
+            "kind": "reported",
+            "src": "회사 20억 달러 투자 확인, 120억 달러 보도",
+            "url": "https://techcrunch.com/2025/07/15/mira-muratis-thinking-machines-lab-is-worth-12b-in-seed-round/"
+          }
+        ]
+      }
+    ],
+    "beats": {
+      "hook": "AI 회사 몸값,\n1위는 어디?",
+      "hook_until": 3,
+      "anchors": [
+        [
+          "2023-12-21",
+          3.0
+        ],
+        [
+          "2026-02-12",
+          12.0
+        ],
+        [
+          "2026-05-28",
+          13.6
+        ],
+        [
+          "2026-11-06",
+          23.5
+        ]
+      ],
+      "rehook": {
+        "date": "2026-05-28",
+        "text": "OpenAI, 2위로"
+      },
+      "ask": {
+        "text": "OpenAI,\n1위 되찾을까?",
+        "from": 15.0
+      }
+    }
+  }
+}

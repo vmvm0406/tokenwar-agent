@@ -6,7 +6,7 @@
 결과:
     carousel: slides/01.jpg ... (1080x1350), 표지 motion이 있으면 slides/01.mp4 (첫 장 영상, 01.jpg는 정지 화면)
     reel:     frames/01.jpg ... (1080x1920), reel.mp4, cover.jpg  (카드형 모션 릴스, 선택)
-    video:    reel.mp4, cover.jpg  (영상 프레임 릴스, video.py; list면 listreel.py, rank면 rankreel.py)
+    video:    reel.mp4, cover.jpg  (영상 프레임 릴스, video.py; list면 listreel.py, rank면 rankreel.py, race면 racereel.py)
 
 디자인 원칙 (STYLE_GUIDE.md 1-1장): 편집 디자인. 큰 활자, 선, 녹색 면.
 알약 태그·둥근 카드·작은 대문자 라벨·가짜 UI 화면·점 무늬·진행 바 같은 'AI 디자인 티'는 쓰지 않는다.
@@ -485,6 +485,21 @@ def main(folder):
         from timeline_reel import make_timeline_reel
         dur = make_timeline_reel(post, out_dir, CONFIG)
         print(f"연표 릴스 길이: {dur:.1f}초")
+        check_sound_or_exit(out_dir)
+        thumb_or_exit(post, out_dir)
+        print("완료:", out_dir)
+        return
+    if post["type"] == "video" and post.get("race"):
+        # 막대 경주 릴스 (agent/racereel.py + racereel.js, TEMPLATES.md "막대 경주 릴스")
+        from racereel import make_race_reel
+        try:
+            dur = make_race_reel(post, out_dir, CONFIG)
+        except ValueError as e:
+            print("막대 경주 릴스 렌더링 중단:")
+            for line in str(e).splitlines():
+                print(" -", line)
+            sys.exit(1)
+        print(f"막대 경주 릴스 길이: {dur:.1f}초")
         check_sound_or_exit(out_dir)
         thumb_or_exit(post, out_dir)
         print("완료:", out_dir)
