@@ -187,6 +187,11 @@ def clause_noun_end(text):
         return True
     # "분위기를 바꾸는 조명 단어 20가지", "복귀를 막는 세 가지": 꾸미는 말(~는/~은/~던)이 붙은 개수로 끝나는 목록 제목
     # (STYLE_GUIDE 4장: 독자가 받는 개수는 의미 있는 숫자, 목록형 자료 릴스)
+    # "AI에 가장 먼저 흔들릴 직업 TOP 10": 꾸미는 말(~ㄴ/~ㄹ/~는)이 붙은 순위 제목 (순위 카운트다운 릴스, 2026-11-17)
+    m = re.search(r"(?i)\s(?:TOP\s*\d+|\d+\s*위)$", w)
+    if m:
+        before = w[:m.start()].split()[-4:]
+        return any(len(t) >= 2 and (t[-1] in "는은던" or _jong(t[-1]) in (4, 8)) for t in before)
     m = re.search(r"(?:\d+|[한두세네]|다섯|여섯|일곱|여덟|아홉|열)\s*(가지|개)$", w)
     if m:
         before = w[:m.start()].split()[-4:]
@@ -243,7 +248,9 @@ def check_video(post):
     errors, warnings = [], []
     lim = CONFIG["limits"]
     is_list = bool(post.get("list"))   # 목록형 자료 릴스 (listreel.py): video 대신 list
-    for key in ["id", "series", "date", "publish_at", "list" if is_list else "video", "title", "rights", "sources", "caption"]:
+    is_rank = bool(post.get("rank"))   # 순위 카운트다운 릴스 (rankreel.py): video 대신 rank
+    main_key = "rank" if is_rank else "list" if is_list else "video"
+    for key in ["id", "series", "date", "publish_at", main_key, "title", "rights", "sources", "caption"]:
         if key not in post:
             errors.append(f"필수 항목 없음: {key}")
     if errors:
@@ -252,6 +259,10 @@ def check_video(post):
         e_l, w_l = check_list(post)
         errors += e_l
         warnings += w_l
+    if is_rank:
+        e_k, w_k = check_rank(post)
+        errors += e_k
+        warnings += w_k
     if post["rights"] not in RIGHTS:
         errors.append(f"rights는 {RIGHTS} 중 하나: own(직접 만듦), permission(원작자 허락), license(이용 허락 라이선스)")
     if post["rights"] == "quote":
@@ -294,7 +305,7 @@ def check_video(post):
             errors.append("rights_note에 허락받은 날짜·경로나 라이선스 이름을 적을 것")
     ls = _lines(post["title"])
     # 목록형 릴스는 제목이 첫 화면에만 나와 3줄까지 (운영자가 고른 긴 제목, 2026-11-17 '반드시 필요한')
-    most_lines = 3 if post.get("list") else lim["cover_title_lines"]
+    most_lines = 3 if (post.get("list") or post.get("rank")) else lim["cover_title_lines"]
     if len(ls) > most_lines:
         errors.append(f"제목은 {most_lines}줄 이하")
     for l in ls:
@@ -306,9 +317,10 @@ def check_video(post):
     hl = post.get("highlight")
     if hl and hl not in post["title"]:
         errors.append(f"highlight '{hl}'가 제목 안에 없음")
-    errors += check_thumb(post)
+    if not is_rank or post.get("thumb"):   # 순위 릴스는 thumb가 없으면 첫 화면이 커버 (rankreel.py)
+        errors += check_thumb(post)
     v = post.get("video") or {}
-    if not is_list and not v.get("src"):
+    if not is_list and not is_rank and not v.get("src"):
         errors.append("video.src 필요")
     prev_end = -1
     texts = [post["title"]]
@@ -373,6 +385,71 @@ def check_video(post):
 
 
 LIST_COUNT_RE = re.compile(r"(\d+)\s*(가지|개)")
+TOP_RE = re.compile(r"(?i)TOP\s*(\d+)")
+
+
+def check_rank(post):
+    """순위 카운트다운 릴스 (type video + rank, rankreel.py, STYLE_GUIDE 6장 "순위 카운트다운 릴스"). (errors, warnings)
+    - 항목 3~15개, 항목마다 label(12자 이하, 이모지 없음)과 value(숫자) 또는 quote(발언) 중 하나 이상
+    - value가 있으면 1위부터 큰 순서 (공개 자료의 순위 그대로), value_max 이하
+    - 화면 출처 줄(rank.source_line) 필수, 실제 출처(sources, kind tool 아님) 1개 이상
+    - 제목·썸네일의 'TOP N'이 항목 수와 같음, 길이(끝 화면 포함) 20~35초"""
+    errors, warnings = [], []
+    R = post.get("rank")
+    if not isinstance(R, dict):
+        return ["rank는 {items: [{label, sub, value 또는 quote, desc, source}], source_line, ...} 객체 (TEMPLATES.md '순위 카운트다운 릴스')"], warnings
+    items = R.get("items") or []
+    if not 3 <= len(items) <= 15:
+        errors.append(f"rank.items는 3~15개: 지금 {len(items)}개")
+    vals = []
+    for i, it in enumerate(items, 1):
+        lab = str(it.get("label", "")).strip()
+        if not lab:
+            errors.append(f"rank.items {i}위: label(화면 이름) 필요")
+        elif _len(lab) > 12:
+            errors.append(f"rank.items {i}위: label은 12자 이하 (한 줄에 읽히게): '{lab}'")
+        if EMOJI_RE.search(lab + str(it.get("sub", "")) + str(it.get("quote", ""))):
+            errors.append(f"rank.items {i}위: 화면 글에 이모지를 쓰지 않음")
+        v = it.get("value")
+        if v is None and not str(it.get("quote", "")).strip():
+            errors.append(f"rank.items {i}위: value(점수·비율) 또는 quote(발언) 중 하나는 있어야 함")
+        if v is not None:
+            try:
+                vals.append(float(v))
+            except (TypeError, ValueError):
+                errors.append(f"rank.items {i}위: value는 숫자: {v!r}")
+        if it.get("quote") and _len(str(it["quote"])) > 60:
+            errors.append(f"rank.items {i}위: quote는 60자 이하 (화면 3줄 안, 긴 발언은 DM 자료 페이지에)")
+        if not str(it.get("desc", "")).strip():
+            warnings.append(f"rank.items {i}위: desc 없음 → DM 자료 페이지 설명이 빈다")
+    if vals and len(vals) == len(items) and any(a < b for a, b in zip(vals, vals[1:])):
+        errors.append("rank.items는 1위부터 값이 큰 순서여야 함 (자료의 순위를 그대로)")
+    vmax = R.get("value_max")
+    if vmax is not None and vals and max(vals) > float(vmax):
+        errors.append(f"rank.value_max({vmax})보다 큰 값이 있음: 막대가 넘친다")
+    if not str(R.get("source_line", "")).strip():
+        errors.append("rank.source_line(화면 아래 작은 출처 줄, 예: '출처: Microsoft Research (2025)') 필요")
+    elif _len(R["source_line"]) > 40:
+        errors.append(f"rank.source_line은 40자 이하 (한 줄): '{R['source_line']}'")
+    if not [s for s in post.get("sources") or [] if s.get("kind") != "tool" and str(s.get("url", "")).startswith("http")]:
+        errors.append("순위 릴스는 공개 자료 출처(sources, url) 1개 이상: 숫자는 출처의 것만 (STYLE_GUIDE 8장)")
+    for where, t in (("제목", post.get("title", "")), ("썸네일 제목", (post.get("thumb") or {}).get("title", ""))):
+        m = TOP_RE.search(str(t))
+        if m and int(m.group(1)) != len(items):
+            errors.append(f"{where}의 '{m.group(0)}'와 순위 항목 수({len(items)}개)가 다름")
+    if items:
+        from rankreel import timeline, LENGTH_RANGE
+        tl = timeline(post)
+        if not LENGTH_RANGE[0] <= tl["total"] <= LENGTH_RANGE[1]:
+            errors.append(f"순위 릴스 길이 {tl['total']:.1f}초 (끝 화면 포함 {LENGTH_RANGE[0]:g}~{LENGTH_RANGE[1]:g}초): "
+                          "rank.beats_per_item을 줄이거나 항목을 줄인다")
+        if tl["reveal"] > 2.0:
+            errors.append(f"1위 '?' 시간 {tl['reveal']:.1f}초: 2초 안 (운영자 2026-11-17 '너무 오래 끌지 않게')")
+    if post.get("length") not in (None, "short"):
+        warnings.append("순위 카운트다운 릴스는 20~35초라 length는 'short'")
+    if not post.get("dm"):
+        warnings.append("순위 릴스에 dm이 없음: 전체 순위·출처는 DM 자료 페이지에 둔다 (STYLE_GUIDE 6장)")
+    return errors, warnings
 
 
 def check_list(post):

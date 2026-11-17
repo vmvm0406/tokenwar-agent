@@ -6,6 +6,7 @@ post.json에 `dm`이 있으면 두 가지를 만든다 (STYLE_GUIDE 7-1, TEMPLAT
   2. 자료 안내 페이지 — 공개 저장소 GitHub Pages(docs/p/<게시물 id>/index.html).
      카드에 나온 프롬프트 전체 + dm.page의 추가 자료. DM 안 링크가 이 페이지를 가리킨다.
      목록형 자료 릴스(post.list)는 복사용 프롬프트 없이 '쓰는 법'(용어를 요청 문장 어디에 넣는지) + 용어 목록 + 예시 그림.
+     순위 카운트다운 릴스(post.rank)는 '읽는 법'(점수 뜻) + 영상 속 순위(값·하는 일·발언·출처) + 이어지는 순위(dm.page.more).
      예시 폴더(samples/)는 docs에 올리지 않고 폴더 안 page.html로만 만든다(미리보기).
   안내 페이지 목록(자료실)은 만들지 않는다 (운영자 결정 2026-11-16: 팔로우 안 한 사람도 받게 되므로).
   주소는 DM으로만 알리고, 검색 제외(noindex, docs/robots.txt).
@@ -343,6 +344,15 @@ ul{padding-left:20px;color:#CFD6D2}
 .step.li .en{font-family:'JetBrains Mono',ui-monospace,Consolas,monospace;color:var(--ac);font-size:16px;margin-left:10px}
 .usage{margin:6px 0 0}
 .usage li{margin:6px 0}
+.step.li .rv{color:var(--mu);font-size:15px;margin:8px 0 2px}
+.step.li .rv b{font-family:'Black Han Sans',sans-serif;font-weight:400;color:var(--ac);font-size:26px;margin-left:6px}
+.step.li .rq{border-top:2px solid var(--ac);padding-top:8px;color:var(--fg);font-weight:700}
+.step.li.sm{padding:10px 0}
+.step.li.sm .k{font-size:22px}
+.step.li.sm .rv{display:inline;margin-left:10px}
+.step.li.sm .rv b{font-size:20px}
+.step.li .gs{font-size:13px;color:var(--mu)}
+.step.li .gs a{color:var(--mu)}
 """
 
 
@@ -428,6 +438,45 @@ def page_html(post, folder=None):
                          + "".join(term(n + i, it) for i, it in enumerate(more, 1)))
         lst = (f'{usage_html}<div class="rule"></div><h3>{esc(pg.get("list_title") or "전체 목록")}</h3>'
                f'{"<p>" + esc(txt(pg["list_intro"])) + "</p>" if txt(pg.get("list_intro")) else ""}{rows}{more_html}')
+    # 순위 카운트다운 릴스(post.rank): '읽는 법'(점수 뜻) + 영상 속 순위(번호·이름·원문 이름·값·하는 일·발언·출처)
+    # + 이어지는 순위(dm.page.more, 번호를 이어서). 복사용 프롬프트는 없다.
+    Rk = post.get("rank") or {}
+    if Rk.get("items"):
+        is_list = True   # 아래 extra(복사 상자)를 싣지 않는다
+        dec = int(Rk.get("value_decimals", 1))
+        vlab = Rk.get("value_label") or ""
+        unit = Rk.get("value_unit") or ""
+
+        def rtxt(v):
+            return words(clean(v))
+
+        def rval(it):
+            if it.get("value") is None:
+                return ""
+            return f'<p class="rv">{esc(vlab)} <b>{float(it["value"]):.{dec}f}{esc(unit)}</b></p>'
+
+        def ritem(i, it, short=False):
+            sub = f'<span class="en" lang="en">{esc(it["sub"])}</span>' if it.get("sub") else ""
+            q = f'<p class="rq">{esc(it["quote"])}</p>' if it.get("quote") and not short else ""
+            src = it.get("source") or {}
+            sl = (f'<p class="gs">출처: <a href="{esc(src["url"])}" rel="noopener">{esc(src.get("name") or src["url"])}</a></p>'
+                  if isinstance(src, dict) and src.get("url") and not short else "")
+            d_ = f'<p>{esc(rtxt(it["desc"]))}</p>' if rtxt(it.get("desc")) else ""
+            return (f'<section class="step li{" sm" if short else ""}"><span class="k">{i:02d}</span>'
+                    f'<span class="lb">{esc(it.get("label", ""))}</span>{sub}{rval(it)}{q}{d_}{sl}</section>')
+        usage = [x for x in (rtxt(u) for u in ([pg["usage"]] if isinstance(pg.get("usage"), str) else pg.get("usage") or [])) if x]
+        usage_html = (f'<div class="rule"></div><h3>{esc(pg.get("usage_title") or "읽는 법")}</h3>'
+                      '<ul class="usage">' + "".join(f"<li>{esc(x)}</li>" for x in usage) + "</ul>" if usage else "")
+        n = len(Rk["items"])
+        rows = "".join(ritem(i, it) for i, it in enumerate(Rk["items"], 1))
+        more = pg.get("more") or []
+        more_html = ""
+        if more:
+            more_html = (f'<div class="rule"></div><h3>{esc(pg.get("more_title") or "이어지는 순위")}</h3>'
+                         f'{"<p>" + esc(rtxt(pg["more_intro"])) + "</p>" if rtxt(pg.get("more_intro")) else ""}'
+                         + "".join(ritem(n + i, it, short=True) for i, it in enumerate(more, 1)))
+        lst = (f'{usage_html}<div class="rule"></div><h3>{esc(pg.get("list_title") or "전체 순위")}</h3>'
+               f'{"<p>" + esc(rtxt(pg["list_intro"])) + "</p>" if rtxt(pg.get("list_intro")) else ""}{rows}{more_html}')
     extra = ""
     if pg.get("extra") and not is_list:
         rows = "".join(

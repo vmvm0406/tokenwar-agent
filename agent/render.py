@@ -6,7 +6,7 @@
 결과:
     carousel: slides/01.jpg ... (1080x1350), 표지 motion이 있으면 slides/01.mp4 (첫 장 영상, 01.jpg는 정지 화면)
     reel:     frames/01.jpg ... (1080x1920), reel.mp4, cover.jpg  (카드형 모션 릴스, 선택)
-    video:    reel.mp4, cover.jpg  (영상 프레임 릴스, video.py)
+    video:    reel.mp4, cover.jpg  (영상 프레임 릴스, video.py; list면 listreel.py, rank면 rankreel.py)
 
 디자인 원칙 (STYLE_GUIDE.md 1-1장): 편집 디자인. 큰 활자, 선, 녹색 면.
 알약 태그·둥근 카드·작은 대문자 라벨·가짜 UI 화면·점 무늬·진행 바 같은 'AI 디자인 티'는 쓰지 않는다.
@@ -465,6 +465,21 @@ def main(folder):
         from dm import make_dm
         for p in make_dm(post, out_dir):
             print("DM 자료:", p.relative_to(ROOT) if p.is_relative_to(ROOT) else p)
+    if post["type"] == "video" and post.get("rank"):
+        # 순위 카운트다운 릴스 (agent/rankreel.py, TEMPLATES.md "순위 카운트다운 릴스"). 그림 없이 글자·숫자·막대
+        from rankreel import make_rank_reel
+        try:
+            dur = make_rank_reel(post, out_dir, CONFIG)
+            print(f"순위 릴스 길이: {dur:.1f}초")
+            check_sound_or_exit(out_dir)
+            thumb_or_exit(post, out_dir)   # thumb가 없으면 첫 화면(제목 + '?' 순위표)이 커버
+        except ValueError as e:
+            print("순위 릴스 렌더링 중단:")
+            for line in str(e).splitlines():
+                print(" -", line)
+            sys.exit(1)
+        print("완료:", out_dir)
+        return
     if post["type"] == "video" and post.get("list"):
         # 목록형 자료 릴스 (agent/listreel.py, TEMPLATES.md "목록형 자료 릴스")
         from listreel import make_list_reel, with_placeholders, clear_placeholders

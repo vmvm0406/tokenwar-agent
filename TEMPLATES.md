@@ -258,6 +258,48 @@
 - **checks.py:** 항목 3개 이상, 항목마다 이름·그림, 그림 경로 겹침 금지(항목 수 = 그림 수), 제목·썸네일의 'N가지/N개' = 영상 항목 수, 길이(끝 화면 포함) 20~35초, `rights: own`, `hook` 범위, 마스코트 그림의 prompt·type, `page.more`의 name·en, `en` 없으면 경고.
 - **그림 (마스코트):** 항목 그림은 마스코트 슬라임 AI 그림이다 (STYLE_GUIDE 1-1 "마스코트"). 게시물을 push하면 render.yml이 `gen_images.py`로 없는 그림만 만들고 렌더링까지 한다. 키(CF_ACCOUNT_ID, CF_API_TOKEN)가 Actions에만 있어서 이 컴퓨터에서 render.py를 돌리면 없는 그림은 회색 자리표시(번호만, `_ph/`에 잠깐 만들고 지움)로 틀만 렌더링한다. Actions에서 그림이 빠지면 렌더링이 멈춘다(자리표시 영상이 올라가지 않게). 그림을 다시 만들려면 프롬프트를 고치고 그 `src` 파일만 지운 뒤 push. AI 그림은 하루 상한(`config.json` `image_gen.daily_limit`, UTC 날짜 기준)이 있어서 넘으면 만든 데까지 두고 다음 날(한국 오전 9시 뒤) 이어서 만든다. 그동안 그 게시물은 렌더링되지 않아 게시되지 않는다.
 
+## 순위 카운트다운 릴스 (`type: "video"` + `rank`, 운영자 요청 2026-11-17)
+
+공개 자료의 순위를 10위 → 1위로 세는 릴스 (STYLE_GUIDE 6장 "순위 카운트다운 릴스"). `video` 대신 `rank`. 렌더링은 `agent/rankreel.py` (render.py가 `rank`를 보고 부른다). 그림이 없어 이 컴퓨터에서 바로 끝까지 렌더링된다. 실제 게시물 `posts/queue/2026-11-18-rank-ai-jobs`.
+
+```json
+{
+  "type": "video", "format": "howto", "origin": "own", "length": "short", "rights": "own",
+  "title": "AI에 가장 먼저
+흔들릴 직업 TOP 10", "highlight": "TOP 10",
+  "rank": {
+    "items": [{"label": "통역사·번역가", "sub": "Interpreters and Translators", "value": 49.2,
+               "desc": "(자료 페이지) 하는 일과 AI와 겹치는 일, 사실만"}, ...],
+    "value_label": "AI 적용 점수", "value_max": 50, "value_decimals": 1, "value_unit": "",
+    "avg": 15.9, "avg_label": "평균",
+    "hook_count": 785, "hook_text": "{n}개 직업 중",
+    "source_line": "출처: Microsoft Research 'Working with AI'"
+  },
+  "music": {"generate": true},
+  "sources": [{"name": "...", "url": "https://arxiv.org/abs/..."}],
+  "dm": {"cta": "...", "banner": "...", "page": {"intro": "...", "usage_title": "점수 읽는 법", "usage": ["..."],
+         "list_title": "...", "list_intro": "...", "more": [{"label": "기자·뉴스 해설가", "sub": "...", "value": 38.3}],
+         "more_title": "11위~30위", "more_intro": "..."}}
+}
+```
+
+| 필드 | 내용 |
+|---|---|
+| `rank.items` | **1위부터** 차례로 (영상은 거꾸로 센다). 3~15개. `label`(화면 이름, 12자 이하), `sub`(선택, 작은 둘째 줄: 영어 원문 이름·직함), `value`(점수·비율, 숫자) 또는 `quote`(발언, 60자 이하, 화면에 글자가 차례로 찍힘) 중 하나 이상(둘 다 있으면 막대), `desc`(자료 페이지 설명), `source`(선택, `{name, url}`, 항목마다 출처가 다를 때 — 인물 발언 목록) |
+| `rank.value_label` | 점수 줄 왼쪽 라벨 (예: "AI 적용 점수") |
+| `rank.value_max` | 막대 끝 값 (축 오른쪽 숫자). 없으면 가장 큰 값. 값이 이보다 크면 오류 |
+| `rank.value_decimals`·`value_unit` | 소수 자리(기본 1), 숫자 뒤 단위(선택, 예: "%") |
+| `rank.avg`·`avg_label` | 선택. 막대 위 평균 눈금 (출처에서 계산한 값만) |
+| `rank.hook_count`·`hook_text` | 선택. 첫 화면 카운터 (0부터 올라감). `hook_text`의 `{n}` 자리에 숫자 |
+| `rank.source_line` | **필수.** 점수 줄 아래 작은 출처 한 줄 (40자 이하) |
+| `rank.bpm`·`beats_per_item`·`hook_beats`·`reveal_beats`·`top_beats` | 선택. 기본 120 BPM, 순위 4박(2초), 첫 화면 4박, 1위 '?' 1박(0.5초), 1위 장면 5박 |
+| `thumb` | 선택. 없으면 첫 화면 끝(제목 + '?' 순위표)이 cover.jpg. 있으면 thumb.py가 덮어쓴다 |
+| `dm.page.usage` | '읽는 법' 문장 목록 (점수 뜻, 단위 변환, 연구가 밝힌 해석의 선). `usage_title`로 제목 |
+| `dm.page.more` | 이어지는 순위 (번호는 영상 순위 다음부터). `label`·`sub`·`value` |
+
+- **checks.py:** 항목 수·이름 길이·이모지, value 또는 quote, 값이 1위부터 큰 순서, `value_max` 넘침, `source_line` 필수, 공개 자료 출처(url, kind tool 아님) 1개 이상, 제목·썸네일의 'TOP N' = 항목 수, 길이 20~35초, 1위 '?' 2초 안. 제목 끝 'TOP N'·'N위'는 앞에 꾸미는 말(~ㄴ/~ㄹ/~는)이 있으면 서술어가 있는 것으로 본다.
+- **렌더링 출력:** BPM·드롭·1위 공개 시각, 효과음 개수, 안내 띠, 소리 크기(-14 LUFS). `frames/`는 0.3초·1초·카운트다운 중간 두 곳·1위 공개 직후·끝 화면.
+
 ## 릴스 썸네일 (`thumb`)
 
 릴스(`type: "video"`)에는 꼭 넣는다. `cover.jpg`로 만들어져 프로필 격자와 피드에 보인다. 1080x1920, 그림이 꽉 차고 아래가 어두워지며 가운데 정렬 제목 2줄, 그 아래 작은 TOKEN WAR.
