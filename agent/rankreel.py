@@ -22,6 +22,9 @@
     순위 카드·순위표는 그 아래. 3초 '자료' 띠는 붙이지 않는다.
 그림(선택, rank.items[].src): 순위마다 사진 한 장이 화면 전체 뒤에 깔린다(어둡게 덮어 글자가 읽히게, 장면 안에서 천천히 확대,
     바뀔 때 0.2초 겹쳐 바뀜). 1위는 '?' 동안 흐리게 가렸다가 공개 박에 선명해진다. 출처·라이선스는 items[].credit (캡션 끝 한 줄).
+사진 화면(rank.layout "photo", 운영자 2026-11-17 "사진도 넣고"): 순위표·뒤 숫자를 빼고 사진을 가운데에 밝게 보여 준다.
+    위 제목 띠(크게) + 0초 안내 줄, 아래 안전 영역 바닥에 어두운 면 위 순위 카드(순위 숫자·이름·영어 이름·한 줄 설명
+    items[].claim·점수 막대·기준 줄 source_line). 항목마다 주장 하나만.
 박자: BPM 기본 120 (한 박 = 15프레임, 장면 전환이 박과 0ms 차이). 순위 하나 = rank.beats_per_item(기본 4박 = 2초).
 소리: music_gen.make_hook_music(첫 순위에서 비트 드롭, 1위 공개 박에 크래시) + 효과음(코드 합성: 0초 쿵, 제목 줄 타격,
       순위가 바뀔 때마다 휙 + 타격, 순위표 칸이 생기고 박힐 때마다 틱, 1위 앞 스웰 → 공개 쿵) → -14 LUFS.
@@ -51,6 +54,7 @@ TOP_BEATS = 5                 # 1위 장면 전체 (공개 앞 1박 + 뒤 4박)
 RESULT_AT = 2.0               # items[].result(결과 한 줄)가 순위 장면(1위는 공개 박) 뒤 몇 초에 쾅 박히는지 (화면이 2초 안에 바뀌게)
 TITLE_FONT = 104
 TOP_FONT = 60                 # 0초부터 위쪽 제목 띠 (rank.intro 없을 때)
+PHOTO_TOP_FONT = 86           # rank.layout "photo"일 때 위쪽 제목 (순위표가 없어 자리가 남음)
 HOOK_SCALE = 1.3
 STACK_RIGHT = 840             # 순위표 오른쪽 끝 (오른쪽 아래 버튼 줄 x 850~ 안쪽)
 LABEL_MAX, LABEL_MIN = 84, 52
@@ -133,11 +137,13 @@ def page_html(post, cfg, tl, folder=None):
     def _img(it):
         p = (Path(folder) / it["src"]) if (folder and it.get("src")) else None
         return p.resolve().as_uri() if p and p.exists() else None
+    photo = R.get("layout") == "photo"
     data = {
-        "intro": intro,
+        "intro": intro, "photo": photo,
         "items": [{"label": it.get("label", ""), "sub": it.get("sub", ""), "img": _img(it), "imgx": it.get("img_x", 50),
                    "value": (None if it.get("value") is None else float(it["value"])),
-                   "quote": it.get("quote") or "", "result": it.get("result") or ""} for it in items],
+                   "quote": it.get("quote") or "", "result": it.get("result") or "",
+                   "claim": it.get("claim") or ""} for it in items],
         "res_at": RESULT_AT, "has_res": any(it.get("result") for it in items),
         "scenes": tl["scenes"], "beat": tl["beat"], "reveal": tl["reveal"], "main": tl["main"],
         "hook": {"starts": hook_starts(post, tl), "scale": HOOK_SCALE,
@@ -178,6 +184,11 @@ def page_html(post, cfg, tl, folder=None):
 #f.cp #rowA,#f.cp #rk,#f.cp #lab{{height:180px}} #f.cp .rkn{{font-size:180px;line-height:180px}} #f.cp #rk{{width:220px}} #f.cp #lab{{left:232px}}
 #f.cp #val{{margin-top:14px;height:128px}}
 #f.cp #lt,#f.cp #ls,#f.cp #vl,#f.cp #src,#f.cp .r{{text-shadow:0 2px 10px rgba(0,0,0,.8)}}
+/* layout photo: 사진이 화면 가운데에 보이고, 순위 카드는 안전 영역 아래쪽 어두운 면 위 (순위표·뒤 숫자 없음) */
+#f.ph #shade{{background:rgba(4,5,4,.2)}} #f.ph #stack,#f.ph #bg{{display:none}}
+#f.ph #top .t{{font-size:{PHOTO_TOP_FONT}px}}
+#cardbg{{position:absolute;left:0;right:0;background:rgba(6,7,6,.8);display:none}}
+#clm{{height:60px;margin-top:6px;font-family:'Wanted';font-weight:800;font-size:42px;line-height:60px;color:{b['text']};white-space:nowrap}}
 #bg{{position:absolute;right:-40px;top:300px;font-family:'Black Han Sans';font-size:1180px;line-height:1;color:rgba(0,255,102,.07);
   white-space:nowrap;will-change:transform;transform-origin:70% 50%}}
 #hook{{position:absolute;left:{SIDE}px;right:{SIDE}px;top:{SAFE_TOP + 15}px;text-align:left}}
@@ -224,14 +235,16 @@ def page_html(post, cfg, tl, folder=None):
 .r.q .nm{{color:rgba(242,245,243,.85)}} .r.q b{{color:rgba(242,245,243,.7)}}
 .r.cur .nm,.r.cur b,.r.cur .vv{{color:{b['accent']}}} .r.cur .mb i{{background:{b['accent']}}}
 .r.fl{{background:{b['accent']};}} .r.fl .nm,.r.fl b,.r.fl .vv{{color:#000}} .r.fl .mb i{{background:#000}}
-</style></head><body><div id="f"{"" if intro else ' class="cp"'}>
+</style></head><body><div id="f" class="{"" if intro else "cp"}{" ph" if photo else ""}">
 <div id="ph"><img id="phB"><img id="phA"><div id="shade"></div></div>
 <div id="bg"></div>
 {top_html}
 <div id="hook"><div class="t">{"".join(spans)}</div>{count_html}</div>
+<div id="cardbg"></div>
 <div id="card">
   <div id="rowA"><div id="rk"><div class="rkn" id="rk0"></div><div class="rkn" id="rk1"></div></div>
     <div id="lab"><div id="lt"></div><div id="ls"></div></div></div>
+  <div id="clm" style="display:{'block' if photo else 'none'}"></div>
   <div id="val"><div id="vl">{esc(R.get("value_label", ""))}</div><div id="vn"></div>
     <div id="track"><div id="bar"></div><div id="avg"></div></div><div id="axis"></div>
     <div id="q"></div></div>
@@ -278,10 +291,21 @@ window.twSetup = () => {{
     qs.forEach(x => {{ q.textContent = x.quote; if (q.scrollHeight > $('val').clientHeight + 2) out.push('발언이 너무 김(3줄 넘음): ' + x.quote.slice(0, 20)); }});
     q.style.display = 'none';
   }}
+  if (D.photo) {{
+    const cm = $('clm');
+    D.items.forEach(x => {{ cm.textContent = x.claim; if (cm.scrollWidth > {W} - 2 * SIDE) out.push('한 줄 설명(claim)이 한 줄에 안 들어감: ' + x.claim); }});
+    cm.textContent = '';
+    const top0 = Math.round(SAFE_BOTTOM - 6 - card.getBoundingClientRect().height);
+    const tpb = $('top') ? $('top').getBoundingClientRect().bottom : SAFE_TOP;
+    if (top0 < tpb + 180) out.push('사진이 보일 자리가 너무 좁음 (카드가 제목 띠에 붙음)');
+    card.style.top = top0 + 'px';
+    const cbg = $('cardbg'); cbg.style.display = 'block'; cbg.style.top = (top0 - 30) + 'px'; cbg.style.height = (SAFE_BOTTOM - top0 + 60) + 'px';
+  }}
   const cb = card.getBoundingClientRect().bottom;
   STACK_TOP = Math.round(cb + 26);
   RH = Math.min(46, Math.floor((SAFE_BOTTOM - 10 - STACK_TOP) / D.n));
-  if (RH < 28) out.push('순위표 줄 높이가 너무 작음 (' + RH + 'px): 항목 수를 줄이거나 카드를 줄일 것');
+  if (D.photo) RH = 36;
+  else if (RH < 28) out.push('순위표 줄 높이가 너무 작음 (' + RH + 'px): 항목 수를 줄이거나 카드를 줄일 것');
   const s = $('stack'); s.style.top = STACK_TOP + 'px'; s.style.height = (RH * D.n) + 'px'; s.style.fontSize = Math.round(RH * 0.7) + 'px';
   let h = '';
   D.items.forEach((it, i) => {{
@@ -305,7 +329,7 @@ window.twSetup = () => {{
   document.querySelectorAll('#stack .nm').forEach(el => el.style.width = Math.ceil(nmW + 2) + 'px');
   // 가장 긴 순위표 줄이 오른쪽 끝을 넘는지
   D.items.forEach((it, i) => {{ const r = $('r' + i); if (r.scrollWidth > r.clientWidth + 1) out.push('순위표 줄이 넘침: ' + it.label); }});
-  if ($('stack').getBoundingClientRect().bottom > SAFE_BOTTOM) out.push('순위표가 안전 영역 밖');
+  if (!D.photo && $('stack').getBoundingClientRect().bottom > SAFE_BOTTOM) out.push('순위표가 안전 영역 밖');
   if (D.intro) {{ const hk = $('hook').getBoundingClientRect(); if (hk.bottom > STACK_TOP - 10) out.push('첫 화면 제목이 순위표와 겹침'); }}
   // 박히는 시작 배율: 줄 너비 x 배율이 양옆 안전 영역 안
   window.hkScale = [...document.querySelectorAll(D.intro ? '#hook .ln' : '#top .ln')].map(el => {{
@@ -498,6 +522,13 @@ window.twFrame = (t) => {{
       const nch = Math.round(it.quote.length * k);
       q.textContent = it.quote.slice(0, nch);
     }} else q.style.display = 'none';
+  }}
+  // 한 줄 설명(items[].claim, layout photo): 이름 뒤 0.3초에 나타나 장면 끝까지
+  if (D.photo) {{
+    const cm = $('clm'), v = u - (top ? D.reveal + 0.1 : 0.3);
+    if (it.claim && v >= 0) {{ cm.textContent = it.claim; const k = E3(v / 0.25); cm.style.opacity = k.toFixed(3);
+      cm.style.transform = `translateY(${{((1 - k) * 20).toFixed(1)}}px)`; }}
+    else {{ cm.textContent = ''; }}
   }}
   // 결과 한 줄(items[].result): 장면 2초 뒤 쾅 + 녹색 면 한 박 (화면이 2초 안에 한 번 더 바뀐다)
   const rs = $('res');

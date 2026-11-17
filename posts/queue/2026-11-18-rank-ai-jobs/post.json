@@ -8,70 +8,110 @@
   "date": "2026-11-18",
   "publish_at": "2026-11-18T18:13:00+09:00",
   "rights": "own",
-  "rights_note": "화면은 직접 만든 그래픽(글자·숫자·막대). 순위·점수는 Microsoft Research 'Working with AI' 논문 최신판(arXiv v7, 2026-10-23)과 공개 데이터 v1.1 ai_applicability_scores.csv의 785개 직업 점수 상위 10개를 그대로 옮김(값x100, 소수 첫째 자리 반올림). 2025년 7월 첫 판(v1, 데이터 v1.0)과는 순위가 다름. 평균 15.9는 785개 직업의 단순 평균. 직업 이름은 미국 직업 분류(SOC) 이름을 한국어로 옮김. 배경음악은 'pROgraM vs. Us3R' by morgantj (ccmixter.org/files/morgantj/30328), CC BY 3.0 조각(agent/music_fit.py)·효과음은 agent/music_gen.py 코드 생성.",
-  "title": "AI에 가장 먼저\n흔들릴 직업 TOP 10",
-  "highlight": "TOP 10",
+  "rights_note": "화면 그래픽(글자·숫자·막대)은 직접 만듦. 순위·점수는 Microsoft Research 'Working with AI' 논문 최신판(arXiv v7, 2026-10-23)과 공개 데이터 v1.1 ai_applicability_scores.csv의 785개 직업 점수 상위 10개를 그대로 옮김(값x100, 소수 첫째 자리 반올림). 평균 15.9는 785개 직업의 단순 평균. 직업 이름은 미국 직업 분류(SOC) 이름을 한국어로 옮김. 배경 사진은 순위마다 위키미디어 공용·플리커의 자유 이용 사진(CC BY·CC BY-SA·퍼블릭 도메인, 출처는 rank.items[].credit, 캡션 '사진:' 줄), 직업을 나타내는 장면으로만 씀(보도사진 아님). 배경음악은 'pROgraM vs. Us3R' by morgantj (ccmixter.org/files/morgantj/30328), CC BY 3.0 조각(agent/music_fit.py)·효과음은 agent/music_gen.py 코드 생성.",
+  "title": "나도\n대체당한다고?",
+  "highlight": "대체",
   "rank": {
     "items": [
       {
         "label": "통역사·번역가",
         "sub": "Interpreters and Translators",
         "value": 49.2,
-        "desc": "외국어로 된 말과 글을 다른 언어로 옮기는 직업이에요. 글을 이해하고 새로 쓰는 일이 중심이라, 사람들이 AI에게 가장 많이 맡기는 정보 정리·글쓰기와 많이 겹쳐요."
+        "desc": "외국어로 된 말과 글을 다른 언어로 옮기는 직업이에요. 글을 이해하고 새로 쓰는 일이 중심이라, 사람들이 AI에게 가장 많이 맡기는 정보 정리·글쓰기와 많이 겹쳐요.",
+        "claim": "AI와 겹치는 일: 번역·통역",
+        "src": "img/01.jpg",
+        "img_x": 62,
+        "credit": "Blossom Ozurumba, CC BY-SA 4.0 (https://commons.wikimedia.org/wiki/File:Erika_at_the_Interpreter_Booth.jpg)"
       },
       {
         "label": "역사학자",
         "sub": "Historians",
         "value": 46.2,
-        "desc": "기록과 자료를 찾아 읽고 과거를 연구해 글로 정리하는 직업이에요. 자료를 찾고 정리해 설명하는 일이 대부분이에요."
+        "desc": "기록과 자료를 찾아 읽고 과거를 연구해 글로 정리하는 직업이에요. 자료를 찾고 정리해 설명하는 일이 대부분이에요.",
+        "claim": "AI와 겹치는 일: 자료 조사·정리",
+        "src": "img/02.jpg",
+        "img_x": 50,
+        "credit": "Carol M. Highsmith, 퍼블릭 도메인 (https://commons.wikimedia.org/wiki/File:LOC_Main_Reading_Room_Highsmith.jpg)"
       },
       {
         "label": "작가",
         "sub": "Writers and Authors",
         "value": 45.4,
-        "desc": "소설·글·대본처럼 글을 쓰는 직업이에요. 글을 쓰고 고치는 일 자체가 AI가 자주 돕는 일 가운데 하나예요."
+        "desc": "소설·글·대본처럼 글을 쓰는 직업이에요. 글을 쓰고 고치는 일 자체가 AI가 자주 돕는 일 가운데 하나예요.",
+        "claim": "AI와 겹치는 일: 글쓰기·고쳐 쓰기",
+        "src": "img/03.jpg",
+        "img_x": 40,
+        "credit": "William Warby, CC BY 2.0 (https://commons.wikimedia.org/wiki/File:Bletchley_Park_Desk_and_Typewriter_(21598716801).jpg)"
       },
       {
         "label": "서비스 영업 사원",
         "sub": "Sales Representatives of Services",
         "value": 44.9,
-        "desc": "기업이나 개인에게 서비스를 소개하고 파는 직업이에요. 상품을 설명하고 고객에게 정보를 전달하는 일이 많아요."
+        "desc": "기업이나 개인에게 서비스를 소개하고 파는 직업이에요. 상품을 설명하고 고객에게 정보를 전달하는 일이 많아요.",
+        "claim": "AI와 겹치는 일: 상품 설명·안내",
+        "src": "img/04.jpg",
+        "img_x": 52,
+        "credit": "yonkershonda, CC BY-SA 2.0 (https://www.flickr.com/photos/154852508@N08/34741985212)"
       },
       {
         "label": "CNC 프로그래머",
         "sub": "CNC Tool Programmers",
         "value": 41.9,
-        "desc": "CNC 공작기계가 부품을 깎는 순서를 프로그램으로 짜는 직업이에요. 도면을 읽고 가공 프로그램을 작성하는 일이 중심이에요."
+        "desc": "CNC 공작기계가 부품을 깎는 순서를 프로그램으로 짜는 직업이에요. 도면을 읽고 가공 프로그램을 작성하는 일이 중심이에요.",
+        "claim": "AI와 겹치는 일: 가공 프로그램",
+        "src": "img/05.jpg",
+        "img_x": 35,
+        "credit": "JohnRH4, CC BY-SA 2.0 (https://commons.wikimedia.org/wiki/File:CNC_Mill_(3964417019).jpg)"
       },
       {
         "label": "아나운서·라디오 DJ",
         "sub": "Broadcast Announcers and Radio DJs",
         "value": 40.9,
-        "desc": "방송에서 뉴스와 안내를 전하고 프로그램을 진행하는 직업이에요. 원고를 준비하고 정보를 전달하는 일이 중심이에요."
+        "desc": "방송에서 뉴스와 안내를 전하고 프로그램을 진행하는 직업이에요. 원고를 준비하고 정보를 전달하는 일이 중심이에요.",
+        "claim": "AI와 겹치는 일: 원고 준비·정보 전달",
+        "src": "img/06.jpg",
+        "img_x": 62,
+        "credit": "Adrián Cerón, CC BY-SA 4.0 (https://commons.wikimedia.org/wiki/File:Cabina_de_radio.JPG)"
       },
       {
         "label": "고객 상담원",
         "sub": "Customer Service Representatives",
         "value": 40.8,
-        "desc": "전화·채팅으로 고객 문의에 답하고 문제를 해결하는 직업이에요. 연구팀은 영업직과 함께 정보를 안내하고 전달하는 일이 중심이라 점수가 높다고 설명했어요."
+        "desc": "전화·채팅으로 고객 문의에 답하고 문제를 해결하는 직업이에요. 연구팀은 영업직과 함께 정보를 안내하고 전달하는 일이 중심이라 점수가 높다고 설명했어요.",
+        "claim": "AI와 겹치는 일: 문의 답변·안내",
+        "src": "img/07.jpg",
+        "img_x": 72,
+        "credit": "MÁV Zrt., CC BY-SA 3.0 (https://commons.wikimedia.org/wiki/File:Callcenter03.jpg)"
       },
       {
         "label": "텔레마케터",
         "sub": "Telemarketers",
         "value": 40.4,
-        "desc": "전화로 상품과 서비스를 안내하고 판매하는 직업이에요. 정해진 설명을 전달하는 대화가 대부분이에요."
+        "desc": "전화로 상품과 서비스를 안내하고 판매하는 직업이에요. 정해진 설명을 전달하는 대화가 대부분이에요.",
+        "claim": "AI와 겹치는 일: 정해진 설명 전달",
+        "src": "img/08.jpg",
+        "img_x": 45,
+        "credit": "Defensoría del Pueblo de la Ciudad de Buenos Aires, CC BY-SA 4.0 (https://commons.wikimedia.org/wiki/File:DefPuebloCABA_-_Centro_de_contacto.jpg)"
       },
       {
         "label": "정치학자",
         "sub": "Political Scientists",
         "value": 39.1,
-        "desc": "정치 제도와 여론, 정책을 조사하고 분석해 글로 발표하는 직업이에요. 자료 조사와 분석, 글쓰기가 중심이에요."
+        "desc": "정치 제도와 여론, 정책을 조사하고 분석해 글로 발표하는 직업이에요. 자료 조사와 분석, 글쓰기가 중심이에요.",
+        "claim": "AI와 겹치는 일: 자료 분석·글쓰기",
+        "src": "img/09.jpg",
+        "img_x": 50,
+        "credit": "David Kernan, CC BY 4.0 (https://commons.wikimedia.org/wiki/File:Inside_the_D%C3%A1il_-_The_Irish_Parliament_Chamber.jpg)"
       },
       {
         "label": "수학자",
         "sub": "Mathematicians",
         "value": 38.6,
-        "desc": "수학 이론을 연구하고 문제를 풀어 증명하는 직업이에요. 개념을 설명하고 분석하는 일이 중심이에요."
+        "desc": "수학 이론을 연구하고 문제를 풀어 증명하는 직업이에요. 개념을 설명하고 분석하는 일이 중심이에요.",
+        "claim": "AI와 겹치는 일: 개념 설명·분석",
+        "src": "img/10.jpg",
+        "img_x": 40,
+        "credit": "simpleinsomnia, CC BY 2.0 (https://www.flickr.com/photos/95329455@N02/11125348744)"
       }
     ],
     "value_label": "AI 적용 점수",
@@ -81,8 +121,11 @@
     "avg_label": "평균",
     "hook_count": 785,
     "hook_text": "{n}개 직업 중",
-    "source_line": "출처: Microsoft Research 'Working with AI'",
-    "cta_line": "댓글 남기시면 30위까지 전체 DM으로"
+    "source_line": "마이크로소프트 연구 · 785개 직업 AI 적용 점수",
+    "cta_line": "내 직업은 안전할까? 댓글로",
+    "layout": "photo",
+    "beats_per_item": 5,
+    "top_beats": 6
   },
   "music": {
     "src": "music.m4a",
@@ -114,137 +157,15 @@
       "url": "https://github.com/microsoft/working-with-ai"
     }
   ],
-  "caption": "AI 대체 직업 순위 TOP 10, 마이크로소프트 연구팀이 785개 직업에 매긴 'AI 적용 점수'로 10위부터 1위까지 정리했습니다.\n댓글 남기시면 30위까지 전체 순위를 DM으로 보내 드려요.\n\n📊 빙 코파일럿 대화 약 20만 건을 분석해, AI가 실제로 해낸 일이 직업마다 업무와 얼마나 겹치는지 점수로 매겼습니다.\n📍 1위는 통역사·번역가(49.2점)이고, 작가와 고객 상담원도 10위 안에 들었어요. 785개 직업 평균은 15.9점입니다.\n💡 연구팀은 점수가 높다고 일자리가 줄어든다는 뜻은 아니라고 밝혔어요. AI가 일하는 방식부터 바꿀 직업에 가깝습니다.\n👉 출처: Microsoft Research 'Working with AI' 논문·공개 데이터 (2026년 10월 개정판)\n\n번역이나 고객 상담 일을 하는 친구에게 보내 주세요.\n\n음악: 'pROgraM vs. Us3R' by morgantj (ccmixter.org/files/morgantj/30328), CC BY 3.0\n\n팔로우하고 댓글 남기시면 30위까지 전체 순위를 DM으로 보내 드려요.",
+  "caption": "AI 대체 직업 순위 TOP 10, 마이크로소프트 연구팀이 785개 직업에 매긴 'AI 적용 점수'로 10위부터 1위까지 정리했습니다.\n내 직업은 안전할까요? 댓글로 직업을 남겨 주세요.\n\n📊 빙 코파일럿 대화 약 20만 건을 분석해, AI가 실제로 해낸 일이 직업마다 업무와 얼마나 겹치는지 점수로 매겼습니다.\n📍 1위는 통역사·번역가(49.2점)이고, 작가와 고객 상담원도 10위 안에 들었어요. 785개 직업 평균은 15.9점입니다.\n💡 점수가 높은 직업일수록 글을 쓰고, 자료를 찾고, 정보를 전하는 일이 많았습니다.\n👉 출처: Microsoft Research 'Working with AI' 논문·공개 데이터 (2026년 10월 개정판)\n\n번역이나 고객 상담 일을 하는 친구에게 보내 주세요.\n\n사진(위키미디어 공용·플리커):\n1위 Blossom Ozurumba, CC BY-SA 4.0\n2위 Carol M. Highsmith, 퍼블릭 도메인\n3위 William Warby, CC BY 2.0\n4위 yonkershonda, CC BY-SA 2.0\n5위 JohnRH4, CC BY-SA 2.0\n6위 Adrián Cerón, CC BY-SA 4.0\n7위 MÁV Zrt., CC BY-SA 3.0\n8위 Defensoría del Pueblo de la Ciudad de Buenos Aires, CC BY-SA 4.0\n9위 David Kernan, CC BY 4.0\n10위 simpleinsomnia, CC BY 2.0\n음악: 'pROgraM vs. Us3R' by morgantj (ccmixter.org/files/morgantj/30328), CC BY 3.0\n\n팔로우하면 매일 AI 소식을 받아 보실 수 있어요.",
   "hashtags": [
     "#AI일자리",
     "#인공지능",
     "#마이크로소프트",
     "#토큰전쟁"
   ],
-  "dm": {
-    "keyword": "자료",
-    "message": "요청하신 AI 대체 직업 순위, 30위까지 점수와 함께 정리해 뒀어요 📊\n아래 '자료 보기'를 누르면 직업마다 하는 일과 점수 읽는 법, 원문 출처를 볼 수 있어요.\n논문 공개 데이터 링크도 넣어 뒀으니 다른 직업 점수도 찾아보세요.",
-    "cta": "팔로우하고 댓글 남기시면\n30위까지 전체 순위를\n보내 드립니다",
-    "page": {
-      "intro": "마이크로소프트 연구팀이 785개 직업에 매긴 'AI 적용 점수' 순위를 30위까지 정리했어요. 직업마다 하는 일과 점수를 함께 볼 수 있어요.",
-      "usage_title": "점수 읽는 법",
-      "usage": [
-        "AI 적용 점수는 마이크로소프트 연구팀이 Bing Copilot 대화 약 20만 건을 분석해, 사람들이 AI로 실제 해낸 일이 직업마다 업무와 얼마나 겹치고 얼마나 잘 됐는지를 매긴 값이에요.",
-        "논문 값(0~1)에 100을 곱해 보여 드려요. 785개 직업의 단순 평균은 15.9점이에요.",
-        "점수가 높다고 그 직업이 사라진다는 뜻은 아니에요. 연구팀도 점수만 보고 일자리나 임금이 줄어든다고 결론 내리면 안 된다고 밝혔어요. AI가 일하는 방식을 크게 바꿀 수 있는 직업으로 보면 돼요.",
-        "점수가 높은 직업은 글을 쓰고 정보를 찾고 설명하는 일이 많아요. 연구팀은 AI가 가장 자주, 가장 잘 돕는 일이 이런 정보 업무라고 설명했어요.",
-        "직업 이름은 미국 직업 분류(SOC) 이름을 한국에서 익숙한 이름으로 옮겼어요. 순위는 논문 최신판(2026년 10월 개정)과 공개 데이터 v1.1 기준이라, 2025년 7월 첫 판과는 조금 달라요."
-      ],
-      "list_title": "AI 적용 점수 TOP 10",
-      "list_intro": "번호는 순위예요. 영상에서는 10위부터 1위로 셌어요.",
-      "more": [
-        {
-          "label": "기자·뉴스 해설가",
-          "sub": "News Analysts, Reporters, and Journalists",
-          "value": 38.3
-        },
-        {
-          "label": "승객 안내원",
-          "sub": "Passenger Attendants",
-          "value": 37.6
-        },
-        {
-          "label": "테크니컬 라이터",
-          "sub": "Technical Writers",
-          "value": 37.3
-        },
-        {
-          "label": "컨시어지",
-          "sub": "Concierges",
-          "value": 37.2
-        },
-        {
-          "label": "교정·교열자",
-          "sub": "Proofreaders and Copy Markers",
-          "value": 36.9
-        },
-        {
-          "label": "편집자",
-          "sub": "Editors",
-          "value": 36.7
-        },
-        {
-          "label": "대학 경영학 교수",
-          "sub": "Business Teachers, Postsecondary",
-          "value": 36.7
-        },
-        {
-          "label": "홍보 전문가",
-          "sub": "Public Relations Specialists",
-          "value": 36.5
-        },
-        {
-          "label": "데이터 과학자",
-          "sub": "Data Scientists",
-          "value": 35.7
-        },
-        {
-          "label": "개인 재무 상담사",
-          "sub": "Personal Financial Advisors",
-          "value": 35.5
-        },
-        {
-          "label": "웹 개발자",
-          "sub": "Web Developers",
-          "value": 35.3
-        },
-        {
-          "label": "광고 영업 사원",
-          "sub": "Advertising Sales Agents",
-          "value": 35.3
-        },
-        {
-          "label": "경영 컨설턴트",
-          "sub": "Management Analysts",
-          "value": 35.3
-        },
-        {
-          "label": "지리학자",
-          "sub": "Geographers",
-          "value": 35.2
-        },
-        {
-          "label": "증권 사무원",
-          "sub": "Brokerage Clerks",
-          "value": 35.0
-        },
-        {
-          "label": "시장 조사·마케팅 전문가",
-          "sub": "Market Research Analysts and Marketing Specialists",
-          "value": 35.0
-        },
-        {
-          "label": "대학 경제학 교수",
-          "sub": "Economics Teachers, Postsecondary",
-          "value": 34.9
-        },
-        {
-          "label": "긴급 신고 접수원",
-          "sub": "Public Safety Telecommunicators",
-          "value": 34.6
-        },
-        {
-          "label": "대여·접수 창구 직원",
-          "sub": "Counter and Rental Clerks",
-          "value": 34.4
-        },
-        {
-          "label": "전화 교환원",
-          "sub": "Telephone Operators",
-          "value": 34.2
-        }
-      ],
-      "more_title": "11위~30위",
-      "more_intro": "785개 직업 전체 점수는 아래 출처의 공개 데이터에서 볼 수 있어요."
-    }
-  },
   "threads": {
-    "text": "마이크로소프트 연구팀이 785개 직업에 'AI 적용 점수'를 매겼는데, 1위는 통역사·번역가였습니다.\n\nBing Copilot 대화 약 20만 건에서 사람들이 AI로 실제 해낸 일을 직업별 업무와 맞춰 본 점수거든요. 작가(3위), 고객 상담원(7위)도 10위 안에 들었습니다.\n\n다만 점수가 높다고 그 직업이 사라진다는 뜻은 아니라고 연구팀은 선을 그었습니다. 글과 말로 정보를 다루는 일부터 일하는 방식이 바뀐다는 이야기에 가깝습니다.",
+    "text": "마이크로소프트 연구팀이 785개 직업에 'AI 적용 점수'를 매겼는데, 1위는 통역사·번역가였습니다.\n\nBing Copilot 대화 약 20만 건에서 사람들이 AI로 실제 해낸 일을 직업별 업무와 맞춰 본 점수입니다. 작가(3위), 고객 상담원(7위)도 10위 안에 들었습니다.\n\n점수가 높은 직업은 글과 말로 정보를 찾고, 정리하고, 전하는 일이 많았습니다.",
     "images": [
       "cover"
     ],
@@ -252,5 +173,16 @@
     "replies": [
       "출처: Microsoft Research 'Working with AI' 논문 (2026년 10월 개정판)\nhttps://arxiv.org/abs/2507.07935"
     ]
+  },
+  "end_cta": "팔로우하면\n매일 AI 소식",
+  "thumb": {
+    "title": "나도\n대체당한다고?",
+    "highlight": "대체",
+    "image": {
+      "type": "image",
+      "src": "img/08.jpg",
+      "url": "https://commons.wikimedia.org/wiki/File:DefPuebloCABA_-_Centro_de_contacto.jpg",
+      "position": "45% 50%"
+    }
   }
 }

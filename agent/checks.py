@@ -428,6 +428,8 @@ def check_rank(post):
                 vals.append(float(v))
             except (TypeError, ValueError):
                 errors.append(f"rank.items {i}위: value는 숫자: {v!r}")
+        if it.get("claim") and _len(str(it["claim"])) > 20:
+            errors.append(f"rank.items {i}위: claim(화면 한 줄 설명)은 20자 이하: '{it['claim']}'")
         if it.get("quote") and _len(str(it["quote"])) > 60:
             errors.append(f"rank.items {i}위: quote는 60자 이하 (화면 3줄 안, 긴 발언은 DM 자료 페이지에)")
         if not str(it.get("desc", "")).strip():
@@ -1244,10 +1246,36 @@ def deixis(post):
     return w
 
 
+# 중립 지키기·변명 말투 (운영자 2026-11-17 "뭔가 중립을 지키려고 하는 게 굉장히 AI 같아", STYLE_GUIDE 0 원칙 5·6). 경고만.
+HEDGE_RE = re.compile(r"(라는|다는|란) 뜻은 아니|뜻은 아닙니다|의미는 아닙니다|것은 아닙니다|물론 [^.!?]{0,30}(도 있|수도 있)|"
+                      r"단정할 수는? 없|단정하기는? 어렵|일반화하기는? 어렵|선을 그었|소멸 아님|사라진다는 뜻")
+
+
+def hedging(post):
+    """캡션·화면 글의 중립·변명 문장 경고 (예: '~라는 뜻은 아닙니다', '물론 ~도 있습니다', '단정할 수는 없지만')."""
+    w = []
+    texts = [("캡션", post.get("caption")), ("제목", post.get("title")), ("썸네일 제목", (post.get("thumb") or {}).get("title"))]
+    for sec in ("rank", "list"):
+        R = post.get(sec) or {}
+        texts += [(f"{sec}.{k}", R.get(k)) for k in ("source_line", "note_line", "cta_line") if isinstance(R.get(k), str)]
+        for i, it in enumerate(R.get("items") or [], 1):
+            texts += [(f"{sec}.items {i}", it.get(k)) for k in ("claim", "result", "quote", "label")]
+    for i, s in enumerate(post.get("subtitles") or [], 1):
+        if not s.get("speech", post.get("speech", False)):
+            texts.append((f"{i}번 자막", s.get("text")))
+    for i, s in enumerate(post.get("slides") or [], 1):
+        texts += [(f"{i}번째 장", s.get(k)) for k in ("title", "heading", "body", "sub")]
+    for where, t in texts:
+        m = HEDGE_RE.search(str(t or ""))
+        if m:
+            w.append(f"{where}: 중립·변명 말투 '{m.group(0)}' → 빼고, 정확함은 제목·주장 고르기로 (STYLE_GUIDE 0 원칙 5·6)")
+    return w
+
+
 def check_post(post):
     """(errors, warnings) 반환."""
     e, w = _check_post(post)
-    w = w + writing_rules(post) + our_story(post) + deixis(post)
+    w = w + writing_rules(post) + our_story(post) + deixis(post) + hedging(post)
     e = e + check_length_field(post)
     e_t, w_t = check_threads(post)
     return e + check_license(post) + e_t, w + awkward_titles(post) + w_t
