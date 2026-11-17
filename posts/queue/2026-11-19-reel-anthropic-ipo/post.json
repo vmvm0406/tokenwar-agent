@@ -72,15 +72,26 @@
           "type": "big",
           "big": "{cap_krw}",
           "sub": "{cap_usd} · 공모가 범위 중간값 {price}달러 기준",
-          "size": 130
+          "size": 130,
+          "at": "1,200조"
         },
         "overlay_final": {
           "type": "big",
           "big": "{cap_krw}",
           "sub": "{cap_usd} · 공모가 {price}달러 기준",
-          "size": 130
+          "size": 130,
+          "at": "1,200조"
         },
-        "overlay_at": "low"
+        "overlay_at": "low",
+        "pops": [
+          {
+            "at": "클로드",
+            "img": "img/logo/claude-symbol.svg",
+            "x": 880,
+            "y": 530,
+            "h": 80
+          }
+        ]
       },
       {
         "beat": "delay1",
@@ -101,8 +112,19 @@
           "type": "big",
           "big": "2021",
           "count": false,
-          "sub": "공동 창업자 7명 · 오픈AI 출신"
-        }
+          "sub": "공동 창업자 7명 · 오픈AI 출신",
+          "at": "2021년",
+          "sub_at": "7명"
+        },
+        "pops": [
+          {
+            "at": "오픈AI",
+            "img": "img/logo/openai.svg",
+            "x": 560,
+            "y": 600,
+            "h": 56
+          }
+        ]
       },
       {
         "beat": "delay1",
@@ -138,8 +160,19 @@
               "2026.5",
               "9,650억 달러"
             ]
-          ]
-        }
+          ],
+          "at": "몸값은",
+          "punch_at": "열다섯 배"
+        },
+        "pops": [
+          {
+            "at": "몸값은",
+            "img": "img/logo/anthropic.svg",
+            "x": 600,
+            "y": 596,
+            "h": 34
+          }
+        ]
       },
       {
         "beat": "rehook",
@@ -153,7 +186,7 @@
           1.08
         ],
         "credit": "사진: 삼성디지털시티 · Grzegorz Sokol (CC BY 3.0)",
-        "vo": "얼마나 크냐면, 삼성전자 시가총액보다 큽니다!",
+        "vo": "얼마나 크냐면요, 삼성전자 몸값보다 큽니다!",
         "cap": "삼성전자 시가총액보다\n큽니다",
         "hl": "삼성전자",
         "overlay": {
@@ -163,16 +196,35 @@
               "label": "앤트로픽 (공모가 기준)",
               "value": "{cap_krw_jo}",
               "display": "{cap_krw}",
-              "on": true
+              "on": true,
+              "at": "큽니다"
             },
             {
               "label": "삼성전자 (보통주)",
               "value": "{cmp_krw_jo}",
-              "display": "{cmp_krw}"
+              "display": "{cmp_krw}",
+              "at": "삼성전자"
             }
           ],
-          "note": "삼성전자 11월 17일 종가 · 1달러 {krw_rate}원"
-        }
+          "note": "삼성전자 11월 17일 종가 · 1달러 {krw_rate}원",
+          "at": "삼성전자"
+        },
+        "pops": [
+          {
+            "at": "큽니다",
+            "img": "img/logo/anthropic.svg",
+            "x": 600,
+            "y": 572,
+            "h": 30
+          },
+          {
+            "at": "삼성전자",
+            "img": "img/logo/samsung.svg",
+            "x": 600,
+            "y": 714,
+            "h": 30
+          }
+        ]
       },
       {
         "beat": "delay2",
@@ -192,8 +244,18 @@
         "overlay": {
           "type": "big",
           "big": "45배",
-          "sub": "분기 매출 3.8억 → 170억 달러"
-        }
+          "sub": "분기 매출 3.8억 → 170억 달러",
+          "at": "마흔다섯"
+        },
+        "pops": [
+          {
+            "at": "분기 매출",
+            "img": "img/logo/claude-symbol.svg",
+            "x": 470,
+            "y": 590,
+            "h": 90
+          }
+        ]
       },
       {
         "beat": "delay2",
@@ -207,13 +269,14 @@
           1.06
         ],
         "credit": "화면: claude.com 공식 페이지",
-        "vo": "10만 달러 넘게 쓰는 기업 고객만 만 천구백 곳.",
+        "vo": "10만 달러 넘게 쓰는 기업 고객만, 일만 천구백 곳.",
         "cap": "1년에 10만 달러 넘게 쓰는\n기업 고객 11,900곳",
         "hl": "11,900곳",
         "overlay": {
           "type": "big",
           "big": "11,900곳",
-          "sub": "1년 전 950곳"
+          "sub": "1년 전 950곳",
+          "at": "일만 천구백"
         }
       },
       {
@@ -228,15 +291,39 @@
           1.1
         ],
         "credit": "사진: 나스닥 마켓사이트 · ajay_suresh (CC BY 2.0)",
-        "vo": "그리고 오늘 밤, 나스닥 상장! 종목 코드는 에이, 엔, 티.",
+        "vo": "그리고 오늘 밤, 나스닥 상장! 종목 코드는 에이. 엔. 티.",
         "cap": "그리고 오늘 밤,\n나스닥 상장",
         "hl": "나스닥 상장",
         "overlay": {
           "type": "big",
           "big": "ANT",
           "count": false,
-          "sub": "나스닥 종목 코드"
-        }
+          "sub": "나스닥 종목 코드",
+          "letters": [
+            [
+              "에이",
+              "A"
+            ],
+            [
+              "엔",
+              "AN"
+            ],
+            [
+              "티",
+              "ANT"
+            ]
+          ],
+          "sub_at": "티"
+        },
+        "pops": [
+          {
+            "at": "나스닥",
+            "img": "img/logo/nasdaq.svg",
+            "x": 560,
+            "y": 596,
+            "h": 56
+          }
+        ]
       },
       {
         "beat": "answer",
@@ -258,7 +345,8 @@
           "type": "big",
           "big": "{range}달러",
           "count": false,
-          "sub": "1주 공모가 범위"
+          "sub": "1주 공모가 범위",
+          "at": "70"
         },
         "vo_final": "공모가는 {price}달러, 첫 거래는 {open}달러에서 시작했습니다.",
         "cap_final": "공모가 {price}달러,\n첫 거래 {open}달러",
@@ -266,11 +354,11 @@
         "overlay_final": {
           "type": "big",
           "big": "{open}달러",
-          "sub": "첫 거래 가격 · 공모가 {price}달러"
+          "sub": "첫 거래 가격 · 공모가 {price}달러",
+          "at": "첫 거래"
         }
       }
-    ],
-    "gap": 0.35
+    ]
   },
   "thumb": {
     "title": "삼성전자보다 큰\nAI 회사가 나왔다",
