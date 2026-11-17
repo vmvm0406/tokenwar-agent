@@ -1,4 +1,4 @@
-# 잘 터진 주제 (2026-11-17 22:52 기준)
+# 잘 터진 주제 (2026-11-17 22:59 기준)
 
 주제를 고를 때 이 표의 위쪽 주제와 **같거나 비슷한 것**을 먼저 고른다 (STYLE_GUIDE 3장). PR 본문에 "참고한 잘 터진 주제: …" 한 줄을 적는다.
 
@@ -36,12 +36,12 @@
 - 26.0x 릴스 @gojaehyun.go: [오늘은 갤럭시 Z폴드8로 오타마톤을 만들었어요. 힌지 걱정해주시는 분들 많은데 갤럭시는 내구성이 아주 좋아서 괜찮아요. ㅎㅎ](https://www.instagram.com/reel/DdENwWivW9L/)
 - 21.3x 릴스 @ai.talk.kr: [“AI 시장, 결국 치킨 게임으로 가고 있는 걸까요?”](https://www.instagram.com/reel/DcDWvDKpGBj/)
 
-### 유명인·CEO 발언 — 순위 점수 21.9, 릴스 106·카드 13, 배수 중간값 1.02x
+### 유명인·CEO 발언 — 순위 점수 22.0, 릴스 106·카드 13, 배수 중간값 1.02x
 - 25.7x 릴스 @bizucafe: [화폐는 의미 없다 (일론 머스크)](https://www.instagram.com/reel/De8mVBGgBJL/)
 - 23.3x 릴스 @bizucafe: [중국 이길 방법은 하나 (일론 머스크)](https://www.instagram.com/reel/Dfvj43QgnE_/)
 - 17.7x 릴스 @ai.talk.kr: [“일론 머스크는 왜 샘 올트먼을 믿지 않는 걸까요?”](https://www.instagram.com/reel/DbzUQ_VvaxQ/)
 
-### 챗GPT·제미나이 사진·그림 변환 — 순위 점수 19.8, 릴스 77·카드 77, 배수 중간값 0.90x
+### 챗GPT·제미나이 사진·그림 변환 — 순위 점수 19.8, 릴스 77·카드 77, 배수 중간값 0.91x
 - 40.6x 카드 @ai.trend.kr: [평범한 사진 한 장을 간직하고 싶은 그림으로 만들어보세요 🖼️](https://www.instagram.com/p/DckJfiMD83G/)
 - 22.1x 카드 @ai.trend.kr: [핸드폰 배경화면을 바꿨더니, 하루에도 몇 번씩 꺼내 보게 됐어요.🐾](https://www.instagram.com/p/DcdMcZDjzBL/)
 - 11.8x 릴스 @ai_dori_: [클로드 Sonnet 5 모델 출시! 힉스필드 MCP ai 연결해서 손그림으로 목업포스터 만드는 법😉 ( 제작지원 higgsfield.ai )](https://www.instagram.com/reel/Dah7Vb6zCtT/)
