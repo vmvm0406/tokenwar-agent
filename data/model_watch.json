@@ -1884,7 +1884,16 @@
    "why": "기업·연구·정책 주소",
    "tries": 0,
    "status": "skipped"
+  },
+  "https://openai.com/index/strengthening-nato-allied-cyber-defences-ai": {
+   "source": "OpenAI 뉴스",
+   "company": "OpenAI",
+   "title": "Strengthening NATO and allied cyber defenses with AI",
+   "first_seen": "2026-11-17T16:19:24+09:00",
+   "why": "모델·기능 발표 아님",
+   "tries": 0,
+   "status": "skipped"
   }
  },
- "updated": "2026-11-17T16:04:24+09:00"
+ "updated": "2026-11-17T16:19:24+09:00"
 }
