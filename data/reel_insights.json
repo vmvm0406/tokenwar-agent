@@ -122,22 +122,73 @@
    }
   },
   "2026-11-17": {
+   "18083610074378341": {
+    "timestamp": "2026-11-17T12:18:58+0000",
+    "permalink": "https://www.instagram.com/reel/Df16b-oEnTA/",
+    "folder": "2026-11-17-video-claude-of-duty",
+    "title": "프롬프트 3문단으로 FPS 게임이 나왔습니다",
+    "duration": 21.5,
+    "views": 0,
+    "reach": 0,
+    "saved": 0,
+    "shares": 0,
+    "total_interactions": 0,
+    "likes": 0,
+    "comments": 0,
+    "ig_reels_avg_watch_time": 0,
+    "ig_reels_video_view_total_time": 0,
+    "reels_skip_rate": 0
+   },
+   "18106928459457054": {
+    "timestamp": "2026-11-17T10:51:54+0000",
+    "permalink": "https://www.instagram.com/reel/Df1wbmIjaK_/",
+    "folder": "2026-11-17-video-amodei-chips-north-korea",
+    "title": "칩을 중국에 팔 거면 차라리 북한에 핵을 팔아라",
+    "duration": 65.3,
+    "views": 140,
+    "reach": 131,
+    "saved": 1,
+    "shares": 0,
+    "total_interactions": 2,
+    "likes": 1,
+    "comments": 0,
+    "ig_reels_avg_watch_time": 8747,
+    "ig_reels_video_view_total_time": 1154696,
+    "reels_skip_rate": 44.3
+   },
+   "17886021090628832": {
+    "timestamp": "2026-11-17T09:21:32+0000",
+    "permalink": "https://www.instagram.com/reel/Df1mKLOijbM/",
+    "folder": "2026-11-17-list-camera",
+    "title": "AI 영상으로 돈 버는데 이것도 몰라?",
+    "duration": 21.8,
+    "views": 116,
+    "reach": 110,
+    "saved": 0,
+    "shares": 0,
+    "total_interactions": 0,
+    "likes": 0,
+    "comments": 0,
+    "ig_reels_avg_watch_time": 2862,
+    "ig_reels_video_view_total_time": 317717,
+    "reels_skip_rate": 86.2
+   },
    "18049669823831337": {
     "timestamp": "2026-11-17T02:21:15+0000",
     "permalink": "https://www.instagram.com/reel/Df02CTVgaJb/",
     "folder": "2026-11-17-list-lighting",
     "title": "AI 영상 제작자에게 반드시 필요한 조명 용어 20가지",
     "duration": 28.6,
-    "views": 106,
-    "reach": 86,
+    "views": 134,
+    "reach": 125,
     "saved": 3,
-    "shares": 0,
-    "total_interactions": 3,
+    "shares": 2,
+    "total_interactions": 5,
     "likes": 0,
     "comments": 0,
-    "ig_reels_avg_watch_time": 5096,
-    "ig_reels_video_view_total_time": 438290,
-    "reels_skip_rate": 69
+    "ig_reels_avg_watch_time": 4593,
+    "ig_reels_video_view_total_time": 583368,
+    "reels_skip_rate": 83.2
    },
    "17882767407553907": {
     "timestamp": "2026-11-16T13:27:46+0000",
@@ -237,8 +288,8 @@
     "total_interactions": 0,
     "likes": 0,
     "comments": 0,
-    "ig_reels_avg_watch_time": 5067,
-    "ig_reels_video_view_total_time": 841144,
+    "ig_reels_avg_watch_time": 5048,
+    "ig_reels_video_view_total_time": 843116,
     "reels_skip_rate": 57.7
    },
    "18163250107546991": {
@@ -271,8 +322,8 @@
     "total_interactions": 6,
     "likes": 2,
     "comments": 0,
-    "ig_reels_avg_watch_time": 8700,
-    "ig_reels_video_view_total_time": 2610032,
+    "ig_reels_avg_watch_time": 8657,
+    "ig_reels_video_view_total_time": 2614490,
     "reels_skip_rate": 61.6
    }
   }
@@ -286,7 +337,10 @@
   "17958768750292888": 67.9,
   "18112593002190549": 62.7,
   "17882767407553907": 22.5,
-  "18049669823831337": 28.6
+  "18049669823831337": 28.6,
+  "18083610074378341": 21.5,
+  "18106928459457054": 65.3,
+  "17886021090628832": 21.8
  },
  "unsupported": {},
  "metrics_returned": [
@@ -301,5 +355,5 @@
   "total_interactions",
   "views"
  ],
- "updated": "2026-11-17T12:43+09:00"
+ "updated": "2026-11-17T21:36+09:00"
 }
