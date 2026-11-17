@@ -1710,7 +1710,68 @@
    "tries": 0,
    "breaking": true,
    "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMiVkFVX3lxTE9felJFNzYtQjhkWHYwOFhkNjJTazQ2Mm9NS1dRTm9kSmNLZGxQWWI4RWVPZ3pFcVByQzl0Nl9fMDNBeFBlWVJZYUM4SXVKNFBWcTdncWhB?oc=5": {
+   "source": "news",
+   "company": "오픈AI",
+   "entities": [
+    "오픈AI"
+   ],
+   "tok": [
+    "공격",
+    "니아",
+    "리포",
+    "미국",
+    "사이",
+    "실패",
+    "아주",
+    "유발",
+    "이버",
+    "제소",
+    "캘리",
+    "통제",
+    "포니"
+   ],
+   "title": "[업계 속보: 주요 매체 3곳(AI타임스, 중앙일보, 지디넷코리아) · 규제] 미국 캘리포니아주, 오픈AI 제소…\"AI 통제 실패·사이버 공격 유발\"",
+   "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9felJFNzYtQjhkWHYwOFhkNjJTazQ2Mm9NS1dRTm9kSmNLZGxQWWI4RWVPZ3pFcVByQzl0Nl9fMDNBeFBlWVJZYUM4SXVKNFBWcTdncWhB?oc=5",
+   "first_seen": "2026-11-17T12:34:26+09:00",
+   "why": "48시간 안에 같은 회사·인물 게시물 있음: 2026-11-16-carousel-chatgpt-wallet (오픈AI)",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMiWkFVX3lxTE5za2ZQeHVSOG5GZTNXUDNFODVyRlJ5VEUxZ18yaVhmNVVIbmVrRzhCRHl2VkJ1bWtHcVNoOGo1MTF5ZWxwcy1jZVNXVEYxZHRzelp6dFlaQkhCZ9IBX0FVX3lxTFB4MUVzRkplTWFaZ19QVHY0QWVUTVJiZEVDY19DRFBYVm5HWW9STENZRmVhZWgtVlpoYXI3bnZ1WFhJQk9nMFppaVRZYnl3ZXR3b1VYS2VPRkJKSmFEX1c4?oc=5": {
+   "source": "news",
+   "company": "엔비디아",
+   "entities": [
+    "엔비디아"
+   ],
+   "tok": [
+    "0억",
+    "30",
+    "83",
+    "도마",
+    "두둔",
+    "둔한",
+    "럼프",
+    "식도",
+    "어치",
+    "억원",
+    "원어",
+    "이해",
+    "주식",
+    "충돌",
+    "트럼",
+    "해충"
+   ],
+   "title": "[업계 속보: 주요 매체 3곳(KBS, 경향신문, 동아일보) · 인사] 젠슨 황 두둔한 트럼프, 엔비디아 주식도 830억원어치···이해충돌 도마",
+   "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5za2ZQeHVSOG5GZTNXUDNFODVyRlJ5VEUxZ18yaVhmNVVIbmVrRzhCRHl2VkJ1bWtHcVNoOGo1MTF5ZWxwcy1jZVNXVEYxZHRzelp6dFlaQkhCZ9IBX0FVX3lxTFB4MUVzRkplTWFaZ19QVHY0QWVUTVJiZEVDY19DRFBYVm5HWW9STENZRmVhZWgtVlpoYXI3bnZ1WFhJQk9nMFppaVRZYnl3ZXR3b1VYS2VPRkJKSmFEX1c4?oc=5",
+   "first_seen": "2026-11-17T12:34:26+09:00",
+   "why": "48시간 안에 같은 회사·인물 게시물 있음: 2026-11-17-video-amodei-chips-north-korea (엔비디아)",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
   }
  },
- "updated": "2026-11-17T12:19:23+09:00"
+ "updated": "2026-11-17T12:34:26+09:00"
 }
