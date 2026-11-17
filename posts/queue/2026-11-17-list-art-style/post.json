@@ -26,7 +26,7 @@
         "type": "image",
         "src": "img/list/01.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a watercolor painting with soft bleeding colors on textured paper. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "prompt": "Completely repaint the whole image as a loose watercolor painting; do not keep the photographic look, no photo texture anywhere. The slime, the sofa, the wall and the plant are all redrawn in this style, the slime is NOT a glossy 3D photo pasted in. Same framing as the reference: the slime centered on the sofa, same size and same position. Transparent watercolor washes bleeding into each other with soft wet edges and blooms, visible white paper showing through, rough cold-press paper texture, the sofa is just a few loose pale blue-grey washes, pigment pooling at the edges, the slime is a light lime-green wash with darker green bleeding at the rim. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
         "ai_generated": true
       },
       {
@@ -36,7 +36,7 @@
         "type": "image",
         "src": "img/list/02.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a classical oil painting with thick visible brush strokes on canvas. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "prompt": "Completely repaint the whole image as a classical oil painting on canvas; do not keep the photographic look, no photo texture anywhere. The slime, the sofa, the wall and the plant are all redrawn in this style, the slime is NOT a glossy 3D photo pasted in. Same framing as the reference: the slime centered on the sofa, same size and same position. Thick impasto paint with large visible brush strokes and palette-knife marks everywhere, raised ridges of paint, canvas weave visible, rich deep warm colors like an old master painting, dark brown and ochre background, the slime painted with thick strokes of lime and yellow-green, no smooth surfaces. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
         "ai_generated": true
       },
       {
@@ -56,7 +56,7 @@
         "type": "image",
         "src": "img/list/04.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as an East Asian ink wash painting, black ink brush strokes with soft grey washes on rice paper. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "prompt": "Completely repaint the whole image as a traditional East Asian ink wash painting (sumi-e) on rice paper; do not keep the photographic look, no photo texture anywhere. The slime, the sofa, the wall and the plant are all redrawn in this style, the slime is NOT a glossy 3D photo pasted in. Same framing as the reference: the slime centered on the sofa, same size and same position. Only black ink and grey washes, no other colors except a faint pale green tint on the slime. Expressive calligraphic brush strokes of varying thickness, ink bleeding into fibrous off-white rice paper, large empty paper areas, the sofa suggested with a few bold dry-brush strokes, the plant painted as bamboo-like ink strokes. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
         "ai_generated": true
       },
       {
@@ -76,7 +76,7 @@
         "type": "image",
         "src": "img/list/06.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as 16-bit pixel art with a limited color palette and crisp square pixels. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "prompt": "Completely repaint the whole image as retro 16-bit video game pixel art; do not keep the photographic look, no photo texture anywhere. The slime, the sofa, the wall and the plant are all redrawn in this style, the slime is NOT a glossy 3D photo pasted in. Same framing as the reference: the slime centered on the sofa, same size and same position. A very coarse pixel grid: the image is made of large square pixels, about 64 pixels wide in total, every edge is a hard stair-step, no smooth gradients, no anti-aliasing, a limited palette of about 16 flat colors with dithering, like a Super Nintendo game screen. The slime is a chunky pixel sprite with a black pixel outline. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
         "ai_generated": true
       },
       {
@@ -86,7 +86,7 @@
         "type": "image",
         "src": "img/list/07.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a still from a 3D animated feature film, soft stylized shapes, warm cinematic lighting. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "prompt": "Completely repaint the whole image as a 3D animated feature film still, Pixar style; do not keep the photographic look, no photo texture anywhere. The slime, the sofa, the wall and the plant are all redrawn in this style, the slime is NOT a glossy 3D photo pasted in. Same framing as the reference: the slime centered on the sofa, same size and same position. Stylized cartoon proportions, the slime has big shiny cartoon eyes with highlights and a rounded toy-like body, the sofa is chunky and soft with exaggerated rounded shapes, saturated candy colors, warm orange key light and blue rim light, clean subsurface-scattering CGI look, simplified cartoon room, not a real photo. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
         "ai_generated": true
       },
       {
@@ -96,7 +96,7 @@
         "type": "image",
         "src": "img/list/08.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a claymation scene where everything is made of soft modeling clay with fingerprint textures. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "prompt": "Completely repaint the whole image as a stop-motion claymation scene; do not keep the photographic look, no photo texture anywhere. The slime, the sofa, the wall and the plant are all redrawn in this style, the slime is NOT a glossy 3D photo pasted in. Same framing as the reference: the slime centered on the sofa, same size and same position. Everything is sculpted from matte plasticine modeling clay: visible fingerprints, thumb smudges and tool marks on every surface, slightly lumpy hand-made shapes, the slime is an opaque matte lime-green clay figure (not translucent, not glossy), the sofa is a lumpy clay sofa in pastel blue, the plant is rolled clay leaves, soft miniature set lighting. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
         "ai_generated": true
       },
       {
@@ -106,7 +106,7 @@
         "type": "image",
         "src": "img/list/09.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a layered paper craft diorama made of cut paper layers with soft shadows. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "prompt": "Completely repaint the whole image as a layered cut paper craft diorama; do not keep the photographic look, no photo texture anywhere. The slime, the sofa, the wall and the plant are all redrawn in this style, the slime is NOT a glossy 3D photo pasted in. Same framing as the reference: the slime centered on the sofa, same size and same position. Everything is made of flat colored construction paper cut-outs stacked in layers with visible paper edges, paper fibers and small drop shadows between layers. The slime is a flat lime-green paper cut-out with layered paper ears, the sofa is pale blue cardstock shapes, the wall is textured beige paper, the plant is cut paper leaves. No glossy or transparent surfaces. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
         "ai_generated": true
       },
       {
@@ -116,7 +116,7 @@
         "type": "image",
         "src": "img/list/10.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a stained glass window with bold black lead lines and glowing colored glass. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "prompt": "Completely repaint the whole image as a church stained glass window; do not keep the photographic look, no photo texture anywhere. The slime, the sofa, the wall and the plant are all redrawn in this style, the slime is NOT a glossy 3D photo pasted in. Same framing as the reference: the slime centered on the sofa, same size and same position. The whole picture is divided into many flat pieces of colored glass separated by thick black lead lines, like a cathedral window with light shining through it. The slime is made of several lime-green glass pieces, the sofa is deep blue glass pieces, the background is a mosaic of amber, ruby red and cobalt glass panes. Visible glass texture and bubbles in the glass, no photographic shading. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
         "ai_generated": true
       },
       {
@@ -126,7 +126,7 @@
         "type": "image",
         "src": "img/list/11.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a mosaic made of small square ceramic tiles. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "prompt": "Completely repaint the whole image as an ancient Roman floor mosaic; do not keep the photographic look, no photo texture anywhere. The slime, the sofa, the wall and the plant are all redrawn in this style, the slime is NOT a glossy 3D photo pasted in. Same framing as the reference: the slime centered on the sofa, same size and same position. The entire image, including the slime, is built from small square stone and ceramic tiles (tesserae) about the size of a fingertip, each tile clearly visible with grey grout lines between them, slightly uneven placement, limited earthy colors plus lime green for the slime. Nothing is smooth, everything is tiles. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
         "ai_generated": true
       },
       {
@@ -136,7 +136,7 @@
         "type": "image",
         "src": "img/list/12.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a Japanese ukiyo-e woodblock print with flat colors, bold outlines and paper texture. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "prompt": "Completely repaint the whole image as a Japanese ukiyo-e woodblock print in the style of Hokusai; do not keep the photographic look, no photo texture anywhere. The slime, the sofa, the wall and the plant are all redrawn in this style, the slime is NOT a glossy 3D photo pasted in. Same framing as the reference: the slime centered on the sofa, same size and same position. Flat areas of color with no shading, bold black carved outlines, a limited palette of Prussian blue, indigo, muted red, ochre and pale green, visible wood grain and washi paper texture, slightly misaligned color registration, the background wall becomes a pale sky with a stylized wave pattern, the slime is flat pale green with a black outline. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
         "ai_generated": true
       },
       {
@@ -166,7 +166,7 @@
         "type": "image",
         "src": "img/list/15.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a vintage 1970s film photograph with faded warm colors, film grain and light leaks. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "prompt": "Completely repaint the whole image as a real 1970s analog film snapshot; do not keep the photographic look, no photo texture anywhere. The slime, the sofa, the wall and the plant are all redrawn in this style, the slime is NOT a glossy 3D photo pasted in. Same framing as the reference: the slime centered on the sofa, same size and same position. Strong faded warm orange-brown color cast, washed-out greens, lifted milky blacks, very heavy visible film grain, a bright orange light leak on the left edge, slight blur, rounded vignette corners, dated 1970s living room with wood paneling and a brown corduroy sofa, like an old family photo album print. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
         "ai_generated": true
       },
       {
@@ -186,7 +186,7 @@
         "type": "image",
         "src": "img/list/17.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a child's crayon drawing on paper with waxy rough strokes. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "prompt": "Completely repaint the whole image as a child's crayon drawing; do not keep the photographic look, no photo texture anywhere. The slime, the sofa, the wall and the plant are all redrawn in this style, the slime is NOT a glossy 3D photo pasted in. Same framing as the reference: the slime centered on the sofa, same size and same position. Drawn by a 6-year-old with wax crayons on white paper: wobbly uneven outlines, scribbly coloring that goes outside the lines, waxy streaky strokes with white paper gaps, the sofa a simple blue rectangle shape, a big yellow sun with rays in the corner, the slime a lime-green blob with two triangle ears, flat naive perspective. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
         "ai_generated": true
       },
       {
@@ -196,7 +196,7 @@
         "type": "image",
         "src": "img/list/18.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a colored pencil drawing with visible pencil strokes on paper. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "prompt": "Completely repaint the whole image as a colored pencil drawing on toned paper; do not keep the photographic look, no photo texture anywhere. The slime, the sofa, the wall and the plant are all redrawn in this style, the slime is NOT a glossy 3D photo pasted in. Same framing as the reference: the slime centered on the sofa, same size and same position. Fine hatched and cross-hatched colored pencil strokes clearly visible everywhere, directional strokes following the shapes, paper grain showing through the strokes, light cream paper, the sofa drawn with light blue and violet hatching, soft colored pencil shading on the slime in lime and yellow, unfinished sketchy edges fading into blank paper. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
         "ai_generated": true
       },
       {
@@ -206,7 +206,7 @@
         "type": "image",
         "src": "img/list/19.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a pointillism painting made entirely of small colored dots. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "prompt": "Completely repaint the whole image as a pointillism painting in the style of Georges Seurat; do not keep the photographic look, no photo texture anywhere. The slime, the sofa, the wall and the plant are all redrawn in this style, the slime is NOT a glossy 3D photo pasted in. Same framing as the reference: the slime centered on the sofa, same size and same position. The entire image is made only of thousands of separate small round dots of pure color, each dot clearly visible with gaps between them, no lines and no smooth areas, complementary colors placed side by side (blue and orange dots on the sofa, green and yellow dots on the slime, pink and violet dots on the wall). Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
         "ai_generated": true
       },
       {

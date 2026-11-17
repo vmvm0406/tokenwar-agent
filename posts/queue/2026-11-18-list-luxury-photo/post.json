@@ -30,7 +30,7 @@
         "type": "image",
         "src": "img/list/02.jpg",
         "mascot": true,
-        "prompt": "Same slime character as the reference image. Make the photo look like this: editorial fashion magazine photoshoot look, clean styled set, refined composition. Photorealistic, vertical 4:5, no text, no letters.",
+        "prompt": "Completely re-shoot this as a new professional photo; do not keep the reference room, the grey sofa, the white wall or the plant. The reference is only for the slime's look. Editorial fashion magazine photoshoot: the slime sits on a sculptural mustard-yellow designer armchair in a bold terracotta-colored studio set with a tall arched wall cutout, hard flash light with a crisp shadow on the wall, high-fashion art-directed styling, Vogue cover mood. The slime stays in the center of the frame. Photorealistic, vertical 4:5, no text, no letters.",
         "ai_generated": true
       },
       {
@@ -50,7 +50,7 @@
         "type": "image",
         "src": "img/list/04.jpg",
         "mascot": true,
-        "prompt": "Same slime character as the reference image. Make the photo look like this: soft diffused light, very gentle shadows, smooth soft tones. Photorealistic, vertical 4:5, no text, no letters.",
+        "prompt": "Completely re-shoot this as a new professional photo; do not keep the reference room, the grey sofa, the white wall or the plant. The reference is only for the slime's look. Soft diffused light: the slime sits on a pale pink linen cloth, lit through a huge softbox and sheer white curtains so there are almost no shadows, very low contrast, airy pastel cream and blush tones, dreamy and gentle, light even glow on its translucent body. The slime stays in the center of the frame. Photorealistic, vertical 4:5, no text, no letters.",
         "ai_generated": true
       },
       {
@@ -60,7 +60,7 @@
         "type": "image",
         "src": "img/list/05.jpg",
         "mascot": true,
-        "prompt": "Same slime character as the reference image. Make the photo look like this: natural light portrait style, soft daylight from a window, warm and honest mood. Photorealistic, vertical 4:5, no text, no letters.",
+        "prompt": "Completely re-shoot this as a new professional photo; do not keep the reference room, the grey sofa, the white wall or the plant. The reference is only for the slime's look. Natural light portrait: the slime sits on a wooden windowsill next to an open window, real daylight falling from the side, half of the slime lit and half in soft shade, out-of-focus green trees outside the window, honest documentary feel, no studio lights. The slime stays in the center of the frame. Photorealistic, vertical 4:5, no text, no letters.",
         "ai_generated": true
       },
       {
@@ -70,7 +70,7 @@
         "type": "image",
         "src": "img/list/06.jpg",
         "mascot": true,
-        "prompt": "Same slime character as the reference image. Make the photo look like this: golden hour backlight, warm sun behind the slime making its translucent body glow, soft lens haze. Photorealistic, vertical 4:5, no text, no letters.",
+        "prompt": "Completely re-shoot this as a new professional photo; do not keep the reference room, the grey sofa, the white wall or the plant. The reference is only for the slime's look. Golden hour backlight outdoors: the slime sits on tall grass in a meadow at sunset, the low orange sun directly behind it near the horizon, strong warm rim light glowing through its translucent body, sun flare and golden haze, the sky orange and pink. The slime stays in the center of the frame. Photorealistic, vertical 4:5, no text, no letters.",
         "ai_generated": true
       },
       {
@@ -80,7 +80,7 @@
         "type": "image",
         "src": "img/list/07.jpg",
         "mascot": true,
-        "prompt": "Same slime character as the reference image. Make the photo look like this: shallow depth of field, the slime sharp and the background softly blurred. Photorealistic, vertical 4:5, no text, no letters.",
+        "prompt": "Completely re-shoot this as a new professional photo; do not keep the reference room, the grey sofa, the white wall or the plant. The reference is only for the slime's look. Shallow depth of field: the slime sits on a cafe table, photographed at f/1.4. Only the slime is sharp; the cafe behind it is completely melted into a smooth creamy blur with big soft round bokeh circles of warm lights, the table edge in front is also blurred. The slime stays in the center of the frame. Photorealistic, vertical 4:5, no text, no letters.",
         "ai_generated": true
       },
       {
@@ -90,7 +90,7 @@
         "type": "image",
         "src": "img/list/08.jpg",
         "mascot": true,
-        "prompt": "Same slime character as the reference image. Make the photo look like this: shot with an 85mm portrait lens, flattering compression, creamy background blur. Photorealistic, vertical 4:5, no text, no letters.",
+        "prompt": "Completely re-shoot this as a new professional photo; do not keep the reference room, the grey sofa, the white wall or the plant. The reference is only for the slime's look. Shot with an 85mm portrait lens at f/1.8 outdoors in a city park: flattering compressed perspective, the slime sharp at eye level, the trees and path behind it compressed and turned into a creamy green blur, soft natural light, classic portrait framing. The slime stays in the center of the frame. Photorealistic, vertical 4:5, no text, no letters.",
         "ai_generated": true
       },
       {
@@ -100,7 +100,7 @@
         "type": "image",
         "src": "img/list/09.jpg",
         "mascot": true,
-        "prompt": "Same slime character as the reference image. Make the photo look like this: macro photography, very close to the slime, tiny bubbles and glossy surface details in sharp focus. Photorealistic, vertical 4:5, no text, no letters.",
+        "prompt": "Completely re-shoot this as a new professional photo; do not keep the reference room, the grey sofa, the white wall or the plant. The reference is only for the slime's look. Extreme macro photography: the camera is a few centimeters from the slime, its face fills most of the frame, the tiny air bubbles inside its jelly body and water droplets on its glossy surface are huge and razor sharp, the edges of the frame fall off into blur, black background. The slime stays in the center of the frame. Photorealistic, vertical 4:5, no text, no letters.",
         "ai_generated": true
       },
       {
@@ -110,7 +110,7 @@
         "type": "image",
         "src": "img/list/10.jpg",
         "mascot": true,
-        "prompt": "Same slime character as the reference image. Make the photo look like this: minimalist composition, the slime alone with lots of empty space and a plain background. Photorealistic, vertical 4:5, no text, no letters.",
+        "prompt": "Completely re-shoot this as a new professional photo; do not keep the reference room, the grey sofa, the white wall or the plant. The reference is only for the slime's look. Minimalist composition: a single flat sage-green seamless background and floor with nothing else, the slime small with a huge empty negative space all around it, one soft shadow, calm clean gallery look. The slime stays in the center of the frame. Photorealistic, vertical 4:5, no text, no letters.",
         "ai_generated": true
       },
       {
@@ -120,7 +120,7 @@
         "type": "image",
         "src": "img/list/11.jpg",
         "mascot": true,
-        "prompt": "Same slime character as the reference image. Make the photo look like this: matte texture look, soft non-reflective surfaces, calm muted tones. Photorealistic, vertical 4:5, no text, no letters.",
+        "prompt": "Completely re-shoot this as a new professional photo; do not keep the reference room, the grey sofa, the white wall or the plant. The reference is only for the slime's look. Matte texture: the slime is made of soft matte silicone with a powdery velvet-like surface, opaque and non-reflective, placed on a matte beige stone plinth against a matte warm grey plaster wall, flat soft light, no shine and no reflections anywhere, calm muted earthy tones. The slime stays in the center of the frame. Photorealistic, vertical 4:5, no text, no letters.",
         "ai_generated": true
       },
       {
@@ -150,7 +150,7 @@
         "type": "image",
         "src": "img/list/14.jpg",
         "mascot": true,
-        "prompt": "Same slime character as the reference image. Make the photo look like this: film color grading, soft faded film colors and gentle grain, nostalgic mood. Photorealistic, vertical 4:5, no text, no letters.",
+        "prompt": "Completely re-shoot this as a new professional photo; do not keep the reference room, the grey sofa, the white wall or the plant. The reference is only for the slime's look. Film color grading: the slime sits on a park bench on a city street in the late afternoon, shot on Kodak Portra 400 film, warm faded film colors, teal shadows and creamy highlights, gentle visible grain, slightly lifted blacks, nostalgic 1990s mood. The slime stays in the center of the frame. Photorealistic, vertical 4:5, no text, no letters.",
         "ai_generated": true
       },
       {
@@ -160,7 +160,7 @@
         "type": "image",
         "src": "img/list/15.jpg",
         "mascot": true,
-        "prompt": "Same slime character as the reference image. Make the photo look like this: 8K ultra detailed, extremely sharp, every tiny bubble and reflection visible. Photorealistic, vertical 4:5, no text, no letters.",
+        "prompt": "Completely re-shoot this as a new professional photo; do not keep the reference room, the grey sofa, the white wall or the plant. The reference is only for the slime's look. 8K ultra detailed studio photo on a black glossy reflective surface against a pure black background: extremely sharp, every tiny air bubble, every water droplet and every reflection on the slime is crisp and visible, strong crisp specular highlights, perfect reflection below it. The slime stays in the center of the frame. Photorealistic, vertical 4:5, no text, no letters.",
         "ai_generated": true
       }
     ],
