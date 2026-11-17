@@ -26,7 +26,8 @@
         "type": "image",
         "src": "img/list/01.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a watercolor painting with soft bleeding colors on textured paper. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a watercolor painting with soft bleeding colors on textured paper. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "ai_generated": true
       },
       {
         "name": "유화",
@@ -35,7 +36,8 @@
         "type": "image",
         "src": "img/list/02.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a classical oil painting with thick visible brush strokes on canvas. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a classical oil painting with thick visible brush strokes on canvas. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "ai_generated": true
       },
       {
         "name": "연필 스케치",
@@ -44,7 +46,8 @@
         "type": "image",
         "src": "img/list/03.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a graphite pencil sketch in black and white, hatching lines on white paper. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a graphite pencil sketch in black and white, hatching lines on white paper. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "ai_generated": true
       },
       {
         "name": "수묵화",
@@ -53,7 +56,8 @@
         "type": "image",
         "src": "img/list/04.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as an East Asian ink wash painting, black ink brush strokes with soft grey washes on rice paper. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as an East Asian ink wash painting, black ink brush strokes with soft grey washes on rice paper. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "ai_generated": true
       },
       {
         "name": "팝아트",
@@ -62,7 +66,8 @@
         "type": "image",
         "src": "img/list/05.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as pop art with bold flat colors, thick black outlines and halftone dots. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as pop art with bold flat colors, thick black outlines and halftone dots. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "ai_generated": true
       },
       {
         "name": "픽셀 아트",
@@ -71,7 +76,8 @@
         "type": "image",
         "src": "img/list/06.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as 16-bit pixel art with a limited color palette and crisp square pixels. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as 16-bit pixel art with a limited color palette and crisp square pixels. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "ai_generated": true
       },
       {
         "name": "3D 애니메이션",
@@ -80,7 +86,8 @@
         "type": "image",
         "src": "img/list/07.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a still from a 3D animated feature film, soft stylized shapes, warm cinematic lighting. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a still from a 3D animated feature film, soft stylized shapes, warm cinematic lighting. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "ai_generated": true
       },
       {
         "name": "클레이 인형",
@@ -89,7 +96,8 @@
         "type": "image",
         "src": "img/list/08.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a claymation scene where everything is made of soft modeling clay with fingerprint textures. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a claymation scene where everything is made of soft modeling clay with fingerprint textures. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "ai_generated": true
       },
       {
         "name": "종이 공예",
@@ -98,7 +106,8 @@
         "type": "image",
         "src": "img/list/09.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a layered paper craft diorama made of cut paper layers with soft shadows. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a layered paper craft diorama made of cut paper layers with soft shadows. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "ai_generated": true
       },
       {
         "name": "스테인드글라스",
@@ -107,7 +116,8 @@
         "type": "image",
         "src": "img/list/10.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a stained glass window with bold black lead lines and glowing colored glass. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a stained glass window with bold black lead lines and glowing colored glass. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "ai_generated": true
       },
       {
         "name": "모자이크",
@@ -116,7 +126,8 @@
         "type": "image",
         "src": "img/list/11.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a mosaic made of small square ceramic tiles. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a mosaic made of small square ceramic tiles. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "ai_generated": true
       },
       {
         "name": "일본 목판화",
@@ -125,7 +136,8 @@
         "type": "image",
         "src": "img/list/12.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a Japanese ukiyo-e woodblock print with flat colors, bold outlines and paper texture. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a Japanese ukiyo-e woodblock print with flat colors, bold outlines and paper texture. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "ai_generated": true
       },
       {
         "name": "미국 만화책",
@@ -134,7 +146,8 @@
         "type": "image",
         "src": "img/list/13.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as an American comic book panel with bold ink lines, halftone shading and bright flat colors. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as an American comic book panel with bold ink lines, halftone shading and bright flat colors. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "ai_generated": true
       },
       {
         "name": "한국 웹툰",
@@ -143,7 +156,8 @@
         "type": "image",
         "src": "img/list/14.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a Korean webtoon illustration with clean thin line art, soft cel shading and pastel colors. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a Korean webtoon illustration with clean thin line art, soft cel shading and pastel colors. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "ai_generated": true
       },
       {
         "name": "빈티지 필름 사진",
@@ -152,7 +166,8 @@
         "type": "image",
         "src": "img/list/15.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a vintage 1970s film photograph with faded warm colors, film grain and light leaks. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a vintage 1970s film photograph with faded warm colors, film grain and light leaks. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "ai_generated": true
       },
       {
         "name": "네온 사이버펑크",
@@ -161,7 +176,8 @@
         "type": "image",
         "src": "img/list/16.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a neon cyberpunk scene with glowing pink and cyan neon lights and a futuristic night city outside the window. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a neon cyberpunk scene with glowing pink and cyan neon lights and a futuristic night city outside the window. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "ai_generated": true
       },
       {
         "name": "크레파스",
@@ -170,7 +186,8 @@
         "type": "image",
         "src": "img/list/17.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a child's crayon drawing on paper with waxy rough strokes. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a child's crayon drawing on paper with waxy rough strokes. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "ai_generated": true
       },
       {
         "name": "색연필",
@@ -179,7 +196,8 @@
         "type": "image",
         "src": "img/list/18.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a colored pencil drawing with visible pencil strokes on paper. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a colored pencil drawing with visible pencil strokes on paper. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "ai_generated": true
       },
       {
         "name": "점묘화",
@@ -188,7 +206,8 @@
         "type": "image",
         "src": "img/list/19.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a pointillism painting made entirely of small colored dots. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a pointillism painting made entirely of small colored dots. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "ai_generated": true
       },
       {
         "name": "한 줄 라인 아트",
@@ -197,7 +216,8 @@
         "type": "image",
         "src": "img/list/20.jpg",
         "mascot": true,
-        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a single continuous black line drawing on a white background, minimal one-line art. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+        "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a single continuous black line drawing on a white background, minimal one-line art. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+        "ai_generated": true
       }
     ],
     "hook": 6,
@@ -286,7 +306,8 @@
           "type": "image",
           "src": "img/more/voxel-art.jpg",
           "mascot": true,
-          "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as voxel art made of small cubes, a 3D scene built from tiny cubic blocks. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+          "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as voxel art made of small cubes, a 3D scene built from tiny cubic blocks. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+          "ai_generated": true
         },
         {
           "name": "아이소메트릭",
@@ -340,7 +361,8 @@
           "type": "image",
           "src": "img/more/embroidery.jpg",
           "mascot": true,
-          "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as an embroidery stitched with colored thread on linen fabric, visible stitches. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+          "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as an embroidery stitched with colored thread on linen fabric, visible stitches. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+          "ai_generated": true
         },
         {
           "name": "니트 인형",
@@ -349,7 +371,8 @@
           "type": "image",
           "src": "img/more/knitted-wool-texture.jpg",
           "mascot": true,
-          "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a knitted wool scene, everything looks hand-knitted from soft yarn. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+          "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a knitted wool scene, everything looks hand-knitted from soft yarn. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+          "ai_generated": true
         },
         {
           "name": "블록 장난감",
@@ -363,7 +386,8 @@
           "type": "image",
           "src": "img/more/glass-sculpture.jpg",
           "mascot": true,
-          "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a clear and green glass sculpture, everything made of polished glass on a glass sofa. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature."
+          "prompt": "Same slime character, same pose, same sofa scene and composition as the reference image. Redraw the whole image as a clear and green glass sculpture, everything made of polished glass on a glass sofa. Keep the cat ears, the dot eyes and the smile. No text, no letters, no signature.",
+          "ai_generated": true
         }
       ],
       "more_title": "추가 그림체 20개",
@@ -381,5 +405,6 @@
     "AI 사진 그림체 변환",
     "사진 그림 변환",
     "그림체 프롬프트"
-  ]
+  ],
+  "ai_image": true
 }

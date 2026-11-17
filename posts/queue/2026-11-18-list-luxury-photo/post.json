@@ -20,7 +20,8 @@
         "type": "image",
         "src": "img/list/01.jpg",
         "mascot": true,
-        "prompt": "Same slime character as the reference image. Make the photo look like this: cinematic look, dramatic color grading, widescreen movie still feeling, soft haze. Photorealistic, vertical 4:5, no text, no letters."
+        "prompt": "Same slime character as the reference image. Make the photo look like this: cinematic look, dramatic color grading, widescreen movie still feeling, soft haze. Photorealistic, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "에디토리얼 화보",
@@ -29,7 +30,8 @@
         "type": "image",
         "src": "img/list/02.jpg",
         "mascot": true,
-        "prompt": "Same slime character as the reference image. Make the photo look like this: editorial fashion magazine photoshoot look, clean styled set, refined composition. Photorealistic, vertical 4:5, no text, no letters."
+        "prompt": "Same slime character as the reference image. Make the photo look like this: editorial fashion magazine photoshoot look, clean styled set, refined composition. Photorealistic, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "제품 광고 사진",
@@ -38,7 +40,8 @@
         "type": "image",
         "src": "img/list/03.jpg",
         "mascot": true,
-        "prompt": "Same slime character as the reference image. Make the photo look like this: commercial product photography, the slime on a clean seamless studio backdrop, perfect studio light, glossy reflections. Photorealistic, vertical 4:5, no text, no letters."
+        "prompt": "Same slime character as the reference image. Make the photo look like this: commercial product photography, the slime on a clean seamless studio backdrop, perfect studio light, glossy reflections. Photorealistic, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "부드러운 확산광",
@@ -47,7 +50,8 @@
         "type": "image",
         "src": "img/list/04.jpg",
         "mascot": true,
-        "prompt": "Same slime character as the reference image. Make the photo look like this: soft diffused light, very gentle shadows, smooth soft tones. Photorealistic, vertical 4:5, no text, no letters."
+        "prompt": "Same slime character as the reference image. Make the photo look like this: soft diffused light, very gentle shadows, smooth soft tones. Photorealistic, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "자연광 인물 사진",
@@ -56,7 +60,8 @@
         "type": "image",
         "src": "img/list/05.jpg",
         "mascot": true,
-        "prompt": "Same slime character as the reference image. Make the photo look like this: natural light portrait style, soft daylight from a window, warm and honest mood. Photorealistic, vertical 4:5, no text, no letters."
+        "prompt": "Same slime character as the reference image. Make the photo look like this: natural light portrait style, soft daylight from a window, warm and honest mood. Photorealistic, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "골든아워 역광",
@@ -65,7 +70,8 @@
         "type": "image",
         "src": "img/list/06.jpg",
         "mascot": true,
-        "prompt": "Same slime character as the reference image. Make the photo look like this: golden hour backlight, warm sun behind the slime making its translucent body glow, soft lens haze. Photorealistic, vertical 4:5, no text, no letters."
+        "prompt": "Same slime character as the reference image. Make the photo look like this: golden hour backlight, warm sun behind the slime making its translucent body glow, soft lens haze. Photorealistic, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "얕은 심도",
@@ -74,7 +80,8 @@
         "type": "image",
         "src": "img/list/07.jpg",
         "mascot": true,
-        "prompt": "Same slime character as the reference image. Make the photo look like this: shallow depth of field, the slime sharp and the background softly blurred. Photorealistic, vertical 4:5, no text, no letters."
+        "prompt": "Same slime character as the reference image. Make the photo look like this: shallow depth of field, the slime sharp and the background softly blurred. Photorealistic, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "85mm 렌즈",
@@ -83,7 +90,8 @@
         "type": "image",
         "src": "img/list/08.jpg",
         "mascot": true,
-        "prompt": "Same slime character as the reference image. Make the photo look like this: shot with an 85mm portrait lens, flattering compression, creamy background blur. Photorealistic, vertical 4:5, no text, no letters."
+        "prompt": "Same slime character as the reference image. Make the photo look like this: shot with an 85mm portrait lens, flattering compression, creamy background blur. Photorealistic, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "매크로 촬영",
@@ -92,7 +100,8 @@
         "type": "image",
         "src": "img/list/09.jpg",
         "mascot": true,
-        "prompt": "Same slime character as the reference image. Make the photo look like this: macro photography, very close to the slime, tiny bubbles and glossy surface details in sharp focus. Photorealistic, vertical 4:5, no text, no letters."
+        "prompt": "Same slime character as the reference image. Make the photo look like this: macro photography, very close to the slime, tiny bubbles and glossy surface details in sharp focus. Photorealistic, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "미니멀 구도",
@@ -101,7 +110,8 @@
         "type": "image",
         "src": "img/list/10.jpg",
         "mascot": true,
-        "prompt": "Same slime character as the reference image. Make the photo look like this: minimalist composition, the slime alone with lots of empty space and a plain background. Photorealistic, vertical 4:5, no text, no letters."
+        "prompt": "Same slime character as the reference image. Make the photo look like this: minimalist composition, the slime alone with lots of empty space and a plain background. Photorealistic, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "무광 질감",
@@ -110,7 +120,8 @@
         "type": "image",
         "src": "img/list/11.jpg",
         "mascot": true,
-        "prompt": "Same slime character as the reference image. Make the photo look like this: matte texture look, soft non-reflective surfaces, calm muted tones. Photorealistic, vertical 4:5, no text, no letters."
+        "prompt": "Same slime character as the reference image. Make the photo look like this: matte texture look, soft non-reflective surfaces, calm muted tones. Photorealistic, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "고급 대리석 배경",
@@ -119,7 +130,8 @@
         "type": "image",
         "src": "img/list/12.jpg",
         "mascot": true,
-        "prompt": "Same slime character as the reference image. Make the photo look like this: the slime on a luxury white marble surface with a marble background, elegant soft light. Photorealistic, vertical 4:5, no text, no letters."
+        "prompt": "Same slime character as the reference image. Make the photo look like this: the slime on a luxury white marble surface with a marble background, elegant soft light. Photorealistic, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "벨벳 배경",
@@ -128,7 +140,8 @@
         "type": "image",
         "src": "img/list/13.jpg",
         "mascot": true,
-        "prompt": "Same slime character as the reference image. Make the photo look like this: the slime in front of a deep green velvet backdrop, rich soft folds, elegant studio light. Photorealistic, vertical 4:5, no text, no letters."
+        "prompt": "Same slime character as the reference image. Make the photo look like this: the slime in front of a deep green velvet backdrop, rich soft folds, elegant studio light. Photorealistic, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "필름 색감",
@@ -137,7 +150,8 @@
         "type": "image",
         "src": "img/list/14.jpg",
         "mascot": true,
-        "prompt": "Same slime character as the reference image. Make the photo look like this: film color grading, soft faded film colors and gentle grain, nostalgic mood. Photorealistic, vertical 4:5, no text, no letters."
+        "prompt": "Same slime character as the reference image. Make the photo look like this: film color grading, soft faded film colors and gentle grain, nostalgic mood. Photorealistic, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       },
       {
         "name": "8K 초고해상도",
@@ -146,7 +160,8 @@
         "type": "image",
         "src": "img/list/15.jpg",
         "mascot": true,
-        "prompt": "Same slime character as the reference image. Make the photo look like this: 8K ultra detailed, extremely sharp, every tiny bubble and reflection visible. Photorealistic, vertical 4:5, no text, no letters."
+        "prompt": "Same slime character as the reference image. Make the photo look like this: 8K ultra detailed, extremely sharp, every tiny bubble and reflection visible. Photorealistic, vertical 4:5, no text, no letters.",
+        "ai_generated": true
       }
     ],
     "hook": 12,
@@ -234,7 +249,8 @@
           "type": "image",
           "src": "img/more/dark-moody-tones.jpg",
           "mascot": true,
-          "prompt": "Same slime character as the reference image. Make the photo look like this: dark moody tones, deep shadows, rich dark colors, a single soft light on the slime. Photorealistic, vertical 4:5, no text, no letters."
+          "prompt": "Same slime character as the reference image. Make the photo look like this: dark moody tones, deep shadows, rich dark colors, a single soft light on the slime. Photorealistic, vertical 4:5, no text, no letters.",
+          "ai_generated": true
         },
         {
           "name": "뉴트럴 톤",
@@ -248,7 +264,8 @@
           "type": "image",
           "src": "img/more/mid-century-modern-interior.jpg",
           "mascot": true,
-          "prompt": "Same slime character as the reference image. Make the photo look like this: the slime on a walnut mid-century modern lounge chair in a 1960s style living room, warm lamp light. Photorealistic, vertical 4:5, no text, no letters."
+          "prompt": "Same slime character as the reference image. Make the photo look like this: the slime on a walnut mid-century modern lounge chair in a 1960s style living room, warm lamp light. Photorealistic, vertical 4:5, no text, no letters.",
+          "ai_generated": true
         },
         {
           "name": "브러시드 메탈",
@@ -257,7 +274,8 @@
           "type": "image",
           "src": "img/more/brushed-metal.jpg",
           "mascot": true,
-          "prompt": "Same slime character as the reference image. Make the photo look like this: the slime on a brushed metal pedestal with a brushed metal background, cool reflections, product photo. Photorealistic, vertical 4:5, no text, no letters."
+          "prompt": "Same slime character as the reference image. Make the photo look like this: the slime on a brushed metal pedestal with a brushed metal background, cool reflections, product photo. Photorealistic, vertical 4:5, no text, no letters.",
+          "ai_generated": true
         },
         {
           "name": "실크 천",
@@ -266,7 +284,8 @@
           "type": "image",
           "src": "img/more/silk-fabric-drape.jpg",
           "mascot": true,
-          "prompt": "Same slime character as the reference image. Make the photo look like this: the slime on flowing champagne-colored silk fabric drapes, soft glossy folds, elegant studio light. Photorealistic, vertical 4:5, no text, no letters."
+          "prompt": "Same slime character as the reference image. Make the photo look like this: the slime on flowing champagne-colored silk fabric drapes, soft glossy folds, elegant studio light. Photorealistic, vertical 4:5, no text, no letters.",
+          "ai_generated": true
         },
         {
           "name": "3분할 구도",
@@ -304,5 +323,6 @@
     "AI 사진 프롬프트",
     "고급 사진 용어",
     "AI 제품 사진"
-  ]
+  ],
+  "ai_image": true
 }
