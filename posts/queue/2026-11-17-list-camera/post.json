@@ -16,7 +16,8 @@
       "type": "image",
       "src": "img/list/scene.jpg",
       "mascot": true,
-      "prompt": "Place the same slime character at night in a narrow alley in Seoul, sitting on the stone step in front of a small cozy cafe, warm light glowing from the cafe window, small hanging shop signs without readable letters, wet pavement reflecting the lights. Eye-level medium shot, the slime in the center. Photorealistic 3D render, vertical 4:5, no text, no letters."
+      "prompt": "Place the same slime character at night in a narrow alley in Seoul, sitting on the stone step in front of a small cozy cafe, warm light glowing from the cafe window, small hanging shop signs without readable letters, wet pavement reflecting the lights. Eye-level medium shot, the slime in the center. Photorealistic 3D render, vertical 4:5, no text, no letters.",
+      "ai_generated": true
     },
     "items": [
       {
@@ -27,7 +28,8 @@
         "src": "img/list/01.jpg",
         "mascot": true,
         "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: extreme close-up shot, only the slime's face and eyes fill the frame. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ref": "img/list/scene.jpg"
+        "ref": "img/list/scene.jpg",
+        "ai_generated": true
       },
       {
         "name": "클로즈업",
@@ -37,7 +39,8 @@
         "src": "img/list/02.jpg",
         "mascot": true,
         "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: close-up shot, the slime's head and upper body fill the frame. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ref": "img/list/scene.jpg"
+        "ref": "img/list/scene.jpg",
+        "ai_generated": true
       },
       {
         "name": "미디엄 샷",
@@ -47,7 +50,8 @@
         "src": "img/list/03.jpg",
         "mascot": true,
         "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: medium shot, the whole slime and a little of the cafe entrance around it. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ref": "img/list/scene.jpg"
+        "ref": "img/list/scene.jpg",
+        "ai_generated": true
       },
       {
         "name": "와이드 샷",
@@ -57,7 +61,8 @@
         "src": "img/list/04.jpg",
         "mascot": true,
         "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: wide shot, the whole narrow alley and the cafe front visible, the slime small in the frame. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ref": "img/list/scene.jpg"
+        "ref": "img/list/scene.jpg",
+        "ai_generated": true
       },
       {
         "name": "로우 앵글",
@@ -67,7 +72,8 @@
         "src": "img/list/05.jpg",
         "mascot": true,
         "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: low angle shot from near the ground looking up at the slime, the slime looks big and heroic. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ref": "img/list/scene.jpg"
+        "ref": "img/list/scene.jpg",
+        "ai_generated": true
       },
       {
         "name": "하이 앵글",
@@ -77,7 +83,8 @@
         "src": "img/list/06.jpg",
         "mascot": true,
         "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: high angle shot looking down at the slime from above, the slime looks small. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ref": "img/list/scene.jpg"
+        "ref": "img/list/scene.jpg",
+        "ai_generated": true
       },
       {
         "name": "버즈아이 뷰",
@@ -87,7 +94,8 @@
         "src": "img/list/07.jpg",
         "mascot": true,
         "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: bird's-eye view, the camera directly overhead looking straight down at the slime and the alley. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ref": "img/list/scene.jpg"
+        "ref": "img/list/scene.jpg",
+        "ai_generated": true
       },
       {
         "name": "더치 앵글",
@@ -97,7 +105,8 @@
         "src": "img/list/08.jpg",
         "mascot": true,
         "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: Dutch angle, the camera tilted about 25 degrees, tilted horizon, uneasy mood. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ref": "img/list/scene.jpg"
+        "ref": "img/list/scene.jpg",
+        "ai_generated": true
       },
       {
         "name": "오버 더 숄더",
@@ -107,7 +116,8 @@
         "src": "img/list/09.jpg",
         "mascot": true,
         "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: over-the-shoulder shot from behind the blurred shoulder of a person in a dark coat in the foreground, looking at the slime. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ref": "img/list/scene.jpg"
+        "ref": "img/list/scene.jpg",
+        "ai_generated": true
       },
       {
         "name": "얕은 심도(보케)",
@@ -117,7 +127,8 @@
         "src": "img/list/10.jpg",
         "mascot": true,
         "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: shallow depth of field, the slime in sharp focus, the cafe lights behind turned into large soft bokeh circles. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ref": "img/list/scene.jpg"
+        "ref": "img/list/scene.jpg",
+        "ai_generated": true
       },
       {
         "name": "아나모픽 렌즈 플레어",
@@ -127,7 +138,8 @@
         "src": "img/list/11.jpg",
         "mascot": true,
         "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: shot with an anamorphic lens, long horizontal blue lens flares across the frame from the cafe lights, cinematic look. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ref": "img/list/scene.jpg"
+        "ref": "img/list/scene.jpg",
+        "ai_generated": true
       },
       {
         "name": "35mm 필름 질감",
@@ -137,7 +149,8 @@
         "src": "img/list/12.jpg",
         "mascot": true,
         "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: shot on 35mm film, visible film grain, slightly faded film colors, cinematic. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ref": "img/list/scene.jpg"
+        "ref": "img/list/scene.jpg",
+        "ai_generated": true
       },
       {
         "name": "어안 렌즈",
@@ -147,7 +160,8 @@
         "src": "img/list/13.jpg",
         "mascot": true,
         "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: fisheye lens, strong barrel distortion, the slime close to the lens in the center, the alley curving around the edges. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ref": "img/list/scene.jpg"
+        "ref": "img/list/scene.jpg",
+        "ai_generated": true
       },
       {
         "name": "틸트시프트",
@@ -157,7 +171,8 @@
         "src": "img/list/14.jpg",
         "mascot": true,
         "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: tilt-shift photography, miniature effect, a narrow band of focus on the slime, top and bottom strongly blurred, seen from slightly above. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ref": "img/list/scene.jpg"
+        "ref": "img/list/scene.jpg",
+        "ai_generated": true
       },
       {
         "name": "실루엣",
@@ -167,7 +182,8 @@
         "src": "img/list/15.jpg",
         "mascot": true,
         "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: silhouette, the slime as a dark silhouette against the bright cafe window behind it. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ref": "img/list/scene.jpg"
+        "ref": "img/list/scene.jpg",
+        "ai_generated": true
       }
     ],
     "hook": 11,
@@ -244,7 +260,8 @@
           "src": "img/more/worms-eye-view.jpg",
           "mascot": true,
           "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: worm's-eye view, the camera on the wet pavement looking almost straight up at the slime, the cafe and the night sky towering above. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-          "ref": "img/list/scene.jpg"
+          "ref": "img/list/scene.jpg",
+          "ai_generated": true
         },
         {
           "name": "돌리 인",
@@ -269,7 +286,8 @@
           "src": "img/more/drone-shot.jpg",
           "mascot": true,
           "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: drone shot, aerial view from high above the narrow alley at night, the slime small on the step in front of the glowing cafe, rooftops around. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-          "ref": "img/list/scene.jpg"
+          "ref": "img/list/scene.jpg",
+          "ai_generated": true
         },
         {
           "name": "오비트 샷",
@@ -294,7 +312,8 @@
           "src": "img/more/telephoto-lens.jpg",
           "mascot": true,
           "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: shot with a long telephoto lens from far down the alley, strong background compression, the cafe lights large and close behind the slime. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-          "ref": "img/list/scene.jpg"
+          "ref": "img/list/scene.jpg",
+          "ai_generated": true
         },
         {
           "name": "광각 렌즈",
@@ -314,7 +333,8 @@
           "src": "img/more/symmetrical-composition.jpg",
           "mascot": true,
           "prompt": "Same slime character, same Seoul alley cafe at night, same lighting and mood as the reference image. Change ONLY the camera: perfectly symmetrical composition, the slime exactly in the center in front of the cafe door, the alley walls mirrored on both sides. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-          "ref": "img/list/scene.jpg"
+          "ref": "img/list/scene.jpg",
+          "ai_generated": true
         }
       ],
       "more_title": "추가 카메라 용어 15개",
@@ -326,5 +346,6 @@
     "images": [
       "cover"
     ]
-  }
+  },
+  "ai_image": true
 }
