@@ -115,6 +115,9 @@ def check(post, self_name=None, today=None):
     for name, other in all_posts():
         if name == self_name or other.get("id") == post.get("id"):
             continue
+        # 고쳐 다시 올리는 게시물(post.json "replaces": 원래 게시물 id)은 그 원본과 겹침을 보지 않는다
+        if post.get("replaces") and post.get("replaces") in (name, other.get("id")):
+            continue
         d1 = post_date(other)
         if not d1:
             continue
