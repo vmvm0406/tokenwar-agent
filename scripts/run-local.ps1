@@ -66,6 +66,10 @@ try {
     $slotsHow = if ($plan.Count) { "Per date (fill the earliest date first; get publish_at with the command shown): " + ($plan -join "; ") + "." }
                 else { "Get each publish_at from 'py -3.12 agent/slots.py next <kind> --count N' (LOCAL.md 5장)." }
     $prompt = "Follow LOCAL.md for today. Work and write in Korean. Make $nCard carousel(s) and $nReel reel(s) in advance for today through the day after tomorrow. $slotsHow Do not put 'approved' in post.json (the operator approves after review; LOCAL.md 3장)."
+    # 브라우저(Playwright MCP)를 쓰더라도 창을 띄우지 않는다 (2026-11-17: 정해진 시각 실행 때 크롬 창이 여러 번 떴다)
+    $env:PLAYWRIGHT_MCP_HEADLESS = "true"
+    # 나눠 맡긴 에이전트가 끝날 때까지 기다린다 (2026-11-17: 기본 600초에 걸려 에이전트 10개가 끝나기 전에 끊겼다)
+    $env:CLAUDE_CODE_PRINT_BG_WAIT_CEILING_MS = "0"
     claude -p $prompt --permission-mode auto --max-turns 300 2>&1 | Out-File -FilePath $log -Encoding utf8
 }
 finally {
