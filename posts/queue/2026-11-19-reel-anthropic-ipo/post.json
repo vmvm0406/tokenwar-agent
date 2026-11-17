@@ -1,0 +1,160 @@
+{
+  "id": "2026-11-19-reel-anthropic-ipo",
+  "type": "reel",
+  "series": "전황",
+  "origin": "own",
+  "length": "short",
+  "date": "2026-11-19",
+  "publish_at": "2026-11-19T23:45:00+09:00",
+  "asap_after_listing": true,
+  "note": "asap_after_listing: true. 나스닥 첫 거래(예정 11/19 미국 동부 9:30 = 한국 23:30) 직후 올릴 미리 만든 릴스. 지금 숫자는 공모가 범위 중간값 74달러 기준 자리표시. 확정 공모가·시초가가 나오면 ipo 블록과 ipo.fill이 가리키는 장 필드를 고치고 다시 렌더링 (안내: side-session-notes ipo-fill.md). 투자 권유·매수/매도 표현 금지.",
+  "ipo": {
+    "status": "placeholder",
+    "ticker": "ANT",
+    "exchange": "Nasdaq Global Select Market",
+    "price_range": [
+      70,
+      78
+    ],
+    "price": 74,
+    "open": null,
+    "shares_outstanding_after": 13086672593,
+    "market_cap_at_price_usd_100m": 9680,
+    "fill": {
+      "slides[0].big": "공모가 기준 시가총액(억 달러) = 13,086,672,593주 x 공모가 / 1억, 콤마 포함 7자 이하",
+      "slides[1].visual.items[4]": "상장 막대 value·display = 위와 같은 시가총액(억 달러)",
+      "slides[4].value": "확정 공모가(달러)",
+      "slides[4].label": "'범위 중간값·확정 전' 문구를 '확정 공모가'로",
+      "slides[4].body": "첫 거래 시초가 OO달러 (ipo.open)",
+      "caption": "첫 줄 다음 문단의 공모가·시가총액 숫자",
+      "threads.text": "공모가·시가총액 숫자",
+      "slides[0].sub": "'공모가 OO달러 기준' 가격"
+    }
+  },
+  "slides": [
+    {
+      "kind": "cover",
+      "layout": "big",
+      "big": "9,680억",
+      "title": "클로드 회사가\n주식시장에 나왔다",
+      "highlight": "주식시장",
+      "sub": "공모가 74달러 기준 시가총액(달러) · 투자 권유 아님"
+    },
+    {
+      "kind": "body",
+      "heading": "2021년 창업,\n몸값이 이렇게 컸다",
+      "highlight": "몸값",
+      "visual": {
+        "type": "bars",
+        "unit": "억 달러",
+        "items": [
+          {
+            "label": "2025.3 시리즈 E",
+            "value": 615,
+            "display": "615억"
+          },
+          {
+            "label": "2025.9 시리즈 F",
+            "value": 1830,
+            "display": "1,830억"
+          },
+          {
+            "label": "2026.2 시리즈 G",
+            "value": 3800,
+            "display": "3,800억"
+          },
+          {
+            "label": "2026.5 시리즈 H",
+            "value": 9650,
+            "display": "9,650억"
+          },
+          {
+            "label": "2026.11 상장",
+            "value": 9680,
+            "display": "9,680억",
+            "on": true
+          }
+        ]
+      },
+      "body": "상장 막대는 공모가 기준 시가총액입니다"
+    },
+    {
+      "kind": "stat",
+      "value": "45",
+      "unit": "배",
+      "heading": "분기 매출\n1년 반 만에 45배",
+      "highlight": "45배",
+      "label": "3.8억 달러에서 170억 달러가 됐습니다",
+      "body": "2025년 1분기와 2026년 3분기 증권신고서 숫자입니다"
+    },
+    {
+      "kind": "stat",
+      "value": "11,900",
+      "unit": "곳",
+      "heading": "1년에 10만 달러 넘게\n내는 기업 고객",
+      "highlight": "10만 달러",
+      "label": "1년 전 950곳에서 12배로 늘었습니다",
+      "body": "2026년 9월 말 증권신고서 기준입니다"
+    },
+    {
+      "kind": "stat",
+      "value": "74",
+      "unit": "달러",
+      "heading": "나스닥 상장\n종목 코드 ANT",
+      "highlight": "ANT",
+      "label": "공모가 범위 70~78달러의 중간값입니다 (확정 전)",
+      "body": "공시 숫자 정리이며 투자 권유가 아닙니다"
+    }
+  ],
+  "sources": [
+    {
+      "name": "Anthropic 증권신고서 S-1/A (SEC EDGAR, 2026.11.10)",
+      "url": "https://www.sec.gov/Archives/edgar/data/2130357/000162828026072484/anthropicpbc-sx1ax2.htm"
+    },
+    {
+      "name": "Anthropic 시리즈 H 발표 (2026.5.28)",
+      "url": "https://www.anthropic.com/news/series-h"
+    },
+    {
+      "name": "Anthropic 시리즈 F 발표 (2025.9)",
+      "url": "https://www.anthropic.com/news/anthropic-raises-series-f-at-usd183b-post-money-valuation"
+    },
+    {
+      "name": "Anthropic 시리즈 E 발표 (2025.3)",
+      "url": "https://www.anthropic.com/news/anthropic-raises-series-e-at-usd61-5b-post-money-valuation"
+    }
+  ],
+  "caption": "앤트로픽 상장, 클로드를 만든 회사가 나스닥에 종목 코드 ANT로 올라왔습니다.\n\n공모가 74달러 기준 시가총액은 약 9,680억 달러. 상장 뒤 발행 주식 130억 8,667만 주로 계산했습니다.\n\n2021년에 창업한 회사입니다. 투자 유치 직후 기업가치는 2025년 3월 615억 달러, 9월 1,830억 달러, 2026년 2월 3,800억 달러, 5월 9,650억 달러였습니다.\n\n분기 매출은 2025년 1분기 3.8억 달러에서 2026년 3분기 170억 달러로 늘었습니다. 1년에 10만 달러 넘게 내는 고객은 950곳에서 1만 1,900곳이 됐습니다.\n\n증권신고서(S-1)와 회사 발표 숫자를 정리한 글이며, 투자 권유가 아닙니다.\n\n출처: Anthropic 증권신고서 S-1/A (SEC EDGAR, 11월 10일), Anthropic 공식 발표",
+  "hashtags": [
+    "#앤트로픽",
+    "#클로드",
+    "#나스닥상장",
+    "#AI뉴스",
+    "#토큰전쟁"
+  ],
+  "topic": [
+    "앤트로픽",
+    "앤트로픽 상장",
+    "클로드"
+  ],
+  "keywords": [
+    "앤트로픽 상장",
+    "앤트로픽 IPO",
+    "클로드 상장",
+    "ANT"
+  ],
+  "music": {
+    "generate": true,
+    "credit": "배경음악: 토큰전쟁이 코드로 직접 만든 음악 (외부 음원 없음)"
+  },
+  "threads": {
+    "text": "앤트로픽이 나스닥에 상장했습니다. 종목 코드는 ANT입니다.\n\n공모가 74달러 기준 시가총액은 약 9,680억 달러.\n2021년 창업, 2025년 3월 기업가치 615억 달러에서 1년 8개월 만입니다.\n\n분기 매출은 2025년 1분기 3.8억 달러에서 2026년 3분기 170억 달러가 됐습니다.\n\n증권신고서 숫자 정리이고, 투자 권유는 아닙니다.",
+    "images": [
+      "cover"
+    ],
+    "topic": "AI Threads",
+    "replies": [
+      "출처: Anthropic 증권신고서 S-1/A (SEC EDGAR, 11월 10일)\nhttps://www.sec.gov/Archives/edgar/data/2130357/000162828026072484/anthropicpbc-sx1ax2.htm"
+    ]
+  }
+}
