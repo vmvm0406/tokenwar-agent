@@ -1293,6 +1293,11 @@ def screen_now(post):
     texts += [(f"timeline.{k}", T.get(k)) for k in ("unit_note", "cta_line")]
     texts += [(f"timeline.beats {i}", b.get("text")) for i, b in enumerate(T.get("beats") or [], 1)]
     texts += [(f"timeline.periods {i}", p[0]) for i, p in enumerate(T.get("periods") or [], 1) if p]
+    R = post.get("race") or {}   # 막대 경주 릴스 (racereel.py)
+    texts += [(f"race.{k}", R.get(k)) for k in ("basis_line", "cta_line", "punch")]
+    B = R.get("beats") or {}
+    texts += [("race.beats.hook", B.get("hook"))] + [(f"race.beats.{k}", (B.get(k) or {}).get("text")) for k in ("rehook", "ask")]
+    texts += [(f"race.series {s.get('name')}", s.get("name")) for s in R.get("series") or []]
     for where, t in texts:
         if "지금" in str(t or ""):
             w.append(f"{where}: 화면 정리 글에 '지금' → '현재'나 연도('2026년')로 (STYLE_GUIDE 4장 화면 정리 글)")

@@ -295,7 +295,7 @@
       }
     ],
     "beats": {
-      "hook": "AI 사용자 1위,\n지금은 누구?",
+      "hook": "AI 사용자 1위,\n2026년은 누구?",
       "hook_until": 3,
       "anchors": [
         [
