@@ -52,6 +52,7 @@
 | `agent/publish.py` | 인스타 게시 (Graph API, graph.facebook.com, 페이지 토큰). 미디어는 `docs/media/`에 복사·push해 GitHub Pages 주소로 넘기고, 게시 뒤 비운다. 게시된 폴더의 `clips/source.mp4`는 지운다. dm 게시물은 게시 직후 'Zorcha 설정 필요' 이슈 + `data/zorcha_todo.md` → 'Zorcha 담당' 세션이 `ZORCHA.md` 절차로 설정. `DRY_RUN=1`로 시험 |
 | `ZORCHA.md` | Zorcha 댓글 자동 DM 설정 절차 (게시물마다 브라우저로 자동화 생성, 'Zorcha 담당' 세션이 따름) |
 | `agent/tts.py` / `assets/voice/` | Kokoro 영어 음성(TTS) 미리 만들기 / 음성 모델 라이선스 기록 |
+| `agent/tts_ko_norm.py` / `assets/voice/ko_words.json`, `reading_cases.md` | 한국어 TTS 읽기 교정(운영자 2026-11-17): 단위별 고유어/한자어("세 개", "이 주"), 큰 수·범위, 영어 이름 사전 → tts.py가 기본으로 씀(일레븐랩스 Deok). `--verify --gate`: 만든 음성을 다시 받아써 다르면 막음 |
 | `agent/benchmarks.py` / `agent/hot.py` | 인스타 반응 분석 / 지금 관심 주제 |
 | `agent/reel_insights.py` | 우리 최근 30일 릴스 시청 지표(조회·평균 시청 시간·시청 비율·3초 건너뛰기·저장·공유) → `data/reel_insights.json`(날짜별), `data/reel_insights.md`(표 + 보이는 것 3줄). `reel-insights.yml`이 매일 반응 분석 뒤에. `--offline`: md만 |
 | `agent/token_check.py` | 토큰 점검 |
