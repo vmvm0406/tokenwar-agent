@@ -12,6 +12,7 @@
   "title": "AI 그림으로\n돈 버는데\n이것도 몰라?",
   "highlight": "돈 버는데",
   "list": {
+    "topic": "그림체",
     "base": {
       "name": "원본 사진",
       "type": "image",
