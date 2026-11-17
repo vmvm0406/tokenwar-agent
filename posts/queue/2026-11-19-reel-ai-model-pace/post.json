@@ -464,7 +464,13 @@
           "ai_generated": true
         }
       }
-    ]
+    ],
+    "rehook": {
+      "after": "2024-12-31",
+      "small": "2020~22년엔 3년 동안 2개",
+      "big": "2024년엔 1년에 9개",
+      "highlight": "9개"
+    }
   },
   "thumb": {
     "title": "특이점 온 AI\n새 모델 출시 간격은?",

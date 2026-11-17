@@ -20,6 +20,8 @@
 post.json:
   "timeline": {
     "events": [{"date": "2023-03-14", "lab": "OpenAI", "name": "GPT-4", "url": "공식 발표 주소"}, ...],   # 5개 이상, 날짜 순
+    "rehook": {"after": "2024-12-31", "small": "2020~22년엔 3년 동안 2개", "big": "2024년엔 1년에 9개", "highlight": "9개"},
+                                   # 선택: 리후킹(5박자 3번째, 12~15초) 그 날짜 마지막 점 뒤 1.8초 멈추고 반전 한 줄 (결과 숫자 아님)
     "beats": [{"name": "GPT-4", "text": "모의 변호사 시험 상위 10%",                                     # 선택, 6개 안팎
                "image": {"type": "image", "src": "img/beat-gpt4.jpg", "prompt": "...", "size": [1344, 1088]}}],
     "periods": [["2020~22년", 2020, 2022], ["2023년", 2023, 2023], ...],   # 끝 정리 (선택, 없으면 해마다)
@@ -47,7 +49,8 @@ SAFE_BOTTOM = _SAFE.get("bottom", 1250)
 SIDE = _SAFE.get("side", 65)
 
 TL_START = 0.5                    # 제목 쾅 뒤 바로 재생
-TL_LEN = 13.0                     # 점만 찍히는 시간 (그림 멈춤 제외)
+TL_LEN = 16.0                     # 점만 찍히는 시간 (그림·리후킹 멈춤 제외). 5박자에 맞춤: 답은 25초 언저리
+REHOOK_LEN = 1.8                  # 리후킹 멈춤 (timeline.rehook)
 BEAT_LEN = 1.1                    # 대표 모델 그림 멈춤
 TAIL = 0.6                        # 마지막 점 뒤
 SUM_LEN = 5.5                     # 끝 정리 화면 (줄이 다 뜬 뒤 3.5초 이상 그대로)
@@ -129,6 +132,9 @@ def plan(post, folder=None):
         j = next((i for i, e in enumerate(ev) if e["name"] == b.get("name")), None)
         if j is not None:
             beat_of[j] = b
+    rh = tl.get("rehook") or {}
+    rh_i = max((i for i, e in enumerate(ev) if rh.get("after") and e["date"] <= rh["after"]), default=None)
+    rehook = None
     times, beats, t = [], [], TL_START + 0.2
     for i in range(len(ev)):
         if i:
@@ -143,6 +149,10 @@ def plan(post, folder=None):
             beats.append({"i": i, "t0": t + 0.1, "name": ev[i]["name"], "lab": ev[i]["lab"],
                           "text": str(b.get("text", "")), "img": img})
             t += BEAT_LEN
+        if i == rh_i:
+            rehook = {"i": i, "t0": t + 0.35, "small": str(rh.get("small", "")), "big": str(rh.get("big", "")),
+                      "hl": str(rh.get("highlight", ""))}
+            t += 0.35 + REHOOK_LEN
     x0d, x1d = dt.date(ds[0].year, 1, 1), dt.date(ds[-1].year, 12, 31)
     span = (x1d - x0d).days
     years = list(range(ds[0].year, ds[-1].year + 1))
@@ -153,7 +163,7 @@ def plan(post, folder=None):
         "ev": [{"name": e["name"], "lab": e["lab"], "date": e["date"].replace("-", "."),
                 "u": (d - x0d).days / span, "row": LABS.index(e["lab"]) if e["lab"] in LABS else len(LABS) - 1,
                 "t": t} for e, d, t in zip(ev, ds, times)],
-        "beats": beats, "beat_len": BEAT_LEN,
+        "beats": beats, "beat_len": BEAT_LEN, "rehook": rehook, "rehook_len": REHOOK_LEN,
         "labs": LABS, "lab_info": lab_info(), "years": years, "x0year": ds[0].year, "span": span,
         "tl_start": TL_START, "tl_end": tl_end, "end": tl_end + SUM_LEN,
         "title": str(post["title"]).split("\n"), "hl": post.get("highlight") or "",
@@ -165,7 +175,8 @@ def plan(post, folder=None):
 
 def sfx_times(p):
     """효과음 시각 (화면이 바뀌는 프레임 시각, JS와 같은 식)."""
-    return {"impacts": [0.0, 0.3] + p["rows_t"][-1:], "hits": p["rows_t"][:-1],
+    rh = [p["rehook"]["t0"]] if p.get("rehook") else []
+    return {"impacts": [0.0, 0.3] + rh + p["rows_t"][-1:], "hits": p["rows_t"][:-1],
             "marks": [e["t"] for e in p["ev"]],
             "whoosh_end": [b["t0"] + 0.12 for b in p["beats"]] + [p["tl_end"] + 0.3],
             "riser": (p["ev"][len(p["ev"]) * 2 // 3]["t"], p["tl_end"])}
@@ -353,7 +364,8 @@ def make_timeline_reel(post, folder, cfg):
 
 def preview_times(p, total):
     """미리보기: 0.3초, 그림 멈춤마다 가운데, 재생 끝 직전, 정리 화면 끝, 끝 화면."""
-    ts = [0.3] + [b["t0"] + p["beat_len"] * 0.5 for b in p["beats"]] + [p["tl_end"] - 0.4, p["end"] - 0.3]
+    rh = [p["rehook"]["t0"] + 0.6] if p.get("rehook") else []
+    ts = sorted([0.3] + [b["t0"] + p["beat_len"] * 0.5 for b in p["beats"]] + rh) + [p["tl_end"] - 0.4, p["end"] - 0.3]
     if total > p["end"] + 0.5:
         ts.append(total - 1.0)
     return ts
@@ -396,6 +408,12 @@ def check_timeline(post):
         im = b.get("image") or {}
         if not (im.get("src") and (im.get("prompt") or im.get("url"))):
             errors.append(f"timeline.beats {j}: image {{type, src, prompt 또는 url}} 필요")
+    rh = tl.get("rehook")
+    if rh:
+        if not (str(rh.get("after", ""))[:4].isdigit() and rh.get("big")):
+            errors.append("timeline.rehook은 {after: YYYY-MM-DD, small, big, highlight} (big 필요)")
+        elif len(str(rh["big"])) > 14 or len(str(rh.get("small", ""))) > 20:
+            errors.append(f"timeline.rehook: big 14자·small 20자 이하 ('{rh['big']}', '{rh.get('small', '')}')")
     if tl.get("metr"):
         warnings.append("timeline.metr는 더 이상 화면에 그리지 않는다 (한 가지 생각만, 2026-11-17). 근거는 캡션에")
     ts = tl.get("thumb_src")
@@ -403,7 +421,7 @@ def check_timeline(post):
         warnings.append("timeline.thumb_src와 thumb.image.src가 다름 (렌더링이 그린 그림을 썸네일로 쓰려면 같게)")
     if not errors and ev:
         nb = len([b for b in tl.get("beats") or [] if any(e.get("name") == b.get("name") for e in ev)])
-        total = TL_START + 0.2 + TL_LEN + nb * BEAT_LEN + TAIL + SUM_LEN + (2.5 if ((post.get("dm") or {}).get("cta") or post.get("end_cta")) else 0)
+        total = TL_START + 0.2 + TL_LEN + nb * BEAT_LEN + (0.35 + REHOOK_LEN if tl.get("rehook") else 0) + TAIL + SUM_LEN + (2.5 if ((post.get("dm") or {}).get("cta") or post.get("end_cta")) else 0)
         if not LENGTH_RANGE[0] <= total <= LENGTH_RANGE[1]:
             errors.append(f"연표 릴스 길이 {total:.1f}초 ({LENGTH_RANGE[0]:g}~{LENGTH_RANGE[1]:g}초)")
     return errors, warnings

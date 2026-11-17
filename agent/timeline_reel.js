@@ -103,13 +103,17 @@ function drawHL(ln, cx, y, px) {
 
 function dotPop(dt) { return dt >= 0 && dt < 0.2 ? 1 + 1.4 * (1 - ease(dt / 0.2)) : 1; }
 function beatAt(t) { return P.beats.find(b => t >= b.t0 && t < b.t0 + P.beat_len) || null; }
+const RH = P.rehook;
+function inRehook(t) { return RH && t >= RH.t0 && t < RH.t0 + P.rehook_len; }
+// 멈춤(그림·리후킹): 재생선이 멈추는 구간 [시작 점 번호, 다시 움직이는 시각]
+const PAUSES = P.beats.map(b => ({ i: b.i, until: b.t0 + P.beat_len })).concat(RH ? [{ i: RH.i, until: RH.t0 + P.rehook_len }] : []);
 
 function playheadU(t) {
   if (t < P.ev[0].t) return lerp(0, P.ev[0].u, clamp((t - P.tl_start) / (P.ev[0].t - P.tl_start), 0, 1));
   for (let i = 0; i < N - 1; i++) {
     if (t < P.ev[i + 1].t) {
-      const b = P.beats.find(x => x.i === i);
-      const t0 = b ? b.t0 + P.beat_len : P.ev[i].t;          // 그림 멈춤 동안 재생선도 멈춘다
+      const ps = PAUSES.filter(x => x.i === i);
+      const t0 = ps.length ? Math.max(...ps.map(x => x.until)) : P.ev[i].t;   // 멈춤 동안 재생선도 멈춘다
       return lerp(P.ev[i].u, P.ev[i + 1].u, clamp((t - t0) / (P.ev[i + 1].t - t0), 0, 1));
     }
   }
@@ -227,6 +231,23 @@ function drawBeat(t, b) {
   }
 }
 
+// 리후킹 (5박자 3번째): 어두워진 연표 위 가운데에 작은 줄 + 큰 줄 쾅 (결과 숫자는 아직 아님)
+function drawRehook(t) {
+  const d = t - RH.t0, L = P.rehook_len;
+  const out = d > L - 0.18 ? ease((d - (L - 0.18)) / 0.18) : 0;
+  const a = ease(d / 0.12) * (1 - out);
+  text(RH.small, W / 2, 790, 40, C.text, { w: 700, align: 'center', alpha: a });
+  const px = 96, y = 900;
+  scaleAt(W / 2, y - 34, slam(d - 0.15) || (d < 0.15 ? 0.001 : 1), () => {
+    g.globalAlpha = 1 - out;
+    const hl = RH.hl && RH.big.includes(RH.hl) ? RH.hl : '';
+    const parts = hl ? [RH.big.slice(0, RH.big.indexOf(hl)), hl, RH.big.slice(RH.big.indexOf(hl) + hl.length)] : [RH.big];
+    let x = W / 2 - width(RH.big, px, true) / 2;
+    parts.forEach((p, k) => { if (!p) return; text(p, x, y, px, hl && k === 1 ? C.accent : C.text, { bhs: true, alpha: 1 - out }); x += width(p, px, true); });
+    g.globalAlpha = 1;
+  });
+}
+
 // 끝 정리: 새 모델 하나 나오는 데 걸린 시간 (같은 눈금 막대)
 const BAR_Y0 = 712, BAR_STEP = 96, BAR_MAXW = W - 2 * SIDE;
 function drawSummary(t) {
@@ -260,6 +281,8 @@ function twFrame(t) {
   const b = t < TL_END ? beatAt(t) : null;
   let dim = 1;
   if (b) { const d = t - b.t0; dim = 1 - 0.8 * ease(d / 0.2) * (1 - (d > P.beat_len - 0.16 ? ease((d - P.beat_len + 0.16) / 0.16) : 0)); }
+  const rh = t < TL_END && inRehook(t);
+  if (rh) { const d = t - RH.t0; dim = 1 - 0.85 * ease(d / 0.12) * (1 - (d > P.rehook_len - 0.18 ? ease((d - P.rehook_len + 0.18) / 0.18) : 0)); }
   const chartA = (t < TL_END ? 1 : 1 - ease((t - TL_END) / 0.25)) * dim;
   if (chartA > 0) {
     g.save(); g.globalAlpha = chartA;
@@ -269,6 +292,7 @@ function twFrame(t) {
     if (t < TL_END && dim > 0.6) { g.save(); g.globalAlpha = 1; drawNow(t); drawCount(t); g.restore(); }
   }
   if (b) drawBeat(t, b);
+  if (rh) drawRehook(t);
   drawSummary(t);
   g.setTransform(1, 0, 0, 1, 0, 0);
   drawTitle(t);
@@ -305,6 +329,7 @@ function twProblems() {
     if (CARD_X + 58 + width(b.name, 52, true) > 850) out.push(`그림 이름이 버튼 줄에 닿음: ${b.name}`);
     if (CARD_X + width(b.text, 42, false, 700) > 850) out.push(`그림 특징 줄이 버튼 줄에 닿음: ${b.text}`);
   });
+  if (RH && width(RH.big, 96, true) > W - 2 * SIDE) out.push(`리후킹 줄이 화면 폭을 넘음: ${RH.big}`);
   const lastY = BAR_Y0 + (P.rows.length - 1) * BAR_STEP;
   if (lastY + 34 > 1150) out.push(`정리 마지막 줄이 버튼 줄에 닿음 (y ${lastY + 34})`);
   P.rows.forEach(r => { if (SIDE + width(r.name, 40, true) + 30 + width(r.value, 56 * 1.05, true) > W - SIDE) out.push(`정리 줄이 화면 폭을 넘음: ${r.name} ${r.value}`); });
