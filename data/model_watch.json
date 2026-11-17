@@ -1893,7 +1893,69 @@
    "why": "모델·기능 발표 아님",
    "tries": 0,
    "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMiW0FVX3lxTFA0a19RYTl3WklSWVpMWUtjNGtSeHZpRlRKTk5OR2ZoRDAtdmlZRy1DWEdialNJQ1lYYVpnaHBUc0llYS1MV1NLazVRNXVYMUgwd1VmX215Qi1XU2_SAWBBVV95cUxOZEZ3elMtdTNPMVVpcFJxdkVMU01UVzhSczBIRk1sZW5WSEc0ZEtqaVZZdXI4UmVIVlVrdXFLeVJ2N2ZLOUhSWUl0anNMV3lWWkdMX1B0VjFYSlZQaHRPZW0?oc=5": {
+   "source": "news",
+   "company": "엔비디아",
+   "entities": [
+    "엔비디아"
+   ],
+   "tok": [
+    "경영",
+    "권력",
+    "디슨",
+    "막강",
+    "매디",
+    "보다",
+    "비서",
+    "사실",
+    "서실",
+    "슨이",
+    "실상",
+    "실장",
+    "영진",
+    "진보"
+   ],
+   "title": "[업계 속보: 주요 매체 3곳(연합뉴스, 중앙일보, 한국경제) · 인사] \"젠슨 황 딸 매디슨이 사실상 비서실장…경영진보다 막강 권력\"",
+   "url": "https://news.google.com/rss/articles/CBMiW0FVX3lxTFA0a19RYTl3WklSWVpMWUtjNGtSeHZpRlRKTk5OR2ZoRDAtdmlZRy1DWEdialNJQ1lYYVpnaHBUc0llYS1MV1NLazVRNXVYMUgwd1VmX215Qi1XU2_SAWBBVV95cUxOZEZ3elMtdTNPMVVpcFJxdkVMU01UVzhSczBIRk1sZW5WSEc0ZEtqaVZZdXI4UmVIVlVrdXFLeVJ2N2ZLOUhSWUl0anNMV3lWWkdMX1B0VjFYSlZQaHRPZW0?oc=5",
+   "first_seen": "2026-11-17T17:19:28+09:00",
+   "why": "48시간 안에 같은 회사·인물 게시물 있음: 2026-11-17-video-amodei-chips-north-korea (엔비디아)",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
+  },
+  "news:https://news.google.com/rss/articles/CBMiTkFVX3lxTE83c0ZCQmtQZEE1WUhlSnNYU3o0ZUd2T0tRV0t0ZHNoRTJWaFNFNWJHdGpuZmdFdEhUUTNMLW1lRVJSM0pqTVNFY053U0IwUQ?oc=5": {
+   "source": "news",
+   "company": "엔비디아",
+   "entities": [
+    "엔비디아"
+   ],
+   "tok": [
+    "0억",
+    "30",
+    "83",
+    "규모",
+    "됐다",
+    "럼프",
+    "보유",
+    "설엔",
+    "스파",
+    "억원",
+    "이설",
+    "입증",
+    "주식",
+    "최대",
+    "트럼",
+    "파이"
+   ],
+   "title": "[업계 속보: 주요 매체 3곳(AI타임스, KBS, 전자신문) · 인사] 트럼프, 엔비디아 주식 '최대 830억원 규모' 보유… 中 스파이설엔 “입증 안 됐다”",
+   "url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTE83c0ZCQmtQZEE1WUhlSnNYU3o0ZUd2T0tRV0t0ZHNoRTJWaFNFNWJHdGpuZmdFdEhUUTNMLW1lRVJSM0pqTVNFY053U0IwUQ?oc=5",
+   "first_seen": "2026-11-17T17:19:28+09:00",
+   "why": "48시간 안에 같은 회사·인물 게시물 있음: 2026-11-17-video-amodei-chips-north-korea (엔비디아)",
+   "tries": 0,
+   "breaking": true,
+   "status": "skipped"
   }
  },
- "updated": "2026-11-17T17:04:23+09:00"
+ "updated": "2026-11-17T17:19:28+09:00"
 }
