@@ -1,0 +1,58 @@
+name: 실험 그림 (임시)
+
+# experiments/slime-dialogue 그림 만들기 (CF 키가 Secrets에만 있어서). 실험이 끝나면 이 파일을 지운다.
+on:
+  workflow_dispatch:
+    inputs:
+      names:
+        description: "만들 이름 앞부분(공백 구분, 비우면 전부)"
+        required: false
+        default: ""
+
+concurrency:
+  group: experiment-images
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  gen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q requests pillow
+      - name: 그림 만들기
+        env:
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          IMAGE_GEN_COUNT_FILE: ${{ runner.temp }}/count.json
+          NAMES: ${{ github.event.inputs.names }}
+        run: |
+          cp data/image_gen_count.json "$RUNNER_TEMP/base.json" 2>/dev/null || echo '{}' > "$RUNNER_TEMP/base.json"
+          cp "$RUNNER_TEMP/base.json" "$RUNNER_TEMP/count.json"
+          python agent/image_quota.py status
+          python experiments/slime-dialogue/gen.py $NAMES
+      - name: 커밋
+        if: ${{ !cancelled() }}
+        run: |
+          git config user.name "tokenwar-bot"
+          git config user.email "tokenwar-bot@users.noreply.github.com"
+          mkdir -p "$RUNNER_TEMP/gen" && cp -r experiments/slime-dialogue/gen/. "$RUNNER_TEMP/gen/" 2>/dev/null || true
+          for i in 1 2 3 4 5; do
+            git fetch -q origin main
+            git checkout -q -f -B tmp origin/main
+            mkdir -p experiments/slime-dialogue/gen && cp -r "$RUNNER_TEMP/gen/." experiments/slime-dialogue/gen/
+            git show origin/main:data/image_gen_count.json > "$RUNNER_TEMP/remote.json" 2>/dev/null || echo '{}' > "$RUNNER_TEMP/remote.json"
+            python agent/image_quota.py merge --base "$RUNNER_TEMP/base.json" --local "$RUNNER_TEMP/count.json" \
+              --remote "$RUNNER_TEMP/remote.json" --out data/image_gen_count.json
+            git add experiments/slime-dialogue/gen data/image_gen_count.json
+            git diff --cached --quiet && { echo "바뀐 것 없음"; exit 0; }
+            git commit -q -m "실험 그림: 대화형 슬라임 릴스"
+            git push -q origin HEAD:main && exit 0
+            sleep $((i * 5))
+          done
+          exit 1
