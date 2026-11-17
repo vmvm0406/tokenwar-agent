@@ -30,6 +30,12 @@ jsDelivr는 저장소가 50MB를 넘으면 403을 낼 수 있고, raw.githubuser
 '인스타는 됐고 스레드는 아직'인 게시물 = posts/published/<폴더>에 있고 published.json에 threads_id가 없는 것.
 스레드 이미지는 docs/media/<폴더>-th/에 두고, 스레드 게시가 끝날 때까지 지우지 않는다.
 스레드가 실패해도 인스타 게시는 성공으로 둔다 (published.json에 threads_error, threads_tries만 남김).
+
+중복 게시 막기 (2026-11-17 FPS 릴스 두 번 게시): 게시 기록 push가 실패하면 폴더가 queue에 남아 다음 실행이 또 올린다.
+그래서 올리기 전에 우리 계정 최근 게시물(GET /{ig-user-id}/media)을 보고, DEDUP_HOURS(12시간) 안에
+캡션 첫 줄이 같은 게시물이 있으면 다시 올리지 않고 그 게시물로 published.json을 쓴 뒤 published로 옮긴다
+(Zorcha 이슈는 이미 열렸으니 zorcha_todo 줄만). 조회가 실패하면 경고만 찍고 그대로 올린다.
+같은 조회로 published.json에 media_id가 비어 있는 최근 게시물(손으로 고친 기록)의 media_id를 permalink로 채운다.
 """
 import json
 import os
@@ -69,6 +75,8 @@ MEDIA_KEEP_MIN = int(CONFIG.get("media_keep_min", 120))  # 이보다 늦어진 �
 GH_TOKEN = os.environ.get("GITHUB_TOKEN", "")
 ZORCHA_TODO = ROOT / "data" / "zorcha_todo.md"
 ZORCHA_LABEL = "zorcha"
+DEDUP_HOURS = 12      # 이 시간 안에 캡션 첫 줄이 같은 게시물이 있으면 다시 올리지 않는다
+FILL_ID_HOURS = 48    # 이 시간 안 게시물 중 media_id가 빈 것만 채운다
 
 
 class PublishError(Exception):
@@ -331,8 +339,84 @@ def open_issue(title, body):
         return None, f"이슈 만들기 실패: {e}"
 
 
-def notify_zorcha(folder, post, permalink):
-    """dm 게시물이 올라가면 운영자에게 Zorcha 설정을 알린다 (이슈 + data/zorcha_todo.md). 예외를 밖으로 내지 않는다."""
+def first_line(text):
+    for line in (text or "").splitlines():
+        if line.strip():
+            return line.strip()
+    return ""
+
+
+def parse_ts(ts):
+    """인스타 timestamp('2026-11-17T12:19:05+0000')나 ISO 문자열 → datetime. 못 읽으면 None."""
+    for f in (lambda t: datetime.strptime(t, "%Y-%m-%dT%H:%M:%S%z"), datetime.fromisoformat):
+        try:
+            at = f(str(ts))
+            return at if at.tzinfo else at.replace(tzinfo=timezone.utc)
+        except (TypeError, ValueError):
+            pass
+    return None
+
+
+def recent_media(ig_id):
+    """우리 계정 최근 게시물 [{id, caption, permalink, timestamp}]. 조회 실패면 None (게시는 막지 않음)."""
+    if DRY:
+        fake = os.environ.get("DEDUP_FAKE_MEDIA")  # 시험용: 가짜 최근 게시물 목록(json 파일)
+        return json.loads(Path(fake).read_text(encoding="utf-8")) if fake else []
+    try:
+        return call("GET", f"{ig_id}/media", fields="id,caption,permalink,timestamp", limit="25").get("data") or []
+    except (PublishError, requests.RequestException, ValueError) as e:
+        print(f"  경고: 최근 게시물 조회 실패, 중복 확인 없이 진행: {e}")
+        return None
+
+
+def find_duplicate(post, media, now, hours=DEDUP_HOURS):
+    """media 중 hours 시간 안에 올라온, 캡션 첫 줄이 이 게시물과 같은 것 (없으면 None)."""
+    want = first_line(full_caption(post))
+    if not want:
+        return None
+    for m in media or []:
+        at = parse_ts(m.get("timestamp"))
+        if at is None or now - at > timedelta(hours=hours):
+            continue
+        if first_line(m.get("caption")) == want:
+            return m
+    return None
+
+
+def missing_id_folders(now):
+    """published.json에 media_id가 비어 있고 permalink만 있는 최근(FILL_ID_HOURS) 게시물 폴더."""
+    out = []
+    if not DONE.exists():
+        return out
+    for f in sorted(p for p in DONE.iterdir() if p.is_dir()):
+        state = read_json(f / "published.json")
+        if not state or state.get("media_id") or not state.get("permalink"):
+            continue
+        at = parse_ts(state.get("published_at"))
+        if at is not None and now - at <= timedelta(hours=FILL_ID_HOURS):
+            out.append(f)
+    return out
+
+
+def fill_missing_ids(media, now):
+    """media_id가 빈 최근 게시물에 permalink가 같은 게시물의 id를 채운다."""
+    by_link = {(m.get("permalink") or "").rstrip("/"): m for m in media or [] if m.get("permalink")}
+    for f in missing_id_folders(now):
+        state = read_json(f / "published.json")
+        m = by_link.get(state["permalink"].rstrip("/"))
+        if m:
+            state["media_id"] = m["id"]
+            at = parse_ts(m.get("timestamp"))
+            if at:  # 손으로 적은 대략의 시각을 인스타 기록으로
+                state["published_at"] = at.astimezone(timezone.utc).isoformat()
+            print(f"media_id 채움: {f.name} → {m['id']}")
+            if not DRY:
+                save_state(f, state)
+
+
+def notify_zorcha(folder, post, permalink, new_issue=True):
+    """dm 게시물이 올라가면 운영자에게 Zorcha 설정을 알린다 (이슈 + data/zorcha_todo.md). 예외를 밖으로 내지 않는다.
+    new_issue=False: 이슈는 이미 열린 것(중복 게시 막기로 건너뛴 게시물)이라 zorcha_todo 줄만 남긴다."""
     if not post.get("dm"):
         return
     try:
@@ -348,7 +432,7 @@ def notify_zorcha(folder, post, permalink):
             print(NL.join("    " + l for l in body.splitlines()))
             print(f"  [DRY] {ZORCHA_TODO.name}에 쌓을 줄: " + line.replace("ISSUE", "이슈 #?"))
             return
-        num, info = open_issue(title, body)
+        num, info = open_issue(title, body) if new_issue else (None, "이미 올라간 게시물이라 이슈를 새로 열지 않음")
         if num:
             print(f"  Zorcha 알림 이슈 #{num}: {info}")
         else:
@@ -456,6 +540,29 @@ def keep_threads_media(now):
     write_stage(wanted(recent_published(now), [(f, p) for f, p, _, _ in threads_pending(now)]))
 
 
+def account_id():
+    if IG_USER_ID:
+        print(f"계정 ID: {IG_USER_ID}")
+        return IG_USER_ID
+    me = call("GET", "me", fields="user_id,username")
+    print(f"계정: {me.get('username')} ({me.get('user_id') or me.get('id')})")
+    return me.get("user_id") or me.get("id")
+
+
+def finish(folder, post, result, new_issue=True):
+    """게시된 게시물: published.json을 쓰고 posts/published로 옮긴 뒤 Zorcha 알림."""
+    (folder / "published.json").write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+    if not DRY:
+        # 렌더링 원본 구간(clips/source.mp4)은 게시 뒤엔 필요 없다. 저장소가 커지지 않게 지운다.
+        (folder / "clips" / "source.mp4").unlink(missing_ok=True)
+        DONE.mkdir(parents=True, exist_ok=True)
+        shutil.move(str(folder), str(DONE / folder.name))
+    notify_zorcha(folder, post, result.get("permalink", ""), new_issue=new_issue)
+    if post.get("threads"):
+        print(f"  스레드는 {THREADS_DELAY_MIN}분 뒤 실행에서 올림" if threads.enabled()
+              else "  스레드 건너뜀 (THREADS_ACCESS_TOKEN 없음)")
+
+
 def main():
     if not TOKEN and not DRY:
         print("IG_ACCESS_TOKEN이 없음. GitHub 저장소 Settings › Secrets에 넣었는지 확인.")
@@ -479,6 +586,23 @@ def main():
                 print(f"건너뜀 (아직 렌더링 전, 렌더링 작업이 끝나면 다음 확인 때 올라감): {f.name}")
                 continue
             todo.append((f, post))
+    ig_id = None
+    if todo or missing_id_folders(now):
+        ig_id = account_id()
+        media = recent_media(ig_id)
+        if media:
+            fill_missing_ids(media, now)
+        # 이미 올라간 게시물(게시 기록 push 실패 등)은 다시 올리지 않고 기록만 맞춘다
+        for f, p in list(todo):
+            dup = find_duplicate(p, media, now) if media else None
+            if dup:
+                todo.remove((f, p))
+                print(f"이미 게시됨, 다시 올리지 않음: {f.name} → {dup.get('permalink') or dup['id']}")
+                at = parse_ts(dup.get("timestamp")) or now
+                finish(f, p, {"media_id": dup["id"], "permalink": dup.get("permalink", ""),
+                              "published_at": at.astimezone(timezone.utc).isoformat(),
+                              "note": "중복 게시 막기: 앞 실행이 이미 올렸고 게시 기록만 빠져 있어 다시 올리지 않음"},
+                       new_issue=False)
     pending = threads_pending(now)
     th_due = [(f, p, st) for f, p, st, go in pending if go]
     if not todo and not th_due:
@@ -496,14 +620,6 @@ def main():
         sys.exit(1)
 
     failed = False
-    if todo:
-        if IG_USER_ID:
-            ig_id = IG_USER_ID
-            print(f"계정 ID: {ig_id}")
-        else:
-            me = call("GET", "me", fields="user_id,username")
-            ig_id = me.get("user_id") or me.get("id")
-            print(f"계정: {me.get('username')} ({ig_id})")
     for folder, post in todo:
         print(f"게시: {folder.name} ({post['type']})")
         try:
@@ -519,17 +635,8 @@ def main():
                 mw = check_published_media(media_id)
                 if mw:
                     result["media_warnings"] = mw
-            (folder / "published.json").write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
-            if not DRY:
-                # 렌더링 원본 구간(clips/source.mp4)은 게시 뒤엔 필요 없다. 저장소가 커지지 않게 지운다.
-                (folder / "clips" / "source.mp4").unlink(missing_ok=True)
-                DONE.mkdir(parents=True, exist_ok=True)
-                shutil.move(str(folder), str(DONE / folder.name))
             print(f"  완료: {link or media_id}")
-            notify_zorcha(folder, post, link)
-            if post.get("threads"):
-                print(f"  스레드는 {THREADS_DELAY_MIN}분 뒤 실행에서 올림" if threads.enabled()
-                      else "  스레드 건너뜀 (THREADS_ACCESS_TOKEN 없음)")
+            finish(folder, post, result)
         except PublishError as e:
             failed = True
             print(f"  실패: {e}")

@@ -58,6 +58,5 @@ jobs:
             echo "바뀐 것 없음"
           else
             git commit -m "게시 결과 기록"
-            git pull --rebase
-            git push
+            bash scripts/push-retry.sh
           fi
