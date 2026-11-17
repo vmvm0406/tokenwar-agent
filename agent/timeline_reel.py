@@ -408,8 +408,8 @@ def check_timeline(post):
         if not txt or len(txt) > 12:
             errors.append(f"timeline.beats {j}: text(특징 한 줄)는 1~12자 (빠른 그림은 0.5초): '{txt}'")
         im = b.get("image") or {}
-        if not (im.get("src") and (im.get("prompt") or im.get("url"))):
-            errors.append(f"timeline.beats {j}: image {{type, src, prompt 또는 url}} 필요")
+        if not (im.get("src") and (im.get("prompt") or im.get("url") or im.get("shot") or im.get("credit"))):
+            errors.append(f"timeline.beats {j}: image {{type, src, prompt·url·shot 또는 credit(직접 찍은 공식 발표 화면)}} 필요")
     rh = tl.get("rehook")
     if rh:
         if not (str(rh.get("after", ""))[:4].isdigit() and rh.get("big")):
