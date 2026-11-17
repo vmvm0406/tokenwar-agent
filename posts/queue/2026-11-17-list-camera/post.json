@@ -94,7 +94,6 @@
         "src": "img/list/07.jpg",
         "mascot": true,
         "prompt": "Completely change the camera position and lens; do not keep the reference framing, the reference is only for the slime's look and the place. New camera: bird's-eye view, the camera directly overhead pointing straight down, perfectly vertical top-down view. The slime is seen from the very top: only the top of its round head and two ears, small in the middle of the frame. The frame is filled with the pattern of wet paving stones of the alley, the edge of the cafe step and the warm light spilling from the door onto the ground. No walls or sky visible, flat map-like view. Keep the same slime character shape and color, same narrow Seoul alley with the small cafe at night, warm cafe light, wet pavement. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ref": "img/list/scene.jpg",
         "ai_generated": true
       },
       {
@@ -105,7 +104,6 @@
         "src": "img/list/08.jpg",
         "mascot": true,
         "prompt": "Completely change the camera position and lens; do not keep the reference framing, the reference is only for the slime's look and the place. New camera: Dutch angle. The whole image is rotated 25 degrees clockwise: the horizon, the cafe door frame, the building edges and the slime are all strongly tilted diagonally across the frame. No vertical line in the image is upright. Tense, uneasy mood. Keep the same slime character shape and color, same narrow Seoul alley with the small cafe at night, warm cafe light, wet pavement. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ref": "img/list/scene.jpg",
         "ai_generated": true
       },
       {
@@ -127,7 +125,6 @@
         "src": "img/list/10.jpg",
         "mascot": true,
         "prompt": "Completely change the camera position and lens; do not keep the reference framing, the reference is only for the slime's look and the place. New camera: 85mm lens at f/1.2, extremely shallow depth of field. The camera is close to the slime at its eye level. Only the slime is razor sharp. Everything behind it is completely melted into a smooth blur: the cafe, the signs and the alley become large soft round bokeh circles of warm orange and white light filling the background. No background details readable at all, the wet ground in front is also blurred. Keep the same slime character shape and color, same narrow Seoul alley with the small cafe at night, warm cafe light, wet pavement. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ref": "img/list/scene.jpg",
         "ai_generated": true
       },
       {
@@ -171,7 +168,6 @@
         "src": "img/list/14.jpg",
         "mascot": true,
         "prompt": "Completely change the camera position and lens; do not keep the reference framing, the reference is only for the slime's look and the place. New camera: tilt-shift miniature photo. The camera is high up and far away, looking down diagonally at the whole alley from a rooftop. The alley, the cafe, the doors and the tiny slime on the step look like a toy miniature model. Only a thin horizontal band in the middle where the slime sits is sharp. The top third and the bottom third of the image are heavily blurred. Saturated colors, toy-like look. Keep the same slime character shape and color, same narrow Seoul alley with the small cafe at night, warm cafe light, wet pavement. Photorealistic 3D render, vertical 4:5, no text, no letters.",
-        "ref": "img/list/scene.jpg",
         "ai_generated": true
       },
       {
