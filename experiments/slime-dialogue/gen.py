@@ -69,25 +69,41 @@ COMP = {   # 회사: [(후보, 묘사, seed)]  로고 모양·색을 본뜬 몸 
 }
 
 
+SET = ("A cozy miniature 3D diorama set in soft matte clay / vinyl toy style, rounded chunky shapes, empty scene with "
+       "no characters, no people, no animals, no text, no letters, no logos. Dim evening lighting, dark charcoal walls, "
+       "soft lime green accent glow, gentle depth of field, eye-level front view. ")
+SCENES = {   # 무대 (세로 1088x1920). 캐릭터는 코드로 앞에 합성하므로 앞쪽 바닥·책상 위를 비워 둔다
+    "scene-desk": (SET + "A chunky rounded wooden desk across the lower third, a big rounded computer monitor in the "
+                   "middle of the desk with a softly glowing blank green-tinted screen, a small desk lamp, a mug, a "
+                   "small plant. The front half of the desk top is empty and clear.", 11),
+    "scene-meeting": (SET + "A small meeting room: a rounded table in the lower third seen from the front, a blank "
+                      "whiteboard on the back wall, two soft pendant lights, a potted plant in the corner. The table "
+                      "top is empty and clear.", 22),
+}
+
+
 def jobs():
     for k, face in FACE.items():
-        yield f"host-{k}", (MASCOT_KEEP + BG + face, MASCOT_SEED, True)
+        yield f"host-{k}", (MASCOT_KEEP + BG + face, MASCOT_SEED, True, (1088, 1360))
     for c, cands in COMP.items():
         for tag, desc, seed in cands:
-            yield f"{c}-{tag}", (STYLE + desc, seed, False)
+            yield f"{c}-{tag}", (STYLE + desc, seed, False, (1088, 1360))
+    for name, (prompt, seed) in SCENES.items():
+        for tag, s in (("A", seed), ("B", seed + 100)):
+            yield f"{name}-{tag}", (prompt, s, False, (1088, 1920))
 
 
 def main(names):
     ref = ref_png(MASCOT_BASE)
     OUT.mkdir(parents=True, exist_ok=True)
     made = 0
-    for name, (prompt, seed, use_ref) in jobs():
+    for name, (prompt, seed, use_ref, (w, h)) in jobs():
         out = OUT / f"{name}.jpg"
         if out.exists() or (names and not any(name.startswith(n) for n in names)):
             continue
         print("make", name, flush=True)
         try:
-            save_jpeg(ai_generate(prompt, 1088, 1360, seed, ref if use_ref else None), out)
+            save_jpeg(ai_generate(prompt, w, h, seed, ref if use_ref else None), out)
             made += 1
         except Exception as e:   # 한 장 실패해도 나머지는 계속 (상한이면 멈춤)
             print("  fail", name, type(e).__name__, str(e)[:200], flush=True)
