@@ -72,6 +72,10 @@
 - **Zorcha 설정 알림:** 같은 스크립트가 origin/main의 `data/zorcha_todo.md`(publish.py가 dm 게시물을 올릴 때마다 한 줄) 중 GitHub 이슈(라벨 zorcha)가 아직 열린 줄을 `%USERPROFILE%\tokenwar-daily\data\zorcha_alerts.md`(확인 시각 + 목록, 처음 본 줄은 '(새로)', 없으면 '없음', 매번 덮어씀, git에 안 올림)와 `logs/<월>-watch.log`에 남긴다. 이미 본 줄은 `data/zorcha_seen.txt`. 지휘 세션이 이 파일을 읽어 최상위 세션에 "Zorcha 설정 필요: <제목> + 인스타 링크 + dm.md"로 알린다. 운영자가 설정을 끝내고 이슈를 닫으면 목록에서 빠진다.
 - 손으로 보기: `py -3.12 agent/approve.py --pending --hours 24` (작업 폴더 posts/queue).
 
+### 스토리 (운영자 결정 2026-11-17)
+
+게시된 게시물은 publish.py가 바로 스토리로도 올린다 (릴스 = 같은 영상, 60초 넘으면 앞 59.5초 / 카드뉴스 = 1번 장). 결과는 published.json `story_id`·`story_at`·`story_media`, 실패하면 `story_error` (피드 게시는 그대로 성공). 실패했거나 예전 게시물을 한꺼번에 올릴 때: `gh workflow run stories-backfill.yml -f dry_run=true`로 목록을 본 뒤 `-f dry_run=false` (`gap_min` 기본 2분, `limit`). 인스타에서 지운 게시물과 published.json에 `status`가 있는 게시물은 건너뛴다. 하이라이트에 넣기는 운영자가 직접 (STYLE_GUIDE 7-3).
+
 ## 4. 끝
 
 마지막 출력에 한 줄 요약(만든 것, PR 링크, 게시 시각, 건너뛴 것과 이유)을 남긴다. `logs/`에 저장된다.

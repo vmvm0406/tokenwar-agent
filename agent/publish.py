@@ -36,12 +36,22 @@ jsDelivr는 저장소가 50MB를 넘으면 403을 낼 수 있고, raw.githubuser
 캡션 첫 줄이 같은 게시물이 있으면 다시 올리지 않고 그 게시물로 published.json을 쓴 뒤 published로 옮긴다
 (Zorcha 이슈는 이미 열렸으니 zorcha_todo 줄만). 조회가 실패하면 경고만 찍고 그대로 올린다.
 같은 조회로 published.json에 media_id가 비어 있는 최근 게시물(손으로 고친 기록)의 media_id를 permalink로 채운다.
+
+스토리 (2026-11-17 운영자 "게시물을 스토리로 올려"): 피드 게시가 끝나면 같은 게시물을 스토리로도 올린다
+(media_type=STORIES). 릴스는 같은 영상(60초가 넘으면 앞 59.5초로 잘라서, ffmpeg가 없으면 cover.jpg 사진),
+카드뉴스는 1번 장 사진(slides/01.jpg). post.json "story": false면 건너뛴다. published.json에 story_id·story_at
+(실패면 story_error)을 남기고, story_id가 있으면 다시 올리지 않는다. 스토리가 실패해도 피드 게시는 성공으로 둔다.
+중복 게시 막기로 건너뛴 게시물은 앞 실행이 스토리도 올렸을 수 있어 올리지 않는다 (story_skipped).
+지금 올라가 있는 게시물을 한꺼번에: python agent/publish.py --stories-backfill (stories-backfill.yml,
+STORY_GAP_MIN 간격, 인스타에서 지운 게시물·published.json status가 있는 게시물은 건너뜀).
 """
 import json
 import os
 import shutil
 import subprocess
+import re
 import sys
+import tempfile
 import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -75,6 +85,8 @@ MEDIA_KEEP_MIN = int(CONFIG.get("media_keep_min", 120))  # 이보다 늦어진 �
 GH_TOKEN = os.environ.get("GITHUB_TOKEN", "")
 ZORCHA_TODO = ROOT / "data" / "zorcha_todo.md"
 ZORCHA_LABEL = "zorcha"
+STORY_MAX_SEC = 60    # 스토리 영상 최대 길이 (Graph API). 넘으면 앞부분만
+STORY_TMP = Path(tempfile.gettempdir()) / "tokenwar-story"
 DEDUP_HOURS = 12      # 이 시간 안에 캡션 첫 줄이 같은 게시물이 있으면 다시 올리지 않는다
 FILL_ID_HOURS = 48    # 이 시간 안 게시물 중 media_id가 빈 것만 채운다
 
@@ -188,12 +200,14 @@ def stage(files):
     raise PublishError("docs/media push 실패")
 
 
-def media_url(folder, rel, name=None):
+def media_url(folder, rel, name=None, src=None):
+    """src: 원본이 게시물 폴더 밖에 있을 때(스토리용으로 자른 영상) 그 경로."""
     url = f"{MEDIA_BASE}/{name or stage_name(folder)}/{rel}"
     if DRY:
         return url
+    src = Path(src) if src else folder / rel
     # Pages 배포가 끝나 주소가 실제로 열리는지 확인 (크기·종류까지). 확인 요청엔 ?v=를 붙여 404가 캐시되지 않게 한다.
-    size = (folder / rel).stat().st_size
+    size = src.stat().st_size
     want = CONTENT_TYPES.get(Path(rel).suffix.lower(), "")
     for _ in range(48):  # 최대 12분
         try:
@@ -204,7 +218,7 @@ def media_url(folder, rel, name=None):
                 if want.startswith("image/"):
                     import hashlib
                     g = requests.get(url, timeout=60)
-                    if g.status_code != 200 or hashlib.sha256(g.content).digest() != hashlib.sha256((folder / rel).read_bytes()).digest():
+                    if g.status_code != 200 or hashlib.sha256(g.content).digest() != hashlib.sha256(src.read_bytes()).digest():
                         time.sleep(15)
                         continue
                 return url
@@ -316,6 +330,130 @@ def check_published_media(media_id):
     for w in warns:
         print(f"  경고: {w}")
     return warns
+
+
+def ffmpeg_exe():
+    """ffmpeg 경로 (PATH, 없으면 pip imageio-ffmpeg). 없으면 None."""
+    exe = shutil.which("ffmpeg")
+    if exe:
+        return exe
+    try:
+        import imageio_ffmpeg
+        return imageio_ffmpeg.get_ffmpeg_exe()
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def video_seconds(path):
+    """영상 길이(초). ffmpeg -i 출력의 Duration을 읽는다. 모르면 None."""
+    exe = ffmpeg_exe()
+    if not exe:
+        return None
+    r = subprocess.run([exe, "-hide_banner", "-i", str(path)], capture_output=True, text=True,
+                       encoding="utf-8", errors="replace")
+    m = re.search(r"Duration:\s*(\d+):(\d+):(\d+(?:\.\d+)?)", r.stderr)
+    return int(m[1]) * 3600 + int(m[2]) * 60 + float(m[3]) if m else None
+
+
+def trim_video(src, dst, seconds):
+    """src 앞 seconds초를 dst로 (다시 인코딩, 끝 0.5초 소리 페이드). 실패하면 False."""
+    exe = ffmpeg_exe()
+    if not exe:
+        return False
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    r = subprocess.run([exe, "-y", "-v", "error", "-i", str(src), "-t", f"{seconds:.2f}",
+                        "-af", f"afade=t=out:st={seconds - 0.5:.2f}:d=0.5",
+                        "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-pix_fmt", "yuv420p",
+                        "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart", str(dst)],
+                       capture_output=True, text=True, encoding="utf-8", errors="replace")
+    if r.returncode or not dst.exists():
+        print(f"  스토리 영상 자르기 실패: {r.stderr.strip()[:200]}")
+        return False
+    return True
+
+
+_story_cache = {}
+
+
+def story_media(folder, post):
+    """스토리에 쓸 미디어 (docs/media 안 상대 이름, 원본 경로, "VIDEO"|"IMAGE"). 올리지 않으면 None."""
+    if post.get("story") is False:
+        return None
+    key = folder.name
+    if key in _story_cache:
+        return _story_cache[key]
+    out = None
+    if post["type"] == "carousel":
+        f = folder / "slides" / "01.jpg"
+        out = ("slides/01.jpg", f, "IMAGE") if f.exists() else None
+    elif (folder / "reel.mp4").exists():
+        sec = video_seconds(folder / "reel.mp4")
+        if sec is None or sec <= STORY_MAX_SEC:
+            out = ("reel.mp4", folder / "reel.mp4", "VIDEO")
+        else:
+            cut = STORY_MAX_SEC - 0.5
+            tmp = STORY_TMP / f"{folder.name}.mp4"
+            if trim_video(folder / "reel.mp4", tmp, cut):
+                print(f"  스토리: {sec:.1f}초 릴스를 앞 {cut:g}초로 자름 ({folder.name})")
+                out = ("story.mp4", tmp, "VIDEO")
+            elif (folder / "cover.jpg").exists():
+                print(f"  스토리: {sec:.1f}초 릴스, ffmpeg가 없어 cover.jpg 사진으로 ({folder.name})")
+                out = ("cover.jpg", folder / "cover.jpg", "IMAGE")
+    _story_cache[key] = out
+    return out
+
+
+def story_files(items):
+    """docs/media에 올려 둘 스토리 미디어 {docs/media 안 경로: 원본 경로}."""
+    files = {}
+    for folder, post in items:
+        try:
+            sm = story_media(folder, post)
+        except Exception as e:  # noqa: BLE001  스토리 준비 실패로 피드 게시를 막지 않는다
+            print(f"  경고: 스토리 미디어 준비 실패 ({folder.name}): {e}")
+            _story_cache[folder.name] = None
+            continue
+        if sm:
+            files[f"{stage_name(folder)}/{sm[0]}"] = sm[1]
+    return files
+
+
+def publish_story(ig_id, folder, post):
+    """스토리 하나를 올리고 (story_id, 쓴 미디어 이름). 실패하면 PublishError."""
+    sm = story_media(folder, post)
+    if not sm:
+        raise PublishError("스토리에 쓸 미디어 없음")
+    rel, src, kind = sm
+    url = media_url(folder, rel, src=src)
+    if kind == "VIDEO":
+        c = call("POST", f"{ig_id}/media", media_type="STORIES", video_url=url)
+        wait_ready(c["id"], 10)
+    else:
+        c = call("POST", f"{ig_id}/media", media_type="STORIES", image_url=url)
+        wait_ready(c["id"], 3)
+    return call("POST", f"{ig_id}/media_publish", creation_id=c["id"])["id"], rel
+
+
+def add_story(ig_id, folder, post, state):
+    """피드 게시가 끝난 게시물을 스토리로도 올리고 state(published.json 내용)에 기록한다.
+    예외를 밖으로 내지 않는다 (피드 게시는 이미 성공). 올렸으면 True."""
+    if state.get("story_id"):
+        return False
+    if post.get("story") is False:
+        state["story_skipped"] = "post.json story: false"
+        return False
+    try:
+        sid, rel = publish_story(ig_id, folder, post)
+        state["story_id"] = sid
+        state["story_at"] = datetime.now(timezone.utc).isoformat()
+        state["story_media"] = rel
+        state.pop("story_error", None)
+        print(f"  스토리 완료: {sid} ({rel})")
+        return True
+    except Exception as e:  # noqa: BLE001  스토리 실패로 피드 게시 기록이 틀어지면 안 된다
+        state["story_error"] = str(e)[:500]
+        print(f"  경고: 스토리 실패 (피드 게시는 그대로 성공): {e}")
+        return False
 
 
 def open_issue(title, body):
@@ -601,7 +739,8 @@ def main():
                 at = parse_ts(dup.get("timestamp")) or now
                 finish(f, p, {"media_id": dup["id"], "permalink": dup.get("permalink", ""),
                               "published_at": at.astimezone(timezone.utc).isoformat(),
-                              "note": "중복 게시 막기: 앞 실행이 이미 올렸고 게시 기록만 빠져 있어 다시 올리지 않음"},
+                              "note": "중복 게시 막기: 앞 실행이 이미 올렸고 게시 기록만 빠져 있어 다시 올리지 않음",
+                              "story_skipped": "중복 게시 막기 (앞 실행이 스토리도 올렸을 수 있음)"},
                        new_issue=False)
     pending = threads_pending(now)
     th_due = [(f, p, st) for f, p, st, go in pending if go]
@@ -614,7 +753,7 @@ def main():
     th_posts = [(f, p) for f, p in todo if p.get("threads") and threads.enabled()]
     th_posts += [(f, p) for f, p, _, _ in pending]
     try:
-        stage(wanted(todo + recent_published(now), th_posts))
+        stage({**wanted(todo + recent_published(now), th_posts), **story_files(todo)})
     except (PublishError, subprocess.CalledProcessError) as e:
         print(f"미디어 올리기 실패: {e}")
         sys.exit(1)
@@ -636,6 +775,7 @@ def main():
                 if mw:
                     result["media_warnings"] = mw
             print(f"  완료: {link or media_id}")
+            add_story(ig_id, folder, post, result)
             finish(folder, post, result)
         except PublishError as e:
             failed = True
@@ -652,5 +792,104 @@ def main():
         sys.exit(1)
 
 
+def backfill_candidates():
+    """스토리가 아직 없는 게시된 게시물 [(폴더, post, state)], 게시 순(오래된 것부터). 운영자가 지운 것(status)은 뺀다."""
+    out = []
+    if not DONE.exists():
+        return out
+    for f in sorted(p for p in DONE.iterdir() if p.is_dir()):
+        post, state = read_json(f / "post.json"), read_json(f / "published.json")
+        if not post or not state:
+            continue
+        why = ("status: " + str(state["status"])[:40] if state.get("status")
+               else "story_id 있음" if state.get("story_id")
+               else "story_skipped" if state.get("story_skipped")
+               else "post.json story: false" if post.get("story") is False
+               else "media_id 없음" if not state.get("media_id") else "")
+        if why:
+            print(f"건너뜀 ({why}): {f.name}")
+            continue
+        out.append((f, post, state))
+    out.sort(key=lambda t: parse_ts(t[2].get("published_at")) or datetime.min.replace(tzinfo=timezone.utc))
+    return out
+
+
+def live_media_ids(ig_id):
+    """지금 인스타에 남아 있는 우리 게시물 id 집합 (최근 200개까지). 조회 실패면 PublishError."""
+    if DRY:
+        fake = os.environ.get("DEDUP_FAKE_MEDIA")  # 시험용: 가짜 게시물 목록(json 파일)
+        if fake:
+            return {m["id"] for m in json.loads(Path(fake).read_text(encoding="utf-8"))}
+        if not TOKEN:
+            return None
+    # 읽기만 하는 조회라 DRY_RUN에서도 실제로 묻는다 (시험 실행에서 건너뛸 게시물을 미리 보려고)
+    ids, after = set(), None
+    for _ in range(4):
+        params = {"fields": "id,permalink", "limit": "50", **({"after": after} if after else {})}
+        r = requests.get(f"{API}/{ig_id}/media", params=params, headers={"Authorization": f"Bearer {TOKEN}"}, timeout=60)
+        j = r.json()
+        if r.status_code >= 400 or "error" in j:
+            raise PublishError(f"게시물 목록 조회 실패 ({r.status_code}): {(j.get('error') or {}).get('message', '')}")
+        ids |= {m["id"] for m in j.get("data") or []}
+        after = ((j.get("paging") or {}).get("cursors") or {}).get("after")
+        if not after or not (j.get("paging") or {}).get("next"):
+            break
+    return ids
+
+
+def backfill_stories():
+    """지금 올라가 있는 게시물 중 스토리가 없는 것을 오래된 것부터 스토리로 (STORY_GAP_MIN분 간격, 기본 2).
+    STORY_LIMIT: 앞에서부터 이 개수만 (0이면 전부)."""
+    if not TOKEN and not DRY:
+        print("IG_ACCESS_TOKEN이 없음.")
+        sys.exit(1)
+    gap = float(os.environ.get("STORY_GAP_MIN") or 2)
+    limit = int(os.environ.get("STORY_LIMIT") or 0)
+    cands = backfill_candidates()
+    ig_id = account_id()
+    live = live_media_ids(ig_id)
+    if live is not None:
+        for f, _, st in cands:
+            if st["media_id"] not in live:
+                print(f"건너뜀 (인스타에 없음, 지운 게시물): {f.name}")
+        cands = [(f, p, st) for f, p, st in cands if st["media_id"] in live]
+    if limit:
+        cands = cands[:limit]
+    print(f"스토리로 올릴 게시물 {len(cands)}개 (간격 {gap:g}분):")
+    files = story_files([(f, p) for f, p, _ in cands])
+    for f, p, st in cands:
+        sm = _story_cache.get(f.name)
+        print(f"  {st.get('published_at', '')[:16]}  {f.name}  → {sm[0] if sm else '(미디어 없음)'}")
+    if not cands:
+        return
+    try:
+        # 최근 게시물 미디어·스레드를 기다리는 이미지는 그대로 두고 스토리 미디어를 더한다
+        now = datetime.now(timezone.utc)
+        keep = wanted(recent_published(now), [(f, p) for f, p, _, _ in threads_pending(now)])
+        stage({**keep, **files})
+    except (PublishError, subprocess.CalledProcessError) as e:
+        print(f"미디어 올리기 실패: {e}")
+        sys.exit(1)
+    ok = fail = 0
+    for i, (f, p, st) in enumerate(cands):
+        if i and not DRY:
+            time.sleep(gap * 60)
+        print(f"스토리: {f.name}")
+        if add_story(ig_id, f, p, st):
+            ok += 1
+        else:
+            fail += 1
+        if not DRY:
+            save_state(f, st)
+    print(f"스토리 {ok}개 올림, 실패 {fail}개")
+    if not DRY:
+        keep_threads_media(datetime.now(timezone.utc))  # 스토리용 미디어는 내린다 (워크플로 마지막 단계가 커밋)
+    if fail:
+        sys.exit(1)
+
+
 if __name__ == "__main__":
-    main()
+    if "--stories-backfill" in sys.argv[1:]:
+        backfill_stories()
+    else:
+        main()

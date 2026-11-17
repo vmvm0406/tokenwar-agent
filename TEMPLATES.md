@@ -420,6 +420,10 @@ ChatGPT를 씁니다",
 
 `"length": "short"` (20~35초, 가장 강한 구간·결과 하나) 또는 `"long"` (1분 언저리). 길이별 시청 비율 비교용(data/reel_insights.md, 계정 분석 에이전트가 읽음). 없으면 길이로 짐작한다. STYLE_GUIDE 6장.
 
+## 모든 게시물 공통: `story` (선택)
+
+기본은 스토리로도 올린다 (publish.py, 피드 게시 직후. 릴스 = 같은 영상, 60초가 넘으면 앞 59.5초 / 카드뉴스 = `slides/01.jpg`). 스토리로 올리지 않을 게시물만 `"story": false`. 결과는 published.json `story_id`, `story_at`, `story_media` (실패면 `story_error`, 건너뛰면 `story_skipped`). STYLE_GUIDE 7-3.
+
 ## 모든 게시물 공통: `threads` (선택, 스레드 글)
 
 같은 소식의 스레드(Threads) 글 버전. 없으면 스레드에 올리지 않는다 (예전 게시물 그대로). 캡션을 쓸 때 같이 쓴다. 쓰는 법은 STYLE_GUIDE 7-2.

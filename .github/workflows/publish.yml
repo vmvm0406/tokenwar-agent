@@ -31,7 +31,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      - run: pip install requests pillow
+      # imageio-ffmpeg: 60초 넘는 릴스를 스토리용으로 앞 59.5초만 자를 때 (agent/publish.py story_media)
+      - run: pip install requests pillow imageio-ffmpeg
 
       - name: git 사용자 (게시할 미디어를 docs/media로 push할 때 씀)
         run: |
