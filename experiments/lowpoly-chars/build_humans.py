@@ -20,6 +20,9 @@ ONLY = argv[argv.index("--only") + 1].split(",") if "--only" in argv else ["jens
 OUT = B.OUT
 
 SKIN = "#EDBF98"
+# 면 수: 삼각형을 더 잘게 나눈 각진 로우폴리 (운영자 2026-11-18 "일반 남성은 그대로, 삼각형 좀 더 세부적으로")
+FACES = dict(head=1400, hair=1000, body=4200)
+FACET_SMOOTH, FACET_JITTER = 1, 0.11   # 덜 매끈하게 + 면마다 명암 차이 → 각이 보이게
 HUMANS = {
     "jensen": dict(
         skin="#D7A07A", hair="#7E7E7A", top="#1A1A1C", top_rough=0.32, tee="#34343A",
@@ -79,6 +82,7 @@ def capsule_into(bm, a, b, r):
 
 
 def blob(name, shapes, faces, color, rough=0.68, voxel=0.018, smooth=4, jitter=0.07, color_fn=None):
+    smooth, jitter = min(smooth, FACET_SMOOTH + 1), max(jitter, FACET_JITTER)
     """shapes: [('e', 중심, 반지름3) | ('c', a, b, r)] → 합쳐 리메시 → 매끈 → 면 줄이기 → 평면 셰이딩 + 면 색."""
     bm = bmesh.new()
     for s in shapes:
@@ -107,14 +111,14 @@ def make_head(key, cfg, mats):
                                       ("e", (0, -0.07, 0.40), (0.05, 0.045, 0.04))]  # 코
     skin = skin + [("e", (0.41, -0.02, 0), (0.06, 0.10, 0.07)),       # 귀
                    ("e", (-0.41, -0.02, 0), (0.06, 0.10, 0.07))]
-    head = blob(f"{key}_head", skin, 700, cfg["skin"], rough=0.72, voxel=0.014)
+    head = blob(f"{key}_head", skin, FACES["head"], cfg["skin"], rough=0.72, voxel=0.014)
     head.parent = grp
     hs = [("e", *cfg["hair_main"])] + [("e", *h) for h in cfg["hair_extra"]]
     hfn = None
     if cfg.get("hair_streak"):  # 앞→뒤로 흐르는 짙은 줄무늬
         hc, sc_ = B.hex2rgb(cfg["hair"]), B.hex2rgb(cfg["hair_streak"])
         hfn = lambda c: sc_ if math.sin(c.x * 26 + c.z * 3 + c.y * 4) > 0.45 else hc
-    hair = blob(f"{key}_hair", hs, 520, cfg["hair"], rough=0.8, voxel=0.016, smooth=3, jitter=0.08, color_fn=hfn)
+    hair = blob(f"{key}_hair", hs, FACES["hair"], cfg["hair"], rough=0.8, voxel=0.016, smooth=3, jitter=0.08, color_fn=hfn)
     hair.parent = grp
     bpy.context.view_layer.update()
     m2 = {**mats, "brow": B.material(f"{key}_brow", B.hex2rgb(cfg.get("brow", "#222222")), rough=0.8),
@@ -189,7 +193,7 @@ def make_body(key, cfg):
         if tee_c and c.y < -0.08 and c.z > 0.88 and ax < 0.035 + (c.z - 0.88) * 0.33:   # 열린 재킷 안 티셔츠(V)
             return tee_c
         return top_c
-    return blob(f"{key}_body", S, 2600, cfg["top"], cfg["top_rough"], voxel=0.016, smooth=8, color_fn=color)
+    return blob(f"{key}_body", S, FACES["body"], cfg["top"], cfg["top_rough"], voxel=0.016, smooth=8, color_fn=color)
 
 
 def skin_to(ob, ao):

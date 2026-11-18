@@ -5,6 +5,7 @@
 | 파일 | 내용 |
 |---|---|
 | `jensen.glb` | 젠슨 황 기본 (입 오므려 말하는 얼굴). 각진 로우폴리 + 사진 질감 70% + 입체 하프림 안경 + 귀 |
+| `man.glb` | 일반 남성 (손으로 빚은 화풍 + 잘게 나눈 각진 로우폴리, 뼈대 13개, 표정 부품 7종). 만든 법 `build_humans.py --only man` |
 | `jensen_closed.glb` | 표정: 입 다문 평온 (말 안 할 때·입 닫힘) |
 
 - 만든 스크립트: `experiments/lowpoly-chars/jensen_n64.py` (모양), `make_expressions.py`(표정 사진 맞추기), `blend_photo.py`(사진 70% + 사진 속 안경 지우기). 2026-11-18 운영자 확정.
