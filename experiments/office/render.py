@@ -67,7 +67,30 @@ def trim_silence(a, sr=16000, th=0.01):
 LEAD = 0.4   # 첫 대사 전 여유
 
 
+def tts_single(l):
+    """한 대사를 지정 모델로 따로 (예: v3가 발음을 뭉갤 때 v2, 운영자 2026-11-18 '조롱'). tts_dialogue와 같은 모양으로 돌려줌."""
+    sys.path.insert(0, str(ROOT / "agent"))
+    import tts
+    v = VOICES["voices"][l["who"]]
+    body = {"text": l["say"], "model_id": l["model"], "voice_settings": {"stability": 0.5, "similarity_boost": 0.75, "style": 0.3}}
+    h = hashlib.sha256(json.dumps([v["voice_id"], body], ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:20]
+    f = CACHE / f"one_{h}.mp3"
+    if not f.exists():
+        CACHE.mkdir(parents=True, exist_ok=True)
+        f.write_bytes(tts._eleven(f"/text-to-speech/{v['voice_id']}?output_format=mp3_44100_128", tts.eleven_key(), body, accept="audio/mpeg"))
+        print(f"  ElevenLabs {len(l['say'])}자 ({l['who']}, {l['model']})", file=sys.stderr)
+    if SPEED != 1.0:
+        fs = f.with_name(f.stem + f"_x{SPEED:.2f}.mp3")
+        if not fs.exists():
+            subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(f), "-af", f"atempo={SPEED}", "-b:a", "192k", str(fs)], check=True)
+        f = fs
+    dur = len(decode(f)) / 16000
+    return f, {"segs": [[0.0, dur]], "ranges": [[0, len(l["say"])]], "chars": [], "starts": []}
+
+
 def tts_dialogue(lines_in):
+    if len(lines_in) == 1 and lines_in[0].get("model"):
+        return tts_single(lines_in[0])
     """대사 묶음을 한 번에 (ElevenLabs text-to-dialogue, v3): 대사 사이가 자연스럽게 이어진다 (운영자 2026-11-18 '뚝뚝 끊김').
     → (mp3, 대사별 [시작, 끝]초). 같은 대본이면 캐시."""
     sys.path.insert(0, str(ROOT / "agent"))
@@ -106,7 +129,7 @@ def tts_dialogue(lines_in):
     return f, d
 
 
-SPEED = 1.12
+SPEED = 1.22   # 운영자 2026-11-18 '전체적으로 말 더 빨리' (1.12 → 1.22)
 
 
 CLIP_FPS = 15
@@ -223,13 +246,13 @@ def build(script):
     for i, l in enumerate(script["lines"]):
         if l.get("overlay"):          # 겹쳐 나오는 소리(예: 흥얼거림)는 대화 순서 밖 → 아래에서 따로
             continue
-        if l.get("break") and cur:
+        if (l.get("break") is not None or l.get("model") or (cur and script["lines"][cur[-1]].get("model"))) and cur:
             groups.append(cur); cur = []
         cur.append(i)
     groups.append(cur)
     hop, lines, parts, t0 = 16000 // FPS, [None] * len(script["lines"]), [], lead
     for gi, g in enumerate(groups):
-        t0 += script["lines"][g[0]].get("break", 0) if gi else 0
+        t0 += script["lines"][g[0]].get("break", 0.12) if gi else 0
         mp3, dd = tts_dialogue([script["lines"][i] for i in g])
         segs = [list(s) for s in dd["segs"]]
         # 대사 구간은 voice_segments보다 글자 시각이 정확함 (같은 사람이 이어 말할 때 경계가 1초쯤 어긋남) → 말한 글자 첫·끝으로
@@ -272,8 +295,11 @@ def build(script):
         lines[i] = {"who": l["who"], "t": round(t, 3), "dur": round(len(seg) / 16000, 3), "env": [round(e / peak * 0.7, 3) for e in env],
                     "sub": None, "subs": None, "emo": l.get("emo"), "note": None, "src": str(mp3), "ofs": round(s0, 3), "overlay": True}
 
-    def at(e):
-        return e["t"] if "t" in e else lines[e["line"]]["t"] + e.get("dt", 0)
+    def at(e):   # "end": true → 그 대사 끝 기준
+        if "t" in e:
+            return e["t"]
+        L_ = lines[e["line"]]
+        return L_["t"] + (L_["dur"] if e.get("end") else 0) + e.get("dt", 0)
     timed = lambda key: [dict(e, t=round(max(0, at(e)), 3)) for e in script.get(key, [])]
     shots = sorted(timed("shots"), key=lambda s: s["t"])
     shots[0]["t"] = 0

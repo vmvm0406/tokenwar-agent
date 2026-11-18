@@ -121,20 +121,11 @@
   },
   {
    "who": "jensen",
-   "say": "[frustrated] 언제까지 나를 조, 롱할까? 나는 평생 조, 롱받아야 하는 사람이야?",
+   "say": "언제까지 나를 조롱할까? 나는 평생 조롱받아야 하는 사람이야?",
    "sub": "언제까지 나를 조롱할까?|나는 평생 조롱받아야 하는 사람이야?",
-   "emo": "sad"
-  },
-  {
-   "who": "chatgpt",
-   "say": "[singing softly to herself] 첩 줘~ 첩첩 줘~ 첩 줘~",
-   "sub": null,
-   "emo": "happy",
-   "overlay": {
-    "line": 11,
-    "dt": 0.4,
-    "vol": 0.5
-   }
+   "emo": "sad",
+   "model": "eleven_multilingual_v2",
+   "break": 0.15
   },
   {
    "who": "chatgpt",
@@ -148,7 +139,7 @@
    "say": "[angry sigh] 하아...",
    "sub": "하아...",
    "emo": "angry",
-   "break": 0.9
+   "break": 0.7
   }
  ],
  "screens": [
@@ -475,63 +466,69 @@
    "d": 4.0
   },
   {
-   "line": 13,
+   "line": 12,
    "dt": 0.0,
    "who": "chatgpt",
    "emo": "smile"
   },
   {
-   "line": 13,
+   "line": 12,
    "dt": 0.0,
    "who": "chatgpt",
    "do": "look",
    "at": "jensen"
   },
   {
-   "line": 14,
-   "dt": -0.75,
+   "line": 12,
+   "dt": -0.65,
+   "end": true,
    "who": "jensen",
    "do": "throw"
   },
   {
-   "line": 14,
-   "dt": -0.75,
+   "line": 12,
+   "dt": -0.9,
+   "end": true,
    "who": "jensen",
    "emo": "angry"
   },
   {
-   "line": 14,
-   "dt": -0.3,
+   "line": 12,
+   "dt": 0.0,
+   "end": true,
    "who": "chatgpt",
    "emo": "surprised"
   },
   {
-   "line": 14,
-   "dt": -0.28,
+   "line": 12,
+   "dt": 0.0,
+   "end": true,
    "who": "chatgpt",
    "do": "hop"
   },
   {
-   "line": 14,
-   "dt": 0.4,
+   "line": 12,
+   "dt": 0.5,
+   "end": true,
    "who": "chatgpt",
    "emo": "embarrassed"
   },
   {
-   "line": 14,
-   "dt": 0.2,
+   "line": 12,
+   "dt": 0.1,
+   "end": true,
    "who": "claude",
    "emo": "surprised"
   },
   {
-   "line": 14,
-   "dt": 0.6,
+   "line": 13,
+   "dt": -0.1,
    "who": "jensen",
    "do": "sigh"
   },
   {
-   "line": 14,
-   "dt": 0.6,
+   "line": 13,
+   "dt": 0.0,
    "who": "jensen",
    "do": "look",
    "at": "camera"
@@ -612,18 +609,19 @@
    "cam": "wide"
   },
   {
-   "line": 13,
+   "line": 12,
    "dt": -0.1,
    "cam": "close:chatgpt"
   },
   {
-   "line": 14,
-   "dt": -0.8,
+   "line": 12,
+   "dt": -0.75,
+   "end": true,
    "cam": "wide"
   },
   {
-   "line": 14,
-   "dt": 0.5,
+   "line": 13,
+   "dt": 0.0,
    "cam": "close:jensen"
   }
  ],
@@ -631,7 +629,7 @@
   {
    "text": "클로드에 영상 보는 스킬 다는 법|프로필에 정리해 뒀어요",
    "kind": "end",
-   "line": 14,
+   "line": 13,
    "dt": 1.6,
    "d": 3.0
   }
@@ -748,20 +746,23 @@
    "vol": 0.5
   },
   {
-   "line": 14,
-   "dt": -0.6,
+   "line": 12,
+   "dt": -0.5,
+   "end": true,
    "kind": "swipe",
    "vol": 0.8
   },
   {
-   "line": 14,
-   "dt": -0.3,
+   "line": 12,
+   "dt": 0.0,
+   "end": true,
    "kind": "pop",
    "vol": 1.0
   },
   {
-   "line": 14,
-   "dt": -0.28,
+   "line": 12,
+   "dt": 0.02,
+   "end": true,
    "kind": "boing",
    "vol": 0.6
   }

@@ -42,7 +42,7 @@
 
 | 무엇 | 내용 |
 |---|---|
-| 서비스 | ElevenLabs https://elevenlabs.io , 운영자 본인 계정, **Starter 월 결제** (월 약 3만 자) |
+| 서비스 | ElevenLabs https://elevenlabs.io , 운영자 본인 계정, **Starter 월 결제** (월 4만 크레딧, 2026-11-18 구독 화면 확인, 매달 17일 갱신) |
 | 상업 이용 | 유료 플랜은 만든 음성을 상업적으로 쓸 수 있다 (무료 플랜은 불가, 출처 표시 필요). Starter부터 상업 이용 허락. 저작자 표시 의무 없음 |
 | 모델 | `eleven_multilingual_v2` (한국어 지원), 출력 `mp3_44100_128` |
 | 키 | 사용자 환경 변수 `ELEVENLABS_API_KEY` (이 컴퓨터만, 저장소·GitHub Secrets에 없음). 설정: MIGRATION.md 3-4장 |
