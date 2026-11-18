@@ -4,7 +4,7 @@
   "settings": {"stability": 0.5},
   "voices": {
     "claude":  {"name": "Jiyoung - Warm and Clear", "voice_id": "AW5wrnG1jVizOYY7R1Oo", "persona": "차분·다정, 정리 잘함"},
-    "chatgpt": {"name": "Chris - Warm and Clear", "voice_id": "PDoCXqBQFGsvfO0hNkEs", "persona": "자신만만·말 많음"},
+    "chatgpt": {"name": "Jisoo - Inviting, Clear and Measured (여, 2026-11-18 운영자: 여자 목소리·하이톤으로 변경, 예전 Chris)", "voice_id": "iWLjl1zCuqXRkW6494ve", "persona": "자신만만·말 많음·아첨"},
     "gemini":  {"name": "JY - Trendy K-Culture Vlog Girl", "voice_id": "bQlkYuipD5BHEhntA5iz", "persona": "발랄·빠름"},
     "man":     {"name": "Mr. K - Natural Korean Voice", "voice_id": "LKOcTG4J4tYTPR9DnLeM", "persona": "평범한 직장인"},
     "jensen":  {"name": "tokenwar-jensen-keynote (Voice Design A3)", "voice_id": "rXtw37U3vJXL0rMfFu0A",

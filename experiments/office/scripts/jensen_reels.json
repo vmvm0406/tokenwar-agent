@@ -58,13 +58,13 @@
   {
    "who": "jensen",
    "say": "[sighs] 하... 이거 봐 봐.",
-   "sub": "하… 이거 봐 봐…",
+   "sub": "하... 이거 봐 봐...",
    "emo": "sad"
   },
   {
    "who": "claude",
    "say": "[sad] 음, 어디요? 저는 영상을 볼 수 없나 봐요.",
-   "sub": "음… 어디요?|저는 영상을 볼 수 없나 봐요…",
+   "sub": "음... 어디요?|저는 영상을 볼 수 없나 봐요...",
    "emo": "sad"
   },
   {
@@ -77,7 +77,7 @@
   {
    "who": "claude",
    "say": "[gasps] 와! 눈앞이 보여요!",
-   "sub": "와… 눈앞이 보여요!",
+   "sub": "와... 눈앞이 보여요!",
    "emo": "surprised"
   },
   {
@@ -88,9 +88,17 @@
   },
   {
    "who": "claude",
-   "say": "[stifles laughter] 흡, 아, 안 웃었어요.",
-   "sub": "흡… 아, 안 웃었어요.",
-   "emo": "embarrassed"
+   "say": "[bursts out laughing] 푸흡! 크크크큭!",
+   "sub": "푸흡! 크크큭!",
+   "emo": "happy",
+   "break": 2.6
+  },
+  {
+   "who": "claude",
+   "say": "[embarrassed, whispering] 아, 죄송해요... 안 웃었어요...",
+   "sub": "아... 죄송해요...|안 웃었어요...",
+   "emo": "embarrassed",
+   "break": 1.1
   },
   {
    "who": "jensen",
@@ -101,26 +109,26 @@
   {
    "who": "claude",
    "say": "[seriously] 네, 관련 자료 조금만 더 찾아볼게요.",
-   "sub": "네…|관련 자료 조금만 더 찾아볼게요.",
+   "sub": "네...|관련 자료 조금만 더 찾아볼게요.",
    "emo": "neutral"
   },
   {
    "who": "jensen",
-   "break": 3.6,
    "say": "[tired] 지피티, 너라도 좀 도와줘. 언제까지 나를 조롱할까? 나는 평생 조롱받아야 하는 사람이야?",
    "sub": "지피티, 너라도 좀 도와줘.|언제까지 나를 조롱할까?|나는 평생 조롱받아야 하는 사람이야?",
-   "emo": "sad"
+   "emo": "sad",
+   "break": 8.0
   },
   {
    "who": "chatgpt",
-   "say": "[chewing popcorn] 젠슨 황... 너, 정말 핵심을 찔렀어.",
-   "sub": "젠슨 황…|너 정말 핵심을 찔렀어 👈",
+   "say": "[cheerful] 젠슨 황... 너 정말 핵심을 찔렀어!",
+   "sub": "젠슨 황...|너 정말 핵심을 찔렀어 👈",
    "emo": "smile"
   },
   {
    "who": "jensen",
    "say": "[angry sigh] 하아...",
-   "sub": "하아…",
+   "sub": "하아...",
    "emo": "angry"
   }
  ],
@@ -131,46 +139,46 @@
    "t": 0.0
   },
   {
-   "screen": "phone",
-   "clip": "r1",
    "line": 1,
-   "dt": 0.3
-  },
-  {
+   "dt": 0.3,
    "screen": "phone",
-   "clip": "r1",
-   "line": 5,
-   "dt": 0.4
+   "clip": "r1"
   },
   {
+   "line": 6,
+   "dt": -2.4,
    "screen": "phone",
-   "clip": null,
-   "line": 7,
-   "dt": 0.2
+   "clip": "r1"
   },
   {
-   "screen": "monitor",
-   "clip": "r3",
    "line": 8,
-   "dt": 0.2
+   "dt": 0.2,
+   "screen": "phone",
+   "clip": null
   },
   {
+   "line": 10,
+   "dt": -7.6,
    "screen": "monitor",
-   "clip": "r2",
-   "line": 8,
-   "dt": 2.6
+   "clip": "r3"
   },
   {
+   "line": 10,
+   "dt": -4.8,
    "screen": "monitor",
-   "clip": "r3",
-   "line": 9,
-   "dt": -1.6
+   "clip": "r2"
   },
   {
+   "line": 10,
+   "dt": -2.0,
    "screen": "monitor",
-   "clip": "r1",
-   "line": 9,
-   "dt": 1.8
+   "clip": "r3"
+  },
+  {
+   "line": 11,
+   "dt": -0.5,
+   "screen": "monitor",
+   "clip": "r1"
   }
  ],
  "events": [
@@ -240,116 +248,196 @@
    "at": "camera"
   },
   {
+   "line": 3,
+   "dt": 0.9,
+   "who": "jensen",
+   "do": "type",
+   "d": 1.2
+  },
+  {
    "line": 4,
    "dt": -0.15,
    "who": "claude",
    "do": "hop"
   },
   {
-   "line": 5,
-   "dt": 0.4,
+   "line": 6,
+   "dt": -2.4,
    "who": "jensen",
    "do": "phone",
    "mode": "show",
    "at": "claude"
   },
   {
-   "line": 5,
-   "dt": 0.4,
+   "line": 6,
+   "dt": -2.4,
    "who": "jensen",
    "do": "look",
    "at": "claude"
   },
   {
    "line": 6,
+   "dt": -2.2,
+   "who": "claude",
+   "do": "look",
+   "at": "phone"
+  },
+  {
+   "line": 6,
+   "dt": -2.2,
+   "who": "claude",
+   "emo": "neutral"
+  },
+  {
+   "line": 6,
    "dt": 0.0,
    "who": "claude",
+   "do": "hop"
+  },
+  {
+   "line": 6,
+   "dt": 0.1,
+   "who": "claude",
    "do": "tremble",
-   "d": 1.6
+   "d": 1.0
   },
   {
    "line": 7,
+   "dt": -1.1,
+   "who": "jensen",
+   "emo": "angry"
+  },
+  {
+   "line": 7,
+   "dt": -1.1,
+   "who": "jensen",
+   "do": "look",
+   "at": "claude"
+  },
+  {
+   "line": 7,
+   "dt": -0.4,
+   "who": "claude",
+   "do": "look",
+   "at": "jensen"
+  },
+  {
+   "line": 7,
+   "dt": 0.0,
+   "who": "claude",
+   "do": "tremble",
+   "d": 1.4
+  },
+  {
+   "line": 8,
    "dt": 0.2,
    "who": "jensen",
    "do": "phone",
    "mode": "down"
   },
   {
-   "line": 8,
-   "dt": 0.0,
+   "line": 9,
+   "dt": 0.2,
    "who": "claude",
    "do": "look",
    "at": "monitor"
   },
   {
-   "line": 8,
-   "dt": 1.0,
+   "line": 10,
+   "dt": -7.0,
    "who": "claude",
    "emo": "embarrassed"
   },
   {
-   "line": 8,
-   "dt": 1.2,
+   "line": 10,
+   "dt": -6.8,
    "who": "claude",
    "do": "tremble",
    "d": 1.0
   },
   {
-   "line": 8,
-   "dt": 3.4,
+   "line": 10,
+   "dt": -4.2,
    "who": "claude",
    "do": "tremble",
    "d": 1.0
   },
   {
-   "line": 9,
-   "dt": -2.4,
-   "who": "jensen",
-   "emo": "sad"
+   "line": 10,
+   "dt": -1.6,
+   "who": "claude",
+   "do": "tremble",
+   "d": 1.0
   },
   {
-   "line": 9,
-   "dt": 0.0,
-   "who": "jensen",
-   "do": "look",
-   "at": "chatgpt"
-  },
-  {
-   "line": 11,
-   "dt": -0.1,
-   "who": "jensen",
-   "do": "sigh"
-  },
-  {
-   "line": 11,
-   "dt": 0.0,
-   "who": "jensen",
-   "do": "look",
-   "at": "camera"
-  },
-  {
-   "line": 9,
-   "dt": -3.3,
+   "line": 10,
+   "dt": -7.0,
    "who": "chatgpt",
-   "do": "enter",
-   "d": 1.6
+   "do": "move",
+   "x": 0.62,
+   "d": 2.2,
+   "style": "sneak",
+   "from": "off"
   },
   {
-   "line": 9,
-   "dt": -3.3,
+   "line": 10,
+   "dt": -7.0,
    "who": "chatgpt",
-   "emo": "happy"
+   "emo": "neutral"
   },
   {
-   "line": 9,
-   "dt": -1.4,
+   "line": 10,
+   "dt": -4.6,
    "who": "chatgpt",
    "do": "look",
    "at": "monitor"
   },
   {
-   "line": 9,
+   "line": 10,
+   "dt": -4.6,
+   "who": "chatgpt",
+   "emo": "happy"
+  },
+  {
+   "line": 10,
+   "dt": -3.9,
+   "who": "chatgpt",
+   "do": "move",
+   "x": "off",
+   "d": 0.9,
+   "style": "hop"
+  },
+  {
+   "line": 10,
+   "dt": -2.9,
+   "who": "chatgpt",
+   "do": "carry"
+  },
+  {
+   "line": 10,
+   "dt": -2.7,
+   "who": "chatgpt",
+   "do": "move",
+   "x": "home",
+   "d": 1.2,
+   "style": "hop"
+  },
+  {
+   "line": 10,
+   "dt": -1.4,
+   "who": "chatgpt",
+   "do": "put"
+  },
+  {
+   "line": 10,
    "dt": -1.2,
+   "who": "chatgpt",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 10,
+   "dt": -1.1,
    "who": "chatgpt",
    "do": "munch",
    "d": 14.0
@@ -357,50 +445,41 @@
   {
    "line": 10,
    "dt": 0.0,
+   "who": "jensen",
+   "do": "look",
+   "at": "chatgpt"
+  },
+  {
+   "line": 10,
+   "dt": -0.5,
+   "who": "jensen",
+   "emo": "sad"
+  },
+  {
+   "line": 11,
+   "dt": 0.0,
    "who": "chatgpt",
    "do": "look",
    "at": "jensen"
   },
   {
-   "line": 10,
+   "line": 11,
    "dt": 0.0,
    "who": "chatgpt",
    "emo": "smile"
   },
   {
-   "line": 9,
-   "dt": -3.3,
-   "who": "claude",
+   "line": 12,
+   "dt": -0.1,
+   "who": "jensen",
+   "do": "sigh"
+  },
+  {
+   "line": 12,
+   "dt": 0.0,
+   "who": "jensen",
    "do": "look",
-   "at": "chatgpt"
-  },
-  {
-   "line": 9,
-   "dt": -1.6,
-   "who": "claude",
-   "do": "look",
-   "at": "monitor"
-  },
-  {
-   "line": 9,
-   "dt": -1.4,
-   "who": "claude",
-   "do": "tremble",
-   "d": 1.2
-  },
-  {
-   "line": 9,
-   "dt": 2.0,
-   "who": "claude",
-   "do": "tremble",
-   "d": 1.2
-  },
-  {
-   "line": 9,
-   "dt": 4.8,
-   "who": "claude",
-   "do": "tremble",
-   "d": 1.2
+   "at": "camera"
   }
  ],
  "shots": [
@@ -438,91 +517,258 @@
    "cam": "close:claude"
   },
   {
-   "line": 5,
-   "dt": 0.2,
+   "line": 6,
+   "dt": -2.5,
    "cam": "two:jensen:claude"
   },
   {
    "line": 6,
-   "dt": -0.05,
+   "dt": -0.1,
    "cam": "close:claude"
   },
   {
    "line": 7,
+   "dt": -1.1,
+   "cam": "close:jensen"
+  },
+  {
+   "line": 7,
+   "dt": -0.05,
+   "cam": "close:claude"
+  },
+  {
+   "line": 8,
    "dt": -0.05,
    "cam": "close:jensen"
   },
   {
-   "line": 8,
+   "line": 9,
    "dt": 0.0,
    "cam": "two:claude:monitor"
   },
   {
-   "line": 9,
-   "dt": -3.4,
+   "line": 10,
+   "dt": -7.2,
    "cam": "wide"
   },
   {
    "line": 10,
+   "dt": 0.0,
+   "cam": "close:jensen"
+  },
+  {
+   "line": 11,
    "dt": -0.1,
    "cam": "close:chatgpt"
   },
   {
-   "line": 11,
+   "line": 12,
    "dt": -0.1,
    "cam": "close:jensen"
   }
  ],
  "cards": [
   {
-   "text": "패러디",
-   "kind": "tag",
-   "t": 0.0,
-   "until_line": 2
-  },
-  {
    "text": "클로드에 영상 보는 스킬 다는 법 → 프로필에 정리해 뒀어요",
    "kind": "end",
-   "line": 11,
+   "line": 12,
    "dt": 1.4,
    "d": 2.2
   }
  ],
  "audio": [
   {
-   "clip": "r3",
-   "line": 8,
-   "dt": 0.2,
-   "from": 0.0,
-   "to": 2.4,
-   "vol": 0.28
-  },
-  {
-   "clip": "r2",
-   "line": 8,
-   "dt": 2.6,
-   "from": 0.0,
-   "to": 2.8,
-   "vol": 0.28
-  },
-  {
-   "clip": "r3",
-   "line": 9,
-   "dt": -1.6,
-   "from": 0.0,
-   "to": 3.2,
-   "vol": 0.2
-  },
-  {
+   "line": 6,
+   "dt": -2.4,
    "clip": "r1",
-   "line": 9,
-   "dt": 1.8,
+   "from": 0.0,
+   "to": 2.6,
+   "vol": 0.22
+  },
+  {
+   "line": 10,
+   "dt": -7.6,
+   "clip": "r3",
+   "from": 0.0,
+   "to": 2.7,
+   "vol": 0.3
+  },
+  {
+   "line": 10,
+   "dt": -4.8,
+   "clip": "r2",
+   "from": 0.0,
+   "to": 2.7,
+   "vol": 0.3
+  },
+  {
+   "line": 10,
+   "dt": -2.0,
+   "clip": "r3",
+   "from": 0.0,
+   "to": 2.2,
+   "vol": 0.16
+  },
+  {
+   "line": 11,
+   "dt": -0.5,
+   "clip": "r1",
    "from": 1.2,
    "to": 5.9,
-   "vol": 0.16
+   "vol": 0.14
   }
  ],
  "tail": 3.4,
+ "sfx": [
+  {
+   "line": 4,
+   "dt": -0.35,
+   "kind": "ding",
+   "vol": 0.8
+  },
+  {
+   "line": 4,
+   "dt": -0.15,
+   "kind": "boing",
+   "vol": 0.7
+  },
+  {
+   "line": 6,
+   "dt": 0.0,
+   "kind": "boing",
+   "vol": 0.5
+  },
+  {
+   "line": 10,
+   "dt": -4.8,
+   "kind": "swipe"
+  },
+  {
+   "line": 10,
+   "dt": -2.0,
+   "kind": "swipe"
+  },
+  {
+   "line": 11,
+   "dt": -0.5,
+   "kind": "swipe",
+   "vol": 0.6
+  },
+  {
+   "line": 10,
+   "dt": -1.4,
+   "kind": "pop",
+   "vol": 0.8
+  },
+  {
+   "line": 10,
+   "dt": -6.95,
+   "kind": "tiptoe",
+   "vol": 0.6
+  },
+  {
+   "line": 10,
+   "dt": -6.45,
+   "kind": "tiptoe",
+   "vol": 0.6
+  },
+  {
+   "line": 10,
+   "dt": -5.95,
+   "kind": "tiptoe",
+   "vol": 0.6
+  },
+  {
+   "line": 10,
+   "dt": -5.45,
+   "kind": "tiptoe",
+   "vol": 0.6
+  },
+  {
+   "line": 10,
+   "dt": -1.0,
+   "kind": "crunch",
+   "vol": 0.55
+  },
+  {
+   "line": 10,
+   "dt": -0.44999999999999996,
+   "kind": "crunch",
+   "vol": 0.55
+  },
+  {
+   "line": 10,
+   "dt": 0.10000000000000009,
+   "kind": "crunch",
+   "vol": 0.55
+  },
+  {
+   "line": 10,
+   "dt": 0.6500000000000001,
+   "kind": "crunch",
+   "vol": 0.55
+  },
+  {
+   "line": 10,
+   "dt": 1.2000000000000002,
+   "kind": "crunch",
+   "vol": 0.55
+  },
+  {
+   "line": 10,
+   "dt": 1.75,
+   "kind": "crunch",
+   "vol": 0.55
+  },
+  {
+   "line": 10,
+   "dt": 2.3000000000000003,
+   "kind": "crunch",
+   "vol": 0.55
+  },
+  {
+   "line": 10,
+   "dt": 2.8500000000000005,
+   "kind": "crunch",
+   "vol": 0.55
+  },
+  {
+   "line": 10,
+   "dt": 3.4000000000000004,
+   "kind": "crunch",
+   "vol": 0.55
+  },
+  {
+   "line": 10,
+   "dt": 3.95,
+   "kind": "crunch",
+   "vol": 0.55
+  },
+  {
+   "line": 10,
+   "dt": 4.5,
+   "kind": "crunch",
+   "vol": 0.55
+  },
+  {
+   "line": 10,
+   "dt": 5.050000000000001,
+   "kind": "crunch",
+   "vol": 0.55
+  },
+  {
+   "line": 10,
+   "dt": 5.6000000000000005,
+   "kind": "crunch",
+   "vol": 0.55
+  },
+  {
+   "line": 10,
+   "dt": 6.15,
+   "kind": "crunch",
+   "vol": 0.55
+  }
+ ],
  "props": {
   "popcorn": true
  }

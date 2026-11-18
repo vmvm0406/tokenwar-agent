@@ -205,7 +205,7 @@ const SCR = {}, PHONE = { g: null, pos: new THREE.Vector3(), mode: 'none' }, POP
 function phonePose(mode, at) {
   const hu = Object.values(cast).find((c) => c.human);
   const face = POS[hu.key].face;
-  if (mode === 'face') { const p = face.clone().add(new THREE.Vector3(-0.03, -0.13, 0.28)); return { p, look: face.clone() }; }
+  if (mode === 'face') { const p = face.clone().add(new THREE.Vector3(-0.03, -0.24, 0.46)); return { p, look: face.clone() }; }   // 얼굴에 묻히지 않게 앞·아래로
   if (mode === 'show') { const T = POS[at].face; const p = face.clone().lerp(T, 0.66).add(new THREE.Vector3(0, 0.06, 0)); return { p, look: T.clone() }; }
   const p = new THREE.Vector3(-0.32, deskY + 0.006, -0.2); return { p, look: p.clone().add(new THREE.Vector3(0, 1, 0.001)) };
 }
@@ -220,6 +220,7 @@ function updatePhone(t) {
   const look = A.look.clone().lerp(B.look, u);
   PHONE.g.lookAt(look);
   PHONE.g.updateMatrixWorld(true);
+  POS.phone = { x: PHONE.g.position.x, face: PHONE.g.position.clone() };
   PHONE.mode = cur.mode; PHONE.hold = cur.mode === 'down' ? 1 - u : (prev && prev.mode === 'down' ? u : 1);
 }
 window.twInit = async (script) => {
@@ -369,16 +370,29 @@ function animAI(c, t) {
   for (const e of evs(who, 'munch')) if (t > e.t && t < e.t + (e.d || 3)) {   // 팝콘 냠냠 (말 안 할 때 입 오물오물 + 통통)
     chew = Math.sin(t * 13) > 0.2 ? 0.6 : 0; sy += 0.03 * Math.abs(Math.sin(t * 6.5));
   }
-  // 등장: 오른쪽 밖에서 통통 뛰며 들어옴 (enter 전에는 화면 밖), 팝콘은 머리에 이고 와서 옆에 내려놓음
+  // 이동 (운영자 2026-11-18: 지피티가 눈치 보며 슬금슬금 들어왔다가 나가서 팝콘 이고 다시 옴)
+  // move 이벤트: {x: 목표(숫자 또는 "home"/"off"), d, style: sneak(살금살금·두리번)|hop(통통)}. 첫 move 전에는 첫 move의 출발점.
   let x = c.baseX;
-  const en = evs(who, 'enter')[0];
-  if (en) {
-    const d = en.d || 1.6, u = clamp((t - en.t) / d);
-    x = lerp(1.45, c.baseX, ease(u));
-    if (t < en.t + d) { y += 0.06 * Math.abs(Math.sin(Math.PI * (t - en.t) / 0.32)); ry += -0.5 * (1 - u); }
-    if (t < en.t) x = 3;
-    if (POP.g) {
-      const put = en.t + d + 0.15, v = ease((t - put) / 0.35);
+  const mv = evs(who, 'move').sort((a, b) => a.t - b.t);
+  if (mv.length) {
+    const X0 = (v) => v === 'home' ? c.baseX : v === 'off' ? 1.5 : v;
+    x = X0(mv[0].from ?? 'off');
+    for (const e of mv) {
+      if (t < e.t) break;
+      const d = e.d || 1.2, u = clamp((t - e.t) / d), to = X0(e.x), from = x;
+      x = lerp(from, to, e.style === 'sneak' ? u : ease(u));
+      if (u < 1) {
+        if (e.style === 'sneak') { y += 0.012 * Math.abs(Math.sin(Math.PI * (t - e.t) / 0.22)); rz += 0.06 * Math.sin(t * 9); ry += 0.45 * Math.sin(t * 2.6); }
+        else { y += 0.06 * Math.abs(Math.sin(Math.PI * (t - e.t) / 0.32)); }
+        ry += (to > from ? 0.6 : -0.6) * Math.sin(Math.PI * u) * 0.5;
+      }
+    }
+  }
+  if (POP.g) {   // 팝콘: carry(머리에 이기) → put(옆에 내려놓기), carry 전에는 숨김
+    const ca = evs(who, 'carry')[0], pt = evs(who, 'put')[0];
+    POP.g.visible = !!ca && t >= ca.t;
+    if (ca && t >= ca.t) {
+      const v = pt ? ease((t - pt.t) / 0.35) : 0;
       const head = new THREE.Vector3(x, deskY + y + c.size * 0.98, c.root.position.z);
       POP.g.position.copy(head).lerp(POP.rest, v);
       if (v > 0 && v < 1) POP.g.position.y += 0.08 * Math.sin(Math.PI * v);
@@ -419,7 +433,7 @@ function animHuman(c, t) {
     aim(B['upper_arm.R'], null, elbow.sub(sh), u);
     const el = B['lower_arm.R'].getWorldPosition(new THREE.Vector3());
     aim(B['lower_arm.R'], null, ph.sub(el), u);
-    if (PHONE.mode === 'face') rotW(B.head, X, 0.18 * u);                       // 폰 내려다보기
+    if (PHONE.mode === 'face') rotW(B.head, X, 0.08 * u);                       // 폰 내려다보기
   }
   for (const e of evs(who, 'type')) if (t > e.t && t < e.t + (e.d || 2)) {   // 타자
     rotW(B['lower_arm.L'], X, 0.06 * Math.sin(t * 22)); rotW(B['lower_arm.R'], X, 0.06 * Math.sin(t * 22 + 1.7));
@@ -472,6 +486,7 @@ function caption(t) {
   g2.font = '700 50px Wanted';
   let text = l.sub;   // 호흡에 맞게 나눈 조각 중 지금 것
   if (l.subs && l.subs.length > 1) { const r = t - l.t; text = (l.subs.find((s) => r < s.t1) || l.subs[l.subs.length - 1]).text; }
+  text = text.replace(/…/g, '...');   // '…'는 글자 가운데 높이에 찍혀서 마침표 셋으로 (운영자 2026-11-18)
   const rows = wrap(text, 780), lh = 66, pad = 26;
   const w = Math.max(...rows.map((r) => g2.measureText(r).width)) + pad * 2, h = rows.length * lh + pad * 1.4;
   const x = (W - w) / 2, y = 360;

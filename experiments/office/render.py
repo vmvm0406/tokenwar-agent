@@ -76,19 +76,37 @@ def tts_dialogue(lines_in):
     body = {"inputs": [{"text": l["say"], "voice_id": VOICES["voices"][l["who"]]["voice_id"]} for l in script["lines"]],
             "model_id": VOICES["model"], "language_code": "ko", "settings": VOICES["settings"]}
     h = hashlib.sha256(json.dumps(body, ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:20]
-    f, js = CACHE / f"dlg_{h}.mp3", CACHE / f"dlg_{h}.json"
+    f, js = CACHE / f"dlg2_{h}.mp3", CACHE / f"dlg2_{h}.json"
     if not (f.exists() and js.exists()):
         CACHE.mkdir(parents=True, exist_ok=True)
         r = json.loads(tts._eleven("/text-to-dialogue/with-timestamps?output_format=mp3_44100_128", tts.eleven_key(), body))
         f.write_bytes(base64.b64decode(r["audio_base64"]))
-        segs = {}
+        segs, ranges = {}, {}
         for s in r["voice_segments"]:
             i = s["dialogue_input_index"]
             a, b = segs.get(i, (s["start_time_seconds"], s["end_time_seconds"]))
             segs[i] = (min(a, s["start_time_seconds"]), max(b, s["end_time_seconds"]))
-        js.write_text(json.dumps([segs[i] for i in range(len(script["lines"]))]), encoding="utf-8")
+            c0, c1 = ranges.get(i, (s["character_start_index"], s["character_end_index"]))
+            ranges[i] = (min(c0, s["character_start_index"]), max(c1, s["character_end_index"]))
+        al = r.get("alignment") or {}
+        n = len(script["lines"])
+        js.write_text(json.dumps({"segs": [segs[i] for i in range(n)], "ranges": [ranges[i] for i in range(n)],
+                                  "chars": al.get("characters", []), "starts": al.get("character_start_times_seconds", [])},
+                                 ensure_ascii=False), encoding="utf-8")
         print(f"  ElevenLabs 대화 {sum(len(l['say']) for l in script['lines'])}자", file=sys.stderr)
-    return f, json.loads(js.read_text(encoding="utf-8"))
+    d = json.loads(js.read_text(encoding="utf-8"))
+    # 말 빠르게 (운영자 2026-11-18 "전체적으로 말 빨리"): 음높이 그대로 atempo, 시각도 같은 비율로
+    if SPEED != 1.0:
+        fs = f.with_name(f.stem + f"_x{SPEED:.2f}.mp3")
+        if not fs.exists():
+            subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(f), "-af", f"atempo={SPEED}", "-b:a", "192k", str(fs)], check=True)
+        f = fs
+        d["segs"] = [[a / SPEED, b / SPEED] for a, b in d["segs"]]
+        d["starts"] = [x / SPEED for x in d["starts"]]
+    return f, d
+
+
+SPEED = 1.12
 
 
 CLIP_FPS = 15
@@ -104,6 +122,75 @@ def clip_frames(cid, c):
                         str(d / "%04d.jpg")], check=True)
     n = len(list(d.glob("*.jpg")))
     return {"n": n, "fps": CLIP_FPS, "base": f"/experiments/office/out/clipframes/{cid}/", "credit": c.get("credit", "")}
+
+
+def whisper_align(mp3, says):
+    """대사 묶음 음성을 받아써서(단어 시각) 대본 글자에 맞춤 → 대사마다 [(글자, 시작, 끝)] (글자·숫자만).
+    대본과 받아쓰기 글자를 difflib으로 짝짓고, 못 짝지은 글자는 앞뒤 시각으로 메움. 결과는 mp3 옆 .wa.json 캐시."""
+    import difflib
+    import re as _re
+    cache = Path(str(mp3) + ".wa.json")
+    key = json.dumps(says, ensure_ascii=False)
+    if cache.exists():
+        c = json.loads(cache.read_text(encoding="utf-8"))
+        if c.get("key") == key:
+            return c["per"]
+    from faster_whisper import WhisperModel
+    m = WhisperModel("small", device="cpu", compute_type="int8")
+    segs, _ = m.transcribe(decode(mp3), language="ko", word_timestamps=True)
+    hc = []                                   # 받아쓴 글자와 시각
+    for sg in segs:
+        for w in sg.words:
+            chs = [ch for ch in w.word if ch.isalnum()]
+            for j, ch in enumerate(chs):
+                a = w.start + (w.end - w.start) * j / max(1, len(chs))
+                hc.append((ch, a, a + (w.end - w.start) / max(1, len(chs))))
+    lines = [[ch for ch in _re.sub(r"\[[^\]]*\]", "", s) if ch.isalnum()] for s in says]
+    want = [ch for l in lines for ch in l]
+    times = [None] * len(want)
+    sm = difflib.SequenceMatcher(None, want, [h[0] for h in hc], autojunk=False)
+    for bl in sm.get_matching_blocks():
+        for j in range(bl.size):
+            times[bl.a + j] = hc[bl.b + j][1:]
+    known = [i for i, x in enumerate(times) if x]
+    if not known:
+        return None
+    for i in range(len(times)):              # 빈 곳 메우기 (가장 가까운 앞 글자 끝 / 뒤 글자 시작)
+        if times[i] is None:
+            prev = max([k for k in known if k < i], default=None)
+            nxt = min([k for k in known if k > i], default=None)
+            t = times[prev][1] if prev is not None else times[nxt][0]
+            times[i] = (t, t + 0.05)
+    per, pos = [], 0
+    for l in lines:
+        per.append([(ch, round(times[pos + j][0], 3), round(times[pos + j][1], 3)) for j, ch in enumerate(l)])
+        pos += len(l)
+    cache.write_text(json.dumps({"key": key, "per": per}, ensure_ascii=False), encoding="utf-8")
+    return per
+
+
+def split_subs_aligned(sub, d, k, line_t0):
+    """자막 조각 경계를 일레븐랩스 글자 시각으로 정확히 (운영자 2026-11-18 '자막 타이밍이 안 맞아').
+    대본 say의 글자(대괄호 감정 표시 제외, 글자·숫자만 셈) 순서로 자막 조각의 글자 수를 맞춰, 다음 조각 첫 글자의 시작 시각에서 끊음."""
+    parts = [p.strip() for p in sub.split("|") if p.strip()]
+    if len(parts) <= 1 or not d.get("chars"):
+        return None
+    spoken = [x[1] for x in (d.get("_per") or [[]] * (k + 1))[k]]
+    if not spoken:
+        return None
+    cnt = lambda s: sum(ch.isalnum() for ch in s)
+    total = sum(cnt(p) for p in parts) or 1
+    out, acc, prev = [], 0, 0.0
+    for i, p in enumerate(parts):
+        acc += cnt(p)
+        if i < len(parts) - 1:
+            j = min(len(spoken) - 1, round(acc / total * len(spoken)))
+            cut = max(prev, spoken[j] - line_t0 - 0.05)
+        else:
+            cut = 1e9
+        out.append({"text": p, "t0": round(prev, 3), "t1": round(cut, 3)})
+        prev = cut
+    return out
 
 
 def split_subs(sub, env, dur):
@@ -138,7 +225,16 @@ def build(script):
     hop, lines, parts, t0 = 16000 // FPS, [None] * len(script["lines"]), [], lead
     for g in groups:
         t0 += script["lines"][g[0]].get("break", 0) if g[0] else 0
-        mp3, segs = tts_dialogue([script["lines"][i] for i in g])
+        mp3, dd = tts_dialogue([script["lines"][i] for i in g])
+        segs = [list(s) for s in dd["segs"]]
+        # 대사 구간은 voice_segments보다 글자 시각이 정확함 (같은 사람이 이어 말할 때 경계가 1초쯤 어긋남) → 말한 글자 첫·끝으로
+        # 대사·자막 시각은 받아쓰기 단어 시각으로 (일레븐랩스 글자 시각은 실제 소리보다 0.7초까지 어긋남, 2026-11-18 확인)
+        per = whisper_align(mp3, [script["lines"][i]["say"] for i in g])
+        if per:
+            dd["_per"] = per
+            for k in range(len(g)):
+                if per[k]:
+                    segs[k] = [max(0.0, per[k][0][1] - 0.15), per[k][-1][2] + 0.12]
         a = decode(mp3)
         parts.append({"file": str(mp3), "t": round(t0, 3)})
         for k, i in enumerate(g):
@@ -151,7 +247,7 @@ def build(script):
             peak = max(env) or 1
             lines[i] = {"who": l["who"], "t": round(t0 + s0 + q0, 3), "dur": round(len(seg) / 16000, 3),
                         "env": [round(e / peak, 3) for e in env], "sub": (l.get("sub") or "").replace("|", " "),
-                        "subs": split_subs(l.get("sub") or "", env, len(seg) / 16000),
+                        "subs": split_subs_aligned(l.get("sub") or "", dd, k, s0 + q0) or split_subs(l.get("sub") or "", env, len(seg) / 16000),
                         "emo": l.get("emo"), "note": l.get("note"), "src": str(mp3), "ofs": round(s0 + q0, 3)}
         t0 += len(a) / 16000
     dur = t0 + script.get("tail", 1.0)
@@ -168,7 +264,7 @@ def build(script):
     clips = {cid: clip_frames(cid, c) for cid, c in script.get("clips", {}).items()}
     return {"cast": script["cast"], "lines": lines, "events": timed("events"), "shots": shots, "dur": round(dur, 3), "fps": FPS,
             "parts": parts, "intro": intro, "lead": lead, "clips": clips, "clipsrc": script.get("clips", {}),
-            "screens": sorted(timed("screens"), key=lambda s: s["t"]), "cards": cards, "audio": timed("audio"), "props": script.get("props", {})}
+            "screens": sorted(timed("screens"), key=lambda s: s["t"]), "cards": cards, "audio": timed("audio"), "props": script.get("props", {}), "sfx": timed("sfx")}
 
 
 def check_pron(tl, script):
@@ -212,7 +308,7 @@ async def shoot(tl, frames, out_dir, gpu, still):
         await pg.route(HOST + "**", serve)
         await pg.goto(HOST + "experiments/office/index.html")
         await pg.wait_for_function("window.twReady === true", timeout=60000)
-        js_tl = {k: v for k, v in tl.items() if k not in ("parts", "intro", "clipsrc", "audio")}
+        js_tl = {k: v for k, v in tl.items() if k not in ("parts", "intro", "clipsrc", "audio", "sfx")}
         js_tl["lines"] = [{k: v for k, v in l.items() if k not in ("src", "ofs")} for l in tl["lines"]]
         info = await pg.evaluate("(s) => window.twInit(s)", js_tl)
         print(json.dumps(info, ensure_ascii=False), flush=True)
@@ -247,6 +343,21 @@ def encode(tl, frames_dir, mp4):
         d = int(x["t"] * 1000)
         add(ROOT / c["file"], f"atrim={x['from']}:{x['to']},asetpts=PTS-STARTPTS,afade=t=in:d=0.3,afade=t=out:st={x['to'] - x['from'] - 0.6:.2f}:d=0.6,"
                               f"aformat=sample_rates=44100:channel_layouts=stereo,volume={x.get('vol', 0.2)},adelay={d}|{d}")
+    # 효과음 (직접 합성, 라이선스 문제 없음): ding(스킬 연결) boing(펄쩍) swipe(릴스 넘김) crunch(팝콘) pop(내려놓기) tiptoe(살금살금)
+    SFX = {
+        "ding": "aevalsrc='0.32*(sin(2*PI*1318*t)+0.6*sin(2*PI*1975*t))*exp(-t*5)':d=0.9:s=44100",
+        "boing": "aevalsrc='0.3*sin(2*PI*(300*t+900*t*t))*exp(-t*9)':d=0.35:s=44100",
+        "swipe": "anoisesrc=d=0.3:c=white:a=0.6:r=44100,highpass=f=1500,lowpass=f=7000,afade=t=in:d=0.1,afade=t=out:st=0.12:d=0.18,volume=0.45",
+        "crunch": "anoisesrc=d=0.08:c=pink:a=0.9:r=44100,bandpass=f=2600:w=1800,afade=t=out:st=0.02:d=0.06,volume=0.5",
+        "pop": "aevalsrc='0.4*sin(2*PI*190*t)*exp(-t*28)':d=0.18:s=44100",
+        "tiptoe": "aevalsrc='0.22*sin(2*PI*880*t)*exp(-t*40)':d=0.1:s=44100",
+    }
+    for i, x in enumerate(tl.get("sfx", [])):
+        d = int(x["t"] * 1000)
+        ins.extend(["-f", "lavfi", "-i", SFX[x["kind"]]])
+        k = len([v for v in ins if v == "-i"])
+        fl.append(f"[{k}:a]aformat=sample_rates=44100:channel_layouts=stereo,volume={x.get('vol', 1.0)},adelay={d}|{d}[x{i}]")
+        labs.append(f"[x{i}]")
     fc = ";".join(fl) + ";" + "".join(labs) + f"amix=inputs={len(labs)}:normalize=0,apad,loudnorm=I=-14:TP=-1.5[a]"
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-framerate", str(FPS), "-i", str(frames_dir / "f%05d.jpg")] + ins +
                    ["-filter_complex", fc, "-map", "0:v", "-map", "[a]", "-t", str(tl["dur"]), "-c:v", "libx264", "-pix_fmt", "yuv420p",
