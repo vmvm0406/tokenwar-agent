@@ -242,7 +242,7 @@ function animAI(c, t) {
   for (const e of evs(who, 'nod')) rx += 0.22 * Math.sin(Math.PI * 2 * clamp((t - e.t) / 0.5)) * (t > e.t && t < e.t + 1.0 ? 1 : 0);
   for (const e of evs(who, 'shake')) ry += 0.3 * Math.sin(Math.PI * 4 * clamp((t - e.t) / 0.8)) * (t > e.t && t < e.t + 0.8 ? 1 : 0);
   for (const e of evs(who, 'tilt')) rz += 0.22 * ease((t - e.t) / 0.25) * (1 - ease((t - e.t - (e.d || 1.2)) / 0.3));
-  for (const e of evs(who, 'tremble')) if (t > e.t && t < e.t + (e.d || 1)) jx += 0.008 * Math.sin(t * 90);
+  for (const e of evs(who, 'tremble')) if (t > e.t && t < e.t + (e.d || 1)) jx += 0.0022 * Math.sin(t * 55);   // 운영자: 부들거림 작게
   c.root.position.y = deskY + y;
   c.sq.scale.set(1 / Math.sqrt(sy), sy, 1 / Math.sqrt(sy));
   c.root.rotation.set(rx, ry, rz);

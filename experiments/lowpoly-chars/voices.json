@@ -1,7 +1,7 @@
 {
-  "_note": "캐릭터별 목소리 (운영자 2026-11-18 선택). ElevenLabs Starter, 모델 eleven_v3(대괄호 감정 태그 [excited] [sighs] 등 사용), stability 0.0. 키는 사용자 환경변수 ELEVENLABS_API_KEY.",
+  "_note": "캐릭터별 목소리 (운영자 2026-11-18 선택). ElevenLabs Starter, 모델 eleven_v3(대괄호 감정 태그 [excited] [sighs] 등 사용), stability 0.5(Natural, 0.0은 들쭉날쭉해 대사가 끊겨 들림). 키는 사용자 환경변수 ELEVENLABS_API_KEY.",
   "model": "eleven_v3",
-  "settings": {"stability": 0.0},
+  "settings": {"stability": 0.5},
   "voices": {
     "claude":  {"name": "Jiyoung - Warm and Clear", "voice_id": "AW5wrnG1jVizOYY7R1Oo", "persona": "차분·다정, 정리 잘함"},
     "chatgpt": {"name": "Chris - Warm and Clear", "voice_id": "PDoCXqBQFGsvfO0hNkEs", "persona": "자신만만·말 많음"},

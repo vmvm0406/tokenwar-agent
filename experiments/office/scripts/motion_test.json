@@ -6,10 +6,10 @@
     {"key": "chatgpt", "x": 0.29, "z": 0.24, "yaw": -0.25, "size": 0.4}
   ],
   "lines": [
-    {"who": "man", "say": "[sighs] 아... 부장님이 내일까지 보고서 다 해 오래요.", "sub": "아… 부장님이 내일까지 보고서 다 해 오래요.", "emo": "sad"},
-    {"who": "claude", "say": "[softly] 음... 제가 세 줄로 정리해 드릴게요.", "sub": "음… 제가 세 줄로 정리해 드릴게요.", "emo": "smile", "gap": 0.35},
+    {"who": "man", "say": "[sighs] 아, 부장님이 내일까지 보고서 다 해 오라고 하셨어요.", "sub": "아… 부장님이 내일까지 보고서 다 해 오라고 하셨어요.", "emo": "sad"},
+    {"who": "claude", "say": "[softly] 음, 제가 세 줄로 정리해 드릴게요.", "sub": "음… 제가 세 줄로 정리해 드릴게요.", "emo": "smile", "gap": 0.35},
     {"who": "chatgpt", "say": "[confidently] 세 줄이요? 저는 한 줄이면 됩니다!", "sub": "세 줄이요? 저는 한 줄이면 됩니다!", "emo": "happy", "gap": 0.3},
-    {"who": "claude", "say": "[annoyed] 방금... 내 말 가로챘어?", "sub": "방금… 내 말 가로챘어?", "emo": "angry", "gap": 0.35}
+    {"who": "claude", "say": "[annoyed] 방금, 내 말 뺏어 간 거야?", "sub": "방금… 내 말 뺏어 간 거야?", "emo": "angry", "gap": 0.35}
   ],
   "events": [
     {"line": 0, "dt": 0.0, "who": "man", "do": "facepalm", "d": 1.8},

@@ -64,29 +64,76 @@ def trim_silence(a, sr=16000, th=0.01):
     return (idx[0] / sr, idx[-1] / sr) if len(idx) else (0.0, len(a) / sr)
 
 
+LEAD = 0.4   # 첫 대사 전 여유
+
+
+def tts_dialogue(script):
+    """대사 전체를 한 번에 (ElevenLabs text-to-dialogue, v3): 대사 사이가 자연스럽게 이어진다 (운영자 2026-11-18 '뚝뚝 끊김').
+    → (mp3, 대사별 [시작, 끝]초). 같은 대본이면 캐시."""
+    sys.path.insert(0, str(ROOT / "agent"))
+    import tts
+    body = {"inputs": [{"text": l["say"], "voice_id": VOICES["voices"][l["who"]]["voice_id"]} for l in script["lines"]],
+            "model_id": VOICES["model"], "language_code": "ko", "settings": VOICES["settings"]}
+    h = hashlib.sha256(json.dumps(body, ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:20]
+    f, js = CACHE / f"dlg_{h}.mp3", CACHE / f"dlg_{h}.json"
+    if not (f.exists() and js.exists()):
+        CACHE.mkdir(parents=True, exist_ok=True)
+        r = json.loads(tts._eleven("/text-to-dialogue/with-timestamps?output_format=mp3_44100_128", tts.eleven_key(), body))
+        f.write_bytes(base64.b64decode(r["audio_base64"]))
+        segs = {}
+        for s in r["voice_segments"]:
+            i = s["dialogue_input_index"]
+            a, b = segs.get(i, (s["start_time_seconds"], s["end_time_seconds"]))
+            segs[i] = (min(a, s["start_time_seconds"]), max(b, s["end_time_seconds"]))
+        js.write_text(json.dumps([segs[i] for i in range(len(script["lines"]))]), encoding="utf-8")
+        print(f"  ElevenLabs 대화 {sum(len(l['say']) for l in script['lines'])}자", file=sys.stderr)
+    return f, json.loads(js.read_text(encoding="utf-8"))
+
+
 def build(script):
     """대사 음성·시각·입 모양(소리 크기) 계산 → JS에 넘길 타임라인."""
-    t, lines = 0.4, []
+    mp3, segs = tts_dialogue(script)
+    a = decode(mp3)
+    hop, lines = 16000 // FPS, []
     for i, l in enumerate(script["lines"]):
-        mp3 = tts_line(l["who"], l["say"])
-        a = decode(mp3)
-        s0, s1 = trim_silence(a)
+        s0, s1 = segs[i]
         seg = a[int(s0 * 16000): int(s1 * 16000)]
-        hop = 16000 // FPS
-        env = [float(np.sqrt(np.mean(seg[k:k + hop] ** 2))) for k in range(0, len(seg), hop)]
+        q0, q1 = trim_silence(seg)                                   # 구간 안의 실제 소리 시작·끝
+        seg = seg[int(q0 * 16000): int(q1 * 16000) + 1]
+        env = [float(np.sqrt(np.mean(seg[k:k + hop] ** 2))) for k in range(0, len(seg), hop)] or [0.0]
         peak = max(env) or 1
-        t += l.get("gap", 0.25) if i else 0
-        lines.append({"who": l["who"], "t": round(t, 3), "dur": round(len(seg) / 16000, 3), "env": [round(e / peak, 3) for e in env],
-                      "sub": l.get("sub"), "emo": l.get("emo"), "mp3": str(mp3), "s0": s0})
-        t += len(seg) / 16000
-    dur = t + script.get("tail", 1.0)
+        lines.append({"who": l["who"], "t": round(LEAD + s0 + q0, 3), "dur": round(len(seg) / 16000, 3),
+                      "env": [round(e / peak, 3) for e in env], "sub": l.get("sub"), "emo": l.get("emo")})
+    dur = LEAD + len(a) / 16000 + script.get("tail", 1.0)
+    script["_audio"] = str(mp3)
 
     def at(e):
         return e["t"] if "t" in e else lines[e["line"]]["t"] + e.get("dt", 0)
     events = [dict(e, t=round(at(e), 3)) for e in script.get("events", [])]
     shots = sorted([dict(s, t=round(at(s) if ("line" in s or "t" in s) else 0, 3)) for s in script["shots"]], key=lambda s: s["t"])
     shots[0]["t"] = 0
-    return {"cast": script["cast"], "lines": lines, "events": events, "shots": shots, "dur": round(dur, 3), "fps": FPS}
+    return {"cast": script["cast"], "lines": lines, "events": events, "shots": shots, "dur": round(dur, 3), "fps": FPS,
+            "audio": str(mp3)}
+
+
+def check_pron(tl, script):
+    """발음 확인 (운영자 2026-11-18 '발음 신경 쓰자'): 대사마다 받아써서 대본과 다르면 표시."""
+    import difflib
+    from faster_whisper import WhisperModel
+    m = WhisperModel("small", device="cpu", compute_type="int8")
+    a = decode(tl["audio"])
+    bad = 0
+    for l, src in zip(tl["lines"], script["lines"]):
+        s = int((l["t"] - LEAD) * 16000)
+        seg = a[max(0, s - 1600): s + int(l["dur"] * 16000) + 1600]
+        heard = " ".join(x.text.strip() for x in m.transcribe(seg, language="ko")[0])
+        want = l.get("sub") or src["say"]
+        norm = lambda x: "".join(ch for ch in x if ch.isalnum())
+        r = difflib.SequenceMatcher(None, norm(want), norm(heard)).ratio()
+        flag = "OK " if r >= 0.92 else "확인"
+        bad += r < 0.92
+        print(f"  [{flag}] {r:.2f} {l['who']}: 대본「{want}」 들림「{heard}」")
+    return bad
 
 
 async def shoot(tl, frames, out_dir, gpu, still):
@@ -124,14 +171,9 @@ async def shoot(tl, frames, out_dir, gpu, still):
 
 
 def encode(tl, frames_dir, mp4):
-    ins, fl = [], []
-    for i, l in enumerate(tl["lines"]):
-        ins += ["-ss", f"{l['s0']:.3f}", "-i", l["mp3"]]
-        d = int(l["t"] * 1000)
-        fl.append(f"[{i + 1}:a]atrim=0:{l['dur'] + 0.05:.3f},adelay={d}|{d}[a{i}]")
-    n = len(tl["lines"])
-    fc = ";".join(fl) + ";" + "".join(f"[a{i}]" for i in range(n)) + f"amix=inputs={n}:normalize=0,apad,loudnorm=I=-14:TP=-1.5[a]"
-    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-framerate", str(FPS), "-i", str(frames_dir / "f%05d.jpg")] + ins +
+    d = int(LEAD * 1000)   # 대화 음성 한 줄을 그대로 (대사 사이 숨·틈이 자연스럽게)
+    fc = f"[1:a]adelay={d}|{d},apad,loudnorm=I=-14:TP=-1.5[a]"
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-framerate", str(FPS), "-i", str(frames_dir / "f%05d.jpg"), "-i", tl["audio"]] +
                    ["-filter_complex", fc, "-map", "0:v", "-map", "[a]", "-t", str(tl["dur"]), "-c:v", "libx264", "-pix_fmt", "yuv420p",
                     "-crf", "18", "-preset", "medium", "-c:a", "aac", "-b:a", "192k", "-ar", "44100", "-movflags", "+faststart", str(mp4)], check=True)
 
@@ -141,12 +183,16 @@ def main():
     ap.add_argument("script")
     ap.add_argument("--gpu", action="store_true")
     ap.add_argument("--stills", help="확인용 초(쉼표), 예: 0.5,3,6")
+    ap.add_argument("--check", action="store_true", help="발음만 확인 (받아쓰기)")
     a = ap.parse_args()
     sp = Path(a.script)
-    tl = build(json.loads(sp.read_text(encoding="utf-8")))
+    script = json.loads(sp.read_text(encoding="utf-8"))
+    tl = build(script)
     out = HERE / "out"
     out.mkdir(exist_ok=True)
     print(f"길이 {tl['dur']}초, 대사 {len(tl['lines'])}개", flush=True)
+    if a.check:
+        sys.exit(1 if check_pron(tl, script) else 0)
     if a.stills:
         frames = [int(float(x) * FPS) for x in a.stills.split(",")]
         asyncio.run(shoot(tl, frames, out, a.gpu, True))
