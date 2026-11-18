@@ -45,7 +45,7 @@ HUMANS = {
         face=dict(eye_s=0.064, eye_aspect=0.62, eye_dx=0.15, mouth_w=0.075, mouth_dy=-0.20, brows=True, grin=True),
         emo={"neutral": ["eye_open", "brow_neutral", "mouth_grin"],
              "happy": ["eye_happy", "brow_neutral", "mouth_grin", "blush"]},
-        collar=True, blocky=True, fashion="jensen", blocky_head=True, photo_tint=0.85),   # 각진 블록 몸 + 젠슨 황 패션 (운영자 2026-11-18)
+        collar=True, blocky=True, fashion="jensen", blocky_head=True, photo_tint=0.85, photo_face=True),   # 각진 블록 몸 + 젠슨 황 패션 (운영자 2026-11-18)
     "man": dict(
         skin="#E2AE86", hair="#2B211C", top="#7FA6D4", top_rough=0.7, tee=None,
         pants="#3A3F4A", shoes="#5B3B29", sleeves="top",
@@ -130,6 +130,29 @@ def rounded_box(bm, center, size, round_=0.35, cuts=3, top_scale=1.0, matrix=Non
     bpy.data.meshes.remove(me)
 
 
+def photo_uv(head):
+    """원본 사진 질감을 머리 앞면에 맞춰 붙임 (운영자 2026-11-18 "원래 사진 원본을 저 모델에 맞게 살짝").
+    가로: 사진 눈 사이 205px = 캐릭터 눈 사이 0.30 / 세로: 사진 눈→입선 240px = 캐릭터 눈→입 0.20 (눈·입 위치가 겹치게)."""
+    me = head.data
+    uv = me.uv_layers.new(name="UVMap")
+    W, H = 1459, 1740
+    for p in me.polygons:
+        for li in p.loop_indices:
+            co = me.vertices[me.loops[li].vertex_index].co
+            px, py = 682 + co.x * 683, 605 - co.y * 1200
+            uv.data[li].uv = (min(max(px / W, 0), 1), 1 - min(max(py / H, 0), 1))
+    img = bpy.data.images.load(os.path.join(os.path.dirname(os.path.abspath(__file__)), "ref", "jensen_face_tex.png"))
+    m = bpy.data.materials.new("jensen_face_photo")
+    m.use_nodes = True
+    nt = m.node_tree
+    bsdf = nt.nodes["Principled BSDF"]
+    bsdf.inputs["Roughness"].default_value = 0.72
+    tex = nt.nodes.new("ShaderNodeTexImage")
+    tex.image = img
+    nt.links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
+    return m
+
+
 def photo_tint(head, amount):
     """앞을 향한 면 색에 사진 피부 명암(ref/jensen_skin_detail.png)을 섞음. 머리 좌표(앞 +Z, 위 +Y, 눈 높이 y=0) → 사진 눈 (682,605), 683px/단위."""
     import numpy as np
@@ -164,26 +187,27 @@ def make_blocky_head(key, cfg):
     둥근 모서리 상자 하나로 사각 얼굴 + 각진 넓은 코 + 각진 귀 / 머리카락은 각진 판 두 개."""
     from mathutils import Matrix
     bm = bmesh.new()
-    rounded_box(bm, (0, -0.02, 0), (0.39, 0.42, 0.37), round_=0.3, cuts=2, top_scale=0.95)      # 사각 얼굴
+    rounded_box(bm, (0, -0.02, 0), (0.39, 0.42, 0.37), round_=0.3, cuts=7, top_scale=0.95)      # 사각 얼굴: 규칙적인 격자 면 (운영자 2026-11-18 "불규칙한 각짐 말고")
     rounded_box(bm, (0, -0.09, 0.39), (0.085, 0.06, 0.06), round_=0.2, cuts=1)                   # 넓은 코
     for sx in (1, -1):
         rounded_box(bm, (0.4 * sx, -0.02, 0), (0.05, 0.09, 0.06), round_=0.2, cuts=1)           # 귀
     bmesh.ops.triangulate(bm, faces=bm.faces[:])
     head = B.bm_to_obj(bm, f"{key}_head")
-    B.remesh(head, 0.02)
     # 턱: 아래로 갈수록 살짝 좁게 (운영자 2026-11-18 "턱이 너무 사각은 아니게")
     for v in head.data.vertices:
         if v.co.y < -0.04:
             t = min(1.0, (-0.04 - v.co.y) / 0.4)
             v.co.x *= 1.0 - 0.32 * t ** 1.6
     head.data.update()
-    B.decimate(head, 3000 if cfg.get("photo_tint") else 600)
     B.shade_flat(head)
     sk = B.hex2rgb(cfg["skin"])
-    B.facet_colors(head, lambda c: sk, jitter=0.08, seed=7)
-    if cfg.get("photo_tint"):
-        photo_tint(head, cfg["photo_tint"])
-    head.data.materials.append(B.material(f"{key}_head_mat", vcol=True, rough=0.72))
+    B.facet_colors(head, lambda c: sk, jitter=0.04, seed=7)
+    if cfg.get("photo_face"):
+        head.data.materials.append(photo_uv(head))          # 원본 사진 질감 (face_texture.py)
+    else:
+        if cfg.get("photo_tint"):
+            photo_tint(head, cfg["photo_tint"])
+        head.data.materials.append(B.material(f"{key}_head_mat", vcol=True, rough=0.72))
     bm = bmesh.new()
     rounded_box(bm, (0, 0.2, -0.06), (0.425, 0.26, 0.42), round_=0.3, cuts=2)                    # 머리 덮개 (위·옆·뒤)
     tilt = Matrix.Rotation(math.radians(-18), 4, "X")
