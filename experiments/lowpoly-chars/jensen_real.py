@@ -144,6 +144,46 @@ def crescent(name, w, depth, curve, t):
     return ob
 
 
+def paint_lips(body, w=0.1, up=0.028, lo=0.036):
+    """로우폴리 면은 그대로, 그 면들에 원래 비율·원래 색의 빨간 입술을 좌우 대칭으로 칠함 (운영자 2026-11-18).
+    입 폭 ≈ 0.16(사진 기준), 윗입술 얇게·아랫입술 도톰하게, 가운데 입술선은 진하게."""
+    import random
+    # 입 자리 면만 잘게 나눔 (큰 삼각형이면 입 모양이 세모로 쏠림). 나머지 로우폴리는 그대로.
+    bm = bmesh.new()
+    bm.from_mesh(body.data)
+    reg = [f for f in bm.faces if f.normal.y < -0.15 and abs(f.calc_center_median().x - FACE_X) < w * 1.4
+           and abs(f.calc_center_median().z - MOUTH_Z) < 0.07]
+    edges = list({e for f in reg for e in f.edges})
+    bmesh.ops.subdivide_edges(bm, edges=edges, cuts=2, use_grid_fill=True)
+    bmesh.ops.triangulate(bm, faces=bm.faces[:])
+    bm.to_mesh(body.data)
+    bm.free()
+    for p in body.data.polygons:
+        p.use_smooth = False
+    rng = random.Random(9)
+    attr = body.data.color_attributes[0]
+    upper, lower, line = B.hex2rgb("#A9454E"), B.hex2rgb("#BD5A60"), B.hex2rgb("#5C1F25")
+    for p in body.data.polygons:
+        c = p.center
+        if p.normal.y > -0.15:   # 앞을 향한 면만 (얼굴이 살짝 돌아가 있어 y 높이로 거르면 한쪽이 빠짐)
+            continue
+        dx, dz = abs(c.x - FACE_X) / w, c.z - MOUTH_Z
+        if dx >= 1:
+            continue
+        span = 1 - dx * dx
+        col = None
+        if abs(dz) < 0.0055 + 0.004 * span:
+            col = line
+        elif 0 < dz < up * span * (1 - 0.35 * math.exp(-(dx / 0.18) ** 2)):   # 윗입술 (가운데 살짝 오목: 큐피드 활)
+            col = upper
+        elif -lo * span ** 0.7 < dz < 0:
+            col = lower
+        if col:
+            k = 1 + rng.uniform(-0.06, 0.06)
+            for li in p.loop_indices:
+                attr.data[li].color = (col[0] * k, col[1] * k, col[2] * k, 1)
+
+
 def clean_mouth(body):
     """입 주변 면을 옆 피부색으로 다시 칠함 (한쪽만 붉던 입술 색이 삐뚤어 보이게 함). 입은 캐릭터 입선으로 새로 그림."""
     import numpy as np, random
@@ -215,11 +255,7 @@ def add_face_parts(body):
         hl.location = (x + 0.022, y - 0.016, EYE_Z + 0.008)
         hl.data.materials.append(lid_m)
         hl.parent = face
-    # 평소 입: 얼굴 비율에 맞는 웃는 초승달 (실제 입 폭 ≈ 0.15, 운영자 2026-11-18 "입이 달려 있긴 해야지, 비율에 맞게")
-    ml = crescent("jensen_real_mouth_smile", 0.078, 0.034, 0.013, 0.03)
-    ml.location = (FACE_X, front_y(bvh, FACE_X, MOUTH_Z) - 0.006, MOUTH_Z)
-    ml.data.materials.append(mat("jr_mouthline", "#3A1215", 0.6))
-    ml.parent = face    # 말할 때 입: 어두운 입 안 (평소엔 납작 → three.js가 높이를 키워 벌림)
+    # 말할 때 입: 어두운 입 안 (평소엔 납작 → three.js가 높이를 키워 벌림)
     my = front_y(bvh, FACE_X, MOUTH_Z) - 0.006
     m = B.lowpoly_ellipsoid("jensen_real_mouth_open", 0.07, 0.03, 0.02, seg=12, rings=4)
     m.rotation_euler = (math.radians(90), 0, 0)
@@ -273,8 +309,8 @@ def main():
         symmetrize(body, side)
     else:
         level_mouth(body)
-        flatten_mouth(body)
         clean_mouth(body)
+        paint_lips(body)
     recolor(body)
     for m in body.data.materials:  # 넓은 조명이 검은 재킷에 하얗게 반사돼 회색으로 보이던 것 줄이기
         bsdf = m.node_tree.nodes.get("Principled BSDF")
