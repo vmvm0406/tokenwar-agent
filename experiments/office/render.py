@@ -103,6 +103,8 @@ def tts_dialogue(lines_in):
     script = {"lines": lines_in}
     body = {"inputs": [{"text": l["say"], "voice_id": VOICES["voices"][l["who"]]["voice_id"]} for l in script["lines"]],
             "model_id": VOICES["model"], "language_code": "ko", "settings": VOICES["settings"]}
+    if lines_in[0].get("seed") is not None:   # 같은 글을 다시 뽑고 싶을 때 (발음이 어긋난 녹음 바꾸기)
+        body["seed"] = lines_in[0]["seed"]
     h = hashlib.sha256(json.dumps(body, ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:20]
     f, js = CACHE / f"dlg2_{h}.mp3", CACHE / f"dlg2_{h}.json"
     if not (f.exists() and js.exists()):
@@ -268,8 +270,21 @@ def build(script):
             for k in range(len(g)):
                 if per[k]:
                     segs[k] = [max(0.0, per[k][0][1] - 0.15), per[k][-1][2] + 0.12]
+        # "cut_after": "조롱받" → 그 글자까지만 들리고 소리를 툭 끊음 (팝콘에 맞아 말이 끊김, 운영자 2026-11-18)
+        mutes = []
+        for k, i in enumerate(g):
+            ca = script["lines"][i].get("cut_after")
+            if ca and per and per[k]:
+                import re as _re
+                body_ = "".join(ch for ch in _re.sub(r"\[[^\]]*\]", "", script["lines"][i]["say"]) if ch.isalnum())
+                key_ = "".join(ch for ch in ca if ch.isalnum())
+                j = body_.rfind(key_)
+                if j >= 0:
+                    cut = per[k][min(len(per[k]) - 1, j + len(key_) - 1)][2] + 0.03
+                    mutes.append([round(cut, 3), round(segs[k][1] + 0.4, 3)])
+                    segs[k][1] = cut
         a = decode(mp3)
-        parts.append({"file": str(mp3), "t": round(t0, 3)})
+        parts.append({"file": str(mp3), "t": round(t0, 3), "mute": mutes})
         for k, i in enumerate(g):
             l = script["lines"][i]
             s0, s1 = segs[k]
@@ -392,7 +407,8 @@ def encode(tl, frames_dir, mp4):
                                f"aformat=sample_rates=44100:channel_layouts=stereo,volume=0.9")
     for p in tl["parts"]:
         d = int(p["t"] * 1000)
-        add(p["file"], f"aformat=sample_rates=44100:channel_layouts=stereo,volume={p.get('vol', 1.0)},adelay={d}|{d}")
+        mute = "".join(f",volume=0:enable='between(t,{a_},{b_})'" for a_, b_ in p.get("mute", []))
+        add(p["file"], f"aformat=sample_rates=44100:channel_layouts=stereo,volume={p.get('vol', 1.0)}{mute},adelay={d}|{d}")
     for x in tl.get("audio", []):
         c = tl["clipsrc"][x["clip"]]
         d = int(x["t"] * 1000)
