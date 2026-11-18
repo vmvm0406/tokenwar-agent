@@ -279,6 +279,22 @@ def arc_tube(name, pts, rad, ring=6):
     return ob
 
 
+def d_mouth(name, w, h, t, n=10):
+    """위가 평평하고 아래가 둥근 D자 입 (활짝 웃음·말하기). 원점 = 윗변 가운데."""
+    pts = [(-w, 0)] + [(w * math.cos(math.pi + math.pi * k / n), h * math.sin(math.pi + math.pi * k / n)) for k in range(1, n)] + [(w, 0)]
+    bm = bmesh.new()
+    bot = [bm.verts.new((x, y, -t / 2)) for x, y in pts]
+    top = [bm.verts.new((x, y, t / 2)) for x, y in pts]
+    bm.faces.new(list(reversed(bot)))
+    bm.faces.new(top)
+    for i in range(len(pts)):
+        j = (i + 1) % len(pts)
+        bm.faces.new((bot[i], bot[j], top[j], top[i]))
+    ob = bm_to_obj(bm, name)
+    shade_flat(ob)
+    return ob
+
+
 def add_face(key, body, root, cx, cy, eye_dx, eye_s, mouth_dy, mouth_w, mats, blush=None):
     dg = bpy.context.evaluated_depsgraph_get()
     bvh = BVHTree.FromObject(body, dg)
@@ -294,24 +310,93 @@ def add_face(key, body, root, cx, cy, eye_dx, eye_s, mouth_dy, mouth_w, mats, bl
     if blush:
         samples += [(cx - blush[0], cy + blush[1]), (cx + blush[0], cy + blush[1])]
     z0 = max(zat(x, y) for x, y in samples)  # 얼굴은 한 평면에 (울퉁불퉁한 면 위에 떠 있게)
+
+    # 얼굴 묶음: 부품 이름 = <캐릭터>_<부품>_<변형>[_L|_R]. three.js가 표정마다 켜고 끈다 (EMOTIONS).
+    face = link(bpy.data.objects.new(f"{key}_face", None))
+    face.parent = root
+    face.location = (cx, cy, z0)
+    s = eye_s
+
+    def put(ob, mat, loc=(0, 0, 0)):
+        ob.data.materials.append(mats[mat])
+        ob.parent = face
+        ob.location = loc
+        return ob
+
+    def arc(name, ox, oy, r, a0, a1, rad, sy=1.0, n=9):
+        pts = [(ox + r * math.cos(math.radians(a0 + (a1 - a0) * k / (n - 1))),
+                oy + r * sy * math.sin(math.radians(a0 + (a1 - a0) * k / (n - 1))), 0.02) for k in range(n)]
+        return arc_tube(name, pts, rad)
+
     for side, sx in (("L", -1), ("R", 1)):
-        e = lowpoly_ellipsoid(f"{key}_eye_{side}", eye_s * 0.78, eye_s, eye_s * 0.45)
-        e.location = (cx + sx * eye_dx, cy, z0 + eye_s * 0.15)
-        e.data.materials.append(mats["eye"])
-        e.parent = root
-        hl = lowpoly_ellipsoid(f"{key}_eyehl_{side}", eye_s * 0.26, eye_s * 0.26, eye_s * 0.15, seg=6, rings=4)
-        hl.location = (eye_s * 0.28, eye_s * 0.38, eye_s * 0.36)
-        hl.data.materials.append(mats["hl"])
-        hl.parent = e
-    if blush:  # 볼터치 (발그레한 표정용, 나중에 켜고 끔)
-        for side, sx in (("L", -1), ("R", 1)):
-            b = lowpoly_ellipsoid(f"{key}_blush_{side}", blush[2] * 1.25, blush[2] * 0.75, 0.012, seg=8, rings=4)
-            b.location = (cx + sx * blush[0], cy + blush[1], z0 + 0.004)
-            b.data.materials.append(mats["blush"])
-            b.parent = root
-    m = arc_tube(f"{key}_mouth_smile", [(x, y, z0 + 0.012) for x, y in mouth_xy], eye_s * 0.2)
-    m.data.materials.append(mats["eye"])
-    m.parent = root
+        ex = sx * eye_dx
+        # 눈: 기본 / 크게(놀람) / ^^(기쁨) / 감음(졸림·민망)
+        for var, k in (("open", 1.0), ("wide", 1.3)):
+            e = put(lowpoly_ellipsoid(f"{key}_eye_{var}_{side}", s * 0.78 * k, s * k, s * 0.45 * k), "eye", (ex, 0, s * 0.15))
+            hl = lowpoly_ellipsoid(f"{key}_eyehl_{var}_{side}", s * 0.26 * k, s * 0.26 * k, s * 0.15, seg=6, rings=4)
+            hl.data.materials.append(mats["hl"])
+            hl.parent = e
+            hl.location = (s * 0.28 * k, s * 0.38 * k, s * 0.36 * k)
+        put(arc(f"{key}_eye_happy_{side}", ex, -s * 0.35, s * 0.75, 20, 160, s * 0.2), "eye")
+        put(arc(f"{key}_eye_closed_{side}", ex, s * 0.45, s * 0.75, 205, 335, s * 0.18, sy=0.7), "eye")
+        # 눈썹: 화남(안쪽이 내려감) / 슬픔(바깥이 내려감)
+        for var, tilt in (("angry", -1), ("sad", 1)):
+            y0 = s * 1.45
+            pts = [(ex - sx * s * 0.6, y0 + tilt * s * 0.25, 0.02), (ex, y0, 0.02), (ex + sx * s * 0.6, y0 - tilt * s * 0.25, 0.02)]
+            put(arc_tube(f"{key}_brow_{var}_{side}", pts, s * 0.16), "eye")
+        if blush:  # 볼터치
+            put(lowpoly_ellipsoid(f"{key}_blush_{side}", blush[2] * 1.25, blush[2] * 0.75, 0.012, seg=8, rings=4),
+                "blush", (sx * blush[0], blush[1], 0.004))
+
+    # 입: 웃음 / 시무룩 / 일자 / 벌림(아) / 오 / 물결(당황)
+    mw, my = mouth_w, mouth_dy
+    put(arc_tube(f"{key}_mouth_smile", [(x - cx, y - cy, 0.012) for x, y in mouth_xy], s * 0.2), "eye")
+    put(arc(f"{key}_mouth_frown", 0, my - mw * 0.9, mw * 0.9, 25, 155, s * 0.2), "eye")
+    put(arc_tube(f"{key}_mouth_flat", [(-mw * 0.7, my, 0.02), (0, my, 0.02), (mw * 0.7, my, 0.02)], s * 0.18), "eye")
+    put(d_mouth(f"{key}_mouth_open", mw * 1.1, mw * 0.85, s * 0.18), "inner", (0, my + mw * 0.45, 0.02))
+    put(lowpoly_ellipsoid(f"{key}_mouth_o", mw * 0.5, mw * 0.62, s * 0.25, seg=10, rings=6), "inner", (0, my - mw * 0.1, 0.01))
+    wav = [(-mw + 2 * mw * k / 8, my + (s * 0.18 if k % 2 else -s * 0.18), 0.02) for k in range(9)]
+    put(arc_tube(f"{key}_mouth_wavy", wav, s * 0.16), "eye")
+    # 땀방울 (당황) — 이마 오른쪽 위
+    sw = put(lowpoly_ellipsoid(f"{key}_sweat", s * 0.45, s * 0.7, s * 0.3, seg=8, rings=6), "sweat",
+             (eye_dx + s * 1.4, s * 1.3, s * 0.1))
+    sw.rotation_euler = (0, 0, math.radians(-20))
+
+
+# 감정 → 켤 부품 (나머지는 끔). three.js 재생기도 같은 표를 쓴다 (out/emotions.json).
+EMOTIONS = {
+    "neutral":     ["eye_open", "mouth_smile"],
+    "happy":       ["eye_happy", "mouth_open", "blush"],
+    "surprised":   ["eye_wide", "mouth_o"],
+    "sad":         ["eye_open", "brow_sad", "mouth_frown"],
+    "angry":       ["eye_open", "brow_angry", "mouth_flat"],
+    "embarrassed": ["eye_closed", "mouth_wavy", "blush", "sweat"],
+    "sleepy":      ["eye_closed", "mouth_flat"],
+}
+FACE_PARTS = ["eye_open", "eye_wide", "eye_happy", "eye_closed", "brow_angry", "brow_sad", "blush",
+              "mouth_smile", "mouth_frown", "mouth_flat", "mouth_open", "mouth_o", "mouth_wavy", "sweat"]
+
+
+def part_of(name, key):
+    """'claude_eye_open_L' → 'eye_open' (eyehl은 부모 눈을 따라감)."""
+    rest = name[len(key) + 1:]
+    for p in FACE_PARTS:
+        if rest == p or rest.startswith(p + "_"):
+            return p
+    return None
+
+
+def set_emotion(root, key, emo):
+    on = set(EMOTIONS[emo])
+    for o in root.children_recursive:
+        if o.name.startswith(f"{key}_eyehl_"):
+            continue
+        p = part_of(o.name, key)
+        if p:
+            hide = p not in on
+            o.hide_render = hide
+            for c in o.children_recursive:
+                c.hide_render = hide
 
 
 # ---------- 장면·렌더 ----------
@@ -381,11 +466,33 @@ def render(sc, path, w, h):
     bpy.ops.render.render(write_still=True)
 
 
+def emotion_sheet(sc, roots):
+    """캐릭터마다 감정 7개 정면 사진 → out/sheet/<캐릭터>_<감정>.png (tile_sheet.py로 한 장에)."""
+    d = os.path.join(OUT, "sheet")
+    os.makedirs(d, exist_ok=True)
+    for o in bpy.data.objects:  # 백그라운드 연속 렌더에서 그림자 지도가 꼬여 까맣게 나오는 일 방지
+        if o.type == "LIGHT":
+            o.data.use_shadow = False
+    home = {k: r.location.copy() for k, r in roots.items()}
+    for key, root in roots.items():
+        for k, r in roots.items():
+            r.location = (0, 0, home[k].z) if k == key else (home[k].x, 50, home[k].z)
+        bpy.context.view_layer.update()
+        z = root.location.z
+        camera(sc, (0.0, -2.6, z + 0.15), (0, 0, z + 0.05), lens=50, focus=(0, -0.3, z), fstop=1.6)
+        for emo in EMOTIONS:
+            set_emotion(root, key, emo)
+            render(sc, os.path.join(d, f"{key}_{emo}.png"), 640, 640)
+        set_emotion(root, key, "neutral")
+
+
 def main():
     sc = setup_scene()
     mats = {"eye": material("eye", hex2rgb("#141414"), rough=0.25),
             "hl": material("hl", (1, 1, 1), rough=0.2, emit=1.5),
-            "blush": material("blush", hex2rgb("#FF6F86"), rough=0.6, emit=0.25)}
+            "blush": material("blush", hex2rgb("#FF6F86"), rough=0.6, emit=0.25),
+            "inner": material("inner", hex2rgb("#2A0A10"), rough=0.5),
+            "sweat": material("sweat", hex2rgb("#9FD8FF"), rough=0.1, emit=0.3)}
     roots = {}
     for i, key in enumerate(ONLY):
         cfg = CHARS[key]
@@ -402,9 +509,12 @@ def main():
         roots[key] = root
     bpy.context.view_layer.update()
 
+    import json
+    with open(os.path.join(OUT, "emotions.json"), "w", encoding="utf-8") as fp:
+        json.dump({"parts": FACE_PARTS, "emotions": EMOTIONS}, fp, ensure_ascii=False, indent=1)
     for key, root in roots.items():
         loc = root.location.copy()
-        root.location = (0, 0, 1.08)
+        root.location = (0, 0, loc.z)  # glb 원점 = 바닥 가운데 (통통 튀기·찌그러지기 기준)
         bpy.ops.object.select_all(action="DESELECT")
         root.select_set(True)
         for c in root.children_recursive:
@@ -412,6 +522,10 @@ def main():
         bpy.ops.export_scene.gltf(filepath=os.path.join(OUT, f"{key}.glb"), export_format="GLB", use_selection=True)
         root.location = loc
 
+    for key, root in roots.items():
+        set_emotion(root, key, "neutral")
+    if "--sheet" in argv:
+        return emotion_sheet(sc, roots)
     tag = "_".join(ONLY)
     n = len(ONLY)
     camera(sc, (0.9, -4.2 - 2.2 * n, 1.5), (0, 0, 1.0), lens=50, focus=(0, 0, 1.0), fstop=2.8)
