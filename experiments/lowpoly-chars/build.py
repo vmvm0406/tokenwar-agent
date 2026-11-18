@@ -37,22 +37,32 @@ CHARS = {
     # 통통하게(운영자 레퍼런스 2026-11-18): 두껍고 둥근 단면(power 0.5) + 윤곽을 사방으로 부풀림(dilate) + 큼직한 면(faces)
     # 2026-11-18 운영자: 광선이 다리처럼 보여 이상 → 로고 모양은 그대로 두고 광선만 가운데 쪽으로 줄임(ray_k).
     # (별 모양 star= 시안은 "클로드 느낌이 사라졌다"로 되돌림)
-    "claude": dict(svg="claude.svg", half=0.12, h=0.36, hmin=0.05, power=0.8, dcap=0.46,
-                   ray_k=dict(r0=0.42, k=0.74),
-                   # "울퉁불퉁해 보여"(운영자 2026-11-18): 납작하게(power 0.8)·더 매끈하게(smooth 8)·면 색 차이 작게
-                   smooth_it=8, jitter=0.05,
-                   disc=dict(r=0.46, sides=28), faces=2400, dilate=0.045,
-                   face=dict(cx=0.0, cy=0.02, eye_dx=0.16, eye_s=0.10, mouth_dy=-0.16, mouth_w=0.08,
-                             blush=(0.28, -0.10, 0.075))),
-    "gemini": dict(svg="gemini.svg", half=0.12, h=0.42, hmin=0.04, power=0.5, dcap=None,
-                   disc=None, faces=2000, dilate=0.06,
-                   face=dict(cx=0.0, cy=0.03, eye_dx=0.17, eye_s=0.10, mouth_dy=-0.16, mouth_w=0.08,
-                             blush=(0.29, -0.11, 0.07))),
-    # 챗GPT: 가운데를 큰 육각 얼굴판으로 덮고 매듭 꽃잎은 바깥에 남김
-    "chatgpt": dict(svg="openai.svg", half=0.10, h=0.36, hmin=0.06, power=0.5, dcap=0.40,
-                    disc=dict(r=0.47, sides=6, rot=30), faces=3200, dilate=0.025,
-                    face=dict(cx=0.0, cy=0.02, eye_dx=0.16, eye_s=0.10, mouth_dy=-0.16, mouth_w=0.08,
-                              blush=(0.27, -0.10, 0.07))),
+    # 2026-11-18 운영자 레퍼런스(통통한 구름 덩어리 + 짧은 발 + 세로 막대 눈, 입 없음): "이런 느낌".
+    # 로고 광선을 아주 짧은 혹으로(ray_k) + 크게 부풀려(dilate) 한 덩어리로, 두껍게(h), 아래에 짧은 발 2개,
+    # 위 밝고 아래 짙은 색(grad). 얼굴은 눈만 (eyes_only) — 표정은 눈·눈썹·볼터치·땀으로만.
+    # 운영자 2026-11-18: 구름 덩어리 방향 OK, 혹 7개 시안은 "꽃 같다" → 로고 광선을 짧은 혹으로(구름),
+    # 레퍼런스처럼 옆으로 조금 넓고(xscale) 혹은 더 매끈하게, 아래는 살짝 평평하게(bottom_flat) 발이 보이게
+    "claude": dict(svg="claude.svg", half=0.12, h=0.62, hmin=0.12, power=0.45, dcap=0.5,
+                   ray_k=dict(r0=0.36, k=0.42), xscale=1.1, bottom_flat=-0.62,
+                   smooth_it=18, jitter=0.04,
+                   disc=dict(r=0.5, sides=28), faces=1600, dilate=0.11,
+                   feet=dict(dx=0.26, s=(0.18, 0.12, 0.2)), grad=("#F2A47C", "#C9552F"),
+                   face=dict(cx=0.0, cy=0.06, eye_dx=0.2, eye_s=0.21, mouth_dy=-0.16, mouth_w=0.08,
+                             blush=(0.33, -0.10, 0.08), eyes_only=True)),
+    # 제미나이: 네 꼭짓점을 조금 짧고 둥글게 (별 모양은 그대로 알아보게)
+    "gemini": dict(svg="gemini.svg", half=0.12, h=0.58, hmin=0.08, power=0.45, dcap=None,
+                   ray_k=dict(r0=0.3, k=0.72), smooth_it=6, jitter=0.04,
+                   disc=None, faces=1600, dilate=0.09,
+                   feet=dict(dx=0.2, s=(0.15, 0.11, 0.18)), grad=(1.12, 0.82),
+                   face=dict(cx=0.0, cy=0.05, eye_dx=0.17, eye_s=0.17, mouth_dy=-0.16, mouth_w=0.08,
+                             blush=(0.28, -0.10, 0.07), eyes_only=True)),
+    # 챗GPT: 가운데 육각 얼굴판 + 매듭 꽃잎, 조금 더 통통하게
+    "chatgpt": dict(svg="openai.svg", half=0.10, h=0.5, hmin=0.1, power=0.45, dcap=0.40,
+                    ray_k=dict(r0=0.5, k=0.85), smooth_it=5, jitter=0.04,
+                    disc=dict(r=0.5, sides=6, rot=30), faces=2400, dilate=0.05,
+                    feet=dict(dx=0.22, s=(0.16, 0.11, 0.19)), grad=("#E4E4DF", "#9A9A95"),
+                    face=dict(cx=0.0, cy=0.03, eye_dx=0.17, eye_s=0.17, mouth_dy=-0.16, mouth_w=0.08,
+                              blush=(0.28, -0.10, 0.07), eyes_only=True)),
 }
 # 제미나이 2025 아이콘 색 (위 빨강, 왼쪽 노랑, 아래 초록, 오른쪽·가운데 파랑)
 GEM_STOPS = [((0.0, 0.95), "#FC413D"), ((0.45, 0.45), "#969DFF"), ((-0.95, 0.0), "#FBBC04"),
@@ -264,6 +274,10 @@ def make_body(key, cfg):
             r = v.co.length
             if r > r0:
                 v.co *= (r0 + (r - r0) * k) / r
+    for v in bm.verts:                         # 옆으로 넓게 / 아래 평평하게 (레퍼런스 덩어리 비율)
+        v.co.x *= cfg.get("xscale", 1.0)
+        if cfg.get("bottom_flat") is not None and v.co.y < cfg["bottom_flat"]:
+            v.co.y = cfg["bottom_flat"] + (v.co.y - cfg["bottom_flat"]) * 0.35
     solid_from_flat(bm, cfg["half"])
     if cfg["disc"]:
         dsc = cfg["disc"]
@@ -279,6 +293,14 @@ def make_body(key, cfg):
 
 
 def body_color(key):
+    g = CHARS[key].get("grad")
+    if g and isinstance(g[0], str):            # 위 밝은 색 → 아래 짙은 색 (레퍼런스처럼 높이에 따라 층)
+        top, bot = hex2rgb(g[0]), hex2rgb(g[1])
+
+        def vert(c):
+            t = max(0.0, min(1.0, (c.y + 0.9) / 1.8))
+            return [bot[i] + (top[i] - bot[i]) * t for i in range(3)]
+        return vert
     if key == "claude":
         base = hex2rgb("#D97757")
         return lambda c: base
@@ -291,8 +313,30 @@ def body_color(key):
         p = Vector((c.x, c.y))
         ws = [1 / ((p - q).length ** 2 + 0.005) ** 2 for q, _ in stops]
         tot = sum(ws)
-        return [sum(w * col[i] for w, (_, col) in zip(ws, stops)) / tot for i in range(3)]
+        col = [sum(w * col[i] for w, (_, col) in zip(ws, stops)) / tot for i in range(3)]
+        if g:                                  # 제미나이: 색은 그대로, 위 밝게·아래 어둡게만
+            t = max(0.0, min(1.0, (c.y + 0.9) / 1.8))
+            col = [v * (g[1] + (g[0] - g[1]) * t) for v in col]
+        return col
     return grad
+
+
+def add_feet(key, body, root, cfg, mat):
+    """짧고 통통한 발 2개 (레퍼런스처럼 몸 아래 살짝 보이게). 로고 평면 좌표: 아래 = -Y, 앞 = +Z."""
+    ys = [v.co.y for v in body.data.vertices]
+    ymin = min(ys)
+    f = cfg["feet"]
+    feet = []
+    for sx in (-1, 1):
+        o = lowpoly_ellipsoid(f"{key}_foot_{'L' if sx < 0 else 'R'}", *f["s"], seg=8, rings=6)
+        loc = Vector((sx * f["dx"], ymin + f["s"][1] * 0.35, 0.02))
+        col = body_color(key)
+        facet_colors(o, lambda c: [v * 0.9 for v in col(c + loc)], jitter=0.04, seed=5)   # 몸 아래쪽 색 그대로, 살짝 짙게
+        o.data.materials.append(mat)
+        o.parent = root
+        o.location = loc
+        feet.append(o)
+    return ymin - f["s"][1] * 0.65           # 발바닥 높이
 
 
 # ---------- 얼굴 ----------
@@ -345,8 +389,33 @@ def d_mouth(name, w, h, t, n=10):
     return ob
 
 
+def bar(name, w, h, d):
+    """세로 막대 눈 (레퍼런스: 까만 직사각형)."""
+    bm = bmesh.new()
+    bmesh.ops.create_cube(bm, size=1.0)
+    for v in bm.verts:
+        v.co = Vector((v.co.x * w, v.co.y * h, v.co.z * d))
+    ob = bm_to_obj(bm, name)
+    shade_flat(ob)
+    return ob
+
+
+def add_bar_eyes(put, key, eye_dx, s):
+    """눈만 있는 얼굴 (운영자 2026-11-18 "눈만 띄우자, 표정은 눈으로만").
+    bar 평소 / barwide 놀람(크게) / barlow 슬픔(짧게·아래) / squint >< 당황 / line 졸림(가로줄). ^^(happy)는 기존 eye_happy."""
+    for side, sx in (("L", -1), ("R", 1)):
+        ex = sx * eye_dx
+        put(bar(f"{key}_eye_bar_{side}", s * 0.42, s * 1.45, s * 0.3), "eye", (ex, 0, s * 0.1))
+        put(bar(f"{key}_eye_barwide_{side}", s * 0.55, s * 1.85, s * 0.3), "eye", (ex, s * 0.1, s * 0.1))
+        put(bar(f"{key}_eye_barlow_{side}", s * 0.42, s * 0.85, s * 0.3), "eye", (ex, -s * 0.35, s * 0.1))
+        put(bar(f"{key}_eye_line_{side}", s * 1.0, s * 0.26, s * 0.3), "eye", (ex, -s * 0.2, s * 0.1))
+        k = -sx                                   # > <: 꼭짓점이 코 쪽
+        pts = [(ex - k * s * 0.4, s * 0.5, 0.02), (ex + k * s * 0.4, 0, 0.02), (ex - k * s * 0.4, -s * 0.5, 0.02)]
+        put(arc_tube(f"{key}_eye_squint_{side}", pts, s * 0.17), "eye")
+
+
 def add_face(key, body, root, cx, cy, eye_dx, eye_s, mouth_dy, mouth_w, mats, blush=None,
-             eye_aspect=1.0, brows=False, grin=False):
+             eye_aspect=1.0, brows=False, grin=False, eyes_only=False):
     dg = bpy.context.evaluated_depsgraph_get()
     bvh = BVHTree.FromObject(body, dg)
 
@@ -357,7 +426,7 @@ def add_face(key, body, root, cx, cy, eye_dx, eye_s, mouth_dy, mouth_w, mats, bl
     for k in range(9):
         a = math.radians(200 + 140 * k / 8)
         mouth_xy.append((cx + mouth_w * math.cos(a), cy + mouth_dy + mouth_w * 0.9 + mouth_w * 0.9 * math.sin(a)))
-    samples = [(cx - eye_dx, cy), (cx + eye_dx, cy)] + mouth_xy
+    samples = [(cx - eye_dx, cy), (cx + eye_dx, cy)] + ([] if eyes_only else mouth_xy)
     if blush:
         samples += [(cx - blush[0], cy + blush[1]), (cx + blush[0], cy + blush[1])]
     z0 = max(zat(x, y) for x, y in samples)  # 얼굴은 한 평면에 (울퉁불퉁한 면 위에 떠 있게)
@@ -382,14 +451,15 @@ def add_face(key, body, root, cx, cy, eye_dx, eye_s, mouth_dy, mouth_w, mats, bl
     for side, sx in (("L", -1), ("R", 1)):
         ex = sx * eye_dx
         # 눈: 기본 / 크게(놀람) / ^^(기쁨) / 감음(졸림·민망)
-        for var, k in (("open", 1.0), ("wide", 1.3)):
+        for var, k in (() if eyes_only else (("open", 1.0), ("wide", 1.3))):
             e = put(lowpoly_ellipsoid(f"{key}_eye_{var}_{side}", s * 0.78 * k, s * k * eye_aspect, s * 0.45 * k), "eye", (ex, 0, s * 0.15))
             hl = lowpoly_ellipsoid(f"{key}_eyehl_{var}_{side}", s * 0.26 * k, s * 0.26 * k, s * 0.15, seg=6, rings=4)
             hl.data.materials.append(mats["hl"])
             hl.parent = e
             hl.location = (s * 0.28 * k, s * 0.38 * k, s * 0.36 * k)
         put(arc(f"{key}_eye_happy_{side}", ex, -s * 0.35, s * 0.75, 20, 160, s * 0.2), "eye")
-        put(arc(f"{key}_eye_closed_{side}", ex, s * 0.45, s * 0.75, 205, 335, s * 0.18, sy=0.7), "eye")
+        if not eyes_only:
+            put(arc(f"{key}_eye_closed_{side}", ex, s * 0.45, s * 0.75, 205, 335, s * 0.18, sy=0.7), "eye")
         # 눈썹: 화남(안쪽이 내려감) / 슬픔(바깥이 내려감)
         for var, tilt in (("angry", -1), ("sad", 1)):
             y0 = s * 1.45
@@ -402,6 +472,12 @@ def add_face(key, body, root, cx, cy, eye_dx, eye_s, mouth_dy, mouth_w, mats, bl
             put(lowpoly_ellipsoid(f"{key}_blush_{side}", blush[2] * 1.25, blush[2] * 0.75, 0.012, seg=8, rings=4),
                 "blush", (sx * blush[0], blush[1], 0.004))
 
+    if eyes_only:
+        add_bar_eyes(put, key, eye_dx, s)
+        sw = put(lowpoly_ellipsoid(f"{key}_sweat", s * 0.45, s * 0.7, s * 0.3, seg=8, rings=6), "sweat",
+                 (eye_dx + s * 1.4, s * 1.3, s * 0.1))
+        sw.rotation_euler = (0, 0, math.radians(-20))
+        return
     # 입: 웃음 / 시무룩 / 일자 / 벌림(아) / 오 / 물결(당황)
     mw, my = mouth_w, mouth_dy
     put(arc_tube(f"{key}_mouth_smile", [(x - cx, y - cy, 0.012) for x, y in mouth_xy], s * 0.2), "eye")
@@ -433,9 +509,20 @@ EMOTIONS = {
     "embarrassed": ["eye_closed", "brow_neutral", "mouth_wavy", "blush", "sweat"],
     "sleepy":      ["eye_closed", "brow_neutral", "mouth_flat"],
 }
+# AI 캐릭터: 입 없이 눈만 (운영자 2026-11-18). 눈 모양·눈썹·볼터치·땀으로 표정.
+AI_EMOTIONS = {
+    "neutral":     ["eye_bar"],
+    "happy":       ["eye_happy", "blush"],
+    "surprised":   ["eye_barwide"],
+    "sad":         ["eye_barlow", "brow_sad"],
+    "angry":       ["eye_bar", "brow_angry"],
+    "embarrassed": ["eye_squint", "blush", "sweat"],
+    "sleepy":      ["eye_line"],
+}
 FACE_PARTS = ["eye_open", "eye_wide", "eye_happy", "eye_closed", "brow_angry", "brow_sad", "blush",
               "mouth_smile", "mouth_frown", "mouth_flat", "mouth_open", "mouth_o", "mouth_wavy", "sweat",
-              "brow_neutral", "mouth_grin"]   # 뒤 둘은 사람 캐릭터만 (없으면 무시)
+              "brow_neutral", "mouth_grin",   # 이 둘은 사람 캐릭터만 (없으면 무시)
+              "eye_barwide", "eye_barlow", "eye_bar", "eye_squint", "eye_line"]   # AI 눈 (barwide·barlow를 bar보다 먼저)
 
 
 def part_of(name, key):
@@ -541,10 +628,10 @@ def emotion_sheet(sc, roots):
         bpy.context.view_layer.update()
         z = root.location.z
         camera(sc, (0.0, -2.6, z + 0.15), (0, 0, z + 0.05), lens=50, focus=(0, -0.3, z), fstop=1.6)
-        for emo in EMOTIONS:
-            set_emotion(root, key, emo)
+        for emo in AI_EMOTIONS:
+            set_emotion(root, key, emo, AI_EMOTIONS)
             render(sc, os.path.join(d, f"{key}_{emo}.png"), 640, 640)
-        set_emotion(root, key, "neutral")
+        set_emotion(root, key, "neutral", AI_EMOTIONS)
 
 
 def main():
@@ -560,19 +647,21 @@ def main():
         root = link(bpy.data.objects.new(key, None))
         body = make_body(key, cfg)
         facet_colors(body, body_color(key), jitter=CHARS[key].get("jitter", 0.11), seed=11 + i)
-        body.data.materials.append(material(f"{key}_mat", vcol=True, rough=0.68))
+        bmat = material(f"{key}_mat", vcol=True, rough=0.68)
+        body.data.materials.append(bmat)
         body.parent = root
         add_face(key, body, root, mats=mats, **cfg["face"])
+        sole = add_feet(key, body, root, cfg, bmat) if cfg.get("feet") else None
         print(key, "faces", len(body.data.polygons))
         # 로고 평면(XY, 앞 +Z)을 세워서 앞이 -Y(카메라 쪽). glTF에서는 앞이 +Z.
         root.rotation_euler = (math.radians(90), 0, 0)
-        root.location = ((i - (len(ONLY) - 1) / 2) * 2.7, 0, 1.0 + cfg.get("dilate", 0))
+        root.location = ((i - (len(ONLY) - 1) / 2) * 2.7, 0, -sole if sole is not None else 1.0 + cfg.get("dilate", 0))
         roots[key] = root
     bpy.context.view_layer.update()
 
     import json
     with open(os.path.join(OUT, "emotions.json"), "w", encoding="utf-8") as fp:
-        json.dump({"parts": FACE_PARTS, "emotions": EMOTIONS}, fp, ensure_ascii=False, indent=1)
+        json.dump({"parts": FACE_PARTS, "emotions": AI_EMOTIONS, "human_emotions": EMOTIONS}, fp, ensure_ascii=False, indent=1)
     for key, root in roots.items():
         loc = root.location.copy()
         root.location = (0, 0, loc.z)  # glb 원점 = 바닥 가운데 (통통 튀기·찌그러지기 기준)
@@ -584,7 +673,7 @@ def main():
         root.location = loc
 
     for key, root in roots.items():
-        set_emotion(root, key, "neutral")
+        set_emotion(root, key, "neutral", AI_EMOTIONS)
     if "--sheet" in argv:
         return emotion_sheet(sc, roots)
     tag = "_".join(ONLY)
