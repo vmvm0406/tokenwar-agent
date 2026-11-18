@@ -19,6 +19,7 @@ FACE_X = -0.10        # 얼굴 가운데 (코끝 x -0.109)
 EYE_Z, EYE_DX = 1.595, 0.165
 MOUTH_Z = 1.255
 JACKET, TEE = "#17171A", "#26262A"
+GLASS_RX, GLASS_RZ, GLASS_DZ, GLASS_OUT = 0.115, 0.07, -0.008, 0.0   # 안경알 반너비·반높이·눈 대비 높이·바깥 이동 (jensen_simple이 사진 비율로 바꿈)
 
 
 def load():
@@ -278,8 +279,8 @@ def add_face_parts(body):
 def add_glasses(bvh, face):
     """하프림(브로우라인): 위테만 굵은 검정, 아래는 가는 은색. 실제 사진의 사각형에 가까운 렌즈."""
     black, wire = mat("jr_frame", "#151517", 0.3), mat("jr_wire", "#AEB3BA", 0.25)
-    rx, rz = 0.115, 0.07
-    zc = EYE_Z - 0.008
+    rx, rz = GLASS_RX, GLASS_RZ
+    zc = EYE_Z + GLASS_DZ
 
     def tube(name, pts, r, m):
         o = B.arc_tube(name, pts, r, ring=5)
@@ -292,7 +293,7 @@ def add_glasses(bvh, face):
         return (xc + rx * math.copysign(abs(c) ** 0.45, c), y, zc + rz * math.copysign(abs(s) ** 0.6, s))
     inner = []
     for sd, sx in (("L", -1), ("R", 1)):
-        xc = FACE_X + sx * EYE_DX
+        xc = FACE_X + sx * (EYE_DX + GLASS_OUT)
         y = front_y(bvh, xc, EYE_Z) - 0.045
         tube(f"jensen_real_glasses_top_{sd}", [rim(xc, y, t) for t in range(-12, 193, 12)], 0.016, black)
         tube(f"jensen_real_glasses_wire_{sd}", [rim(xc, y, t) for t in range(192, 349, 12)], 0.004, wire)

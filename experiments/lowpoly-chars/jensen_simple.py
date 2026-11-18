@@ -24,8 +24,21 @@ import jensen_real as J    # noqa: E402
 
 args = sys.argv[sys.argv.index("--") + 1:]
 SRC = args[0]
-FACES = int(args[args.index("--faces") + 1]) if "--faces" in args else 1800
+FACES = int(args[args.index("--faces") + 1]) if "--faces" in args else 3500   # 조금 더 세밀하게, 잘게는 말고
 PAL = dict(skin="#D9A27F", hair="#A3A39E", jacket="#1B1B1E", tee="#2B2B2F")
+
+# 젠슨 황 얼굴 비율 (2026-11-18, 정면 사진 Stanford 2026-04-30 011을 격자로 잼). 단위: 눈 사이 거리(io) = 0.33.
+# 눈 아래로: 코끝 0.66io, 콧볼 밑 0.76io, 입선 1.17io, 턱 1.93io / 눈 위로: 눈썹 0.29io, 이마선 1.15io
+# 폭: 눈 0.34io, 콧볼 0.66io, 입 0.83io, 광대 2.6io, 안경알 한쪽 1.17io(넓음, 위테만 굵음)
+IO = 0.33
+J.EYE_DX = IO / 2
+# 높이는 참고 3D의 옆얼굴 윤곽에서 잰 실제 위치 (콧등 가장 들어간 곳 = 눈 높이 1.60, 코끝 1.425, 입 1.255, 턱 1.06, 이마선 1.93)
+J.EYE_Z, J.MOUTH_Z = 1.60, 1.255
+J.GLASS_RX, J.GLASS_RZ = 0.58 * IO, 0.28 * IO
+J.GLASS_DZ, J.GLASS_OUT = -0.035 * IO, 0.1 * IO
+NOSE_TIP_Z, NOSTRIL_Z = 1.425, 1.39
+MOUTH_HW = 0.83 * IO / 2                   # 입 반너비 0.137
+NOSE_HW = 0.66 * IO / 2                    # 콧볼 반너비 0.109
 
 
 def lin2srgb(c):
@@ -40,20 +53,36 @@ def build_shape(src_bm):
     bm = bmesh.new()
     bm.from_mesh(ob.data)
     from mathutils import Matrix
-    for c, r in (((J.FACE_X, -0.56, 1.405), (0.082, 0.07, 0.066)),          # 코끝(둥글게)
-                 ((J.FACE_X - 0.075, -0.505, 1.385), (0.055, 0.052, 0.045)),  # 콧방울
-                 ((J.FACE_X + 0.075, -0.505, 1.385), (0.055, 0.052, 0.045)),
-                 ((J.FACE_X, -0.5, 1.5), (0.04, 0.05, 0.09))):              # 콧대
+    for c, r in (((J.FACE_X, -0.565, NOSE_TIP_Z), (0.072, 0.066, 0.062)),                              # 코끝(둥글게)
+                 ((J.FACE_X - NOSE_HW + 0.045, -0.5, NOSTRIL_Z), (0.05, 0.05, 0.042)),                # 콧방울 (콧볼 폭 0.66io)
+                 ((J.FACE_X + NOSE_HW - 0.045, -0.5, NOSTRIL_Z), (0.05, 0.05, 0.042)),
+                 ((J.FACE_X, -0.505, (NOSE_TIP_Z + J.EYE_Z) / 2), (0.036, 0.045, 0.1))):            # 좁은 콧대
         bmesh.ops.create_uvsphere(bm, u_segments=16, v_segments=10, radius=1.0,
                                   matrix=Matrix.Translation(Vector(c)) @ Matrix.Diagonal((*r, 1)))
     bm.to_mesh(ob.data)
     bm.free()
-    B.remesh(ob, 0.028)                      # 굵게: 잔 굴곡 지움
+    B.remesh(ob, 0.022)                      # 잔 굴곡은 지우되 전보다 덜 뭉갬
     m = ob.modifiers.new("sm", "SMOOTH")
-    m.factor, m.iterations = 0.6, 12
+    m.factor, m.iterations = 0.6, 7
     B.apply_mod(ob, m)
-    B.remesh(ob, 0.012)                      # 고르게 다시 (Decimate 전)
-    B.decimate(ob, FACES)
+    B.remesh(ob, 0.011)
+    # 좌우 대칭 (운영자 2026-11-18 "얼굴 대칭은 맞게"): 얼굴 가운데(코)를 x=0으로 옮겨 +x 반을 거울 복사 → 대칭 Decimate
+    me = ob.data
+    for v in me.vertices:
+        v.co.x -= J.FACE_X
+    bm = bmesh.new()
+    bm.from_mesh(me)
+    bmesh.ops.symmetrize(bm, input=bm.verts[:] + bm.edges[:] + bm.faces[:], direction="X", dist=0.002)
+    bm.to_mesh(me)
+    bm.free()
+    n = len(me.polygons) * 2
+    dm = ob.modifiers.new("dec", "DECIMATE")
+    dm.decimate_type, dm.ratio, dm.use_symmetry, dm.symmetry_axis = "COLLAPSE", min(1.0, FACES / max(n, 1)), True, "X"
+    dm.use_collapse_triangulate = True
+    B.apply_mod(ob, dm)
+    for v in ob.data.vertices:
+        v.co.x += J.FACE_X
+    ob.data.update()
     B.shade_flat(ob)
     return ob
 
@@ -77,7 +106,7 @@ def classify(ob, src_bm, img):
         r, g, b = px[int((u.y % 1) * (h - 1)), int((u.x % 1) * (w - 1)), :3]   # 8비트 질감 = sRGB 값
         hh, s, v = colorsys.rgb_to_hsv(r, g, b)
         dxf = c.x - J.FACE_X
-        hairline = 1.86 - 0.05 * math.exp(-((dxf - 0.12) / 0.2) ** 2)   # 이마선 (가르마 반대쪽이 살짝 낮음)
+        hairline = 1.93 - 0.05 * math.exp(-((dxf - 0.12) / 0.2) ** 2)    # 이마선: 사진상 눈~정수리의 49% 지점, 넓은 이마
         if c.z < 1.0 or (c.z < 1.13 and abs(dxf) > 0.24):
             lab[p.index] = "jacket"
         elif c.z > hairline:                                  # 이마선 위 = 머리
@@ -85,8 +114,6 @@ def classify(ob, src_bm, img):
         elif c.z > 1.5 and c.y > -0.12:                       # 뒤통수
             lab[p.index] = "hair"
         elif c.z > 1.6 and abs(dxf) > 0.3 and c.y > -0.38:   # 귀 위 옆머리 (관자놀이까지)
-            lab[p.index] = "hair"
-        elif s < 0.12 and v > 0.5 and c.z > 1.55 and c.y > -0.3:   # 질감상 회색이면 머리
             lab[p.index] = "hair"
         else:
             lab[p.index] = "skin"
@@ -131,19 +158,20 @@ def jensen_eyes(face, body):
     bvh = BVHTree.FromObject(body, bpy.context.evaluated_depsgraph_get())
     for sd, sx in (("L", -1), ("R", 1)):
         e = bpy.data.objects[f"jensen_real_eye_{sd}"]
-        e.scale = (1.15, 1, 0.72)
+        e.scale = (1.3, 1, 0.85)                              # 눈 폭 0.34io (사진)
         e.rotation_euler = (0, math.radians(7 * sx), 0)      # 바깥 끝이 아래로
         hl = bpy.data.objects[f"jensen_real_eyehl_{sd}"]
         hl.location.z -= 0.004
         b = J.box(f"jensen_brow_{sd}", 0.1, 0.014, 0.017, 0.004)
-        bx, bz = e.location.x - sx * 0.004, e.location.z + 0.085      # 윗테 바로 위로 보이게, 이마 표면에 붙임
+        bx, bz = e.location.x - sx * 0.004, e.location.z + 0.35 * IO   # 눈썹 = 눈 위 0.29io (윗테 바로 위), 이마 표면에 붙임
+        b.scale = (1.25, 1, 1)
         b.location = (bx, J.front_y(bvh, bx, bz) - 0.004, bz)
         b.rotation_euler = (0, math.radians(5 * sx), 0)
         b.data.materials.append(brow_m)
         b.parent = face
 
 
-def add_lips(body, face, w=0.115, up=0.019, lo=0.036):
+def add_lips(body, face, w=MOUTH_HW, up=0.024, lo=0.038):
     """얼굴 표면에 딱 붙는 매끈한 윗입술·아랫입술 (원래 사진 비율, 자연스러운 색). 가운데 입술선은 두 조각 사이 가는 틈."""
     dg = bpy.context.evaluated_depsgraph_get()
     bvh = BVHTree.FromObject(body, dg)
