@@ -41,6 +41,18 @@ def build_shape():
     me = bpy.data.meshes.new("jensen_n64")
     src_bm.to_mesh(me)
     ob = B.link(bpy.data.objects.new("jensen_n64", me))
+    # 코를 입체로 키움 (넓고 둥근 코끝 + 큰 콧볼, 운영자 2026-11-18 "코 키우고")
+    from mathutils import Matrix
+    bm = bmesh.new()
+    bm.from_mesh(ob.data)
+    for c, r in (((FACE_X, -0.575, 1.42), (0.085, 0.075, 0.07)),
+                 ((FACE_X - 0.075, -0.51, 1.385), (0.058, 0.055, 0.048)),
+                 ((FACE_X + 0.075, -0.51, 1.385), (0.058, 0.055, 0.048)),
+                 ((FACE_X, -0.515, 1.51), (0.04, 0.05, 0.1))):
+        bmesh.ops.create_uvsphere(bm, u_segments=16, v_segments=10, radius=1.0,
+                                  matrix=Matrix.Translation(Vector(c)) @ Matrix.Diagonal((*r, 1)))
+    bm.to_mesh(ob.data)
+    bm.free()
     B.remesh(ob, 0.03)
     m = ob.modifiers.new("sm", "SMOOTH")
     m.factor, m.iterations = 0.6, 8
@@ -124,16 +136,17 @@ def add_glasses3d(ob):
         o.data.materials.append(m)
         B.shade_flat(o)
         parts.append(o)
-    for sd, (l0, l1) in (("L", (425, 668)), ("R", (712, 958))):
-        top = [P(l0, 574), P(l0 + 22, 560), P((l0 + l1) / 2, 558), P(l1 - 22, 560), P(l1, 574)]
-        tube(f"glasses_top_{sd}", top, 0.016, black)                          # 굵은 윗테
-        bot = [P(l0, 574), P(l0 + 6, 640), P(l0 + 40, 678), P((l0 + l1) / 2, 682), P(l1 - 40, 678), P(l1 - 6, 640), P(l1, 574)]
-        tube(f"glasses_wire_{sd}", bot, 0.0045, wire)                         # 가는 아랫선
-        outer = l0 if sd == "L" else l1
+    # 사진 렌즈 윤곽을 그대로 딴 점 (왼쪽 렌즈; 오른쪽은 x' = 1380 - x 거울). 운영자 2026-11-18 "안경 비율도 좀 달라"
+    # 위테: 거의 일자, 바깥 끝만 살짝 내려감 / 아래: 바깥에서 둥글게 내려와 가운데가 가장 낮고, 코 쪽에서 올라감 (가로로 넓고 납작)
+    TOP = [(416, 574), (438, 561), (550, 557), (660, 560), (672, 568)]
+    BOT = [(416, 574), (423, 618), (448, 658), (500, 680), (560, 686), (620, 674), (654, 646), (667, 612), (672, 568)]
+    for sd, mir in (("L", lambda x: x), ("R", lambda x: 1380 - x)):
+        tube(f"glasses_top_{sd}", [P(mir(x), y) for x, y in TOP], 0.015, black)    # 굵은 윗테
+        tube(f"glasses_wire_{sd}", [P(mir(x), y) for x, y in BOT], 0.0045, wire)   # 가는 아랫선
         x_ear = FACE_X + (-0.43 if sd == "L" else 0.43)
-        ox, oy, oz = P(outer, 570)
+        ox, oy, oz = P(mir(416), 572)
         tube(f"glasses_arm_{sd}", [(ox, oy, oz), (x_ear * 0.98 + FACE_X * 0.02, oy + 0.18, oz + 0.005), (x_ear, 0.08, oz - 0.02)], 0.009, black)
-    tube("glasses_bridge", [P(668, 568), P(690, 556, -0.01), P(712, 568)], 0.009, black)
+    tube("glasses_bridge", [P(672, 567), P(690, 558, -0.01), P(708, 567)], 0.009, black)
     for o in parts:
         o.parent = ob
     return parts
@@ -156,10 +169,21 @@ def x_scale(z):
     return HEAD_W
 
 
+def jaw_taper(co):
+    """턱선 (운영자 2026-11-18 "턱 각도도 달라"): 사진은 광대 폭 대비 입 0.84 → 입·턱 사이 0.54로 좁아지는데 모델은 0.74.
+    입 아래(z 1.30)부터 턱끝(1.06)까지 얼굴 앞부분만 30%까지 더 좁혀 턱선이 안쪽으로 비스듬히 모이게. 어깨·뒷목은 그대로."""
+    sm = lambda t: t * t * (3 - 2 * t)
+    if co.y > 0.05 or abs(co.x - FACE_X) > 0.42 or co.z > 1.30 or co.z < 0.96:
+        return 1.0
+    if co.z >= 1.06:
+        return 1.0 - 0.3 * sm((1.30 - co.z) / 0.24)
+    return 0.7 + 0.3 * sm((1.06 - co.z) / 0.10)      # 턱 밑 → 목: 다시 원래 폭으로
+
+
 def narrow_head(ob, glasses):
     """질감(UV)·안경을 입힌 뒤에 좁혀서 그린 눈·코·입·안경도 같이 좁아짐."""
     for v in ob.data.vertices:
-        v.co.x = FACE_X + (v.co.x - FACE_X) * x_scale(v.co.z)
+        v.co.x = FACE_X + (v.co.x - FACE_X) * x_scale(v.co.z) * jaw_taper(v.co)
     ob.data.update()
     for g in glasses:
         for v in g.data.vertices:
