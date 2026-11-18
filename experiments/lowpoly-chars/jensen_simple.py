@@ -72,7 +72,7 @@ def classify(ob, src_bm, img):
             lab[p.index] = "hair"
         elif c.z > 1.5 and c.y > -0.12:                       # 뒤통수
             lab[p.index] = "hair"
-        elif c.z > 1.62 and abs(dxf) > 0.36 and c.y > -0.32:  # 귀 위 옆머리
+        elif c.z > 1.6 and abs(dxf) > 0.3 and c.y > -0.38:   # 귀 위 옆머리 (관자놀이까지)
             lab[p.index] = "hair"
         elif s < 0.12 and v > 0.5 and c.z > 1.55 and c.y > -0.3:   # 질감상 회색이면 머리
             lab[p.index] = "hair"
@@ -102,6 +102,12 @@ def classify(ob, src_bm, img):
             key = "tee"
         k = 1 + rng.uniform(-0.05, 0.05)
         col = cols[key]
+        if key == "hair":   # 운영자 2026-11-18 "머리 색 제대로": 은회색, 위는 밝고 옆·아래는 짙게 + 뒤로 넘긴 짙은 결
+            t = min(1.0, max(0.0, (c.z - 1.55) / 0.55))
+            dark, light = B.hex2rgb("#5F5F5E"), B.hex2rgb("#ADADA8")
+            col = [dark[i] + (light[i] - dark[i]) * t for i in range(3)]
+            if math.sin((c.x - J.FACE_X) * 34 + c.y * 9) > 0.55:
+                col = [v * 0.62 for v in col]
         for li in p.loop_indices:
             attr.data[li].color = (col[0] * k, col[1] * k, col[2] * k, 1)
     ob.data.materials.append(B.material("jensen_mat", vcol=True, rough=0.8))
