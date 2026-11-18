@@ -75,6 +75,58 @@ def symmetrize(body, side):
         p.use_smooth = False
 
 
+def level_mouth(body, radius_x=0.17, radius_z=0.09):
+    """입꼬리만 바로잡기 (운영자 2026-11-18 "좌우를 맞추는 게 아니라 입꼬리만 다시"): 입술 사이 어두운 선의 기울기를 재서
+    입 주변 정점만 반대로 기울임(가장자리로 갈수록 약하게). 얼굴 나머지는 실물 그대로."""
+    import numpy as np
+    me = body.data
+    attr = me.color_attributes[0]
+    pts = []
+    for p in me.polygons:
+        c = p.center
+        if abs(c.x - FACE_X) < 0.13 and abs(c.z - MOUTH_Z) < 0.05 and c.y < -0.3:
+            col = attr.data[p.loop_indices[0]].color
+            pts.append((c.x, c.z, 0.2126 * col[0] + 0.7152 * col[1] + 0.0722 * col[2]))
+    if len(pts) < 6:
+        return 0.0
+    a = np.array(pts)
+    dark = a[a[:, 2] <= np.percentile(a[:, 2], 25)]       # 입술 사이 어두운 면
+    slope = np.polyfit(dark[:, 0], dark[:, 1], 1)[0]
+    for v in me.vertices:
+        dx, dz = v.co.x - FACE_X, v.co.z - MOUTH_Z
+        if v.co.y < -0.2 and abs(dx) < radius_x and abs(dz) < radius_z:
+            w = (1 - (dx / radius_x) ** 2) * (1 - (dz / radius_z) ** 2)
+            v.co.z -= slope * dx * max(0.0, w) ** 0.5
+    me.update()
+    print("mouth slope", round(float(slope), 3))
+    return slope
+
+
+def clean_mouth(body):
+    """입 주변 면을 옆 피부색으로 다시 칠함 (한쪽만 붉던 입술 색이 삐뚤어 보이게 함). 입은 캐릭터 입선으로 새로 그림."""
+    import numpy as np, random
+    me = body.data
+    attr = me.color_attributes[0]
+    ring, inner = [], []
+    for p in me.polygons:
+        c = p.center
+        dx, dz = abs(c.x - FACE_X), c.z - MOUTH_Z
+        if c.y > -0.3:
+            continue
+        if dx < 0.11 and abs(dz) < 0.05:
+            inner.append(p)
+        elif 0.11 <= dx < 0.2 and abs(dz) < 0.07:
+            ring.append(tuple(attr.data[p.loop_indices[0]].color)[:3])
+    if not ring:
+        return
+    skin = np.median(np.array(ring), axis=0)
+    rng = random.Random(5)
+    for p in inner:
+        k = 1 + rng.uniform(-0.05, 0.05)
+        for li in p.loop_indices:
+            attr.data[li].color = (skin[0] * k, skin[1] * k, skin[2] * k, 1)
+
+
 def stylize(body, face):
     """얼굴형·머리·코·입 모양은 실물 그대로 두고, 머리(+얼굴 부품)를 목 기준으로 키움. 목 1.00~1.13은 부드럽게 이어짐."""
     me = body.data
@@ -121,6 +173,15 @@ def add_face_parts(body):
         hl.location = (x + 0.022, y - 0.016, EYE_Z + 0.008)
         hl.data.materials.append(lid_m)
         hl.parent = face
+    # 평소 입: 양 끝이 살짝 올라간 캐릭터 입선 (입꼬리 대칭)
+    pts = []
+    for k in range(9):
+        t = -1 + 2 * k / 8
+        x = FACE_X + 0.062 * t
+        pts.append((x, front_y(bvh, x, MOUTH_Z) - 0.006, MOUTH_Z + 0.014 * t * t))
+    ml = B.arc_tube("jensen_real_mouth_smile", pts, 0.0065, ring=5)
+    ml.data.materials.append(mat("jr_mouthline", "#2A1612", 0.5))
+    ml.parent = face
     # 말할 때 입: 어두운 입 안 (평소엔 납작 → three.js가 높이를 키워 벌림)
     my = front_y(bvh, FACE_X, MOUTH_Z) - 0.006
     m = B.lowpoly_ellipsoid("jensen_real_mouth_open", 0.07, 0.03, 0.02, seg=12, rings=4)
@@ -170,8 +231,12 @@ def main():
             if o.name == "key":
                 o.data.energy = 900   # 실물 피부가 날아가지 않게
     body = load()
-    side = sys.argv[sys.argv.index("--sym") + 1] if "--sym" in sys.argv else "X"
-    symmetrize(body, side)
+    side = sys.argv[sys.argv.index("--sym") + 1] if "--sym" in sys.argv else None
+    if side:   # 예전 시험용 (운영자는 대칭 말고 입꼬리만 고치길 원함)
+        symmetrize(body, side)
+    else:
+        level_mouth(body)
+        clean_mouth(body)
     recolor(body)
     for m in body.data.materials:  # 넓은 조명이 검은 재킷에 하얗게 반사돼 회색으로 보이던 것 줄이기
         bsdf = m.node_tree.nodes.get("Principled BSDF")
@@ -190,7 +255,7 @@ def main():
     bpy.ops.export_scene.gltf(filepath=os.path.join(B.OUT, "jensen_real_head.glb"), export_format="GLB", use_selection=True, export_vertex_color="ACTIVE")
     fz = 1.72   # 커진 머리의 얼굴 높이쯤
     B.camera(sc, (0.0, -4.4, fz + 0.1), (FACE_X, 0, fz - 0.1), lens=50, focus=(FACE_X, -0.6, fz), fstop=2.4)
-    B.render(sc, os.path.join(B.OUT, f"jensen_real_front_{ {chr(88): chr(112), chr(45)+chr(88): chr(110)}[side] }.png"), 1080, 1350)
+    B.render(sc, os.path.join(B.OUT, "jensen_real_front.png" if not side else f"jensen_real_front_{side}.png"), 1080, 1350)
     B.camera(sc, (2.4, -3.7, fz + 0.2), (FACE_X, 0, fz - 0.15), lens=50, focus=(FACE_X, -0.5, fz), fstop=2.4)
     B.render(sc, os.path.join(B.OUT, "jensen_real_q34.png"), 1080, 1350)
     bpy.data.objects["jensen_real_mouth_open"].hide_render = False   # 말하는 모습 시험
