@@ -49,7 +49,8 @@ def hair_relief(ob):
             continue
         ang = math.atan2(dx, -co.y)
         ridge = max(0.0, math.sin(ang * 8 + co.y * 3.0)) ** 2
-        co += v.normal * (w * (0.012 + 0.004 * ridge))   # 굴곡은 아주 약하게 (운영자 2026-11-18 "머리통이 쭈그러졌어")
+        side_w = cl((co.z - 1.55) / 0.12) * cl((abs(dx) - 0.28) / 0.08) * cl((co.y + 0.35) / 0.1) * cl((1.95 - co.z) / 0.1)
+        co += v.normal * (w * (0.012 + 0.004 * ridge) + side_w * 0.008)   # 옆머리는 조금 더 부풀림 (운영자 2026-11-18)
     me.update()
 
 
@@ -333,9 +334,10 @@ def fit_to_photo(ob):
     for v in me.vertices:
         f = factor(v.co.z)
         dx = abs(v.co.x - FACE_X)   # 옆머리는 윗머리만큼만 좁힘 (운영자 2026-11-18 "옆머리 볼륨은 윗머리 볼륨 정도로")
-        side = max(0.0, min(1.0, (v.co.z - 1.55) / 0.1)) * max(0.0, min(1.0, (dx - 0.26) / 0.08))
-        if f < top_f:
-            f = f + (top_f - f) * side
+        # 옆머리(관자놀이 위)는 원래 폭 그대로 — 관자놀이에서 위로 부드럽게 이어짐 (운영자 2026-11-18 "머리 양옆 볼륨 자연스럽게")
+        side = max(0.0, min(1.0, (v.co.z - 1.45) / 0.3)) * max(0.0, min(1.0, (dx - 0.24) / 0.12))
+        side = side * side * (3 - 2 * side)
+        f = f + (1.0 - f) * side * 0.5
         v.co.x = FACE_X + (v.co.x - FACE_X) * f
     me.update()
     print("fit", " ".join(f"{z:.2f}:{f:.2f}" for z, f in sm[::6]))
