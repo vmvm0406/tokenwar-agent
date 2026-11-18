@@ -58,9 +58,13 @@
   },
   {
    "who": "claude",
-   "say": "[tearful, voice breaking] 그럼... 지금 이 기분은 뭐예요...?",
-   "sub": "그럼...|지금 이 기분은 뭐예요...?",
-   "emo": "cry"
+   "say": "[sobbing quietly, voice breaking, falling tone] 그럼... 지금 이 기분은... 뭐예요...",
+   "sub": "그럼...|지금 이 기분은... 뭐예요...",
+   "emo": "cry",
+   "retake": {
+    "say": "[sobbing quietly, sad and pitiful, falling intonation] 그럼... 지금 이 기분은... 뭐예요...",
+    "seed": 2
+   }
   },
   {
    "who": "man",
@@ -359,7 +363,7 @@
    "end": true,
    "dt": 2.6,
    "kind": "end",
-   "text": "팔로우하고|AI를 재밌게 배워 보세요!"
+   "text": "클로드에게 기억 달아 주는 법!|프로필에 정리해 뒀어요|팔로우하고 AI를 재밌게 배워 보세요!"
   }
  ],
  "sfx": [
@@ -376,5 +380,6 @@
   }
  ],
  "lead": 2.2,
- "level": true
+ "level": true,
+ "fxScale": 0.6
 }

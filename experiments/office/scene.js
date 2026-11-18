@@ -99,13 +99,17 @@ function setFace(c, emo, open, blinking) {
   if (blinking && on.has('eye_open')) { on.delete('eye_open'); on.add('eye_closed'); }
   for (const p in c.parts) c.parts[p].forEach((o) => { o.visible = on.has(p); });
   eyeShape(c, (EMO_FX[emo] || {}).eye || {});
+  for (const o of c.parts.sweat || []) {   // 땀방울 크기 (대본 "fxScale", 운영자 2026-11-19 '물이나 땀 더 작게')
+    if (!o.userData.base) o.userData.base = { s: o.scale.clone() };
+    o.scale.copy(o.userData.base.s).multiplyScalar(S.fxScale || 1);
+  }
   const fx = (EMO_FX[emo] || {}).fx || [];
   if (!fx.length && !c.fx) return;
   const F = faceFx(c), t = CUR_T;
   F.tears.forEach((d, i) => {   // 눈 아래 앞쪽 (카메라 쪽 +z)
     const show = fx.includes('tear') || fx.includes('cry'); d.m.visible = show; if (!show) return;
     _bb.setFromObject(d.e); _bb.getCenter(_c); const h = Math.max(0.006, d.e.userData.base ? d.e.userData.base.h : _bb.max.y - _bb.min.y);
-    const r = h * 0.3, u = fx.includes('cry') ? ((t * 0.7 + i * 0.37) % 1) : 0, w = 1 + 0.06 * Math.sin(t * 6 + i);
+    const r = h * 0.3 * (S.fxScale || 1), u = fx.includes('cry') ? ((t * 0.7 + i * 0.37) % 1) : 0, w = 1 + 0.06 * Math.sin(t * 6 + i);
     d.m.position.set(_c.x + (i ? 1 : -1) * h * 0.15, _c.y - h * 0.75 - u * h * 2.6, _c.z + h * 0.5);
     d.m.scale.set(r * 0.8 * w, r * (1.2 + u * 0.4) * w, r * 0.6);
   });

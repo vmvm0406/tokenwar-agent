@@ -328,6 +328,25 @@ def build(script):
                         "env": [round(e / peak, 3) for e in env], "sub": (l.get("sub") or "").replace("|", " "),
                         "subs": split_subs_aligned(l.get("sub") or "", dd, k, s0 + q0) or split_subs(l.get("sub") or "", env, len(seg) / 16000),
                         "emo": l.get("emo"), "note": l.get("note"), "src": str(mp3), "ofs": round(s0 + q0, 3)}
+            # "retake": {"say", "seed"} → 이 한 줄만 따로 다시 녹음해 같은 자리에 끼움 (운영자 2026-11-19 '끝을 너무 올리지 말고'):
+            # 묶음 녹음의 그 구간은 소리를 끄고, 새 녹음을 원래 길이에 맞게 늘이거나 줄여(0.8~1.25배) 그 시각에 얹음. 앞뒤 대사는 그대로
+            rt = l.get("retake")
+            if rt:
+                f2, _ = tts_single({"who": l["who"], "say": rt["say"], "model": "eleven_v3", "seed": rt.get("seed")})
+                b2 = decode(f2); r0, r1 = trim_silence(b2); new_d = r1 - r0; old_d = len(seg) / 16000
+                avail = (segs[k + 1][0] - (s0 + q0) - 0.15) if k + 1 < len(g) else old_d + 0.6   # 다음 대사 전까지 쓸 수 있는 길이
+                k_ = 1.0 if new_d <= avail else min(1.25, new_d / avail)
+                f3 = Path(str(f2).replace(".mp3", f"_fit{k_:.3f}.mp3"))
+                if not f3.exists():
+                    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", f"{r0:.3f}", "-to", f"{r1:.3f}", "-i", str(f2),
+                                    "-af", f"atempo={k_:.4f}", "-b:a", "192k", str(f3)], check=True)
+                b3 = decode(f3)
+                mutes.append([round(s0 + q0 - 0.02, 3), round(s0 + q0 + max(old_d, len(b3) / 16000) + 0.05, 3)])
+                parts.append({"file": str(f3), "t": round(t0 + s0 + q0, 3), "mute": []})
+                env = [float(np.sqrt(np.mean(b3[j:j + hop] ** 2))) for j in range(0, len(b3), hop)] or [0.0]
+                peak = max(env) or 1
+                lines[i].update(dur=round(len(b3) / 16000, 3), env=[round(e / peak, 3) for e in env], src=str(f3), ofs=0.0,
+                                subs=split_subs(l.get("sub") or "", env, len(b3) / 16000))
         t0 += len(a) / 16000
     dur = t0 + script.get("tail", 1.0)
     # 목소리 크기 맞추기 (운영자 2026-11-19 '소리 안 나고, 데시벨 맞춰'): 대본 "level": true면
