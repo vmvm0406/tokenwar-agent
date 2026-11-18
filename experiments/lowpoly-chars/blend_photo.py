@@ -58,7 +58,8 @@ out_f = f + wmap * (skin - low)
 face = (np.clip((1.25 - r) / 0.25, 0, 1))[..., None]
 low2 = cv2.GaussianBlur(out_f, (0, 0), 25)
 dark = np.clip(skin - low2, 0, None)
-out_f = out_f + face * 0.6 * dark
+out_f = out_f + face * 0.4 * dark
+out_f = out_f * (1 - face * 0.1)          # 피부를 조금 어둡게 (운영자 2026-11-18 "밝기 조금 낮춰, 젠슨 황처럼")
 clean = np.clip(out_f, 0, 255).astype(np.uint8)
 photo = Image.fromarray(clean).filter(ImageFilter.MedianFilter(5))   # 잡티만 살짝 정리
 photo.crop((300, 480, 1080, 760)).save(HERE / "out" / "photo_noglasses.png")

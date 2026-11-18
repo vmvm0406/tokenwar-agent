@@ -223,6 +223,7 @@ def to_model(px, py):
     return FACE_X + (px - EYE_PX[0]) / SX, EYE_Z - (py - EYE_PX[1]) / SZ
 
 
+BRIGHTNESS = 0.85
 GLASS_W = 0.82   # 이마 양옆을 머리로 덮은 만큼 안경도 좁힘 (운영자 2026-11-18)
 
 
@@ -376,7 +377,11 @@ def material(img):
     tex = nt.nodes.new("ShaderNodeTexImage")
     tex.image = img
     tex.interpolation = "Linear"
-    nt.links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
+    hsv = nt.nodes.new("ShaderNodeHueSaturation")       # 전체 밝기 조금 낮춤 (운영자 2026-11-18 "밝기 조금 낮춰, 젠슨 황처럼")
+    hsv.inputs["Value"].default_value = BRIGHTNESS
+    hsv.inputs["Saturation"].default_value = 1.05
+    nt.links.new(tex.outputs["Color"], hsv.inputs["Color"])
+    nt.links.new(hsv.outputs["Color"], bsdf.inputs["Base Color"])
     return m
 
 
@@ -388,7 +393,7 @@ def main():
             if o.name == "key":
                 o.data.energy = 800
     d = bpy.data.lights.new("under", "AREA")                 # 정면 아래 약한 보조광 (코 밑·턱 밑 그늘 누그러뜨림, 미리보기용)
-    d.energy, d.size = 160, 4
+    d.energy, d.size = 110, 4
     ul = B.link(bpy.data.objects.new("under", d))
     ul.location = (0, -3.5, 0.6)
     ul.rotation_euler = (Vector((0, 0, 1.5)) - Vector(ul.location)).to_track_quat("-Z", "Y").to_euler()
