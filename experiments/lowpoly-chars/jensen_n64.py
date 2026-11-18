@@ -67,7 +67,10 @@ def build_shape():
     for c, r in (((FACE_X, -0.565, 1.425), (0.078, 0.068, 0.058)),      # 코끝 (아래로 덜 튀어나오게)
                  ((FACE_X - 0.072, -0.5, 1.395), (0.05, 0.048, 0.038)),
                  ((FACE_X + 0.072, -0.5, 1.395), (0.05, 0.048, 0.038)),
-                 ((FACE_X, -0.515, 1.51), (0.04, 0.05, 0.1))):
+                 ((FACE_X, -0.515, 1.51), (0.04, 0.05, 0.1)),
+                 # 귀 (운영자 2026-11-18 "귀 부분 조금만 넓혀, 실제 귀처럼"): 사진 귀 위치 z 1.36~1.60, 옆으로 4.5cm 튀어나오게
+                 ((FACE_X - EAR_X, EAR_Y, EAR_Z), (0.045, 0.085, 0.12)),
+                 ((FACE_X + EAR_X, EAR_Y, EAR_Z), (0.045, 0.085, 0.12))):
         bmesh.ops.create_uvsphere(bm, u_segments=16, v_segments=10, radius=1.0,
                                   matrix=Matrix.Translation(Vector(c)) @ Matrix.Diagonal((*r, 1)))
     bm.to_mesh(ob.data)
@@ -97,7 +100,8 @@ def build_shape():
     return ob
 
 
-COLLAR_Z, NAPE_Z = 1.07, 1.27   # 깃 선, 뒤통수 머리 끝 선
+COLLAR_Z, NAPE_Z = 1.07, 1.27
+EAR_X, EAR_Y, EAR_Z = 0.45, -0.02, 1.48     # 귀 (얼굴 가운데에서 옆으로, 앞뒤, 높이)   # 깃 선, 뒤통수 머리 끝 선
 
 
 def cut_seams(ob):
@@ -124,8 +128,12 @@ def project_uv(ob, w, h):
         # 경계는 cut_seams가 자른 선(NAPE_Z 뒤통수 머리 끝, COLLAR_Z 깃)에 맞춤 → 색 경계가 반듯함
         dx = abs(c.x - FACE_X)
         back = c.y > -0.05
-        if c.z > NAPE_Z and (c.y > -0.12 or n.y > 0.25 or (n.z > 0.6 and c.z > 1.85)
-                             or (n.y > -0.4 and c.z > 1.5 and (dx > 0.28 or c.y > -0.3))):
+        is_ear = abs(c.z - EAR_Z) < 0.13 and dx > EAR_X - 0.06 and abs(c.y - EAR_Y) < 0.1
+        if is_ear:
+            kind = "photo_side"                      # 귀: 사진 귀 질감
+        elif c.z > NAPE_Z and (c.y > -0.12 or n.y > 0.25 or (n.z > 0.6 and c.z > 1.85)
+                               or (n.y > -0.4 and c.z > 1.5 and (dx > 0.28 or c.y > -0.3))
+                               or (c.z > 1.62 and dx > 0.30 + max(0.0, 1.80 - c.z) * 0.5)):   # 관자놀이도 흰머리 (사진처럼 이마 좁게)
             kind = "hair"                            # 정수리·옆머리·귀 뒤·뒤통수 (흰머리)
         elif back and c.z > COLLAR_Z:
             kind = "neck"                            # 뒷목: 사진 목 피부
@@ -174,7 +182,7 @@ def to_model(px, py):
     return FACE_X + (px - EYE_PX[0]) / SX, EYE_Z - (py - EYE_PX[1]) / SZ
 
 
-GLASS_W = 0.88
+GLASS_W = 0.82   # 이마 양옆을 머리로 덮은 만큼 안경도 좁힘 (운영자 2026-11-18)
 
 
 def add_glasses3d(ob):

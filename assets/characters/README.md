@@ -2,8 +2,13 @@
 
 | 파일 | 내용 |
 |---|---|
-| `jensen.glb` | 젠슨 황 (각진 로우폴리 + 사진 질감 70% + 입체 하프림 안경). 만든 스크립트 `experiments/lowpoly-chars/jensen_n64.py` (2026-11-18 운영자 확정) |
+| `jensen.glb` | 젠슨 황 기본 (입 오므려 말하는 얼굴). 각진 로우폴리 + 사진 질감 70% + 입체 하프림 안경 + 귀 |
+| `jensen_closed.glb` | 표정: 입 다문 평온 (말 안 할 때·입 닫힘) |
+| `jensen_open.glb` | 표정: 입 벌려 말함 (입 열림·놀람) |
+| `jensen_smile.glb` | 표정: 웃음 |
 
-- 한 번 만들어 두면 영상마다 다시 만들지 않는다. 영상은 이 파일을 불러 움직이고 찍기만 한다.
-- 얼굴 질감 사진: Wikimedia Commons "Jensen huang stanford 2026-04-30 011.jpg", Anders Eidesvik, CC BY 4.0 — 게시물 크레딧에 표기.
+- 만든 스크립트: `experiments/lowpoly-chars/jensen_n64.py` (모양), `make_expressions.py`(표정 사진 맞추기), `blend_photo.py`(사진 70% + 사진 속 안경 지우기). 2026-11-18 운영자 확정.
+- 모양은 네 파일이 같고 얼굴 질감만 다름 → 영상에서 대사에 맞춰 질감만 바꿔 끼우면 표정·입 여닫기가 됨 (closed ↔ open 번갈아 = 말하기).
+- **한 번 만들어 두면 영상마다 다시 만들지 않는다.** 영상은 이 파일을 불러 움직이고 찍기만 한다.
+- 얼굴 질감 사진: Wikimedia Commons "Jensen huang stanford 2026-04-30" 007·008·011·035, Anders Eidesvik, CC BY 4.0 — 게시물 크레딧에 표기.
 - 실제 인물 패러디 캐릭터: 하지 않은 말을 진짜 발언처럼 쓰지 않는다. 광고·굿즈에 쓰지 않는다.

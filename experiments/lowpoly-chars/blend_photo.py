@@ -13,7 +13,9 @@ from PIL import Image, ImageDraw, ImageFilter
 HERE = Path(__file__).resolve().parent
 amt = float(sys.argv[1]) if len(sys.argv) > 1 else 0.7
 painted = Image.open(HERE / "ref" / "jensen_painted.png").convert("RGB")
-photo = Image.open(HERE / "ref" / "jensen_photo_bust.jpg").convert("RGB").resize(painted.size)
+SRC_NAME = sys.argv[2] if len(sys.argv) > 2 else "jensen_photo_bust.jpg"
+OUT_NAME = sys.argv[3] if len(sys.argv) > 3 else "jensen_mixed.png"
+photo = Image.open(HERE / "ref" / SRC_NAME).convert("RGB").resize(painted.size)
 
 # 1) 사진에서 안경 테 지우기: 손으로 그린 테 위치(넉넉히) ∩ (어둡거나 반짝이는 픽셀) + 테 자체 띠 → 인페인팅
 arr = np.array(photo)
@@ -55,6 +57,6 @@ d.ellipse([940, 575, 1040, 780], fill=int(255 * amt))
 d.polygon([(470, 900), (895, 900), (840, 1150), (520, 1150)], fill=int(255 * amt))   # 턱 옆·목
 mask = mask.filter(ImageFilter.GaussianBlur(35))
 out = Image.composite(photo, painted, mask)
-out.save(HERE / "ref" / "jensen_mixed.png")
+out.save(HERE / "ref" / OUT_NAME)
 out.crop((330, 300, 1060, 1060)).save(HERE / "out" / "mixed_face_preview.png")
-print(HERE / "ref" / "jensen_mixed.png")
+print(HERE / "ref" / OUT_NAME)
