@@ -208,22 +208,25 @@ def make_blocky_head(key, cfg):
         if cfg.get("photo_tint"):
             photo_tint(head, cfg["photo_tint"])
         head.data.materials.append(B.material(f"{key}_head_mat", vcol=True, rough=0.72))
+    # 머리카락 (운영자 2026-11-18 "앞에서 보면 모자 쓴 느낌"): 상자를 얹지 않고 머리 모양을 따라 감싸는 껍질.
+    # 얼굴 쪽은 실제 이마선(가운데 높고 관자놀이로 들어감)으로 따내고, 귀 주변·목 아래는 비움.
     bm = bmesh.new()
-    rounded_box(bm, (0, 0.2, -0.06), (0.425, 0.26, 0.42), round_=0.3, cuts=2)                    # 머리 덮개 (위·옆·뒤)
-    tilt = Matrix.Rotation(math.radians(-18), 4, "X")
-    rounded_box(bm, (0, 0.38, 0.1), (0.36, 0.08, 0.2), round_=0.25, cuts=1, matrix=tilt)        # 앞머리: 위로 넘긴 판
+    rounded_box(bm, (0, 0.0, -0.015), (0.415, 0.45, 0.395), round_=0.3, cuts=5, top_scale=0.95)
+    rounded_box(bm, (0.04, 0.4, 0.0), (0.3, 0.08, 0.3), round_=0.25, cuts=2,                     # 위로 넘긴 볼륨 (낮게)
+                matrix=Matrix.Rotation(math.radians(-6), 4, "Z"))
     bmesh.ops.triangulate(bm, faces=bm.faces[:])
+
+    def hairline(x):           # 이 높이 아래 앞쪽은 얼굴 (가르마 x -0.12 쪽은 살짝 높음)
+        return 0.25 - 1.1 * max(0.0, abs(x) - 0.1) ** 1.2 + (0.02 if x < -0.05 else 0.0)
+    kill = [f for f in bm.faces if (lambda c: (c.z > 0.03 and c.y < hairline(c.x))
+                                    or c.y < -0.32
+                                    or (abs(c.x) > 0.3 and c.y < 0.06 and c.z > -0.17))(f.calc_center_median())]
+    bmesh.ops.delete(bm, geom=kill, context="FACES")
     hair = B.bm_to_obj(bm, f"{key}_hair")
-    B.remesh(hair, 0.022)
-    B.decimate(hair, 420)
-    # 얼굴 앞쪽은 파냄: 이마선 아래 앞면 정점을 머리 안으로
-    for v in hair.data.vertices:
-        if v.co.z > 0.12 and v.co.y < 0.2:
-            v.co.z = min(v.co.z, 0.12 + max(0.0, v.co.y - 0.05))
-    hair.data.update()
     B.shade_flat(hair)
-    hc = B.hex2rgb(cfg["hair"])
-    B.facet_colors(hair, lambda c: hc, jitter=0.1, seed=8)
+    hc, hd = B.hex2rgb(cfg["hair"]), B.hex2rgb("#4E4E4B")
+    # 가르마 선과 판 사이 그늘은 짙게
+    B.facet_colors(hair, lambda c: hd if (-0.16 < c.x < -0.1 and c.y > 0.2 and c.z > -0.25) else hc, jitter=0.07, seed=8)
     hair.data.materials.append(B.material(f"{key}_hair_mat", vcol=True, rough=0.8))
     return head, hair
 
