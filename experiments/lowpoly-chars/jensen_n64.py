@@ -21,6 +21,7 @@ args = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 FACES = int(args[args.index("--faces") + 1]) if "--faces" in args else 700
 TEX = int(args[args.index("--tex") + 1]) if "--tex" in args else 0   # 0 = 원본 해상도 그대로 (운영자 2026-11-18 "해상도까지 낮출 필요는 없지")
 REF = os.path.join(HERE, "ref")
+SMOOTH = "--smooth" in args
 FACE_X = -0.10
 # 모델 좌표 → 사진 픽셀 (사진 1459x1740)
 EYE_PX, EYE_Z = (682.5, 605.0), 1.60
@@ -61,7 +62,7 @@ def build_shape():
         v.co.x += FACE_X
     ob.data.update()
     for p in ob.data.polygons:
-        p.use_smooth = True       # 90년대 게임기처럼: 실루엣은 각지고 면 안은 부드럽게
+        p.use_smooth = SMOOTH     # 기본 평면 셰이딩: 면이 보이는 각진 로우폴리 (운영자 2026-11-18 "각진 느낌 살리기")
     return ob
 
 
