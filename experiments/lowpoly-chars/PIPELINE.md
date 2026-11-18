@@ -51,7 +51,7 @@
 ## 진행
 - [x] ① AI 캐릭터 모양 (3차)
 - [x] ① 표정 부품·중심축 (감정 7개: neutral·happy·surprised·sad·angry·embarrassed·sleepy, `out/emotions.json`, 시트 `--sheet` + `tile_sheet.py`)
-- [ ] 목소리 정하기 (캐릭터 4)
+- [x] 목소리 정하기 (2026-11-18): 5캐릭터 `voices.json` — 클로드 Jiyoung, 챗GPT Chris, 제미나이 JY, 일반 남성 Mr. K, 젠슨 황 Voice Design A3. 모델 eleven_v3 + 대괄호 감정 태그([excited] [sighs] 등). 기본 표정은 무표정(neutral), 웃음은 smile
 - [x] ① 사람 1차: 젠슨 황·일반 남성 (`build_humans.py`, 뼈 13개, 부위를 뼈에 붙인 피규어 방식, 표정 7가지 + 젠슨은 평소 이 보이는 웃음). 뼈 방향 규칙: 팔 들기 R +Z / L -Z, 다리 앞 -X, 무릎 굽힘 +X, 고개 갸웃 Z·끄덕 X·돌리기 Y (뼈 좌표로 확인)
 - [x] ① 젠슨 황 승인 (2026-11-18): 각진 로우폴리 + 사진 질감 70%(같은 행사 공개 사진, CC BY 4.0) + 입체 하프림 안경 + 귀, 표정 2개(입 다묾·말하기 = 입 여닫기). 완성본 `assets/characters/jensen*.glb`, 만든 법 `jensen_n64.py`·`blend_photo.py`·`make_expressions.py`·`paint_face.py`
 - [x] ① 일반 남성 승인 (2026-11-18): 각진 블록 몸·셔츠·얇은 원형 안경 `man.glb`
