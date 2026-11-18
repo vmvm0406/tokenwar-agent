@@ -1,0 +1,896 @@
+{
+ "_note": "확정 대본 (운영자 2026-11-18) gta6.md. 모니터 화면(카운트다운·팀 캘린더·사다리·쇼츠 자르기)은 post/gta6_screens.py로 만든 우리 그림 (게임 실제 화면 안 씀).",
+ "cast": [
+  {
+   "key": "man",
+   "human": true
+  },
+  {
+   "key": "claude",
+   "x": -0.33,
+   "z": 0.22,
+   "yaw": 0.3,
+   "size": 0.36
+  },
+  {
+   "key": "gemini",
+   "x": 0.0,
+   "z": 0.46,
+   "yaw": 0.0,
+   "size": 0.27
+  },
+  {
+   "key": "chatgpt",
+   "x": 0.33,
+   "z": 0.22,
+   "yaw": -0.3,
+   "size": 0.36
+  }
+ ],
+ "clips": {
+  "countdown": {
+   "file": "experiments/office/out/clips/gta6_countdown.mp4",
+   "from": 0,
+   "to": 8,
+   "land": true,
+   "res": 1920
+  },
+  "calendar": {
+   "file": "experiments/office/out/clips/gta6_calendar.mp4",
+   "from": 0,
+   "to": 6,
+   "land": true,
+   "res": 1920
+  },
+  "ladder": {
+   "file": "experiments/office/out/clips/gta6_ladder.mp4",
+   "from": 0,
+   "to": 6,
+   "land": true,
+   "res": 1920
+  },
+  "shorts": {
+   "file": "experiments/office/out/clips/gta6_shorts.mp4",
+   "from": 0,
+   "to": 6,
+   "land": true,
+   "res": 1920
+  }
+ },
+ "lines": [
+  {
+   "who": "man",
+   "say": "[excitedly, in a low voice] 내일... 연차 쓴다.",
+   "sub": "내일... 연차 쓴다.",
+   "emo": "smile",
+   "seed": 3
+  },
+  {
+   "who": "man",
+   "say": "[excited] 얘들아, 연차 사유 좀 써 줘. [quietly] 티 안 나게.",
+   "sub": "얘들아, 연차 사유 좀 써 줘.|티 안 나게.",
+   "emo": "smile"
+  },
+  {
+   "who": "chatgpt",
+   "say": "[excited] 물론이죠! 할머니 팔순, 사촌 결혼식, 이사까지 넣었어요! [proudly] 정말 감동적이죠?",
+   "sub": "물론이죠!|할머니 팔순, 사촌 결혼식,|이사까지 넣었어요!|정말 감동적이죠?",
+   "emo": "happy"
+  },
+  {
+   "who": "gemini",
+   "say": "[hesitant] 사용자님... [awkward] 팀 캘린더 확인해 봤는데요... 내일 사용자님 팀, 다섯 명 전부 연차 신청했어요!",
+   "sub": "사용자님...|팀 캘린더 확인해 봤는데요...|내일 사용자님 팀,|다섯 명 전부 연차 신청했어요!",
+   "emo": "embarrassed"
+  },
+  {
+   "who": "man",
+   "say": "[stunned] ...다들?",
+   "sub": "...다들?",
+   "emo": "surprised"
+  },
+  {
+   "who": "chatgpt",
+   "say": "[cheerfully] 와, 다들 정말 훌륭한 선택이에요!",
+   "sub": "와, 다들 정말 훌륭한 선택이에요!",
+   "emo": "happy"
+  },
+  {
+   "who": "claude",
+   "say": "[calmly, a bit awkward] 그럼... 한 분은 출근하셔야 할 텐데요.",
+   "sub": "그럼...|한 분은 출근하셔야 할 텐데요.",
+   "emo": "neutral"
+  },
+  {
+   "who": "gemini",
+   "say": "[brightly] 제가 사다리 타기 만들어 드릴까요?",
+   "sub": "제가 사다리 타기 만들어 드릴까요?",
+   "emo": "happy"
+  },
+  {
+   "who": "man",
+   "say": "[sighs, defeated] 하... 내일 스트리머들 지티에이 생방송, 하루 종일 할 텐데.",
+   "sub": "하... 내일 스트리머들 GTA 생방송,|하루 종일 할 텐데.",
+   "emo": "sad",
+   "break": 5.2,
+   "seed": 9
+  },
+  {
+   "who": "claude",
+   "say": "[kindly] 그럼 제가 열 시간짜리 방송, 웃긴 장면만 쇼츠로 잘라 둘게요. 퇴근길에 보세요.",
+   "sub": "그럼 제가 열 시간짜리 방송,|웃긴 장면만 쇼츠로 잘라 둘게요.|퇴근길에 보세요.",
+   "emo": "smile",
+   "note": "* watch 스킬 + FFmpeg"
+  }
+ ],
+ "tail": 5.6,
+ "screens": [
+  {
+   "t": 0,
+   "screen": "monitor",
+   "clip": "countdown",
+   "hold": true
+  },
+  {
+   "line": 3,
+   "dt": 2.2,
+   "screen": "monitor",
+   "clip": "calendar",
+   "hold": true
+  },
+  {
+   "line": 7,
+   "end": true,
+   "dt": 0.1,
+   "screen": "monitor",
+   "clip": "ladder",
+   "hold": true
+  },
+  {
+   "line": 9,
+   "dt": 1.1,
+   "screen": "monitor",
+   "clip": "shorts",
+   "hold": true
+  }
+ ],
+ "shots": [
+  {
+   "t": 0,
+   "cam": "mon",
+   "z0": 1.1,
+   "z1": 1.4
+  },
+  {
+   "line": 0,
+   "dt": 0.8,
+   "cam": "close:man"
+  },
+  {
+   "line": 1,
+   "dt": -0.1,
+   "cam": "wide"
+  },
+  {
+   "line": 2,
+   "dt": -0.1,
+   "cam": "close:chatgpt"
+  },
+  {
+   "line": 3,
+   "dt": -0.1,
+   "cam": "close:gemini"
+  },
+  {
+   "line": 3,
+   "dt": 2.3,
+   "cam": "mon",
+   "z0": 1.0,
+   "z1": 1.2
+  },
+  {
+   "line": 4,
+   "dt": -0.15,
+   "cam": "close:man"
+  },
+  {
+   "line": 5,
+   "dt": -0.1,
+   "cam": "close:chatgpt"
+  },
+  {
+   "line": 6,
+   "dt": -0.1,
+   "cam": "close:claude"
+  },
+  {
+   "line": 7,
+   "dt": -0.1,
+   "cam": "close:gemini"
+  },
+  {
+   "line": 7,
+   "end": true,
+   "dt": 0.15,
+   "cam": "mon",
+   "z0": 1.0,
+   "z1": 1.25
+  },
+  {
+   "line": 7,
+   "end": true,
+   "dt": 4.9,
+   "cam": "close:man"
+  },
+  {
+   "line": 9,
+   "dt": -0.1,
+   "cam": "close:claude"
+  },
+  {
+   "line": 9,
+   "dt": 1.4,
+   "cam": "mon",
+   "z0": 1.0,
+   "z1": 1.15
+  },
+  {
+   "line": 9,
+   "end": true,
+   "dt": 0.45,
+   "cam": "wide"
+  }
+ ],
+ "events": [
+  {
+   "line": 0,
+   "dt": 0,
+   "who": "claude",
+   "at": "man",
+   "do": "look"
+  },
+  {
+   "line": 0,
+   "dt": 0,
+   "who": "chatgpt",
+   "at": "man",
+   "do": "look"
+  },
+  {
+   "line": 0,
+   "dt": 0,
+   "who": "gemini",
+   "at": "man",
+   "do": "look"
+  },
+  {
+   "line": 0,
+   "dt": 0,
+   "who": "man",
+   "at": "monitor",
+   "do": "look"
+  },
+  {
+   "line": 1,
+   "dt": 0,
+   "who": "man",
+   "at": "claude",
+   "do": "look"
+  },
+  {
+   "line": 1,
+   "dt": 0.9,
+   "who": "man",
+   "at": "gemini",
+   "do": "look"
+  },
+  {
+   "line": 1,
+   "dt": 1.8,
+   "who": "man",
+   "at": "chatgpt",
+   "do": "look"
+  },
+  {
+   "line": 2,
+   "dt": 0,
+   "who": "man",
+   "at": "chatgpt",
+   "do": "look"
+  },
+  {
+   "line": 2,
+   "dt": 0,
+   "who": "claude",
+   "at": "chatgpt",
+   "do": "look"
+  },
+  {
+   "line": 2,
+   "dt": 0,
+   "who": "gemini",
+   "at": "chatgpt",
+   "do": "look"
+  },
+  {
+   "line": 2,
+   "dt": 0.1,
+   "who": "chatgpt",
+   "do": "hop"
+  },
+  {
+   "line": 2,
+   "dt": 2.85,
+   "who": "chatgpt",
+   "do": "hop"
+  },
+  {
+   "line": 2,
+   "dt": 3.9,
+   "who": "claude",
+   "d": 1.3,
+   "do": "tilt"
+  },
+  {
+   "line": 3,
+   "dt": 0,
+   "who": "man",
+   "at": "gemini",
+   "do": "look"
+  },
+  {
+   "line": 3,
+   "dt": 0,
+   "who": "chatgpt",
+   "at": "gemini",
+   "do": "look"
+  },
+  {
+   "line": 3,
+   "dt": 0,
+   "who": "claude",
+   "at": "gemini",
+   "do": "look"
+  },
+  {
+   "line": 3,
+   "dt": 0,
+   "who": "gemini",
+   "at": "monitor",
+   "do": "look"
+  },
+  {
+   "line": 3,
+   "dt": 0.7,
+   "who": "gemini",
+   "d": 1.5,
+   "do": "work"
+  },
+  {
+   "line": 3,
+   "dt": 2.3,
+   "who": "man",
+   "at": "monitor",
+   "do": "look"
+  },
+  {
+   "line": 3,
+   "dt": 2.3,
+   "who": "chatgpt",
+   "at": "monitor",
+   "do": "look"
+  },
+  {
+   "line": 3,
+   "dt": 2.3,
+   "who": "claude",
+   "at": "monitor",
+   "do": "look"
+  },
+  {
+   "line": 3,
+   "dt": 4.6,
+   "who": "gemini",
+   "at": "claude",
+   "do": "look"
+  },
+  {
+   "line": 3,
+   "dt": 4.6,
+   "who": "gemini",
+   "d": 1.2,
+   "do": "tremble"
+  },
+  {
+   "line": 4,
+   "dt": -0.1,
+   "who": "man",
+   "do": "startle"
+  },
+  {
+   "line": 4,
+   "dt": 0,
+   "who": "claude",
+   "at": "man",
+   "do": "look"
+  },
+  {
+   "line": 4,
+   "dt": 0,
+   "who": "chatgpt",
+   "at": "man",
+   "do": "look"
+  },
+  {
+   "line": 4,
+   "dt": 0,
+   "who": "gemini",
+   "at": "man",
+   "do": "look"
+  },
+  {
+   "line": 5,
+   "dt": 0,
+   "who": "man",
+   "at": "chatgpt",
+   "do": "look"
+  },
+  {
+   "line": 5,
+   "dt": 0.05,
+   "who": "chatgpt",
+   "do": "hop"
+  },
+  {
+   "line": 5,
+   "dt": 0.6,
+   "who": "gemini",
+   "at": "chatgpt",
+   "do": "look"
+  },
+  {
+   "line": 6,
+   "dt": 0,
+   "who": "man",
+   "at": "claude",
+   "do": "look"
+  },
+  {
+   "line": 6,
+   "dt": 0,
+   "who": "chatgpt",
+   "at": "claude",
+   "do": "look"
+  },
+  {
+   "line": 6,
+   "dt": 0,
+   "who": "gemini",
+   "at": "claude",
+   "do": "look"
+  },
+  {
+   "line": 6,
+   "dt": 0.3,
+   "who": "claude",
+   "at": "man",
+   "do": "look"
+  },
+  {
+   "line": 7,
+   "dt": 0,
+   "who": "man",
+   "at": "gemini",
+   "do": "look"
+  },
+  {
+   "line": 7,
+   "dt": 0,
+   "who": "claude",
+   "at": "gemini",
+   "do": "look"
+  },
+  {
+   "line": 7,
+   "dt": 0,
+   "who": "chatgpt",
+   "at": "gemini",
+   "do": "look"
+  },
+  {
+   "line": 7,
+   "dt": 0.05,
+   "who": "gemini",
+   "do": "hop"
+  },
+  {
+   "line": 7,
+   "dt": 0,
+   "who": "gemini",
+   "at": "man",
+   "do": "look"
+  },
+  {
+   "line": 7,
+   "dt": 0.1,
+   "who": "man",
+   "at": "monitor",
+   "do": "look",
+   "end": true
+  },
+  {
+   "line": 7,
+   "dt": 0.1,
+   "who": "claude",
+   "at": "monitor",
+   "do": "look",
+   "end": true
+  },
+  {
+   "line": 7,
+   "dt": 0.1,
+   "who": "chatgpt",
+   "at": "monitor",
+   "do": "look",
+   "end": true
+  },
+  {
+   "line": 7,
+   "dt": 0.1,
+   "who": "gemini",
+   "at": "monitor",
+   "do": "look",
+   "end": true
+  },
+  {
+   "line": 7,
+   "dt": 0.3,
+   "who": "gemini",
+   "d": 1.0,
+   "do": "work",
+   "end": true
+  },
+  {
+   "line": 7,
+   "dt": 4.15,
+   "who": "man",
+   "do": "startle",
+   "end": true
+  },
+  {
+   "line": 7,
+   "dt": 4.15,
+   "who": "man",
+   "emo": "surprised",
+   "end": true
+  },
+  {
+   "line": 7,
+   "dt": 4.3,
+   "who": "chatgpt",
+   "do": "startle",
+   "end": true
+  },
+  {
+   "line": 7,
+   "dt": 4.3,
+   "who": "chatgpt",
+   "emo": "surprised",
+   "end": true
+  },
+  {
+   "line": 7,
+   "dt": 4.4,
+   "who": "claude",
+   "emo": "embarrassed",
+   "end": true
+  },
+  {
+   "line": 7,
+   "dt": 4.4,
+   "who": "gemini",
+   "emo": "embarrassed",
+   "end": true
+  },
+  {
+   "line": 8,
+   "dt": 0,
+   "who": "man",
+   "do": "sigh"
+  },
+  {
+   "line": 8,
+   "dt": 0,
+   "who": "man",
+   "at": "camera",
+   "do": "look"
+  },
+  {
+   "line": 8,
+   "dt": 0.1,
+   "who": "claude",
+   "at": "man",
+   "do": "look"
+  },
+  {
+   "line": 8,
+   "dt": 0.1,
+   "who": "chatgpt",
+   "at": "man",
+   "do": "look"
+  },
+  {
+   "line": 8,
+   "dt": 0.1,
+   "who": "gemini",
+   "at": "man",
+   "do": "look"
+  },
+  {
+   "line": 8,
+   "dt": 0,
+   "who": "chatgpt",
+   "emo": "sad"
+  },
+  {
+   "line": 8,
+   "dt": 0,
+   "who": "gemini",
+   "emo": "sad"
+  },
+  {
+   "line": 9,
+   "dt": 0,
+   "who": "man",
+   "at": "claude",
+   "do": "look"
+  },
+  {
+   "line": 9,
+   "dt": 0,
+   "who": "chatgpt",
+   "at": "claude",
+   "do": "look"
+  },
+  {
+   "line": 9,
+   "dt": 0,
+   "who": "gemini",
+   "at": "claude",
+   "do": "look"
+  },
+  {
+   "line": 9,
+   "dt": 0.1,
+   "who": "claude",
+   "do": "nod"
+  },
+  {
+   "line": 9,
+   "dt": 1.6,
+   "who": "claude",
+   "at": "monitor",
+   "do": "look"
+  },
+  {
+   "line": 9,
+   "dt": 1.7,
+   "who": "claude",
+   "d": 2.2,
+   "do": "work"
+  },
+  {
+   "line": 9,
+   "dt": 1.8,
+   "who": "man",
+   "at": "monitor",
+   "do": "look"
+  },
+  {
+   "line": 9,
+   "dt": 3.9,
+   "who": "claude",
+   "at": "man",
+   "do": "look"
+  },
+  {
+   "line": 9,
+   "dt": 0.3,
+   "who": "man",
+   "emo": "happy",
+   "end": true
+  },
+  {
+   "line": 9,
+   "dt": 0.3,
+   "who": "chatgpt",
+   "emo": "happy",
+   "end": true
+  },
+  {
+   "line": 9,
+   "dt": 0.3,
+   "who": "gemini",
+   "emo": "happy",
+   "end": true
+  },
+  {
+   "line": 9,
+   "dt": 0.6,
+   "who": "man",
+   "at": "camera",
+   "do": "look",
+   "end": true
+  },
+  {
+   "line": 9,
+   "dt": 0.7,
+   "who": "claude",
+   "at": "camera",
+   "do": "look",
+   "end": true
+  },
+  {
+   "line": 9,
+   "dt": 0.8,
+   "who": "chatgpt",
+   "at": "camera",
+   "do": "look",
+   "end": true
+  },
+  {
+   "line": 9,
+   "dt": 0.9,
+   "who": "gemini",
+   "at": "camera",
+   "do": "look",
+   "end": true
+  }
+ ],
+ "cards": [
+  {
+   "line": 9,
+   "end": true,
+   "dt": 2.2,
+   "kind": "end",
+   "text": "긴 영상, 쇼츠로 자동으로 자르는 법!|프로필에 정리해 뒀어요.|팔로우하고 AI를 재밌게 배워 보세요!"
+  }
+ ],
+ "sfx": [
+  {
+   "line": 2,
+   "dt": 0.1,
+   "kind": "boing"
+  },
+  {
+   "line": 2,
+   "dt": 2.85,
+   "kind": "boing"
+  },
+  {
+   "line": 3,
+   "dt": 0.7,
+   "kind": "click"
+  },
+  {
+   "line": 5,
+   "dt": 0.05,
+   "kind": "boing"
+  },
+  {
+   "line": 7,
+   "dt": 0.05,
+   "kind": "boing"
+  },
+  {
+   "line": 3,
+   "dt": 2.75,
+   "kind": "pop"
+  },
+  {
+   "line": 3,
+   "dt": 3.2,
+   "kind": "pop"
+  },
+  {
+   "line": 3,
+   "dt": 3.65,
+   "kind": "pop"
+  },
+  {
+   "line": 3,
+   "dt": 4.1,
+   "kind": "pop"
+  },
+  {
+   "line": 3,
+   "dt": 4.55,
+   "kind": "pop"
+  },
+  {
+   "line": 7,
+   "end": true,
+   "dt": 0.8,
+   "kind": "tiptoe"
+  },
+  {
+   "line": 7,
+   "end": true,
+   "dt": 1.2,
+   "kind": "tiptoe"
+  },
+  {
+   "line": 7,
+   "end": true,
+   "dt": 1.6,
+   "kind": "tiptoe"
+  },
+  {
+   "line": 7,
+   "end": true,
+   "dt": 2.0,
+   "kind": "tiptoe"
+  },
+  {
+   "line": 7,
+   "end": true,
+   "dt": 2.4,
+   "kind": "tiptoe"
+  },
+  {
+   "line": 7,
+   "end": true,
+   "dt": 2.8,
+   "kind": "tiptoe"
+  },
+  {
+   "line": 7,
+   "end": true,
+   "dt": 3.2,
+   "kind": "tiptoe"
+  },
+  {
+   "line": 7,
+   "end": true,
+   "dt": 3.6,
+   "kind": "tiptoe"
+  },
+  {
+   "line": 7,
+   "end": true,
+   "dt": 4.1,
+   "kind": "boom",
+   "vol": 0.6
+  },
+  {
+   "line": 7,
+   "end": true,
+   "dt": 4.1,
+   "kind": "pop"
+  },
+  {
+   "line": 9,
+   "dt": 1.88,
+   "kind": "click"
+  },
+  {
+   "line": 9,
+   "dt": 2.6,
+   "kind": "click"
+  },
+  {
+   "line": 9,
+   "dt": 3.21,
+   "kind": "click"
+  },
+  {
+   "line": 9,
+   "dt": 5.0,
+   "kind": "ding"
+  }
+ ],
+ "ss": 2,
+ "jpeg": 0.98,
+ "crf": 12,
+ "lead": 1.0
+}

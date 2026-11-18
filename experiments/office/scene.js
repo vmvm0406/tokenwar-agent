@@ -682,8 +682,9 @@ function cards(t) {
       g2.globalAlpha = 1; g2.fillStyle = `rgba(0,0,0,${clamp(u * 1.2)})`; g2.fillRect(0, 0, W, H);
       g2.globalAlpha = clamp(u);
       const [head, ...rest] = c.text.split('|');
-      g2.font = '700 64px Wanted'; g2.fillStyle = '#00FF66';
-      const hr = wrap(head, 880); hr.forEach((r, i) => g2.fillText(r, W / 2, 820 + i * 84));
+      let fs = 64; g2.font = `700 ${fs}px Wanted`; while (fs > 48 && g2.measureText(head).width > 900) { fs -= 2; g2.font = `700 ${fs}px Wanted`; }   // 한 줄에 들어가게 글씨 줄임 (GTA 6 편)
+      g2.fillStyle = '#00FF66';
+      const hr = wrap(head, 920); hr.forEach((r, i) => g2.fillText(r, W / 2, 820 + i * 84));
       g2.font = '700 46px Wanted'; g2.fillStyle = '#ffffff';
       rest.forEach((r, i) => g2.fillText(r, W / 2, 820 + hr.length * 84 + 40 + i * 64));
     }

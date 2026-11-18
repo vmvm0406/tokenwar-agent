@@ -186,7 +186,7 @@ def whisper_align(mp3, says):
     for sg in segs:
         for w in sg.words:
             word = w.word
-            for en, ko in (("GPT", "지피티"), ("gpt", "지피티"), ("AI", "에이아이")):   # 받아쓰기가 영어로 적은 이름
+            for en, ko in (("GPT", "지피티"), ("gpt", "지피티"), ("GTA", "지티에이"), ("gta", "지티에이"), ("AI", "에이아이")):   # 받아쓰기가 영어로 적은 이름
                 word = word.replace(en, ko)
             chs = [ch for ch in word if ch.isalnum()]
             for j, ch in enumerate(chs):
@@ -262,7 +262,7 @@ def build(script):
     """대사 음성·시각·입 모양(소리 크기) 계산 → JS에 넘길 타임라인.
     intro(선택): 대사 전에 릴스 소리 구간. lines의 "break": n초 → 거기서 대화 묶음을 나누고 n초 쉼(자막 카드 자리)."""
     intro = script.get("intro")
-    lead = (intro["to"] - intro["from"] + intro.get("pad", 0.3)) if intro else LEAD
+    lead = (intro["to"] - intro["from"] + intro.get("pad", 0.3)) if intro else script.get("lead", LEAD)   # "lead": 첫 대사 전 여유(초, 훅 제목 자리)
     groups, cur = [], []
     for i, l in enumerate(script["lines"]):
         if l.get("overlay"):          # 겹쳐 나오는 소리(예: 흥얼거림)는 대화 순서 밖 → 아래에서 따로
