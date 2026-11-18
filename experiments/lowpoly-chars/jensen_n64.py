@@ -18,7 +18,7 @@ import build as B              # noqa: E402
 import lowpoly_from_glb as L   # noqa: E402
 
 args = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
-FACES = int(args[args.index("--faces") + 1]) if "--faces" in args else 700
+FACES = int(args[args.index("--faces") + 1]) if "--faces" in args else 1200   # 좀 더 잘게, 각진 느낌은 유지
 TEX = int(args[args.index("--tex") + 1]) if "--tex" in args else 0   # 0 = 원본 해상도 그대로 (운영자 2026-11-18 "해상도까지 낮출 필요는 없지")
 REF = os.path.join(HERE, "ref")
 SMOOTH = "--smooth" in args
@@ -85,13 +85,58 @@ def project_uv(ob, w, h):
         for li in p.loop_indices:
             co = me.vertices[me.loops[li].vertex_index].co
             px, py = to_px(co.x, co.z)
-            if kind == "hair":      # 옆머리 회색 한 군데 (x 380~440, y 420~500) — 넓게 퍼뜨리면 무늬가 깨짐
-                px, py = 380 + (px % 60), 420 + (py % 80)
-            elif kind == "skin":    # 볼 피부 (x 470~530, y 770~850)
-                px, py = 470 + (px % 60), 770 + (py % 80)
+            if kind == "hair":      # 머리카락 견본(20~310)을 위에서 내려다본 좌표로: 가닥이 앞→뒤로 흐름, 이음새 없음
+                px = 30 + min(max((co.x - FACE_X + 0.6) / 1.2, 0), 1) * 270
+                py = 30 + min(max((co.y + 0.6) / 1.2, 0), 1) * 270
+            elif kind == "skin":    # 피부 견본(20~310, 345~395)을 옆에서 본 좌표로
+                px = 30 + min(max((co.y + 0.6) / 1.2, 0), 1) * 270
+                py = 348 + min(max((2.0 - co.z) / 0.9, 0), 1) * 45
             elif kind == "jacket":
                 px, py = 150 + (px % 400), JACKET_V + (py % 120)
             uv.data[li].uv = (min(max(px / w, 0), 1), 1 - min(max(py / h, 0), 1))
+
+
+def to_model(px, py):
+    return FACE_X + (px - EYE_PX[0]) / SX, EYE_Z - (py - EYE_PX[1]) / SZ
+
+
+def add_glasses3d(ob):
+    """입체 하프림 안경 (운영자 2026-11-18 "얼굴 그림에선 지우고 같은 위치에 입체로").
+    사진 위치: 렌즈 x 425~668 / 712~958, 위테 y 560, 아래 y 678. 얼굴 곡면을 따라 바깥쪽이 뒤로 살짝 휨."""
+    from mathutils.bvhtree import BVHTree
+    bvh = BVHTree.FromObject(ob, bpy.context.evaluated_depsgraph_get())
+    eye_y = []
+    for px in (580, 785):
+        x, z = to_model(px, 605)
+        hit = bvh.ray_cast(Vector((x, -3, z)), Vector((0, 1, 0)))
+        eye_y.append(hit[0].y if hit[0] else -0.47)
+    y0 = min(eye_y) - 0.06                     # 렌즈 면: 눈보다 조금 앞
+
+    def P(px, py, extra=0.0):
+        x, z = to_model(px, py)
+        return (x, y0 + 0.16 * ((x - FACE_X) / 0.45) ** 2 + extra, z)
+    black = B.material("glasses_frame", B.hex2rgb("#18181A"), rough=0.3)
+    wire = B.material("glasses_wire", B.hex2rgb("#B9BDC3"), rough=0.25)
+    parts = []
+
+    def tube(name, pts, r, m):
+        o = B.arc_tube(name, pts, r, ring=6)
+        o.data.materials.append(m)
+        B.shade_flat(o)
+        parts.append(o)
+    for sd, (l0, l1) in (("L", (425, 668)), ("R", (712, 958))):
+        top = [P(l0, 574), P(l0 + 22, 560), P((l0 + l1) / 2, 558), P(l1 - 22, 560), P(l1, 574)]
+        tube(f"glasses_top_{sd}", top, 0.016, black)                          # 굵은 윗테
+        bot = [P(l0, 574), P(l0 + 6, 640), P(l0 + 40, 678), P((l0 + l1) / 2, 682), P(l1 - 40, 678), P(l1 - 6, 640), P(l1, 574)]
+        tube(f"glasses_wire_{sd}", bot, 0.0045, wire)                         # 가는 아랫선
+        outer = l0 if sd == "L" else l1
+        x_ear = FACE_X + (-0.43 if sd == "L" else 0.43)
+        ox, oy, oz = P(outer, 570)
+        tube(f"glasses_arm_{sd}", [(ox, oy, oz), (x_ear * 0.98 + FACE_X * 0.02, oy + 0.18, oz + 0.005), (x_ear, 0.08, oz - 0.02)], 0.009, black)
+    tube("glasses_bridge", [P(668, 568), P(690, 556, -0.01), P(712, 568)], 0.009, black)
+    for o in parts:
+        o.parent = ob
+    return parts
 
 
 def material(img):
@@ -117,7 +162,7 @@ def main():
             if o.name == "key":
                 o.data.energy = 800
     ob = build_shape()
-    photo = args[args.index("--photo") + 1] if "--photo" in args else "jensen_photo_toon.png"   # 게임 그림처럼 단순화한 질감 (toon_texture.py)
+    photo = args[args.index("--photo") + 1] if "--photo" in args else "jensen_painted.png"   # 게임 그림처럼 단순화한 질감 (toon_texture.py)
     src = bpy.data.images.load(os.path.join(REF, photo))
     W, H = src.size
     project_uv(ob, W, H)
@@ -132,9 +177,12 @@ def main():
         img.file_format = "PNG"
         img.save()
     ob.data.materials.append(material(img))
+    glasses = add_glasses3d(ob)
     print("faces", len(ob.data.polygons), "TEX", TEX, "photo", photo, "img", tuple(img.size))
     bpy.ops.object.select_all(action="DESELECT")
     ob.select_set(True)
+    for g in glasses:
+        g.select_set(True)
     bpy.ops.export_scene.gltf(filepath=os.path.join(B.OUT, "jensen_n64.glb"), export_format="GLB", use_selection=True)
     fz = 1.55
     B.camera(sc, (0.0, -4.0, fz + 0.1), (FACE_X, 0, fz - 0.05), lens=50, focus=(FACE_X, -0.5, fz), fstop=2.4)

@@ -33,6 +33,29 @@ def line(d, pts, fill, w):
     d.line([C(x, y) for x, y in pts], fill=fill, width=int(w * S), joint="curve")
 
 
+def hair_strands(d, x0, x1, y_base, part_x=None, top=0):
+    """가는 머리카락 가닥: 같은 방향으로 흐르는 부드러운 곡선, 회색 명암 차이는 작게.
+    part_x = 옆 가르마 위치 (왼쪽 가닥은 왼쪽 위로, 오른쪽 가닥은 오른쪽 위·뒤로 크게 넘김)."""
+    import random
+    rng = random.Random(4)
+    shades = [(150, 150, 146), (162, 162, 158), (184, 184, 180), (196, 196, 192), (138, 138, 135)]
+    for k in range(int((x1 - x0) / 3)):
+        x = x0 + rng.uniform(0, x1 - x0)
+        y = y_base + rng.uniform(-25, 15)
+        L = rng.uniform(0.6, 1.0)
+        if part_x is not None and x < part_x:
+            ctrl = [(0, 0), (-25, -90), (-70, -180)]
+        else:
+            ctrl = [(0, 0), (35, -110), (110, -250)]
+        pts = []
+        for i in range(7):                               # 2차 베지어
+            t = i / 6 * L
+            (ax, ay), (bx, by), (cx, cy) = ctrl
+            px = (1 - t) ** 2 * ax + 2 * (1 - t) * t * bx + t * t * cx
+            py = (1 - t) ** 2 * ay + 2 * (1 - t) * t * by + t * t * cy
+            pts.append((x + px, max(top, y + py)))
+        line(d, pts, rng.choice(shades), rng.uniform(2.2, 3.4))
+
 def main():
     im = Image.new("RGB", (W * S, H * S), SKIN)
     d = ImageDraw.Draw(im)
@@ -59,15 +82,12 @@ def main():
     # 머리카락: 이마선 위·옆머리 (옆 가르마로 오른쪽에 볼륨)
     poly(d, [(330, 0), (1100, 0), (1100, 620), (990, 600), (985, 470), (930, 400), (820, 360), (682, 368), (560, 362),
              (470, 395), (420, 460), (410, 600), (330, 620)], HAIR)
-    import math
-    for k in range(14):                                   # 뒤로·옆으로 넘긴 곡선 결 (가르마 쪽에서 오른쪽 위로)
-        x0 = 440 + k * 38
-        y0 = 395 - 25 * math.sin(k / 13 * math.pi)
-        pts = [(x0 + 120 * t + 60 * t * t, y0 - 260 * t) for t in (0, 0.25, 0.5, 0.75, 1.0)]
-        line(d, pts, HAIR_D if k % 2 else HAIR_L, 5)
-    for side, xs in ((-1, 420), (1, 980)):                # 옆머리 결 (귀 위)
-        for k in range(4):
-            line(d, [(xs + side * k * 14, 590 - k * 6), (xs + side * (k * 14 + 30), 430)], HAIR_D, 4)
+    hair_strands(d, 400, 1060, 380, part_x=490)
+    # 뒤통수·옆·정수리용 머리카락 견본 (사진 바깥 왼쪽 위, jensen_n64.py가 여기서 가져감) + 피부 견본
+    poly(d, [(20, 20), (310, 20), (310, 310), (20, 310)], HAIR)
+    hair_strands(d, 20, 310, 310, part_x=None, top=20)
+    poly(d, [(20, 340), (310, 340), (310, 560), (20, 560)], SKIN)
+    ell(d, 20, 400, 310, 560, SKIN_D)
     # 귀
     for x0, x1 in ((330, 400), (965, 1035)):
         ell(d, x0, 590, x1, 760, SKIN)
@@ -100,13 +120,7 @@ def main():
     poly(d, [(597, 845), (767, 845), (740, 872), (682, 884), (624, 872)], LIP_L)
     line(d, [(597, 845), (682, 849), (767, 845)], LIP_LINE, 5)
 
-    # 안경: 위테만 굵은 검정, 아래는 가는 은색 (넓은 렌즈)
-    for lx0, lx1 in ((425, 668), (712, 958)):
-        line(d, [(lx0, 572), (lx0 + 20, 560), (lx1 - 20, 560), (lx1, 572)], FRAME, 13)
-        line(d, [(lx0, 572), (lx0 + 6, 650), (lx0 + 40, 678), (lx1 - 40, 678), (lx1 - 6, 650), (lx1, 572)], WIRE, 4)
-    line(d, [(668, 566), (682, 560), (712, 566)], FRAME, 8)       # 다리(브리지)
-    line(d, [(425, 568), (360, 572)], FRAME, 9)                   # 안경다리
-    line(d, [(958, 568), (1025, 572)], FRAME, 9)
+    # 안경은 그리지 않음 — jensen_n64.py가 같은 위치에 입체로 올림 (운영자 2026-11-18)
 
     im = im.filter(ImageFilter.GaussianBlur(1.2)).resize((W, H), Image.LANCZOS)
     out = HERE / "ref" / "jensen_painted.png"
