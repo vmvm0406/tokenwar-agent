@@ -214,7 +214,7 @@ def make_blocky_head(key, cfg):
     rounded_box(bm, (0, 0.0, -0.015), (0.415, 0.45, 0.395), round_=0.3, cuts=5, top_scale=0.95)
     rounded_box(bm, (0.04, 0.4, 0.0), (0.3, 0.08, 0.3), round_=0.25, cuts=2,                     # 위로 넘긴 볼륨 (낮게)
                 matrix=Matrix.Rotation(math.radians(-6), 4, "Z"))
-    bmesh.ops.triangulate(bm, faces=bm.faces[:])
+    # 삼각형으로 나누지 않음 (운영자 2026-11-18 "머리 질감이 삼각형이라 어색") → 네모 격자 + 부드러운 명암 + 결 줄무늬
 
     def hairline(x):           # 이 높이 아래 앞쪽은 얼굴 (가르마 x -0.12 쪽은 살짝 높음)
         return 0.25 - 1.1 * max(0.0, abs(x) - 0.1) ** 1.2 + (0.02 if x < -0.05 else 0.0)
@@ -237,7 +237,8 @@ def make_blocky_head(key, cfg):
                 c.y = hairline(c.x)                                      # 이마선 곡선
         bmesh.ops.smooth_vert(bm, verts=list(edge), factor=0.5, use_axis_x=True, use_axis_y=True, use_axis_z=False)
     hair = B.bm_to_obj(bm, f"{key}_hair")
-    B.shade_flat(hair)
+    for p in hair.data.polygons:
+        p.use_smooth = True
     hc, hd = B.hex2rgb(cfg["hair"]), B.hex2rgb("#4E4E4B")
     # 가르마 선과 판 사이 그늘은 짙게
     # 젠슨 황 머리 질감: 윗머리는 밝은 은색, 옆·뒤로 갈수록 짙은 회색, 가르마에서 뒤로 넘긴 결(줄무늬)
@@ -253,7 +254,7 @@ def make_blocky_head(key, cfg):
         if c.z < -0.2:
             k *= 0.9                                             # 뒤통수 조금 더 짙게
         return [v * k for v in base]
-    B.facet_colors(hair, hair_col, jitter=0.06, seed=8)
+    B.facet_colors(hair, hair_col, jitter=0.02, seed=8)
     hair.data.materials.append(B.material(f"{key}_hair_mat", vcol=True, rough=0.8))
     return head, hair
 
