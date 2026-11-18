@@ -59,10 +59,10 @@ BONES = {
     "head": ((0, 0, 1.42), (0, 0, 1.95), "neck"),
 }
 for sd, sx in (("L", 1), ("R", -1)):
-    BONES[f"upper_arm.{sd}"] = ((0.36 * sx, 0, 1.26), (0.45 * sx, 0, 0.98), "spine")
-    BONES[f"lower_arm.{sd}"] = ((0.45 * sx, 0, 0.98), (0.48 * sx, -0.02, 0.68), f"upper_arm.{sd}")
-    BONES[f"thigh.{sd}"] = ((0.15 * sx, 0, 0.76), (0.15 * sx, 0, 0.45), "hips")
-    BONES[f"shin.{sd}"] = ((0.15 * sx, 0, 0.45), (0.15 * sx, 0, 0.10), f"thigh.{sd}")
+    BONES[f"upper_arm.{sd}"] = ((0.35 * sx, 0, 1.23), (0.47 * sx, 0, 0.98), "spine")
+    BONES[f"lower_arm.{sd}"] = ((0.47 * sx, 0, 0.98), (0.53 * sx, -0.02, 0.66), f"upper_arm.{sd}")
+    BONES[f"thigh.{sd}"] = ((0.16 * sx, 0, 0.82), (0.16 * sx, 0, 0.45), "hips")
+    BONES[f"shin.{sd}"] = ((0.16 * sx, 0, 0.45), (0.16 * sx, 0, 0.10), f"thigh.{sd}")
 
 
 # ---------- 덩어리 만들기 ----------
@@ -156,29 +156,50 @@ def add_glasses(key, fc, color):
     tube(f"{key}_glasses_bridge", [(-dx + rx * 0.97, s * 0.55, zf), (0, s * 0.7, zf + 0.01), (dx - rx * 0.97, s * 0.55, zf)], s * 0.1, black)
 
 
-def make_parts(key, cfg):
-    """부위 → 붙일 뼈. 좌표는 서 있는 자세(위 +Z, 앞 -Y)."""
-    P = {}
-    top, pants = cfg["top"], cfg["pants"]
-    # 옷 구분은 덧붙인 덩어리 없이 색으로만 (운영자 2026-11-18: 깃 등을 달면 몸이 지저분해짐)
-    top_c = B.hex2rgb(top)
-    color_fn = None
-    if cfg["tee"]:  # 열린 재킷 안 티셔츠 = 가슴 가운데 V자 색 영역
-        tee_c = B.hex2rgb(cfg["tee"])
-        color_fn = lambda c: tee_c if (c.y < -0.08 and c.z > 0.86 and abs(c.x) < 0.03 + (c.z - 0.86) * 0.3) else top_c
-    P["spine"] = [blob(f"{key}_torso", [("e", (0, 0, 1.06), (0.32, 0.22, 0.30)),
-                                          ("e", (0, 0, 1.24), (0.37, 0.21, 0.12))], 520, top, cfg["top_rough"],
-                       color_fn=color_fn)]
-    P["neck"] = [blob(f"{key}_neck", [("c", (0, 0, 1.28), (0, 0, 1.45), 0.08)], 80, cfg["skin"])]
-    P["hips"] = [blob(f"{key}_pelvis", [("e", (0, 0, 0.80), (0.30, 0.20, 0.14))], 260, pants, 0.75)]
-    for sd, sx in (("L", 1), ("R", -1)):
-        P[f"upper_arm.{sd}"] = [blob(f"{key}_uarm{sd}", [("c", (0.37 * sx, 0, 1.25), (0.45 * sx, 0, 0.98), 0.095)], 140, top, cfg["top_rough"])]
-        P[f"lower_arm.{sd}"] = [blob(f"{key}_larm{sd}", [("c", (0.45 * sx, 0, 0.98), (0.475 * sx, -0.02, 0.74), 0.088)], 120, top, cfg["top_rough"]),
-                                blob(f"{key}_hand{sd}", [("e", (0.48 * sx, -0.025, 0.67), (0.075, 0.07, 0.085))], 70, cfg["skin"])]
-        P[f"thigh.{sd}"] = [blob(f"{key}_thigh{sd}", [("c", (0.15 * sx, 0, 0.78), (0.15 * sx, 0, 0.45), 0.13)], 150, pants, 0.75)]
-        P[f"shin.{sd}"] = [blob(f"{key}_shin{sd}", [("c", (0.15 * sx, 0, 0.45), (0.15 * sx, 0, 0.16), 0.115)], 130, pants, 0.75),
-                           blob(f"{key}_shoe{sd}", [("e", (0.15 * sx, -0.05, 0.08), (0.13, 0.19, 0.08))], 110, cfg["shoes"], 0.5)]
-    return P
+def make_body(key, cfg):
+    """몸 전체를 이어진 한 덩어리로 (운영자 2026-11-18 "몸도 자연스럽게"): 가슴→허리→골반→다리, 어깨→팔.
+    옷 구분은 덧붙인 덩어리 없이 면 색으로만 (깃 등을 달면 지저분해짐). 좌표: 서 있는 자세(위 +Z, 앞 -Y), 팔은 살짝 벌린 A자."""
+    S = [("e", (0, 0, 1.12), (0.30, 0.20, 0.19)),            # 가슴
+         ("e", (0, 0, 0.96), (0.26, 0.18, 0.16)),            # 허리
+         ("e", (0, 0, 0.83), (0.28, 0.19, 0.12)),            # 골반
+         ("c", (-0.27, 0, 1.22), (0.27, 0, 1.22), 0.10),      # 어깨선 (둥글게 처진 어깨)
+         ("c", (0, 0, 1.22), (0, 0, 1.44), 0.075)]            # 목
+    for sx in (1, -1):
+        S += [("e", (0.33 * sx, 0, 1.22), (0.105, 0.10, 0.10)),                     # 어깨 둥근 곳
+              ("c", (0.35 * sx, 0, 1.22), (0.47 * sx, 0, 0.98), 0.083),             # 위팔
+              ("c", (0.47 * sx, 0, 0.98), (0.525 * sx, -0.02, 0.71), 0.076),        # 아래팔
+              ("e", (0.535 * sx, -0.025, 0.645), (0.066, 0.058, 0.078)),            # 손
+              ("c", (0.16 * sx, 0, 0.84), (0.16 * sx, 0, 0.45), 0.118),             # 허벅지
+              ("c", (0.16 * sx, 0, 0.45), (0.16 * sx, 0, 0.12), 0.102),             # 종아리
+              ("e", (0.16 * sx, -0.05, 0.07), (0.115, 0.175, 0.075))]               # 신발
+    top_c, pants_c = B.hex2rgb(cfg["top"]), B.hex2rgb(cfg["pants"])
+    skin_c, shoes_c = B.hex2rgb(cfg["skin"]), B.hex2rgb(cfg["shoes"])
+    tee_c = B.hex2rgb(cfg["tee"]) if cfg["tee"] else None
+
+    def color(c):
+        ax = abs(c.x)
+        if c.z < 0.135:
+            return shoes_c
+        if c.z < 0.725 and ax > 0.42:                 # 손
+            return skin_c
+        if c.z > 1.31 and ax < 0.12:                  # 목
+            return skin_c
+        if c.z < 0.86 and ax < 0.33:                  # 바지
+            return pants_c
+        if tee_c and c.y < -0.08 and c.z > 0.88 and ax < 0.035 + (c.z - 0.88) * 0.33:   # 열린 재킷 안 티셔츠(V)
+            return tee_c
+        return top_c
+    return blob(f"{key}_body", S, 2600, cfg["top"], cfg["top_rough"], voxel=0.016, smooth=8, color_fn=color)
+
+
+def skin_to(ob, ao):
+    """뼈에 자동 가중치 (관절이 자연스럽게 휨). root 뼈는 변형에서 뺌."""
+    ao.data.bones["root"].use_deform = False
+    bpy.ops.object.select_all(action="DESELECT")
+    ob.select_set(True)
+    ao.select_set(True)
+    bpy.context.view_layer.objects.active = ao
+    bpy.ops.object.parent_set(type="ARMATURE_AUTO")
 
 
 def emo_table(key):
@@ -223,9 +244,7 @@ def make_human(key, mats):
     head.location = (0, 0, 1.67)
     bpy.context.view_layer.update()
     attach(head, ao, "head")
-    for bone, obs in make_parts(key, cfg).items():
-        for ob in obs:
-            attach(ob, ao, bone)
+    skin_to(make_body(key, cfg), ao)
     return ao
 
 
