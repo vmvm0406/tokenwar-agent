@@ -35,11 +35,13 @@ def hex2rgb(h):
 CHARS = {
     # 클로드: 가운데 몸(얼굴 자리)을 키우고 광선은 그 둘레로 (운영자: 변형 OK, 알아볼 수만 있게, 얼굴은 크게)
     # 통통하게(운영자 레퍼런스 2026-11-18): 두껍고 둥근 단면(power 0.5) + 윤곽을 사방으로 부풀림(dilate) + 큼직한 면(faces)
-    # 2026-11-18 운영자: 광선이 다리처럼 보여 이상 → 로고 SVG 대신 짧은 별. 로고처럼 가는 광선·길이 들쭉날쭉 → 클로드인 줄 알게
-    "claude": dict(svg="claude.svg", half=0.12, h=0.40, hmin=0.05, power=0.5, dcap=0.46,
-                   star=dict(n=10, r_in=0.58, lens=(0.94, 0.79, 0.88, 0.76, 0.92, 0.83, 0.85, 0.77, 0.95, 0.80),
-                             w_base=0.32, w_tip=0.10, rot=90, offs=(0, 6, -5, 4, -7, 3, -4, 7, -3, 5)),   # 뿌리 넓고 끝 좁게 → 다리 말고 별 꼭짓점
-                   disc=dict(r=0.46, sides=28), faces=2400, dilate=0.07,
+    # 2026-11-18 운영자: 광선이 다리처럼 보여 이상 → 로고 모양은 그대로 두고 광선만 가운데 쪽으로 줄임(ray_k).
+    # (별 모양 star= 시안은 "클로드 느낌이 사라졌다"로 되돌림)
+    "claude": dict(svg="claude.svg", half=0.12, h=0.36, hmin=0.05, power=0.8, dcap=0.46,
+                   ray_k=dict(r0=0.42, k=0.74),
+                   # "울퉁불퉁해 보여"(운영자 2026-11-18): 납작하게(power 0.8)·더 매끈하게(smooth 8)·면 색 차이 작게
+                   smooth_it=8, jitter=0.05,
+                   disc=dict(r=0.46, sides=28), faces=2400, dilate=0.045,
                    face=dict(cx=0.0, cy=0.02, eye_dx=0.16, eye_s=0.10, mouth_dy=-0.16, mouth_w=0.08,
                              blush=(0.28, -0.10, 0.075))),
     "gemini": dict(svg="gemini.svg", half=0.12, h=0.42, hmin=0.04, power=0.5, dcap=None,
@@ -199,7 +201,7 @@ def material(name, rgb=None, rough=0.55, vcol=False, emit=0.0):
     return m
 
 
-def dilate(ob, dist):
+def dilate(ob, dist, iters=3):
     """사방으로 통통하게: 법선 방향으로 밀고 → 다시 리메시(겹친 곳 정리) → 살짝 매끈하게."""
     me = ob.data
     n = len(me.vertices)
@@ -211,7 +213,7 @@ def dilate(ob, dist):
     me.update()
     remesh(ob, 0.012)
     m = ob.modifiers.new("sm", "SMOOTH")
-    m.factor, m.iterations = 0.5, 3      # 덜 매끈하게 → 각이 보이게
+    m.factor, m.iterations = 0.5, iters  # 덜 매끈하게 → 각이 보이게 (캐릭터별 smooth_it)
     apply_mod(ob, m)
 
 
@@ -256,6 +258,12 @@ def star_bmesh(st):
 
 def make_body(key, cfg):
     bm = star_bmesh(cfg["star"]) if cfg.get("star") else svg_bmesh(os.path.join(HERE, "logos", cfg["svg"]))
+    if cfg.get("ray_k"):                       # 로고 광선을 가운데 쪽으로 짧게 (모양·들쭉날쭉함은 그대로)
+        r0, k = cfg["ray_k"]["r0"], cfg["ray_k"]["k"]
+        for v in bm.verts:
+            r = v.co.length
+            if r > r0:
+                v.co *= (r0 + (r - r0) * k) / r
     solid_from_flat(bm, cfg["half"])
     if cfg["disc"]:
         dsc = cfg["disc"]
@@ -264,7 +272,7 @@ def make_body(key, cfg):
     remesh(ob, 0.010)
     inflate(ob, cfg["half"], cfg["h"], cfg["hmin"], cfg["power"], cfg["dcap"])
     if cfg.get("dilate"):
-        dilate(ob, cfg["dilate"])
+        dilate(ob, cfg["dilate"], cfg.get("smooth_it", 3))
     decimate(ob, cfg["faces"])
     shade_flat(ob)
     return ob
@@ -551,7 +559,7 @@ def main():
         cfg = CHARS[key]
         root = link(bpy.data.objects.new(key, None))
         body = make_body(key, cfg)
-        facet_colors(body, body_color(key), seed=11 + i)
+        facet_colors(body, body_color(key), jitter=CHARS[key].get("jitter", 0.11), seed=11 + i)
         body.data.materials.append(material(f"{key}_mat", vcol=True, rough=0.68))
         body.parent = root
         add_face(key, body, root, mats=mats, **cfg["face"])
