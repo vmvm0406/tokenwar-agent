@@ -74,11 +74,15 @@ def ellipsoid_into(bm, c, s):
     bmesh.ops.create_uvsphere(bm, u_segments=24, v_segments=16, radius=1.0, matrix=m)
 
 
-def capsule_into(bm, a, b, r):
+def capsule_into(bm, a, b, r, r2=None):
+    """r → r2로 가늘어지는 팔다리 (운영자 2026-11-18 "몸을 자연스러운 모양으로")."""
     a, b = Vector(a), Vector(b)
-    n = max(2, int((b - a).length / (r * 0.45)) + 1)
+    r2 = r if r2 is None else r2
+    n = max(2, int((b - a).length / (min(r, r2) * 0.4)) + 1)
     for k in range(n):
-        ellipsoid_into(bm, a.lerp(b, k / (n - 1)), (r, r, r))
+        t = k / (n - 1)
+        rr = r + (r2 - r) * t
+        ellipsoid_into(bm, a.lerp(b, t), (rr, rr, rr))
 
 
 def blob(name, shapes, faces, color, rough=0.68, voxel=0.018, smooth=4, jitter=0.07, color_fn=None):
@@ -89,7 +93,7 @@ def blob(name, shapes, faces, color, rough=0.68, voxel=0.018, smooth=4, jitter=0
         if s[0] == "e":
             ellipsoid_into(bm, s[1], s[2])
         else:
-            capsule_into(bm, s[1], s[2], s[3])
+            capsule_into(bm, s[1], s[2], s[3], s[4] if len(s) > 4 else None)
     ob = B.bm_to_obj(bm, name)
     B.remesh(ob, voxel)
     if smooth:
@@ -170,11 +174,12 @@ def make_body(key, cfg):
          ("c", (0, 0, 1.22), (0, 0, 1.44), 0.075)]            # 목
     for sx in (1, -1):
         S += [("e", (0.33 * sx, 0, 1.22), (0.105, 0.10, 0.10)),                     # 어깨 둥근 곳
-              ("c", (0.35 * sx, 0, 1.22), (0.47 * sx, 0, 0.98), 0.083),             # 위팔
-              ("c", (0.47 * sx, 0, 0.98), (0.525 * sx, -0.02, 0.71), 0.076),        # 아래팔
-              ("e", (0.535 * sx, -0.025, 0.645), (0.066, 0.058, 0.078)),            # 손
-              ("c", (0.16 * sx, 0, 0.84), (0.16 * sx, 0, 0.45), 0.118),             # 허벅지
-              ("c", (0.16 * sx, 0, 0.45), (0.16 * sx, 0, 0.12), 0.102),             # 종아리
+              ("c", (0.35 * sx, 0, 1.22), (0.47 * sx, 0, 0.98), 0.092, 0.07),       # 위팔: 어깨 굵고 팔꿈치로 가늘게
+              ("c", (0.47 * sx, 0, 0.98), (0.525 * sx, -0.02, 0.71), 0.074, 0.054),  # 아래팔: 손목으로 가늘게
+              ("e", (0.535 * sx, -0.025, 0.655), (0.06, 0.045, 0.082)),            # 손: 납작한 손바닥
+              ("c", (0.16 * sx, 0, 0.84), (0.155 * sx, -0.01, 0.45), 0.128, 0.09),  # 허벅지: 엉덩이 굵고 무릎으로 가늘게
+              ("c", (0.155 * sx, -0.01, 0.45), (0.155 * sx, 0.01, 0.13), 0.092, 0.068),  # 종아리: 발목으로 가늘게
+              ("e", (0.155 * sx, 0.03, 0.34), (0.08, 0.075, 0.1)),                 # 종아리 근육 살짝
               ("e", (0.16 * sx, -0.05, 0.07), (0.115, 0.175, 0.075))]               # 신발
     top_c, pants_c = B.hex2rgb(cfg["top"]), B.hex2rgb(cfg["pants"])
     skin_c, shoes_c = B.hex2rgb(cfg["skin"]), B.hex2rgb(cfg["shoes"])
@@ -204,6 +209,38 @@ def skin_to(ob, ao):
     ao.select_set(True)
     bpy.context.view_layer.objects.active = ao
     bpy.ops.object.parent_set(type="ARMATURE_AUTO")
+    # 관절 가중치를 부드럽게 펴서 꺾일 때 찌그러지지 않게 (운영자 2026-11-18 "관절 때문에 이상한 느낌")
+    smooth_weights(ob, repeat=12, factor=0.6)
+
+
+def smooth_weights(ob, repeat=12, factor=0.6):
+    """정점 가중치를 이웃 평균으로 여러 번 펴고 다시 합이 1이 되게 (관절에서 부드럽게 휨)."""
+    me = ob.data
+    n = len(me.vertices)
+    groups = [g.index for g in ob.vertex_groups]
+    W = {g: [0.0] * n for g in groups}
+    for v in me.vertices:
+        for ge in v.groups:
+            if ge.group in W:
+                W[ge.group][v.index] = ge.weight
+    nb = [[] for _ in range(n)]
+    for e in me.edges:
+        a, b = e.vertices
+        nb[a].append(b)
+        nb[b].append(a)
+    for _ in range(repeat):
+        for g in groups:
+            w = W[g]
+            W[g] = [w[i] * (1 - factor) + factor * (sum(w[j] for j in nb[i]) / len(nb[i]) if nb[i] else w[i]) for i in range(n)]
+    for i in range(n):
+        tot = sum(W[g][i] for g in groups) or 1.0
+        for g in groups:
+            val = W[g][i] / tot
+            vg = ob.vertex_groups[g]
+            if val > 0.001:
+                vg.add([i], val, "REPLACE")
+            else:
+                vg.remove([i])
 
 
 def emo_table(key):
