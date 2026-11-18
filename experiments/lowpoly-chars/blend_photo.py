@@ -21,6 +21,17 @@ d.ellipse([340, 580, 420, 770], fill=int(255 * amt * 0.7))        # 귀
 d.ellipse([945, 580, 1035, 770], fill=int(255 * amt * 0.7))
 d.rectangle([560, 960, 800, 1120], fill=int(255 * amt))           # 목
 mask = mask.filter(ImageFilter.GaussianBlur(35))
+# 사진 속 안경 테 자리는 사진을 빼고 그림만 (입체 안경과 이중으로 비치지 않게)
+holes = Image.new("L", painted.size, 0)
+hd = ImageDraw.Draw(holes)
+for mir in (lambda x: x, lambda x: 1380 - x):
+    hd.line([(mir(x), y) for x, y in [(400, 576), (438, 558), (550, 552), (660, 556), (676, 568)]], fill=255, width=34)
+    hd.line([(mir(x), y) for x, y in [(410, 574), (420, 620), (448, 662), (500, 686), (560, 692), (620, 680), (656, 648), (670, 612), (676, 568)]], fill=255, width=22)
+hd.line([(676, 568), (690, 556), (704, 568)], fill=255, width=26)          # 브리지
+hd.line([(330, 572), (400, 576)], fill=255, width=26)                       # 안경다리
+hd.line([(980, 576), (1050, 572)], fill=255, width=26)
+holes = holes.filter(ImageFilter.GaussianBlur(6))
+mask = ImageChops.subtract(mask, holes)
 
 out = Image.composite(photo, painted, mask)
 out.save(HERE / "ref" / "jensen_mixed.png")

@@ -45,9 +45,9 @@ def build_shape():
     from mathutils import Matrix
     bm = bmesh.new()
     bm.from_mesh(ob.data)
-    for c, r in (((FACE_X, -0.575, 1.42), (0.085, 0.075, 0.07)),
-                 ((FACE_X - 0.075, -0.51, 1.385), (0.058, 0.055, 0.048)),
-                 ((FACE_X + 0.075, -0.51, 1.385), (0.058, 0.055, 0.048)),
+    for c, r in (((FACE_X, -0.565, 1.425), (0.078, 0.068, 0.058)),      # 코끝 (아래로 덜 튀어나오게)
+                 ((FACE_X - 0.072, -0.5, 1.395), (0.05, 0.048, 0.038)),
+                 ((FACE_X + 0.072, -0.5, 1.395), (0.05, 0.048, 0.038)),
                  ((FACE_X, -0.515, 1.51), (0.04, 0.05, 0.1))):
         bmesh.ops.create_uvsphere(bm, u_segments=16, v_segments=10, radius=1.0,
                                   matrix=Matrix.Translation(Vector(c)) @ Matrix.Diagonal((*r, 1)))
@@ -90,6 +90,8 @@ def project_uv(ob, w, h):
                 kind = "hair"   # 뒤통수·정수리·옆머리만 (콧등은 정면 사진 그대로)
             elif n.y > -0.4 and abs(c.x - FACE_X) > 0.3:   # 얼굴 가장자리(귀 쪽)만. 코 옆면은 정면 사진 그대로
                 kind = "skin"
+            elif (n.z < -0.2 and 1.30 < c.z < 1.43 and dx < 0.16) or (n.z < -0.3 and c.z < 1.17) or (n.y > -0.3 and dx > 0.16):   # 코 밑·턱 밑·옆면만  # 아래를 향한 면(코 밑·턱 밑)·옆을 향한 면: 정면 사진이 늘어나 얼룩지므로 피부 견본
+                kind = "skin"
             else:
                 kind = "front"
         else:
@@ -112,6 +114,9 @@ def to_model(px, py):
     return FACE_X + (px - EYE_PX[0]) / SX, EYE_Z - (py - EYE_PX[1]) / SZ
 
 
+GLASS_W = 0.88
+
+
 def add_glasses3d(ob):
     """입체 하프림 안경 (운영자 2026-11-18 "얼굴 그림에선 지우고 같은 위치에 입체로").
     사진 위치: 렌즈 x 425~668 / 712~958, 위테 y 560, 아래 y 678. 얼굴 곡면을 따라 바깥쪽이 뒤로 살짝 휨."""
@@ -126,6 +131,7 @@ def add_glasses3d(ob):
 
     def P(px, py, extra=0.0):
         x, z = to_model(px, py)
+        x = FACE_X + (x - FACE_X) * GLASS_W        # 옆 폭만 좁힘 (운영자 2026-11-18 "안경 옆 폭이 너무 넓다")
         return (x, y0 + 0.16 * ((x - FACE_X) / 0.45) ** 2 + extra, z)
     black = B.material("glasses_frame", B.hex2rgb("#18181A"), rough=0.3)
     wire = B.material("glasses_wire", B.hex2rgb("#B9BDC3"), rough=0.25)
@@ -167,6 +173,58 @@ def x_scale(z):
     if z < 1.5:
         return JAW_W + (HEAD_W - JAW_W) * sm((z - 1.35) / 0.15)
     return HEAD_W
+
+
+# 사진 얼굴 윤곽 (귀 제외, 사진 격자에서 읽음): 사진 y → (왼쪽 끝 x, 오른쪽 끝 x). 운영자 2026-11-18 "얼굴 사진에 맞게 입체 모형도 따라가자"
+PHOTO_OUTLINE = [(420, 470, 905), (500, 440, 930), (600, 420, 945), (700, 425, 950), (760, 440, 945),
+                 (845, 465, 915), (900, 500, 890), (950, 545, 855), (1000, 610, 790), (1020, 650, 740)]
+
+
+def fit_to_photo(ob):
+    """높이마다 모형 앞쪽 얼굴 폭을 사진 윤곽 폭에 맞춤 (단면 전체를 같은 배율로). 질감 투영 전에 해서 사진과 모형 가장자리가 겹침.
+    이마선 위(머리)는 맨 위 배율 유지, 턱 밑~목은 원래 폭으로 서서히."""
+    import bisect
+    me = ob.data
+    pts = sorted((EYE_Z - (py - EYE_PX[1]) / SZ, (r - l) / 2 / SX) for py, l, r in PHOTO_OUTLINE)   # (z, 반너비) z 오름차순
+    zs = [p[0] for p in pts]
+
+    def photo_hw(z):
+        i = bisect.bisect_left(zs, z)
+        if i <= 0:
+            return pts[0][1]
+        if i >= len(pts):
+            return pts[-1][1]
+        (z0, w0), (z1, w1) = pts[i - 1], pts[i]
+        return w0 + (w1 - w0) * (z - z0) / (z1 - z0)
+
+    def mesh_hw(z):
+        ws = [abs(v.co.x - FACE_X) for v in me.vertices if abs(v.co.z - z) < 0.02 and v.co.y < 0.0]   # 볼 옆까지 (앞쪽 절반 전체)
+        return max(ws) if ws else None
+    zlo, zhi = zs[0], zs[-1]
+    table = []
+    for k in range(40):
+        z = zlo + (zhi - zlo) * k / 39
+        mw = mesh_hw(z)
+        if mw:
+            table.append((z, min(1.05, max(0.55, photo_hw(z) / mw))))   # 넓히는 건 최대 5%
+    # 부드럽게 (이웃 평균)
+    sm = [(table[i][0], sum(t[1] for t in table[max(0, i - 2):i + 3]) / len(table[max(0, i - 2):i + 3])) for i in range(len(table))]
+    tz = [t[0] for t in sm]
+
+    def factor(z):
+        if z >= tz[-1]:
+            return sm[-1][1]
+        if z <= tz[0]:
+            f0 = sm[0][1]
+            t = min(1.0, max(0.0, (tz[0] - z) / 0.1))     # 턱 밑 0.1 동안 원래 폭으로
+            return f0 + (1 - f0) * t * t * (3 - 2 * t)
+        i = bisect.bisect_left(tz, z)
+        (z0, f0), (z1, f1) = sm[i - 1], sm[i]
+        return f0 + (f1 - f0) * (z - z0) / (z1 - z0)
+    for v in me.vertices:
+        v.co.x = FACE_X + (v.co.x - FACE_X) * factor(v.co.z)
+    me.update()
+    print("fit", " ".join(f"{z:.2f}:{f:.2f}" for z, f in sm[::6]))
 
 
 def jaw_taper(co):
@@ -213,10 +271,16 @@ def main():
             o.data.use_shadow = False
             if o.name == "key":
                 o.data.energy = 800
+    d = bpy.data.lights.new("under", "AREA")                 # 정면 아래 약한 보조광 (코 밑·턱 밑 그늘 누그러뜨림, 미리보기용)
+    d.energy, d.size = 80, 3
+    ul = B.link(bpy.data.objects.new("under", d))
+    ul.location = (0, -3.5, 0.6)
+    ul.rotation_euler = (Vector((0, 0, 1.5)) - Vector(ul.location)).to_track_quat("-Z", "Y").to_euler()
     ob = build_shape()
     photo = args[args.index("--photo") + 1] if "--photo" in args else "jensen_mixed.png"   # 그린 얼굴 + 사진 50% (blend_photo.py)   # 게임 그림처럼 단순화한 질감 (toon_texture.py)
     src = bpy.data.images.load(os.path.join(REF, photo))
     W, H = src.size
+    fit_to_photo(ob)          # 사진 윤곽에 모형 폭 맞춤 (예전 눈대중 좁히기 narrow_head 대신)
     project_uv(ob, W, H)
     img = src
     if TEX:   # 해상도를 줄일 때만 (경로를 바꾸면 Blender가 그 경로의 예전 파일을 다시 불러오므로 먼저 지움)
@@ -230,7 +294,6 @@ def main():
         img.save()
     ob.data.materials.append(material(img))
     glasses = add_glasses3d(ob)
-    narrow_head(ob, glasses)
     print("faces", len(ob.data.polygons), "TEX", TEX, "photo", photo, "img", tuple(img.size))
     bpy.ops.object.select_all(action="DESELECT")
     ob.select_set(True)
