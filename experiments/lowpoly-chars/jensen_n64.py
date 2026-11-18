@@ -214,7 +214,7 @@ def main():
             if o.name == "key":
                 o.data.energy = 800
     ob = build_shape()
-    photo = args[args.index("--photo") + 1] if "--photo" in args else "jensen_painted.png"   # 게임 그림처럼 단순화한 질감 (toon_texture.py)
+    photo = args[args.index("--photo") + 1] if "--photo" in args else "jensen_mixed.png"   # 그린 얼굴 + 사진 50% (blend_photo.py)   # 게임 그림처럼 단순화한 질감 (toon_texture.py)
     src = bpy.data.images.load(os.path.join(REF, photo))
     W, H = src.size
     project_uv(ob, W, H)
