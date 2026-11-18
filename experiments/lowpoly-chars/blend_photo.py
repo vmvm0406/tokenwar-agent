@@ -52,8 +52,14 @@ low = cv2.GaussianBlur(f, (0, 0), 40)
 skin = np.median(low[700:900, 560:800].reshape(-1, 3), axis=0)
 yy, xx = np.mgrid[0:f.shape[0], 0:f.shape[1]]
 r = np.sqrt(((xx - 682) / 210.0) ** 2 + ((yy - 740) / 250.0) ** 2)
-wmap = (np.clip((r - 0.55) / 0.5, 0, 1) ** 1.2 * 0.9)[..., None]
-clean = np.clip(f + wmap * (skin - low), 0, 255).astype(np.uint8)
+wmap = (np.clip((r - 0.4) / 0.45, 0, 1) ** 1.1 * 0.95)[..., None]
+out_f = f + wmap * (skin - low)
+# 그늘만 밝히기 (운영자 2026-11-18 "그늘진 부분 다듬기"): 얼굴 안에서 피부색보다 어두운 큰 명암을 60% 끌어올림
+face = (np.clip((1.25 - r) / 0.25, 0, 1))[..., None]
+low2 = cv2.GaussianBlur(out_f, (0, 0), 25)
+dark = np.clip(skin - low2, 0, None)
+out_f = out_f + face * 0.6 * dark
+clean = np.clip(out_f, 0, 255).astype(np.uint8)
 photo = Image.fromarray(clean).filter(ImageFilter.MedianFilter(5))   # 잡티만 살짝 정리
 photo.crop((300, 480, 1080, 760)).save(HERE / "out" / "photo_noglasses.png")
 

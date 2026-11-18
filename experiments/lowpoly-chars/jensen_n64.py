@@ -388,7 +388,7 @@ def main():
             if o.name == "key":
                 o.data.energy = 800
     d = bpy.data.lights.new("under", "AREA")                 # 정면 아래 약한 보조광 (코 밑·턱 밑 그늘 누그러뜨림, 미리보기용)
-    d.energy, d.size = 80, 3
+    d.energy, d.size = 160, 4
     ul = B.link(bpy.data.objects.new("under", d))
     ul.location = (0, -3.5, 0.6)
     ul.rotation_euler = (Vector((0, 0, 1.5)) - Vector(ul.location)).to_track_quat("-Z", "Y").to_euler()
