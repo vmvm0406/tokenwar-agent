@@ -118,7 +118,8 @@
    "say": "[impressed] 클로드 너... 그림 실력 좀 늘었다...?",
    "sub": "클로드 너... 그림 실력 좀 늘었다...?",
    "emo": "surprised",
-   "break": 3.9
+   "break": 3.9,
+   "seed": 11
   },
   {
    "who": "claude",
@@ -129,18 +130,24 @@
   },
   {
    "who": "chatgpt",
-   "say": "[thoughtfully] 근데... 그렇게 시험 통과한 사람들도, 아마 있지 않을까?",
-   "sub": "근데... 그렇게 시험 통과한 사람들도|아마 있지 않을까?",
+   "say": "[thoughtfully] 근데 이미 우리 같은 AI 사용해서 시험 봐서 합격한 사람... 널렸을 것 같은데...",
+   "sub": "근데 이미 우리 같은 AI 사용해서|시험 봐서 합격한 사람|널렸을 것 같은데...",
    "emo": "neutral"
+  },
+  {
+   "who": "gemini",
+   "say": "[seriously] 언젠간 다 밝혀질 거야.",
+   "sub": "언젠간 다 밝혀질 거야.",
+   "emo": "angry"
   },
   {
    "who": "chatgpt",
    "say": "[gasps] 헉!",
    "emo": "surprised",
    "overlay": {
-    "line": 8,
+    "line": 9,
     "end": true,
-    "dt": 0.45,
+    "dt": 1.55,
     "vol": 0.7
    }
   },
@@ -149,9 +156,9 @@
    "say": "[gasps] 헉!",
    "emo": "surprised",
    "overlay": {
-    "line": 8,
+    "line": 9,
     "end": true,
-    "dt": 0.55,
+    "dt": 1.67,
     "vol": 0.7
    }
   },
@@ -160,14 +167,14 @@
    "say": "[startled] 앗...!",
    "emo": "surprised",
    "overlay": {
-    "line": 8,
+    "line": 9,
     "end": true,
-    "dt": 0.2,
+    "dt": 1.85,
     "vol": 0.75
    }
   }
  ],
- "tail": 7.6,
+ "tail": 9.2,
  "screens": [
   {
    "t": 0,
@@ -232,7 +239,7 @@
    "bg": "board"
   },
   {
-   "line": 8,
+   "line": 9,
    "end": true,
    "dt": 0.0,
    "screen": "monitor",
@@ -327,29 +334,48 @@
    "cam": "two:claude:chatgpt"
   },
   {
-   "line": 8,
+   "line": 9,
    "end": true,
-   "dt": 0.3,
+   "dt": -0.05,
+   "cam": "mon",
+   "z0": 1.0,
+   "z1": 1.08
+  },
+  {
+   "line": 9,
+   "end": true,
+   "dt": 1.05,
    "cam": "wide",
    "dx": 0.2,
    "back": 1.15
   },
   {
-   "line": 8,
+   "line": 9,
    "end": true,
-   "dt": 1.6,
+   "dt": 2.85,
    "cam": "mon",
    "z0": 1.0,
    "z1": 3.15,
    "zd": 2.2
   },
   {
-   "line": 8,
+   "line": 9,
    "end": true,
-   "dt": 5.0,
+   "dt": 6.55,
    "cam": "wide",
    "dx": 0.2,
    "back": 1.15
+  },
+  {
+   "line": 9,
+   "dt": -0.1,
+   "cam": "close:gemini"
+  },
+  {
+   "line": 9,
+   "end": true,
+   "dt": -0.95,
+   "cam": "prop:remote"
   }
  ],
  "events": [
@@ -538,108 +564,180 @@
   },
   {
    "line": 8,
+   "dt": 0.2,
+   "who": "claude",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 8,
    "dt": 0.3,
    "who": "claude",
    "do": "work",
-   "d": 3.0
+   "d": 1.6
   },
   {
-   "line": 8,
+   "line": 9,
    "end": true,
-   "dt": -0.08,
-   "who": "claude",
-   "do": "press"
-  },
-  {
-   "line": 8,
-   "end": true,
-   "dt": 0.25,
+   "dt": 1.25,
    "who": "man",
    "do": "look",
    "at": "monitor"
   },
   {
-   "line": 8,
+   "line": 9,
    "end": true,
-   "dt": 0.25,
+   "dt": 1.27,
    "who": "chatgpt",
    "do": "look",
    "at": "monitor"
   },
   {
-   "line": 8,
+   "line": 9,
    "end": true,
-   "dt": 0.25,
+   "dt": 1.31,
    "who": "gemini",
    "do": "look",
    "at": "monitor"
   },
   {
-   "line": 8,
+   "line": 9,
    "end": true,
-   "dt": 0.3,
+   "dt": 1.35,
+   "who": "claude",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 9,
+   "end": true,
+   "dt": 1.55,
+   "who": "chatgpt",
+   "do": "startle"
+  },
+  {
+   "line": 9,
+   "end": true,
+   "dt": 1.55,
+   "who": "chatgpt",
+   "emo": "surprised"
+  },
+  {
+   "line": 9,
+   "end": true,
+   "dt": 1.65,
+   "who": "gemini",
+   "do": "startle"
+  },
+  {
+   "line": 9,
+   "end": true,
+   "dt": 1.65,
+   "who": "gemini",
+   "emo": "surprised"
+  },
+  {
+   "line": 9,
+   "end": true,
+   "dt": 1.55,
+   "who": "man",
+   "do": "startle"
+  },
+  {
+   "line": 9,
+   "end": true,
+   "dt": 1.55,
    "who": "man",
    "emo": "surprised"
   },
   {
-   "line": 8,
+   "line": 9,
    "end": true,
-   "dt": 0.2,
+   "dt": 1.8,
    "who": "claude",
-   "do": "hop"
+   "do": "startle"
   },
   {
-   "line": 8,
+   "line": 9,
    "end": true,
-   "dt": 0.45,
-   "who": "chatgpt",
-   "do": "hop"
+   "dt": 1.8,
+   "who": "claude",
+   "emo": "surprised"
   },
   {
-   "line": 8,
+   "line": 9,
    "end": true,
-   "dt": 0.55,
-   "who": "gemini",
-   "do": "hop"
-  },
-  {
-   "line": 8,
-   "end": true,
-   "dt": 5.15,
+   "dt": 6.7,
    "who": "claude",
    "do": "look",
    "at": "camera"
   },
   {
-   "line": 8,
+   "line": 9,
    "end": true,
-   "dt": 5.3,
+   "dt": 6.85,
    "who": "chatgpt",
    "do": "look",
    "at": "camera"
   },
   {
-   "line": 8,
+   "line": 9,
    "end": true,
-   "dt": 5.45,
+   "dt": 7.0,
    "who": "gemini",
    "do": "look",
    "at": "camera"
   },
   {
-   "line": 8,
+   "line": 9,
    "end": true,
-   "dt": 5.6,
+   "dt": 7.15,
    "who": "man",
    "do": "look",
    "at": "camera"
   },
   {
-   "line": 8,
+   "line": 9,
    "end": true,
-   "dt": 5.1,
+   "dt": 6.65,
    "who": "claude",
    "emo": "embarrassed"
+  },
+  {
+   "line": 9,
+   "dt": 0.0,
+   "who": "claude",
+   "do": "look",
+   "at": "gemini"
+  },
+  {
+   "line": 9,
+   "dt": 0.0,
+   "who": "chatgpt",
+   "do": "look",
+   "at": "gemini"
+  },
+  {
+   "line": 9,
+   "dt": 0.0,
+   "who": "man",
+   "do": "look",
+   "at": "gemini"
+  },
+  {
+   "line": 9,
+   "dt": 0.0,
+   "who": "gemini",
+   "do": "look",
+   "at": "camera"
+  },
+  {
+   "line": 9,
+   "end": true,
+   "dt": -0.75,
+   "who": "claude",
+   "do": "press",
+   "amt": 0.8
   }
  ],
  "cards": [
@@ -657,16 +755,16 @@
    "text": "그거 제가 목요일날 말씀드릴게요."
   },
   {
-   "line": 8,
+   "line": 9,
    "end": true,
-   "dt": 6.6,
+   "dt": 8.15,
    "kind": "end",
    "text": "팔로우하고|AI를 재밌게 배워 보세요!"
   }
  ],
  "audio": [
   {
-   "line": 8,
+   "line": 9,
    "end": true,
    "dt": 0.0,
    "clip": "skh",
@@ -722,23 +820,30 @@
    "kind": "ding"
   },
   {
-   "line": 8,
+   "line": 9,
    "end": true,
-   "dt": -0.05,
+   "dt": -0.38,
    "kind": "click"
   },
   {
-   "line": 8,
+   "line": 9,
    "end": true,
-   "dt": 0.02,
+   "dt": 0.0,
    "kind": "pop"
   },
   {
-   "line": 8,
+   "line": 9,
    "end": true,
-   "dt": 3.4,
+   "dt": 4.45,
    "kind": "boom",
    "vol": 0.8
   }
- ]
+ ],
+ "props": {
+  "remote": {
+   "x": -0.29,
+   "z": 0.43,
+   "yaw": 0.35
+  }
+ }
 }

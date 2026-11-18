@@ -140,10 +140,21 @@ function drawScreen(sc, name, t) {
     put(prev, -u); put(cur, 1 - u);
   } else put(cur, 0);
   sc.tex.needsUpdate = true;
-  // 출처는 그 릴스가 처음 나올 때만 1.6초 작게 (운영자 2026-11-18 "잠깐 띄우고 없애")
-  if (!cur || !cur.clip) return null;
-  const first = S.screens.find((s) => s.clip === cur.clip);
-  return t - first.t < 1.6 ? S.clips[cur.clip].credit : null;
+  // 지금 이 화면에 나오는 영상 id (출처 표시는 twFrame에서: 화면이 카메라에 보일 때만, 처음 1.6초)
+  return cur && cur.clip ? cur.clip : null;
+}
+// 화면(모니터·폰·태블릿)이 지금 카메라에 충분히 크게 보이는지 (리트냥이 2026-11-18 "영상이 안 보일 때 출처가 뜨면 이상해")
+function screenVisible(sc) {
+  const m = sc.mesh, pa = m.geometry.parameters, v = new THREE.Vector3();
+  let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+  for (const [a, b] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
+    v.set(a * pa.width / 2, b * pa.height / 2, 0).applyMatrix4(m.matrixWorld).project(camera);
+    if (v.z > 1) return false;
+    x0 = Math.min(x0, v.x); x1 = Math.max(x1, v.x); y0 = Math.min(y0, v.y); y1 = Math.max(y1, v.y);
+  }
+  const cx = (Math.max(x0, -1) + Math.min(x1, 1)) / 2, cy = (Math.max(y0, -1) + Math.min(y1, 1)) / 2;
+  const w = Math.min(x1, 1) - Math.max(x0, -1);
+  return w > 0.36 && Math.abs(cx) < 0.85 && Math.abs(cy) < 0.9;   // 화면 가로의 18% 이상, 화면 안쪽
 }
 
 // ---------- 소품 (로우폴리, 면 명암) ----------
@@ -249,7 +260,7 @@ async function loadAI(key, height) {
 
 // ---------- 조립 ----------
 let renderer, composer, bokeh, scene, camera, cast = {}, S, POS = {}, deskY = 0.74, out, g2;
-const SCR = {}, PHONE = { g: null, pos: new THREE.Vector3(), mode: 'none' }, POP = { g: null };
+const SCR = {}, PHONE = { g: null, pos: new THREE.Vector3(), mode: 'none' }, POP = { g: null }, REMOTE = {}, CREDIT_SEEN = {};
 // 젠슨 폰 위치: face(얼굴 앞, 화면이 젠슨 쪽) / show(at 쪽으로 내밂, 화면이 그쪽) / down(책상에 엎어 둠)
 function phonePose(mode, at) {
   const hu = Object.values(cast).find((c) => c.human);
@@ -363,6 +374,20 @@ window.twInit = async (script) => {
     POP.spill = [];
     for (let k = 0; k < 14; k++) { const sp = new THREE.Mesh(new THREE.IcosahedronGeometry(0.013, 0), pc); sp.visible = false; scene.add(sp); POP.spill.push(sp); }
   }
+  if (S.props && S.props.remote) {   // 리모컨 (리트냥이 2026-11-18: 클로드가 끄덕이다 실수로 버튼을 누름). props.remote {x, z, yaw}
+    const r = S.props.remote, g = new THREE.Group();
+    g.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.018, 0.15), mat(0x1c1d22, 0.45)), { castShadow: true }));
+    for (let k = 0; k < 6; k++) {   // 작은 회색 버튼들
+      const b = new THREE.Mesh(new THREE.CylinderGeometry(0.0065, 0.0065, 0.006, 10), mat(0x8a8d96, 0.5));
+      b.position.set(-0.014 + 0.028 * (k % 2), 0.011, -0.002 + 0.022 * Math.floor(k / 2)); g.add(b);
+    }
+    REMOTE.btnMat = new THREE.MeshStandardMaterial({ color: 0xd8262b, emissive: 0xff2020, emissiveIntensity: 0.0, roughness: 0.4 });
+    REMOTE.btn = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.008, 16), REMOTE.btnMat);
+    REMOTE.btn.position.set(0, 0.012, -0.045); g.add(REMOTE.btn);
+    g.position.set(r.x, deskY + 0.009, r.z); g.rotation.y = r.yaw || 0;
+    scene.add(g); g.updateMatrixWorld(true);
+    REMOTE.g = g; POS.remote = { x: r.x, face: REMOTE.btn.getWorldPosition(new THREE.Vector3()) };
+  }
   camera = new THREE.PerspectiveCamera(36, W / H, 0.05, 40);
   const rt = new THREE.WebGLRenderTarget(W, H, { type: THREE.HalfFloatType, samples: 4 });
   composer = new EffectComposer(renderer, rt); composer.setPixelRatio(1); composer.setSize(W, H);
@@ -420,7 +445,19 @@ function animAI(c, t) {
     const k = ease((t - e.t) / 0.25) * (1 - ease((t - e.t - (e.d || 2) + 0.25) / 0.25));
     rx += 0.16 * k; rz += 0.07 * k * Math.sin(t * 15); y += 0.012 * k * Math.abs(Math.sin(t * 11));
   }
-  for (const e of evs(who, 'press')) { const b = bump(t, e.t, 0.22); rx += 0.4 * b; sy -= 0.1 * b; }   // 꾹 누르기 (실수로 클릭)
+  // 크게 끄덕이다 앞의 리모컨 버튼을 눌러 버림 (리트냥이 2026-11-18): 0.35초 숙였다가 버튼에 닿은 채 0.25초 멈칫 → 천천히 일어남
+  for (const e of evs(who, 'press')) {
+    const r = t - e.t; if (r < 0 || r > 1.2) continue;
+    const k = r < 0.35 ? ease(r / 0.35) : r < 0.6 ? 1 : 1 - ease((r - 0.6) / 0.6);
+    rx += (e.amt || 0.75) * k; sy -= 0.06 * k;
+  }
+  // 화들짝 (놀람): 위로 튀며 뒤로 젖힘 → 잠깐 굳어 떨림 → 천천히 돌아옴
+  for (const e of evs(who, 'startle')) {
+    const r = t - e.t; if (r < 0 || r > 1.6) continue;
+    y += 0.1 * bump(t, e.t, 0.32); sy += 0.16 * bump(t, e.t, 0.22) - 0.08 * bump(t, e.t + 0.3, 0.14);
+    const k = r < 0.15 ? ease(r / 0.15) : 1 - ease((r - 0.9) / 0.7);
+    rx -= 0.28 * k; if (r > 0.3 && r < 0.9) jx += 0.004 * Math.sin(t * 60);
+  }
   for (const e of evs(who, 'tremble')) if (t > e.t && t < e.t + (e.d || 1)) jx += 0.0022 * Math.sin(t * 55);   // 운영자: 부들거림 작게
   let chew = 0;
   for (const e of evs(who, 'munch')) if (t > e.t && t < e.t + (e.d || 3)) {   // 팝콘 냠냠 (말 안 할 때 입 오물오물 + 통통)
@@ -492,6 +529,11 @@ function animHuman(c, t) {
   rotW(B.head, Y, lookYaw(who, t));
   rotW(B.head, X, -0.04 * open * Math.sin(t * 9));                             // 말할 때 살짝 끄덕끄덕
   for (const e of evs(who, 'nod')) if (t > e.t && t < e.t + 1) rotW(B.head, X, 0.25 * Math.sin(Math.PI * 2 * (t - e.t) / 0.5));
+  for (const e of evs(who, 'startle')) {   // 사람 화들짝: 몸·고개를 뒤로 젖힘
+    const r = t - e.t; if (r < 0 || r > 1.8) continue;
+    const k = r < 0.18 ? ease(r / 0.18) : 1 - ease((r - 1.0) / 0.8);
+    rotW(B.spine, X, -0.16 * k); rotW(B.head, X, -0.22 * k);
+  }
   for (const e of evs(who, 'sigh')) { const b = bump(t, e.t, 1.4); rotW(B.spine, X, 0.18 * b); rotW(B.head, X, 0.2 * b); }
   for (const e of evs(who, 'facepalm')) {                                       // 이마 짚기: 오른손을 이마로
     const u = ease((t - e.t) / 0.35) * (1 - ease((t - e.t - (e.d || 1.6)) / 0.4));
@@ -540,6 +582,13 @@ function camFor(s, t) {
   if (kind === 'phone') {   // 폰 화면은 2D로 덮음(phoneOverlay). 뒤는 젠슨 가까이(흐리게)
     const hu = Object.values(cast).find((c) => c.human), f = POS[hu.key].face;
     return { pos: f.clone().add(new THREE.Vector3(0.1, 0.06, 2.7)), look: f.clone().add(new THREE.Vector3(0, -0.06, 0)), focus: f.clone().add(new THREE.Vector3(0, 0, 1.2)), ap: 0.02, phone: u };
+  }
+  if (kind === 'prop') {   // 소품 가까이 (prop:remote): 앞 위에서 내려다봄, 0.07 = 다가가기
+    const f = POS[a].face.clone();
+    look = f.clone().add(new THREE.Vector3(0, 0.03, -0.02));
+    pos = f.clone().add(new THREE.Vector3(0.04, 0.2, 0.42));
+    pos.lerp(look, 0.12 * ease(u));
+    return { pos, look, focus: f, ap: 0.02 };
   }
   if (kind === 'mon') {   // 모니터 정면으로 다가가기 (리트냥이 2026-11-18): z0→z1 (1 = 모니터 가로가 화면 가로에 꼭 맞음, 약 3.1 = 세로까지 꽉 채움),
     // zd(초, 확대에 걸리는 시간, 기본 컷 길이), ox/oy(모니터 안 겨냥 위치 -0.5~0.5). 카메라와 화면 사이 물건(캐릭터)은 가까운 자르기 면으로 안 보이게
@@ -641,13 +690,24 @@ function cards(t) {
 
 window.twFrame = (t) => {
   if (PHONE.g) updatePhone(t);
-  let credit = null;
-  for (const name in SCR) { const cr = drawScreen(SCR[name], name, t); if (cr && !credit) credit = cr; }
   for (const k in cast) (cast[k].human ? animHuman : animAI)(cast[k], t);
+  if (REMOTE.btn) {   // 리모컨 빨간 버튼: 눌린 동안 들어가고 빛남
+    const on = S.events.some((e) => e.do === 'press' && t >= e.t + 0.3 && t < e.t + 0.62);
+    REMOTE.btn.position.y = on ? 0.008 : 0.012; REMOTE.btnMat.emissiveIntensity = on ? 2.2 : 0.0;
+  }
   const cam = camFor(shotAt(t), t);
   camera.position.copy(cam.pos); camera.lookAt(cam.look); camera.updateMatrixWorld();
   const near = cam.near || 0.05;
   if (camera.near !== near) { camera.near = near; camera.updateProjectionMatrix(); if (bokeh.uniforms.nearClip) bokeh.uniforms.nearClip.value = near; }
+  let credit = null;
+  for (const name in SCR) {
+    const clip = drawScreen(SCR[name], name, t);
+    if (!clip || credit) continue;
+    const vis = (name === 'phone' && cam.phone !== undefined) || screenVisible(SCR[name]);
+    const seen = CREDIT_SEEN[clip] || { d: 0, t: -1 };
+    if (vis && seen.d < 1.6) { credit = S.clips[clip].credit; if (seen.t !== t) { seen.d += 1 / S.fps; seen.t = t; } }
+    CREDIT_SEEN[clip] = seen;
+  }
   bokeh.uniforms.focus.value = camera.position.distanceTo(cam.focus);
   bokeh.uniforms.aperture.value = cam.ap; bokeh.uniforms.maxblur.value = 0.014;
   composer.render();
