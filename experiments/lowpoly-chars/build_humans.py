@@ -48,7 +48,7 @@ HUMANS = {
         pants="#3A3F4A", shoes="#5B3B29", sleeves="top",
         hair_main=((0, 0.12, -0.05), (0.46, 0.44, 0.44)),
         hair_extra=[((0, 0.30, 0.15), (0.37, 0.10, 0.12))],  # 앞머리: 이마에 붙게 (운영자 2026-11-18 "앞머리 왜 튀어나왔어")
-        brow="#241C18", face=dict(brows=True), blocky=True,   # 각진 블록 몸 (운영자 2026-11-18)
+        brow="#241C18", face=dict(brows=True), blocky=True, glasses="#2A2A2E",   # 각진 블록 몸 + 안경 (운영자 2026-11-18)
         collar=False),
 }
 FACE = dict(cx=0.0, cy=0.0, eye_dx=0.15, eye_s=0.075, mouth_dy=-0.17, mouth_w=0.06, blush=(0.26, -0.10, 0.06))
@@ -247,6 +247,30 @@ def emo_table(key):
     return {**B.EMOTIONS, **HUMANS[key].get("emo", {})}
 
 
+# 비율 (운영자 2026-11-18 "상체가 너무 짧고 다리가 기괴하게 길다"): 블록 몸 캐릭터만 적용
+LEG_K, TORSO_K, HIP_Z, CHEST_Z = 0.78, 1.14, 0.86, 1.30
+PROP = {"on": False}
+
+
+def pz(z, arm=False):
+    """원래 높이 → 새 높이. 다리(엉덩이 아래)는 줄이고 상체는 늘리고, 그 위(목·머리)와 팔은 통째로 이동."""
+    if not PROP["on"]:
+        return z
+    hip = HIP_Z * LEG_K
+    top_shift = hip + (CHEST_Z - HIP_Z) * TORSO_K - CHEST_Z
+    if arm:
+        return z + top_shift
+    if z <= HIP_Z:
+        return z * LEG_K
+    if z <= CHEST_Z:
+        return hip + (z - HIP_Z) * TORSO_K
+    return z + top_shift
+
+
+def pv(p, arm=False):
+    return (p[0], p[1], pz(p[2], arm))
+
+
 def make_rig(key):
     arm = bpy.data.armatures.new(f"{key}_rig")
     ao = B.link(bpy.data.objects.new(key, arm))
@@ -257,7 +281,8 @@ def make_rig(key):
     bpy.ops.object.mode_set(mode="EDIT")
     for name, (h, t, par) in BONES.items():
         eb = arm.edit_bones.new(name)
-        eb.head, eb.tail = Vector(h), Vector(t)
+        is_arm = name.startswith(("upper_arm", "lower_arm"))
+        eb.head, eb.tail = Vector(pv(h, is_arm)), Vector(pv(t, is_arm))
         if name.startswith(("upper_arm", "lower_arm")) or name.startswith("thigh") or name.startswith("shin"):
             eb.roll = 0
     for name, (h, t, par) in BONES.items():
@@ -276,7 +301,8 @@ def attach(ob, ao, bone):
     ob.matrix_world = mw
 
 
-def block(name, a, b, w, d, color, rough=0.75, taper=1.0, bevel=0.018):
+def block(name, a, b, w, d, color, rough=0.75, taper=1.0, bevel=0.018, paint=None, cuts=5, arm=False):
+    a, b = pv(a, arm), pv(b, arm)
     """a→b 축을 따라 늘인 상자 (가로 w, 앞뒤 d), 모서리 살짝 깎음. taper = b쪽 끝 크기 비율. 운영자 2026-11-18 레퍼런스처럼 각진 블록 몸."""
     from mathutils import Matrix
     a, b = Vector(a), Vector(b)
@@ -287,33 +313,73 @@ def block(name, a, b, w, d, color, rough=0.75, taper=1.0, bevel=0.018):
         k = 1.0 + (taper - 1.0) * (v.co.z + 0.5)
         v.co = Vector((v.co.x * w * k, v.co.y * d * k, (v.co.z + 0.5) * L))
     bmesh.ops.bevel(bm, geom=bm.edges[:], offset=bevel, segments=1, affect="EDGES")
+    if paint and cuts:   # 옷 디테일을 면 색으로 그리려면 면을 잘게 (모양은 그대로 상자)
+        bmesh.ops.subdivide_edges(bm, edges=bm.edges[:], cuts=cuts, use_grid_fill=True)
     bmesh.ops.triangulate(bm, faces=bm.faces[:])
     q = (b - a).normalized().to_track_quat("Z", "Y")
     bmesh.ops.transform(bm, matrix=Matrix.Translation(a) @ q.to_matrix().to_4x4(), verts=bm.verts[:])
     ob = B.bm_to_obj(bm, name)
     B.shade_flat(ob)
     base = B.hex2rgb(color)
-    B.facet_colors(ob, lambda c: base, jitter=0.06, seed=hash(name) % 1000)
+    fn = (lambda c: B.hex2rgb(paint(c) or color)) if paint else (lambda c: base)
+    B.facet_colors(ob, fn, jitter=0.05, seed=hash(name) % 1000)
     ob.data.materials.append(B.material(f"{name}_mat", vcol=True, rough=rough))
     return ob
+
+
+# 옷 디자인 (운영자 2026-11-18 "옷도 레퍼런스 계정처럼"): 블록 위에 셔츠·티·벨트·바지 주름·밑창을 면 색으로
+SHIRT_D, TEE_W, BELT, BUCKLE, PANTS_D, SOLE = "#5E86B8", "#EDEDE8", "#1E1E22", "#C9A94E", "#2E3138", "#2A1C14"
+
+
+def paint_torso(c):
+    ax = abs(c.x)
+    if c.y < -0.1 and c.z > pz(1.1) and ax < 0.02 + (c.z - pz(1.1)) * 0.55:
+        return TEE_W                                   # 깃 사이로 보이는 흰 티 (V)
+    if c.z > pz(1.22) and ax < 0.17 and c.y < 0.05:
+        return SHIRT_D                                 # 셔츠 깃
+    if c.y < -0.14 and ax < 0.014 and c.z < pz(1.1):
+        return SHIRT_D                                 # 단추 줄
+    if c.y < -0.14 and 0.08 < c.x < 0.2 and pz(1.02) < c.z < pz(1.14):
+        return SHIRT_D                                 # 가슴 주머니
+    if c.z < pz(0.9):
+        return SHIRT_D                                 # 밑단
+    return None
+
+
+def paint_sleeve(c):
+    return SHIRT_D if c.z < pz(0.78, arm=True) else None             # 소매 끝 커프스
+
+
+def paint_hips(c):
+    if c.z > pz(0.83):
+        return BUCKLE if (abs(c.x) < 0.045 and c.y < -0.12) else BELT
+    return None
+
+
+def paint_leg(cx):
+    return lambda c: PANTS_D if (abs(c.x - cx) < 0.014 and c.y < -0.08) else None   # 바지 앞 주름선
+
+
+def paint_shoe(c):
+    return SOLE if c.z < 0.035 else None
 
 
 def make_blocky_body(key, cfg, ao):
     """각진 블록 몸: 부위마다 상자 하나를 뼈에 붙임 (관절에서 블록째 꺾임)."""
     top, pants, skin, shoes = cfg["top"], cfg["pants"], cfg["skin"], cfg["shoes"]
     parts = [
-        (block(f"{key}_torso", (0, 0, 0.86), (0, 0, 1.30), 0.56, 0.32, top, taper=1.12), "spine"),
+        (block(f"{key}_torso", (0, 0, 0.86), (0, 0, 1.30), 0.56, 0.32, top, taper=1.12, paint=paint_torso, cuts=10), "spine"),
         (block(f"{key}_neck", (0, 0, 1.26), (0, 0, 1.46), 0.15, 0.15, skin), "neck"),
-        (block(f"{key}_hips", (0, 0, 0.72), (0, 0, 0.90), 0.52, 0.31, pants), "hips"),
+        (block(f"{key}_hips", (0, 0, 0.72), (0, 0, 0.90), 0.52, 0.31, pants, paint=paint_hips, cuts=8), "hips"),
     ]
     for sd, sx in (("L", 1), ("R", -1)):
         parts += [
-            (block(f"{key}_uarm{sd}", (0.36 * sx, 0, 1.27), (0.47 * sx, 0, 0.97), 0.17, 0.17, top), f"upper_arm.{sd}"),
-            (block(f"{key}_larm{sd}", (0.47 * sx, 0, 0.99), (0.525 * sx, -0.02, 0.71), 0.155, 0.155, top), f"lower_arm.{sd}"),
-            (block(f"{key}_hand{sd}", (0.525 * sx, -0.02, 0.72), (0.54 * sx, -0.025, 0.58), 0.12, 0.09, skin, bevel=0.015), f"lower_arm.{sd}"),
-            (block(f"{key}_thigh{sd}", (0.155 * sx, 0, 0.84), (0.155 * sx, 0, 0.44), 0.22, 0.24, pants), f"thigh.{sd}"),
-            (block(f"{key}_shin{sd}", (0.155 * sx, 0, 0.47), (0.155 * sx, 0, 0.11), 0.2, 0.22, pants), f"shin.{sd}"),
-            (block(f"{key}_shoe{sd}", (0.155 * sx, -0.05, 0.0), (0.155 * sx, -0.05, 0.13), 0.2, 0.32, shoes, rough=0.5), f"shin.{sd}"),
+            (block(f"{key}_uarm{sd}", (0.36 * sx, 0, 1.27), (0.47 * sx, 0, 0.97), 0.17, 0.17, top, arm=True), f"upper_arm.{sd}"),
+            (block(f"{key}_larm{sd}", (0.47 * sx, 0, 0.99), (0.525 * sx, -0.02, 0.71), 0.155, 0.155, top, paint=paint_sleeve, arm=True), f"lower_arm.{sd}"),
+            (block(f"{key}_hand{sd}", (0.525 * sx, -0.02, 0.72), (0.54 * sx, -0.025, 0.58), 0.12, 0.09, skin, bevel=0.015, arm=True), f"lower_arm.{sd}"),
+            (block(f"{key}_thigh{sd}", (0.155 * sx, 0, 0.84), (0.155 * sx, 0, 0.44), 0.22, 0.24, pants, paint=paint_leg(0.155 * sx), cuts=8), f"thigh.{sd}"),
+            (block(f"{key}_shin{sd}", (0.155 * sx, 0, 0.47), (0.155 * sx, 0, 0.11), 0.2, 0.22, pants, paint=paint_leg(0.155 * sx), cuts=8), f"shin.{sd}"),
+            (block(f"{key}_shoe{sd}", (0.155 * sx, -0.05, 0.0), (0.155 * sx, -0.05, 0.13), 0.2, 0.32, shoes, rough=0.5, paint=paint_shoe), f"shin.{sd}"),
         ]
     for ob, bone in parts:
         attach(ob, ao, bone)
@@ -321,10 +387,11 @@ def make_blocky_body(key, cfg, ao):
 
 def make_human(key, mats):
     cfg = HUMANS[key]
+    PROP["on"] = bool(cfg.get("blocky"))
     ao = make_rig(key)
     head = make_head(key, cfg, mats)
     head.rotation_euler = (math.radians(90), 0, 0)   # 앞 +Z → -Y
-    head.location = (0, 0, 1.67)
+    head.location = (0, 0, pz(1.67))
     bpy.context.view_layer.update()
     attach(head, ao, "head")
     if cfg.get("blocky"):
