@@ -72,7 +72,7 @@ def tts_single(l):
     sys.path.insert(0, str(ROOT / "agent"))
     import tts
     v = VOICES["voices"][l["who"]]
-    body = {"text": l["say"], "model_id": l["model"], "voice_settings": {"stability": 0.5, "similarity_boost": 0.75, "style": 0.3}}
+    body = {"text": l["say"], "model_id": l["model"], "voice_settings": {"stability": 0.5, "similarity_boost": 0.75, "style": l.get("style", 0.3)}}
     h = hashlib.sha256(json.dumps([v["voice_id"], body], ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:20]
     f = CACHE / f"one_{h}.mp3"
     if not f.exists():

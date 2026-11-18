@@ -88,8 +88,8 @@
   },
   {
    "who": "claude",
-   "say": "[bursts out laughing] 푸흡! 크크크큭!",
-   "sub": "푸흡! 크크큭!",
+   "say": "[snorts] 푸흡! [laughs uncontrollably]",
+   "sub": "푸흡...!",
    "emo": "happy",
    "break": 2.6
   },
@@ -121,11 +121,12 @@
   },
   {
    "who": "jensen",
-   "say": "언제까지 나를 조롱할까? 나는 평생 조롱받아야 하는 사람이야?",
+   "say": "언제까지 나를 조롱할까? 나는 평생 조롱받아야 하는 사람... 이야아?",
    "sub": "언제까지 나를 조롱할까?|나는 평생 조롱받아야 하는 사람이야?",
    "emo": "sad",
    "model": "eleven_multilingual_v2",
-   "break": 0.15
+   "break": 0.15,
+   "style": 0.5
   },
   {
    "who": "chatgpt",
@@ -627,7 +628,7 @@
  ],
  "cards": [
   {
-   "text": "클로드에 영상 보는 스킬 다는 법|프로필에 정리해 뒀어요",
+   "text": "AI에게 눈을 달아 주는 법!|프로필에 정리해 뒀어요.",
    "kind": "end",
    "line": 13,
    "dt": 1.6,
