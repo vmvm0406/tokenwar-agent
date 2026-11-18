@@ -3,7 +3,7 @@
 - **상태:** 자동화 전부 꺼짐(config `automation_off`·`publish_paused`·`production_paused` true, GitHub Actions는 토큰 연장·토큰 점검·Pages만 켜짐). 대기열 비움(`experiments/archive-2026-11-18/`). 세션은 '최상위 에이전트' 하나만, 무거운 일은 하위 에이전트.
 - **리뉴얼 방향(운영자 결정 대기):** 레퍼런스 8곳(agentpoly, base.learn, agentmorphy, ashutoshwithclaude, danborgia, ihc60435, platypus._.ai, withjun.b) 분석 = "사람 캐릭터 + AI 캐릭터" 3D 대화 콩트, 얼굴 출연 없음. 메모: side-session-notes/…/renewal-references.md
   - **확정 (운영자 2026-11-18):** ① 3D 직장 콩트(위기 한 줄 → AI 반응 → 팁 하나 → '자료' DM). 출연: 이름 없는 여성 직장인 '나' + 클로드·챗GPT·제미나이(로고 모양·색 본뜸). 슬라임은 뺌. 아이디 @tokenwar_ai 유지, 표시 이름·소개글만 새 형식에 맞게 바꿈(문구 안 정함). 제작: Blender로 캐릭터 → glTF → three.js 연기·카메라·자막.
-  - 캐릭터 모양 (운영자 2026-11-18): 로고를 그대로 몸으로, 팔다리 없이 표정으로만 연기, 로우폴리. Blender 5.3 설치함. 1차 시안 `experiments/lowpoly-chars/` (build.py, README). 운영자 의견 대기 → 표정 세트 → '나' → three.js 틀 → 첫 콩트 시험 릴스.
+  - 캐릭터 모양 (운영자 2026-11-18): 로고를 그대로 몸으로, 팔다리 없이 표정으로만 연기, 로우폴리. Blender 5.3 설치함. 1차 시안 `experiments/lowpoly-chars/` (build.py, README). 3차(통통한 로우폴리, 운영자 레퍼런스 @canwebuildthis 느낌만)까지 함. **제작은 운영자가 정한 5단계대로: `experiments/lowpoly-chars/PIPELINE.md`** (① 캐릭터 원본 → ② 동작 라이브러리 → ③ three.js 장면 → ④ AI 대본 JSON → ⑤ MP4). 진행 체크도 거기.
 - **제작 도구:** three.js 시험 통과(`experiments/threejs-test/`, a292de3). 노트북 GPU로 30초 릴스 ≈50초 렌더. 추천: 캐릭터는 Blender로 한 번 만들어 glTF → three.js로 연기·카메라·자막 자동. 틀 만들기 2~3일. 고칠 점: AI 팔 짧음, 챗GPT 매듭 울퉁불퉁, 머리 초록 테두리, 자막이 후드티와 겹침, 화면 '비공식 팬 캐릭터' 표기 뺄지 미정.
 - **다시 켜는 법:** config 세 플래그 false + `gh workflow enable <id>`(인스타 게시·그림 만들기 등) + 작업 스케줄러는 그대로(스크립트가 automation_off를 봄).
 - **연동 유지:** 인스타·스레드 토큰, Cloudflare Workers Paid(그림 상한 300, 사용 한도 $5), 일레븐랩스(Deok, Starter 월간, 키는 사용자 환경변수), Zorcha(Live 자동화 6개), GitHub Pages.
