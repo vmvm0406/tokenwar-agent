@@ -48,7 +48,7 @@ HUMANS = {
         pants="#3A3F4A", shoes="#5B3B29", sleeves="top",
         hair_main=((0, 0.12, -0.05), (0.46, 0.44, 0.44)),
         hair_extra=[((0, 0.30, 0.15), (0.37, 0.10, 0.12))],  # 앞머리: 이마에 붙게 (운영자 2026-11-18 "앞머리 왜 튀어나왔어")
-        brow="#241C18", face=dict(brows=True),
+        brow="#241C18", face=dict(brows=True), blocky=True,   # 각진 블록 몸 (운영자 2026-11-18)
         collar=False),
 }
 FACE = dict(cx=0.0, cy=0.0, eye_dx=0.15, eye_s=0.075, mouth_dy=-0.17, mouth_w=0.06, blush=(0.26, -0.10, 0.06))
@@ -276,6 +276,49 @@ def attach(ob, ao, bone):
     ob.matrix_world = mw
 
 
+def block(name, a, b, w, d, color, rough=0.75, taper=1.0, bevel=0.018):
+    """a→b 축을 따라 늘인 상자 (가로 w, 앞뒤 d), 모서리 살짝 깎음. taper = b쪽 끝 크기 비율. 운영자 2026-11-18 레퍼런스처럼 각진 블록 몸."""
+    from mathutils import Matrix
+    a, b = Vector(a), Vector(b)
+    L = (b - a).length
+    bm = bmesh.new()
+    bmesh.ops.create_cube(bm, size=1.0)
+    for v in bm.verts:
+        k = 1.0 + (taper - 1.0) * (v.co.z + 0.5)
+        v.co = Vector((v.co.x * w * k, v.co.y * d * k, (v.co.z + 0.5) * L))
+    bmesh.ops.bevel(bm, geom=bm.edges[:], offset=bevel, segments=1, affect="EDGES")
+    bmesh.ops.triangulate(bm, faces=bm.faces[:])
+    q = (b - a).normalized().to_track_quat("Z", "Y")
+    bmesh.ops.transform(bm, matrix=Matrix.Translation(a) @ q.to_matrix().to_4x4(), verts=bm.verts[:])
+    ob = B.bm_to_obj(bm, name)
+    B.shade_flat(ob)
+    base = B.hex2rgb(color)
+    B.facet_colors(ob, lambda c: base, jitter=0.06, seed=hash(name) % 1000)
+    ob.data.materials.append(B.material(f"{name}_mat", vcol=True, rough=rough))
+    return ob
+
+
+def make_blocky_body(key, cfg, ao):
+    """각진 블록 몸: 부위마다 상자 하나를 뼈에 붙임 (관절에서 블록째 꺾임)."""
+    top, pants, skin, shoes = cfg["top"], cfg["pants"], cfg["skin"], cfg["shoes"]
+    parts = [
+        (block(f"{key}_torso", (0, 0, 0.86), (0, 0, 1.30), 0.56, 0.32, top, taper=1.12), "spine"),
+        (block(f"{key}_neck", (0, 0, 1.26), (0, 0, 1.46), 0.15, 0.15, skin), "neck"),
+        (block(f"{key}_hips", (0, 0, 0.72), (0, 0, 0.90), 0.52, 0.31, pants), "hips"),
+    ]
+    for sd, sx in (("L", 1), ("R", -1)):
+        parts += [
+            (block(f"{key}_uarm{sd}", (0.36 * sx, 0, 1.27), (0.47 * sx, 0, 0.97), 0.17, 0.17, top), f"upper_arm.{sd}"),
+            (block(f"{key}_larm{sd}", (0.47 * sx, 0, 0.99), (0.525 * sx, -0.02, 0.71), 0.155, 0.155, top), f"lower_arm.{sd}"),
+            (block(f"{key}_hand{sd}", (0.525 * sx, -0.02, 0.72), (0.54 * sx, -0.025, 0.58), 0.12, 0.09, skin, bevel=0.015), f"lower_arm.{sd}"),
+            (block(f"{key}_thigh{sd}", (0.155 * sx, 0, 0.84), (0.155 * sx, 0, 0.44), 0.22, 0.24, pants), f"thigh.{sd}"),
+            (block(f"{key}_shin{sd}", (0.155 * sx, 0, 0.47), (0.155 * sx, 0, 0.11), 0.2, 0.22, pants), f"shin.{sd}"),
+            (block(f"{key}_shoe{sd}", (0.155 * sx, -0.05, 0.0), (0.155 * sx, -0.05, 0.13), 0.2, 0.32, shoes, rough=0.5), f"shin.{sd}"),
+        ]
+    for ob, bone in parts:
+        attach(ob, ao, bone)
+
+
 def make_human(key, mats):
     cfg = HUMANS[key]
     ao = make_rig(key)
@@ -284,7 +327,10 @@ def make_human(key, mats):
     head.location = (0, 0, 1.67)
     bpy.context.view_layer.update()
     attach(head, ao, "head")
-    skin_to(make_body(key, cfg), ao)
+    if cfg.get("blocky"):
+        make_blocky_body(key, cfg, ao)
+    else:
+        skin_to(make_body(key, cfg), ao)
     return ao
 
 
