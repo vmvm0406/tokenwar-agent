@@ -44,30 +44,46 @@
  "lines": [
   {
    "who": "man",
-   "say": "[exhausted, mumbling] 클로드... 점심 하나만 시켜 줘.",
-   "sub": "클로드... 점심 하나만 시켜 줘.",
-   "emo": "sleepy"
+   "say": "[exhausted, mumbling] 클로드... 나 너무 배고파... 점심 하나만 시켜 줘...",
+   "sub": "클로드... 나 너무 배고파...|점심 하나만 시켜 줘...",
+   "emo": "half",
+   "seed": 3
   },
   {
    "who": "claude",
-   "say": "네! 브라우저 열게요.",
-   "sub": "네! 브라우저 열게요.",
-   "emo": "happy",
-   "model": "eleven_multilingual_v2",
-   "style": 0.45
+   "say": "[excited] 네! 제가 바로 브라우저 열게요!",
+   "sub": "네! 제가 바로 브라우저 열게요!",
+   "emo": "excited"
   },
   {
    "who": "claude",
-   "say": "[thinking] 점심엔 김밥이 좋겠어요. 참치김밥? 김치김밥?",
-   "sub": "점심엔 김밥이 좋겠어요.|참치김밥? 김치김밥?",
-   "emo": "smile",
-   "break": 0.15
+   "say": "[thinking, playful] 음~ 점심엔 김밥이 딱이죠!",
+   "sub": "음~ 점심엔 김밥이 딱이죠!",
+   "emo": "think"
+  },
+  {
+   "who": "claude",
+   "say": "[curious, rising intonation] 참치김밥?",
+   "sub": "참치김밥?",
+   "emo": "think",
+   "model": "eleven_v3",
+   "seed": 12,
+   "break": 0.05
+  },
+  {
+   "who": "claude",
+   "say": "[curious, rising intonation] 김치김밥?",
+   "sub": "김치김밥?",
+   "emo": "think",
+   "model": "eleven_v3",
+   "seed": 4,
+   "break": 0.05
   },
   {
    "who": "claude",
    "say": "",
    "sub": "치즈김밥?",
-   "emo": "happy",
+   "emo": "excited",
    "clipvoice": {
     "file": "experiments/office/out/clips/wFbJo6tunGo.mp4",
     "from": 9.45,
@@ -78,38 +94,38 @@
    "who": "man",
    "say": "[mumbling] ...참치.",
    "sub": "...참치.",
-   "emo": "sleepy",
+   "emo": "half",
    "break": 0.25
   },
   {
    "who": "claude",
-   "say": "[cheerfully] 한 줄이요, 두 줄이요? 단무지는요? 수저 필요하세요?",
-   "sub": "한 줄이요, 두 줄이요?|단무지는요?|수저 필요하세요?",
-   "emo": "smile"
+   "say": "[excited, fast] 참치 한 줄이요, 두 줄이요? 단무지는 빼요? 수저는요? 도착은 열두 시 반 괜찮으세요?",
+   "sub": "참치 한 줄이요, 두 줄이요?|단무지는 빼요? 수저는요?|도착은 열두 시 반 괜찮으세요?",
+   "emo": "excited"
   },
   {
    "who": "man",
-   "say": "[exhausted] 응... 응... 응...",
+   "say": "[drained, sleepy] 응... 응... 응...",
    "sub": "응... 응... 응...",
-   "emo": "sleepy"
+   "emo": "half"
   },
   {
    "who": "claude",
-   "say": "[proudly] 다 담았어요! 결제 버튼만 직접 눌러 주세요.",
-   "sub": "다 담았어요!|결제 버튼만 직접 눌러 주세요.",
-   "emo": "happy"
+   "say": "[proud, excited] 짠! 다 담았어요! 결제 버튼만 직접 눌러 주세요!",
+   "sub": "짠! 다 담았어요!|결제 버튼만 직접 눌러 주세요!",
+   "emo": "excited"
   },
   {
    "who": "man",
-   "say": "[sighs] ...그냥 내가 주문하는 게 빠르겠다.",
-   "sub": "...그냥 내가 주문하는 게 빠르겠다.",
-   "emo": "neutral"
+   "say": "[sighs, resigned] 하아... 그냥 내가 주문하는 게 빠르겠다.",
+   "sub": "하아... 그냥 내가 주문하는 게 빠르겠다.",
+   "emo": "meh"
   },
   {
    "who": "claude",
-   "say": "[awkwardly] ...처음부터 다시 할까요?",
-   "sub": "...처음부터 다시 할까요?",
-   "emo": "embarrassed",
+   "say": "[awkward nervous laugh] 어... 그럼... 처음부터 다시 할까요?",
+   "sub": "어... 그럼...|처음부터 다시 할까요?",
+   "emo": "awkward",
    "break": 2.2
   }
  ],
@@ -150,23 +166,13 @@
     ],
     [
      0.6,
-     0.22,
-     0.405
-    ],
-    [
-     1.6,
-     0.22,
-     0.405
-    ],
-    [
-     2.0,
-     0.22,
-     0.56
+     0.3,
+     0.45
     ]
    ]
   },
   {
-   "line": 3,
+   "line": 5,
    "dt": 0.0,
    "screen": "monitor",
    "clip": "l2_menu",
@@ -185,7 +191,7 @@
    ]
   },
   {
-   "line": 4,
+   "line": 6,
    "end": true,
    "dt": 0.2,
    "screen": "monitor",
@@ -206,7 +212,7 @@
    ]
   },
   {
-   "line": 5,
+   "line": 7,
    "dt": 0.0,
    "screen": "monitor",
    "clip": "l3_option",
@@ -238,7 +244,7 @@
    ]
   },
   {
-   "line": 7,
+   "line": 9,
    "dt": 0.0,
    "screen": "monitor",
    "clip": "l4_cart",
@@ -257,12 +263,50 @@
    ]
   },
   {
-   "line": 8,
+   "line": 10,
    "end": true,
    "dt": 0.55,
    "screen": "monitor",
    "clip": "l5_soldout",
    "cut": true
+  },
+  {
+   "line": 3,
+   "dt": 0.0,
+   "screen": "monitor",
+   "clip": "l2_menu",
+   "cut": true,
+   "cursor": [
+    [
+     0,
+     0.3,
+     0.45
+    ],
+    [
+     0.3,
+     0.22,
+     0.405
+    ]
+   ]
+  },
+  {
+   "line": 4,
+   "dt": 0.0,
+   "screen": "monitor",
+   "clip": "l2_menu",
+   "cut": true,
+   "cursor": [
+    [
+     0,
+     0.22,
+     0.405
+    ],
+    [
+     0.3,
+     0.22,
+     0.56
+    ]
+   ]
   }
  ],
  "shots": [
@@ -301,34 +345,34 @@
    "z1": 1.12
   },
   {
-   "line": 3,
+   "line": 5,
    "dt": -0.05,
    "cam": "close:claude"
   },
   {
-   "line": 4,
+   "line": 6,
    "dt": -0.9,
    "cam": "close:man"
   },
   {
-   "line": 5,
+   "line": 7,
    "dt": -0.1,
    "cam": "mon",
    "z0": 1.0,
    "z1": 1.08
   },
   {
-   "line": 6,
+   "line": 8,
    "dt": -0.1,
    "cam": "close:man"
   },
   {
-   "line": 7,
+   "line": 9,
    "dt": -0.1,
    "cam": "close:claude"
   },
   {
-   "line": 7,
+   "line": 9,
    "end": true,
    "dt": 0.1,
    "cam": "mon",
@@ -336,12 +380,12 @@
    "z1": 1.1
   },
   {
-   "line": 8,
+   "line": 10,
    "dt": -0.1,
    "cam": "close:man"
   },
   {
-   "line": 8,
+   "line": 10,
    "end": true,
    "dt": 0.35,
    "cam": "mon",
@@ -349,12 +393,12 @@
    "z1": 1.15
   },
   {
-   "line": 9,
+   "line": 11,
    "dt": -0.2,
    "cam": "close:claude"
   },
   {
-   "line": 9,
+   "line": 11,
    "end": true,
    "dt": 0.5,
    "cam": "wide"
@@ -385,24 +429,10 @@
    "d": 2.5
   },
   {
-   "line": 3,
+   "line": 5,
    "dt": 0.0,
    "who": "claude",
    "do": "hop"
-  },
-  {
-   "line": 5,
-   "dt": 0,
-   "who": "claude",
-   "do": "look",
-   "at": "man"
-  },
-  {
-   "line": 5,
-   "dt": 0.1,
-   "who": "claude",
-   "do": "work",
-   "d": 2.6
   },
   {
    "line": 7,
@@ -412,39 +442,11 @@
    "at": "man"
   },
   {
-   "line": 8,
-   "dt": 0,
-   "who": "man",
-   "do": "sigh"
-  },
-  {
-   "line": 8,
-   "dt": 0,
-   "who": "man",
-   "do": "look",
-   "at": "monitor"
-  },
-  {
-   "line": 8,
-   "end": true,
-   "dt": 0.6,
-   "who": "man",
-   "emo": "surprised"
-  },
-  {
-   "line": 8,
-   "end": true,
-   "dt": 0.6,
+   "line": 7,
+   "dt": 0.1,
    "who": "claude",
-   "emo": "surprised"
-  },
-  {
-   "line": 8,
-   "end": true,
-   "dt": 0.6,
-   "who": "claude",
-   "do": "look",
-   "at": "monitor"
+   "do": "work",
+   "d": 2.6
   },
   {
    "line": 9,
@@ -454,64 +456,95 @@
    "at": "man"
   },
   {
-   "line": 9,
+   "line": 10,
+   "dt": 0,
+   "who": "man",
+   "do": "sigh"
+  },
+  {
+   "line": 10,
+   "dt": 0,
+   "who": "man",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 10,
+   "end": true,
+   "dt": 0.6,
+   "who": "man",
+   "emo": "surprised"
+  },
+  {
+   "line": 10,
+   "end": true,
+   "dt": 0.6,
+   "who": "claude",
+   "emo": "surprised"
+  },
+  {
+   "line": 10,
+   "end": true,
+   "dt": 0.6,
+   "who": "claude",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 11,
+   "dt": 0,
+   "who": "claude",
+   "do": "look",
+   "at": "man"
+  },
+  {
+   "line": 11,
    "end": true,
    "dt": 0.4,
    "who": "man",
-   "emo": "sleepy"
+   "emo": "blank"
   },
   {
    "t": 0,
    "who": "man",
    "do": "slump",
-   "d": 19.9,
+   "d": 24.96,
    "amt": 1.0
   },
   {
-   "line": 4,
+   "line": 6,
    "dt": -0.75,
    "who": "man",
    "do": "lift",
    "d": 1.1
   },
   {
-   "line": 9,
+   "line": 11,
    "end": true,
    "dt": 0.4,
    "who": "man",
    "do": "slump",
    "d": 4.0,
    "amt": 1.0
+  },
+  {
+   "line": 11,
+   "end": true,
+   "dt": 0.4,
+   "who": "claude",
+   "emo": "awkward"
   }
  ],
  "cards": [
   {
-   "line": 3,
-   "dt": 0.0,
-   "d": 1.5,
-   "kind": "ghost",
-   "clip": "sana",
-   "x": 330,
-   "y": 500,
-   "w": 460,
-   "h": 560,
-   "alpha": 0.5,
-   "crop": [
-    0.39,
-    0.08,
-    0.25,
-    0.5
-   ]
-  },
-  {
-   "line": 3,
+   "line": 5,
    "dt": 0.0,
    "d": 1.6,
    "kind": "tag",
    "text": "목소리: SBS 런닝맨 사나"
   },
   {
-   "line": 9,
+   "line": 11,
    "end": true,
    "dt": 1.4,
    "kind": "end",
@@ -531,38 +564,39 @@
    "kind": "click"
   },
   {
-   "line": 4,
+   "line": 6,
    "end": true,
    "dt": 0.6,
    "kind": "click"
   },
   {
-   "line": 5,
+   "line": 7,
    "dt": 0.5,
    "kind": "click"
   },
   {
-   "line": 5,
+   "line": 7,
    "dt": 1.3,
    "kind": "click"
   },
   {
-   "line": 5,
+   "line": 7,
    "dt": 2.1,
    "kind": "click"
   },
   {
-   "line": 8,
+   "line": 10,
    "end": true,
    "dt": 0.45,
    "kind": "click"
   },
   {
-   "line": 8,
+   "line": 10,
    "end": true,
    "dt": 0.6,
    "kind": "fail",
    "vol": 0.8
   }
- ]
+ ],
+ "level": true
 }

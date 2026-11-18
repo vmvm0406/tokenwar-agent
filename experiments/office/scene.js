@@ -40,13 +40,84 @@ function facePartsOf(root, key) {
   });
   return parts;
 }
+// 새 표정 (운영자 2026-11-19 "상황에 맞는 표정을 더 만들어서"): 기존 부품 조합 + 눈 모양 바꾸기(eye: 세로 sy, 크기 s, 위아래 dy)
+// + 덧붙이는 것(fx: tear 눈물 그렁 / cry 눈물 흐름 / sparkle 반짝). 캐릭터 파일(glb)은 그대로.
+Object.assign(EMO, {
+  half: ['eye_open', 'brow_neutral', 'mouth_flat'],        // 반쯤 감긴 눈 (배고픔·지침)
+  meh: ['eye_open', 'brow_sad', 'mouth_flat'],             // 게슴츠레 체념
+  excited: ['eye_open', 'brow_neutral', 'mouth_open'],     // 반짝이는 눈
+  think: ['eye_open', 'brow_neutral', 'mouth_flat'],       // 위를 보며 고민
+  down: ['eye_open', 'brow_sad', 'mouth_frown'],           // 축 처진 눈
+  teary: ['eye_wide', 'brow_sad', 'mouth_wavy'],           // 눈물 그렁
+  cry: ['eye_closed', 'brow_sad', 'mouth_wavy'],           // 눈물 흐름
+  bitter: ['eye_happy', 'brow_sad', 'mouth_smile'],        // 쓸쓸한 웃음 (눈물 + 웃는 입)
+  awkward: ['eye_open', 'brow_sad', 'mouth_wavy', 'sweat'],// 식은땀 어색한 웃음
+  worried: ['eye_open', 'brow_sad', 'mouth_flat'],         // 걱정
+  blank: ['eye_open', 'brow_neutral', 'mouth_flat'],       // 멍한 눈 (작은 점 눈)
+});
+const EMO_FX = {
+  half: { eye: { sy: 0.42, dy: -0.25 } }, meh: { eye: { sy: 0.38, dy: -0.25 } },
+  excited: { eye: { s: 1.12 }, fx: ['sparkle'] }, think: { eye: { dy: 0.35, s: 0.92 } },
+  down: { eye: { sy: 0.6, dy: -0.2 } }, teary: { fx: ['tear'] }, cry: { fx: ['cry'] },
+  bitter: { fx: ['tear'] }, blank: { eye: { s: 0.55 } }, worried: { eye: { s: 1.05 } },
+};
+let CUR_T = 0;
+function faceFx(c) {   // 눈물·반짝이 (처음 한 번 만들어 둠): 장면에 두고 매 프레임 눈의 세계 위치에 맞춰 놓음
+  if (c.fx) return c.fx;
+  c.fx = { tears: [], sparks: [] };
+  const tearM = new THREE.MeshStandardMaterial({ color: 0x8fd3ff, emissive: 0x2a7fc0, emissiveIntensity: 0.7, roughness: 0.15 });
+  const sparkM = new THREE.MeshBasicMaterial({ color: 0xfff6c8, toneMapped: false, side: THREE.DoubleSide });
+  const st = new THREE.Shape();
+  for (let k = 0; k < 8; k++) { const a = Math.PI / 2 + k * Math.PI / 4, r = k % 2 ? 0.24 : 1; k ? st.lineTo(r * Math.cos(a), r * Math.sin(a)) : st.moveTo(r * Math.cos(a), r * Math.sin(a)); }
+  for (const e of (c.parts.eye_open || []).filter((o) => o.isMesh)) {
+    const tear = new THREE.Mesh(new THREE.SphereGeometry(1, 10, 8), tearM); tear.visible = false; scene.add(tear);
+    const sp = new THREE.Mesh(new THREE.ShapeGeometry(st), sparkM); sp.visible = false; scene.add(sp);
+    c.fx.tears.push({ m: tear, e }); c.fx.sparks.push({ m: sp, e });
+  }
+  return c.fx;
+}
+const _bb = new THREE.Box3(), _c = new THREE.Vector3(), _s = new THREE.Vector3();
+function eyeShape(c, ef) {   // 눈 모양: 화면 위아래 기준으로 납작하게(sy)·크게(s)·위아래로(dy, 눈 높이 배수)
+  c.root.updateMatrixWorld(true);
+  for (const p of ['eye_open', 'eye_wide']) for (const o of c.parts[p] || []) {
+    if (!o.userData.base) {
+      const q = o.getWorldQuaternion(new THREE.Quaternion());
+      const ax = [new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 1)].map((v) => Math.abs(v.applyQuaternion(q).y));
+      _bb.setFromObject(o);
+      o.userData.base = { s: o.scale.clone(), p: o.position.clone(), up: ax.indexOf(Math.max(...ax)), h: _bb.max.y - _bb.min.y };
+    }
+    const b = o.userData.base, k = ef.s || 1, sy = ef.sy || 1;
+    o.scale.copy(b.s).multiplyScalar(k); o.scale.setComponent(b.up, o.scale.getComponent(b.up) * sy);
+    o.position.copy(b.p);
+    if (ef.dy) { o.parent.updateMatrixWorld(true); const w = o.parent.localToWorld(b.p.clone()); w.y += ef.dy * b.h; o.position.copy(o.parent.worldToLocal(w)); }
+  }
+}
 // emo + 말하는 중(open 0..1) + 눈 깜빡임 → 부품 켜고 끄기
 function setFace(c, emo, open, blinking) {
   const on = new Set((EMO_OVERRIDE[c.key] || {})[emo] || EMO[emo] || EMO.neutral);
   if (open > 0.35) { const grin = on.has('mouth_grin'); MOUTHS.forEach((m) => on.delete(m)); on.add(grin ? 'mouth_grin' : 'mouth_open'); }   // 말할 때 입: 웃는 표정이면 웃는 입 그대로
   if (blinking && on.has('eye_open')) { on.delete('eye_open'); on.add('eye_closed'); }
   for (const p in c.parts) c.parts[p].forEach((o) => { o.visible = on.has(p); });
+  eyeShape(c, (EMO_FX[emo] || {}).eye || {});
+  const fx = (EMO_FX[emo] || {}).fx || [];
+  if (!fx.length && !c.fx) return;
+  const F = faceFx(c), t = CUR_T;
+  F.tears.forEach((d, i) => {   // 눈 아래 앞쪽 (카메라 쪽 +z)
+    const show = fx.includes('tear') || fx.includes('cry'); d.m.visible = show; if (!show) return;
+    _bb.setFromObject(d.e); _bb.getCenter(_c); const h = Math.max(0.006, d.e.userData.base ? d.e.userData.base.h : _bb.max.y - _bb.min.y);
+    const r = h * 0.3, u = fx.includes('cry') ? ((t * 0.7 + i * 0.37) % 1) : 0, w = 1 + 0.06 * Math.sin(t * 6 + i);
+    d.m.position.set(_c.x + (i ? 1 : -1) * h * 0.15, _c.y - h * 0.75 - u * h * 2.6, _c.z + h * 0.5);
+    d.m.scale.set(r * 0.8 * w, r * (1.2 + u * 0.4) * w, r * 0.6);
+  });
+  F.sparks.forEach((d, i) => {   // 눈 오른쪽 위에 반짝
+    const show = fx.includes('sparkle'); d.m.visible = show; if (!show) return;
+    _bb.setFromObject(d.e); _bb.getCenter(_c); _bb.getSize(_s);
+    const h = Math.max(_s.y, 0.006), w = h * (0.32 + 0.14 * Math.abs(Math.sin(t * 5 + i * 1.3)));
+    d.m.position.set(_c.x + _s.x * 0.45, _c.y + h * 0.42, _c.z + h * 0.6); d.m.scale.setScalar(w);
+    d.m.lookAt(camera.position); d.m.rotateZ(0.3 * Math.sin(t * 3 + i));
+  });
 }
+
 
 const OFFICE = {};
 
@@ -734,6 +805,7 @@ function cards(t) {
 }
 
 window.twFrame = (t) => {
+  CUR_T = t;
   if (PHONE.g) updatePhone(t);
   for (const k in cast) (cast[k].human ? animHuman : animAI)(cast[k], t);
   if (RAIN.g) {   // 빗줄기: 위치는 시각으로 정해짐 (프레임 순서와 무관)

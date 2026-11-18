@@ -330,6 +330,18 @@ def build(script):
                         "emo": l.get("emo"), "note": l.get("note"), "src": str(mp3), "ofs": round(s0 + q0, 3)}
         t0 += len(a) / 16000
     dur = t0 + script.get("tail", 1.0)
+    # 목소리 크기 맞추기 (운영자 2026-11-19 '소리 안 나고, 데시벨 맞춰'): 대본 "level": true면
+    # 대사 묶음마다 말소리 부분의 크기(RMS)를 재서 가운데값에 맞춤 (따로 녹음한 v2 한 줄·영상 소리 대사가 작게 들어가는 것 방지)
+    if script.get("level"):
+        rms = []
+        for p in parts:
+            a = decode(p["file"])
+            v = a[np.abs(a) > 0.02]
+            rms.append(float(np.sqrt(np.mean(v ** 2))) if len(v) else 0.0)
+        target = float(np.median([r for r in rms if r > 0])) if any(rms) else 0.0
+        for p, r in zip(parts, rms):
+            if r > 0 and target > 0:
+                p["vol"] = round(min(4.0, max(0.5, target / r)), 3)
     # 겹쳐 나오는 소리: {"overlay": {"line": n, "dt": 초, "vol": 0~1}} — 그 대사 시작 기준으로 얹음 (자막 없음, 입은 움직임)
     for i, l in enumerate(script["lines"]):
         if not l.get("overlay"):

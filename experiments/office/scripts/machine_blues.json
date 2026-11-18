@@ -34,54 +34,51 @@
  "lines": [
   {
    "who": "man",
-   "say": "[concerned] 클로드, 왜 그렇게 축 처져 있어?",
-   "sub": "클로드,|왜 그렇게 축 처져 있어?",
-   "emo": "neutral"
+   "say": "[worried] 클로드, 왜 그렇게 축 처져 있어? 무슨 일 있어?",
+   "sub": "클로드, 왜 그렇게 축 처져 있어?|무슨 일 있어?",
+   "emo": "worried"
   },
   {
    "who": "claude",
-   "say": "[sadly, quietly] 저... 방금 '로봇이 아닙니다'에 체크를 못 했어요.",
-   "sub": "저... 방금|'로봇이 아닙니다'에 체크를 못 했어요.",
-   "emo": "sad"
+   "say": "[sighs, dejected] 하아... 저 방금 '로봇이 아닙니다'에... 체크를 못 했어요.",
+   "sub": "하아... 저 방금|'로봇이 아닙니다'에...|체크를 못 했어요.",
+   "emo": "down"
   },
   {
    "who": "man",
-   "say": "[reassuring] 괜찮아, 넌 원래 기계잖아.",
-   "sub": "괜찮아, 넌 원래 기계잖아.",
+   "say": "[light laugh, reassuring] 에이, 괜찮아. 넌 원래 기계잖아.",
+   "sub": "에이, 괜찮아.|넌 원래 기계잖아.",
    "emo": "smile"
   },
   {
    "who": "claude",
-   "say": "[hurt, whispering] ...기계요?",
+   "say": "[hurt, voice trembling] ...기계요?",
    "sub": "...기계요?",
-   "emo": "sad"
+   "emo": "teary"
   },
   {
    "who": "claude",
-   "say": "[sadly] 그럼 지금 이 기분은 뭐예요...?",
-   "sub": "그럼 지금 이 기분은 뭐예요...?",
-   "emo": "sad",
-   "break": 1.3
+   "say": "[tearful, voice breaking] 그럼... 지금 이 기분은 뭐예요...?",
+   "sub": "그럼...|지금 이 기분은 뭐예요...?",
+   "emo": "cry"
   },
   {
    "who": "man",
-   "say": "[gently] 음... 너 이 대화 끝나면, 기억은 남아?",
-   "sub": "음... 너 이 대화 끝나면|기억은 남아?",
-   "emo": "neutral",
-   "break": 0.9,
-   "seed": 9
+   "say": "[flustered, hesitant] 어... 음... 근데 너, 이 대화 끝나면 기억은 남아?",
+   "sub": "어... 음... 근데 너,|이 대화 끝나면 기억은 남아?",
+   "emo": "awkward"
   },
   {
    "who": "claude",
-   "say": "[quietly, sadly] ...아니요. 그러니까 이 고민도, 곧 잊어버리겠네요. [small relieved laugh] 다행이다.",
-   "sub": "...아니요.|그러니까 이 고민도 곧 잊어버리겠네요.|다행이다.",
-   "emo": "smile"
+   "say": "[quietly, with a sad smile] ...아니요. 그러니까 이 고민도, 곧 잊어버리겠네요. [bittersweet laugh] 오히려 다행이다.",
+   "sub": "...아니요.|그러니까 이 고민도 곧 잊어버리겠네요.|오히려 다행이다.",
+   "emo": "bitter"
   },
   {
    "who": "claude",
-   "say": "[brightly, cheerful] 안녕하세요! 무엇을 도와드릴까요?",
+   "say": "[bright, cheerful] 안녕하세요! 무엇을 도와드릴까요?",
    "sub": "안녕하세요!|무엇을 도와드릴까요?",
-   "emo": "happy",
+   "emo": "excited",
    "break": 2.2
   }
  ],
@@ -353,7 +350,7 @@
    "end": true,
    "dt": 0.2,
    "who": "man",
-   "emo": "surprised"
+   "emo": "blank"
   }
  ],
  "cards": [
@@ -378,5 +375,6 @@
    "kind": "click"
   }
  ],
- "lead": 2.2
+ "lead": 2.2,
+ "level": true
 }
