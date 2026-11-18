@@ -1,0 +1,38 @@
+{
+  "_note": "동작·컷 시험용 (릴스 아님, 대본 회의 전). 사람 1 + AI 2, 책상 장면.",
+  "cast": [
+    {"key": "man", "human": true},
+    {"key": "claude", "x": -0.29, "z": 0.24, "yaw": 0.25, "size": 0.4},
+    {"key": "chatgpt", "x": 0.29, "z": 0.24, "yaw": -0.25, "size": 0.4}
+  ],
+  "lines": [
+    {"who": "man", "say": "[sighs] 아... 부장님이 내일까지 보고서 다 해 오래요.", "sub": "아… 부장님이 내일까지 보고서 다 해 오래요.", "emo": "sad"},
+    {"who": "claude", "say": "[softly] 음... 제가 세 줄로 정리해 드릴게요.", "sub": "음… 제가 세 줄로 정리해 드릴게요.", "emo": "smile", "gap": 0.35},
+    {"who": "chatgpt", "say": "[confidently] 세 줄이요? 저는 한 줄이면 됩니다!", "sub": "세 줄이요? 저는 한 줄이면 됩니다!", "emo": "happy", "gap": 0.3},
+    {"who": "claude", "say": "[annoyed] 방금... 내 말 가로챘어?", "sub": "방금… 내 말 가로챘어?", "emo": "angry", "gap": 0.35}
+  ],
+  "events": [
+    {"line": 0, "dt": 0.0, "who": "man", "do": "facepalm", "d": 1.8},
+    {"line": 0, "dt": 0.2, "who": "claude", "do": "look", "at": "man"},
+    {"line": 0, "dt": 0.2, "who": "chatgpt", "do": "look", "at": "man"},
+    {"line": 1, "dt": 0.0, "who": "man", "do": "look", "at": "claude"},
+    {"line": 1, "dt": 0.6, "who": "claude", "do": "nod"},
+    {"line": 2, "dt": -0.2, "who": "chatgpt", "do": "hop"},
+    {"line": 2, "dt": 0.0, "who": "claude", "do": "look", "at": "chatgpt"},
+    {"line": 2, "dt": 0.0, "who": "man", "do": "look", "at": "chatgpt"},
+    {"line": 2, "dt": 0.0, "who": "claude", "emo": "surprised"},
+    {"line": 3, "dt": 0.0, "who": "claude", "do": "tremble", "d": 1.3},
+    {"line": 3, "dt": 0.3, "who": "chatgpt", "emo": "embarrassed"},
+    {"line": 3, "dt": 0.5, "who": "chatgpt", "do": "tilt", "d": 1.2},
+    {"line": 3, "dt": 1.4, "who": "man", "emo": "smile"},
+    {"line": 3, "dt": 1.4, "who": "man", "do": "look", "at": "camera"}
+  ],
+  "shots": [
+    {"line": 0, "dt": -0.4, "cam": "wide"},
+    {"line": 1, "dt": -0.1, "cam": "close:claude"},
+    {"line": 2, "dt": -0.25, "cam": "close:chatgpt"},
+    {"line": 3, "dt": -0.1, "cam": "two:claude:chatgpt"},
+    {"line": 3, "dt": 1.3, "cam": "wide"}
+  ],
+  "tail": 1.4
+}

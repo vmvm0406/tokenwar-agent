@@ -26,6 +26,11 @@
 - 카메라(컷): 말하는 캐릭터 가까이(얕은 심도·뒤는 흐림), 둘이 함께, 책상 전체. 천천히 다가가기(push-in)만.
 - 표정은 동작과 따로: `emotion: neutral|smile|happy|surprised|sad|angry|embarrassed|sleepy` (기본 neutral = 무표정).
 
+### 만든 것 (2026-11-18): `experiments/office/`
+- `scene.js`: 사무실 책상 장면. 사람(glb, 뼈를 세계 방향으로 겨눠 앉힘) 책상 뒤, AI(glb) 책상 위. 표정 부품 켜고 끄기, 대사 소리 크기로 입 여닫기, 눈 깜빡임.
+- 동작: AI hop·nod·shake·tilt·tremble·look / 사람 facepalm·sigh·nod·type·look. 카메라 wide·close:누구·two:a:b (천천히 다가감, 가까이는 뒤 흐림).
+- `render.py <대본.json>`: 대사 음성(voices.json, v3, 캐시) → 시각 계산 → 프레임 → mp4 (자막 포함). 형식은 render.py 맨 위 설명. 시험 대본 `scripts/motion_test.json`.
+
 ## ③ Three.js 장면 — 배경 프리셋
 - 사무실(책상·모니터·키보드·꼬마전구 빛망울) 먼저, 그다음 집·카페·거리. 소품도 같은 로우폴리 화풍(Blender 스크립트 또는 CC0 소품).
 - 조명·얕은 심도(빛망울)는 프리셋마다 고정.
