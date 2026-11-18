@@ -22,6 +22,7 @@
 | 프로그램 | Python 3.12, Git, GitHub CLI, FFmpeg, Node.js, Claude Code, yt-dlp, Playwright 크로미움 | 2장 |
 | 로그인 | Claude Code(구독 계정), GitHub CLI(vmvm0406) | 3장 (직접) |
 | ElevenLabs 키 | 사용자 환경 변수 `ELEVENLABS_API_KEY` (운영자 계정, Starter 월 결제) | 3-4장 (setx) |
+| Hugging Face 토큰 | 사용자 환경 변수 `HF_TOKEN` (운영자 무료 계정, Read 권한, 2026-11-18). 사진→3D 무료 데모(TRELLIS·Hunyuan3D)용, 무료 계정 GPU 하루 약 5분 | `setx HF_TOKEN "<토큰>"` |
 | 저장소 두 개 | `%USERPROFILE%\tokenwar-agent`(Code 탭용), `%USERPROFILE%\tokenwar-daily`(매일 작업 전용) | 4장 |
 | 작업 스케줄러 2개 | `TokenwarAgent`, `TokenwarModelWatch` | 5장 |
 | Claude 기억(memory) | `C:\Users\vmmxu\.claude\projects\C--Users-vmmxu-tokenwar-agent\memory\` | 1장에서 복사, 4장에서 붙여 넣기 |
