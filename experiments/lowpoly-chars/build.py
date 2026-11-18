@@ -35,7 +35,10 @@ def hex2rgb(h):
 CHARS = {
     # 클로드: 가운데 몸(얼굴 자리)을 키우고 광선은 그 둘레로 (운영자: 변형 OK, 알아볼 수만 있게, 얼굴은 크게)
     # 통통하게(운영자 레퍼런스 2026-11-18): 두껍고 둥근 단면(power 0.5) + 윤곽을 사방으로 부풀림(dilate) + 큼직한 면(faces)
+    # 2026-11-18 운영자: 광선이 다리처럼 보여 이상 → 로고 SVG 대신 짧은 별. 로고처럼 가는 광선·길이 들쭉날쭉 → 클로드인 줄 알게
     "claude": dict(svg="claude.svg", half=0.12, h=0.40, hmin=0.05, power=0.5, dcap=0.46,
+                   star=dict(n=10, r_in=0.58, lens=(0.92, 0.80, 0.87, 0.78, 0.90, 0.82, 0.86, 0.79, 0.91, 0.81),
+                             w_base=0.32, w_tip=0.10, rot=90),   # 뿌리 넓고 끝 좁게 → 다리 말고 별 꼭짓점
                    disc=dict(r=0.46, sides=28), faces=2400, dilate=0.07,
                    face=dict(cx=0.0, cy=0.02, eye_dx=0.16, eye_s=0.10, mouth_dy=-0.16, mouth_w=0.08,
                              blush=(0.28, -0.10, 0.075))),
@@ -212,8 +215,39 @@ def dilate(ob, dist):
     apply_mod(ob, m)
 
 
+def star_bmesh(st):
+    """짧고 통통한 별 (클로드 로고 광선을 줄이고 짧게, 운영자 2026-11-18 "다리가 달린 것 같아 이상").
+    st: n 광선 수, r_in 골 반지름, lens 광선 길이들(반복), w_base/w_tip 광선 폭, rot 회전(도)."""
+    bm = bmesh.new()
+    n, r_in = st["n"], st["r_in"]
+    lens, wb, wt = st["lens"], st["w_base"], st["w_tip"]
+    pts = []
+    for i in range(n):
+        a = math.radians(st.get("rot", 0)) + 2 * math.pi * i / n
+        L = lens[i % len(lens)]
+        d = Vector((math.cos(a), math.sin(a)))
+        p = Vector((-d.y, d.x))
+        half_gap = math.pi / n
+        for k in range(1, 4):                                    # 광선 사이 골: 둥근 호
+            pts.append(Vector((math.cos(a - half_gap * (1 - k / 4)), math.sin(a - half_gap * (1 - k / 4)))) * r_in)
+        base = d * (r_in + 0.02)
+        tip = d * L
+        pts.append(base - p * wb / 2)
+        pts.append(tip - p * wt / 2)
+        for k in range(1, 4):                                    # 끝은 둥글게
+            t = math.pi * k / 4
+            pts.append(tip + d * (wt / 2) * math.sin(t) - p * (wt / 2) * math.cos(t))
+        pts.append(tip + p * wt / 2)
+        pts.append(base + p * wb / 2)
+        for k in range(1, 5):
+            pts.append(Vector((math.cos(a + half_gap * k / 4), math.sin(a + half_gap * k / 4))) * r_in)
+    vs = [bm.verts.new((q.x, q.y, 0.0)) for q in pts]
+    bm.faces.new(vs)
+    return bm
+
+
 def make_body(key, cfg):
-    bm = svg_bmesh(os.path.join(HERE, "logos", cfg["svg"]))
+    bm = star_bmesh(cfg["star"]) if cfg.get("star") else svg_bmesh(os.path.join(HERE, "logos", cfg["svg"]))
     solid_from_flat(bm, cfg["half"])
     if cfg["disc"]:
         dsc = cfg["disc"]
