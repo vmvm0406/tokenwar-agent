@@ -47,7 +47,7 @@ HUMANS = {
         skin="#E2AE86", hair="#2B211C", top="#7FA6D4", top_rough=0.7, tee=None,
         pants="#3A3F4A", shoes="#5B3B29", sleeves="top",
         hair_main=((0, 0.12, -0.05), (0.46, 0.44, 0.44)),
-        hair_extra=[((0, 0.31, 0.24), (0.36, 0.11, 0.16)), ((0.2, 0.28, 0.2), (0.16, 0.1, 0.14))],  # 앞머리
+        hair_extra=[((0, 0.30, 0.15), (0.37, 0.10, 0.12))],  # 앞머리: 이마에 붙게 (운영자 2026-11-18 "앞머리 왜 튀어나왔어")
         brow="#241C18", face=dict(brows=True),
         collar=False),
 }
