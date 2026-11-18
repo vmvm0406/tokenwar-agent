@@ -31,9 +31,11 @@ HUMANS = {
                      ("e", (-0.21, -0.11, 0.27), (0.14, 0.11, 0.10)),
                      ("e", (0, -0.06, 0.40), (0.07, 0.06, 0.055))],        # 코
         hair_main=((0, 0.09, -0.07), (0.435, 0.42, 0.42)),       # 옆은 짧고 뒤로 넘긴 은회색 머리
-        hair_extra=[((0, 0.36, 0.10), (0.30, 0.12, 0.24)),      # 앞머리 볼륨(위로 넘김)
-                    ((0.12, 0.40, -0.02), (0.22, 0.10, 0.26)), ((-0.12, 0.40, -0.02), (0.22, 0.10, 0.26))],
-        brow="#3B3936",
+        # 참고: 엔비디아 공식 'Toy Jensen' — 옆 가르마로 한쪽에 볼륨 있게 넘긴 은회색 머리(짙은 줄무늬)
+        hair_extra=[((0.07, 0.37, 0.10), (0.36, 0.14, 0.27)),   # 가르마 반대쪽으로 넘긴 볼륨
+                    ((0.16, 0.36, -0.10), (0.26, 0.13, 0.26)), ((-0.20, 0.30, -0.05), (0.18, 0.10, 0.24))],
+        hair_streak="#55555A",
+        brow="#3B3936", glasses="#1C1C1E",   # 안경 (운영자 2026-11-18)
         face=dict(eye_s=0.064, eye_aspect=0.62, eye_dx=0.15, mouth_w=0.075, mouth_dy=-0.20, brows=True, grin=True),
         emo={"neutral": ["eye_open", "brow_neutral", "mouth_grin"],
              "happy": ["eye_happy", "brow_neutral", "mouth_grin", "blush"]},
@@ -76,7 +78,7 @@ def capsule_into(bm, a, b, r):
         ellipsoid_into(bm, a.lerp(b, k / (n - 1)), (r, r, r))
 
 
-def blob(name, shapes, faces, color, rough=0.68, voxel=0.018, smooth=4, jitter=0.07):
+def blob(name, shapes, faces, color, rough=0.68, voxel=0.018, smooth=4, jitter=0.07, color_fn=None):
     """shapes: [('e', 중심, 반지름3) | ('c', a, b, r)] → 합쳐 리메시 → 매끈 → 면 줄이기 → 평면 셰이딩 + 면 색."""
     bm = bmesh.new()
     for s in shapes:
@@ -93,7 +95,7 @@ def blob(name, shapes, faces, color, rough=0.68, voxel=0.018, smooth=4, jitter=0
     B.decimate(ob, faces)
     B.shade_flat(ob)
     base = B.hex2rgb(color)
-    B.facet_colors(ob, lambda c: base, jitter=jitter, seed=hash(name) % 1000)
+    B.facet_colors(ob, color_fn or (lambda c: base), jitter=jitter, seed=hash(name) % 1000)
     ob.data.materials.append(B.material(f"{name}_mat", vcol=True, rough=rough))
     return ob
 
@@ -108,26 +110,65 @@ def make_head(key, cfg, mats):
     head = blob(f"{key}_head", skin, 700, cfg["skin"], rough=0.72, voxel=0.014)
     head.parent = grp
     hs = [("e", *cfg["hair_main"])] + [("e", *h) for h in cfg["hair_extra"]]
-    hair = blob(f"{key}_hair", hs, 420, cfg["hair"], rough=0.8, voxel=0.016, smooth=3, jitter=0.1)
+    hfn = None
+    if cfg.get("hair_streak"):  # 앞→뒤로 흐르는 짙은 줄무늬
+        hc, sc_ = B.hex2rgb(cfg["hair"]), B.hex2rgb(cfg["hair_streak"])
+        hfn = lambda c: sc_ if math.sin(c.x * 26 + c.z * 3 + c.y * 4) > 0.45 else hc
+    hair = blob(f"{key}_hair", hs, 520, cfg["hair"], rough=0.8, voxel=0.016, smooth=3, jitter=0.08, color_fn=hfn)
     hair.parent = grp
     bpy.context.view_layer.update()
     m2 = {**mats, "brow": B.material(f"{key}_brow", B.hex2rgb(cfg.get("brow", "#222222")), rough=0.8),
           "teeth": B.material("teeth", B.hex2rgb("#F4F1EA"), rough=0.35)}
-    B.add_face(key, head, grp, mats=m2, **{**FACE, **cfg.get("face", {})})
+    fc = {**FACE, **cfg.get("face", {})}
+    B.add_face(key, head, grp, mats=m2, **fc)
+    if cfg.get("glasses"):
+        add_glasses(key, fc, cfg["glasses"])
     return grp
+
+
+def add_glasses(key, fc, color):
+    """하프림(브로우라인) 안경 — 위에만 굵은 검정 테, 아래는 테 없음(가는 은색 선). 운영자 2026-11-18 "위에만 테".
+    항상 보임(표정과 무관). 얼굴 묶음 좌표(앞 +Z)."""
+    face = bpy.data.objects[f"{key}_face"]
+    z0 = face.location.z
+    s, dx = fc["eye_s"], fc["eye_dx"]
+    rx, ry, zf = s * 1.6, s * 1.15, s * 0.8
+    black = B.material(f"{key}_glasses", B.hex2rgb(color), rough=0.3)
+    wire = B.material(f"{key}_glasses_wire", B.hex2rgb("#B8BCC2"), rough=0.25)
+
+    def tube(name, pts, rad, mat):
+        ob = B.arc_tube(name, pts, rad, ring=5)
+        ob.data.materials.append(mat)
+        ob.parent = face
+        return ob
+
+    def rim_pt(ex, t):  # 둥근 사각형 둘레 (t: 0=오른쪽, 90=위)
+        c, sn = math.cos(math.radians(t)), math.sin(math.radians(t))
+        return (ex + rx * math.copysign(abs(c) ** 0.6, c), ry * math.copysign(abs(sn) ** 0.6, sn), zf)
+    for sd, sx in (("L", -1), ("R", 1)):
+        ex = sx * dx
+        top = [rim_pt(ex, t) for t in range(-10, 191, 10)]          # 위 반쪽 + 옆 조금: 굵은 검정 윗테
+        tube(f"{key}_glasses_top_{sd}", top, s * 0.2, black)
+        bot = [rim_pt(ex, t) for t in range(190, 351, 10)]          # 아래 반쪽: 가는 은색 선
+        tube(f"{key}_glasses_wire_{sd}", bot, s * 0.04, wire)
+        x_out = ex + sx * rx
+        tube(f"{key}_glasses_arm_{sd}", [(x_out, s * 0.4, zf), (sx * 0.40, s * 0.5, zf - 0.12), (sx * 0.42, s * 0.35, -z0 + 0.02)], s * 0.1, black)
+    tube(f"{key}_glasses_bridge", [(-dx + rx * 0.97, s * 0.55, zf), (0, s * 0.7, zf + 0.01), (dx - rx * 0.97, s * 0.55, zf)], s * 0.1, black)
 
 
 def make_parts(key, cfg):
     """부위 → 붙일 뼈. 좌표는 서 있는 자세(위 +Z, 앞 -Y)."""
     P = {}
     top, pants = cfg["top"], cfg["pants"]
+    # 옷 구분은 덧붙인 덩어리 없이 색으로만 (운영자 2026-11-18: 깃 등을 달면 몸이 지저분해짐)
+    top_c = B.hex2rgb(top)
+    color_fn = None
+    if cfg["tee"]:  # 열린 재킷 안 티셔츠 = 가슴 가운데 V자 색 영역
+        tee_c = B.hex2rgb(cfg["tee"])
+        color_fn = lambda c: tee_c if (c.y < -0.08 and c.z > 0.86 and abs(c.x) < 0.03 + (c.z - 0.86) * 0.3) else top_c
     P["spine"] = [blob(f"{key}_torso", [("e", (0, 0, 1.06), (0.32, 0.22, 0.30)),
-                                          ("e", (0, 0, 1.24), (0.37, 0.21, 0.12))], 520, top, cfg["top_rough"])]
-    if cfg["tee"]:  # 열린 재킷 안 티셔츠
-        P["spine"].append(blob(f"{key}_tee", [("e", (0, -0.16, 1.13), (0.085, 0.07, 0.16))], 100, cfg["tee"], 0.8))
-    if cfg["collar"]:  # 재킷 깃
-        for sx in (1, -1):
-            P["spine"].append(blob(f"{key}_lapel{sx}", [("c", (0.18 * sx, -0.15, 1.31), (0.06 * sx, -0.20, 1.04), 0.045)], 70, top, cfg["top_rough"]))
+                                          ("e", (0, 0, 1.24), (0.37, 0.21, 0.12))], 520, top, cfg["top_rough"],
+                       color_fn=color_fn)]
     P["neck"] = [blob(f"{key}_neck", [("c", (0, 0, 1.28), (0, 0, 1.45), 0.08)], 80, cfg["skin"])]
     P["hips"] = [blob(f"{key}_pelvis", [("e", (0, 0, 0.80), (0.30, 0.20, 0.14))], 260, pants, 0.75)]
     for sd, sx in (("L", 1), ("R", -1)):
