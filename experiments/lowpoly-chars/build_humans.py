@@ -43,7 +43,7 @@ HUMANS = {
         hair_streak="#8E8E8A",
         brow="#3B3936", glasses="#1C1C1E",   # 안경 (운영자 2026-11-18)
         face=dict(eye_s=0.064, eye_aspect=0.62, eye_dx=0.15, mouth_w=0.075, mouth_dy=-0.20, brows=True, grin=True),
-        emo={"neutral": ["eye_open", "brow_neutral", "mouth_grin"],
+        emo={"smile": ["eye_open", "brow_neutral", "mouth_grin"],   # 평소 웃음 = 이 보이는 웃음 (기본 표정은 무표정 neutral)
              "happy": ["eye_happy", "brow_neutral", "mouth_grin", "blush"]},
         collar=True, blocky=True, fashion="jensen", blocky_head=True, photo_tint=0.85, photo_face=True),   # 각진 블록 몸 + 젠슨 황 패션 (운영자 2026-11-18)
     "man": dict(

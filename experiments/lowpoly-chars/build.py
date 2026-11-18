@@ -357,6 +357,8 @@ def add_face(key, body, root, cx, cy, eye_dx, eye_s, mouth_dy, mouth_w, mats, bl
     put(arc_tube(f"{key}_mouth_smile", [(x - cx, y - cy, 0.012) for x, y in mouth_xy], s * 0.2), "eye")
     put(arc(f"{key}_mouth_frown", 0, my - mw * 0.9, mw * 0.9, 25, 155, s * 0.2), "eye")
     put(arc_tube(f"{key}_mouth_flat", [(-mw * 0.7, my, 0.02), (0, my, 0.02), (mw * 0.7, my, 0.02)], s * 0.18), "eye")
+    # 무표정 입: 짧고 가는 일자 (기본 표정, 기분이 좋지도 나쁘지도 않게 — 운영자 2026-11-18)
+    put(arc_tube(f"{key}_mouth_rest", [(-mw * 0.45, my + mw * 0.2, 0.02), (0, my + mw * 0.2, 0.02), (mw * 0.45, my + mw * 0.2, 0.02)], s * 0.15), "eye")
     put(d_mouth(f"{key}_mouth_open", mw * 1.1, mw * 0.85, s * 0.18), "inner", (0, my + mw * 0.45, 0.02))
     put(lowpoly_ellipsoid(f"{key}_mouth_o", mw * 0.5, mw * 0.62, s * 0.25, seg=10, rings=6), "inner", (0, my - mw * 0.1, 0.01))
     wav = [(-mw + 2 * mw * k / 8, my + (s * 0.18 if k % 2 else -s * 0.18), 0.02) for k in range(9)]
@@ -375,7 +377,8 @@ def add_face(key, body, root, cx, cy, eye_dx, eye_s, mouth_dy, mouth_w, mats, bl
 
 # 감정 → 켤 부품 (나머지는 끔). three.js 재생기도 같은 표를 쓴다 (out/emotions.json).
 EMOTIONS = {
-    "neutral":     ["eye_open", "brow_neutral", "mouth_smile"],
+    "neutral":     ["eye_open", "brow_neutral", "mouth_rest"],    # 기본 = 무표정 (운영자 2026-11-18)
+    "smile":       ["eye_open", "brow_neutral", "mouth_smile"],   # 예전 기본(살짝 웃음)
     "happy":       ["eye_happy", "brow_neutral", "mouth_open", "blush"],
     "surprised":   ["eye_wide", "brow_neutral", "mouth_o"],
     "sad":         ["eye_open", "brow_sad", "mouth_frown"],
@@ -384,7 +387,7 @@ EMOTIONS = {
     "sleepy":      ["eye_closed", "brow_neutral", "mouth_flat"],
 }
 FACE_PARTS = ["eye_open", "eye_wide", "eye_happy", "eye_closed", "brow_angry", "brow_sad", "blush",
-              "mouth_smile", "mouth_frown", "mouth_flat", "mouth_open", "mouth_o", "mouth_wavy", "sweat",
+              "mouth_smile", "mouth_frown", "mouth_flat", "mouth_rest", "mouth_open", "mouth_o", "mouth_wavy", "sweat",
               "brow_neutral", "mouth_grin"]   # 뒤 둘은 사람 캐릭터만 (없으면 무시)
 
 
