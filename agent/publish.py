@@ -712,20 +712,25 @@ def main():
         print("IG_ACCESS_TOKEN이 없음. GitHub 저장소 Settings › Secrets에 넣었는지 확인.")
         sys.exit(1)
     now = datetime.now(timezone.utc)
-    if CONFIG.get("publish_paused"):
+    # 운영자가 "지금 올려"라고 할 때만 그 폴더 하나를 바로 올림 (운영자 2026-11-18: 정해진 시각 자동 게시 말고 명령할 때만).
+    # publish_paused여도 이 폴더는 올린다. 승인(approved)과 렌더링 끝(.render_hash)은 그대로 본다.
+    now_folder = sys.argv[sys.argv.index("--now") + 1] if "--now" in sys.argv[1:] else None
+    if CONFIG.get("publish_paused") and not now_folder:
         # 운영자 2026-11-18 "릴스 자동으로 올리기는 잠깐 멈추자. 계정을 리뉴얼 할거야": 인스타·스레드 게시 전부 멈춤
         print("게시 멈춤 (config.json publish_paused true). 아무것도 올리지 않음.")
         return
     folders = sorted(p for p in QUEUE.iterdir() if p.is_dir())
     todo = []
     for f in folders:
+        if now_folder and f.name != now_folder:
+            continue
         post = json.loads((f / "post.json").read_text(encoding="utf-8"))
         log = f / "error.log"
         tries = log.read_text(encoding="utf-8").count("\n---\n") if log.exists() else 0
         if tries >= MAX_TRIES:
             print(f"건너뜀 (실패 {tries}회, error.log 확인 후 삭제하면 다시 시도): {f.name}")
             continue
-        if due(post, now):
+        if now_folder or due(post, now):
             if not may_publish(post, CONFIG):
                 # 승인 관문 (config require_approval, agent/approve.py). 실패가 아니라 기다림이라 error.log에 남기지 않는다
                 print(f"승인 대기: {f.name}")

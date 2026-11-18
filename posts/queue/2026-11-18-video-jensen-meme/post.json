@@ -1,0 +1,37 @@
+{
+ "id": "2026-11-18-video-jensen-meme",
+ "date": "2026-11-18",
+ "type": "video",
+ "format": "buzz",
+ "prebuilt": true,
+ "title": "실시간 젠슨황",
+ "topic": "젠슨 황 밈 · 클로드 영상 보기 스킬",
+ "caption": "클로드에게 영상 보는 '눈'을 달아 주는 법 👀 젠슨 황 밈 편\n방법은 프로필 링크(자료실)에 정리해 뒀어요.\n\n엔비디아 CEO에서 물러난 젠슨 황(11월 12일 발표).\n인터넷에 밈이 쏟아지자 클로드에게 물어봤는데…\n클로드는 영상을 볼 수가 없었습니다.\n그래서 영상 보는 스킬을 달아 줬더니 생긴 일 😂\n\n🔎 쓴 도구: 클로드 코드 'watch' 스킬 (claude-video, 오픈소스)\n→ 영상 링크를 주면 장면 사진 + 받아쓰기로 클로드가 영상을 '봅니다'\n\n※ 패러디입니다. 등장인물의 대사는 실제 발언이 아닙니다.\n※ 화면 속 영상: @aipago, @woo__high (AI로 만든 영상)\n※ 사실 출처: CNBC·CNN·Axios (2026년 11월 12~17일 보도)",
+ "hashtags": [
+  "#젠슨황",
+  "#클로드",
+  "#AI활용법",
+  "#토큰전쟁"
+ ],
+ "publish_at": "2026-11-18T21:20:38+09:00",
+ "approved": true,
+ "approved_at": "2026-11-18T21:20:38+09:00",
+ "rights": "parody",
+ "credit": "@aipago, @woo__high",
+ "rights_note": "운영자 결정(2026-11-18): 화면 속 밈 릴스 일부 사용·출처 표기, 위험 감수. 3D 캐릭터·목소리는 직접 제작(일레븐랩스 Starter 상업 이용)",
+ "sources": [
+  {
+   "name": "CNBC",
+   "url": "https://www.cnbc.com/2026/11/12/nvidia-jensen-huang-ceo-live-updates.html"
+  },
+  {
+   "name": "CNN",
+   "url": "https://www.cnn.com/2026/11/17/tech/nvidia-earnings-jensen-huang-exit"
+  },
+  {
+   "name": "Axios",
+   "url": "https://www.axios.com/2026/11/17/jensen-huang-nvidia-ceo-return-earnings"
+  }
+ ],
+ "note": "3D 대화 릴스 첫 편. 영상은 experiments/office/render.py로 만든 완성본(prebuilt), 다시 렌더링하지 않음"
+}

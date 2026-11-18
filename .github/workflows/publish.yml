@@ -8,6 +8,11 @@ on:
     # 15분마다 게시 시각이 된 게시물이 있는지 확인 (UTC 기준, 실제 실행은 몇 분 늦을 수 있음)
     - cron: "*/15 * * * *"
   workflow_dispatch:
+    inputs:
+      folder:
+        description: "지금 바로 올릴 posts/queue 폴더 이름 (운영자 명령 게시, 비우면 평소처럼 게시 시각만 확인)"
+        required: false
+        default: ""
 
 concurrency:
   group: publish
@@ -48,7 +53,7 @@ jobs:
           # 스레드(선택): 없으면 스레드 단계는 조용히 건너뛴다. 인스타 게시 + threads_delay_min 뒤 실행에서 올림 (agent/threads.py)
           THREADS_ACCESS_TOKEN: ${{ secrets.THREADS_ACCESS_TOKEN }}
           GITHUB_TOKEN: ${{ github.token }}
-        run: python agent/publish.py
+        run: python agent/publish.py ${{ inputs.folder != '' && format('--now {0}', inputs.folder) || '' }}
 
       - name: 결과 저장 (게시된 폴더 이동, 오류·스레드 결과 기록, Zorcha 할 일, docs/media 비우기)
         if: always()
