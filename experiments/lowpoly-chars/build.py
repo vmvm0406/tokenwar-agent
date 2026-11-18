@@ -33,17 +33,21 @@ def hex2rgb(h):
 
 # 캐릭터 설정: 로고 파일, 두께, 부풀림, 얼굴 자리
 CHARS = {
-    "claude": dict(svg="claude.svg", half=0.12, h=0.18, hmin=0.04, power=0.6, dcap=0.28,
-                   disc=dict(r=0.30, sides=24), faces=2600,
-                   face=dict(cx=0.0, cy=0.01, eye_dx=0.105, eye_s=0.07, mouth_dy=-0.115, mouth_w=0.06)),
-    "gemini": dict(svg="gemini.svg", half=0.12, h=0.30, hmin=0.03, power=0.6, dcap=None,
-                   disc=None, faces=2400,
-                   face=dict(cx=0.0, cy=0.03, eye_dx=0.135, eye_s=0.08, mouth_dy=-0.135, mouth_w=0.07)),
-    "chatgpt": dict(svg="openai.svg", half=0.10, h=0.15, hmin=0.05, power=0.5, dcap=0.09,
-                    disc=dict(r=0.19, sides=6, rot=30), faces=3600,
-                    face=dict(cx=0.0, cy=0.02, eye_dx=0.17, eye_s=0.075, mouth_dy=-0.13, mouth_w=0.065)),
+    # 클로드: 가운데 몸(얼굴 자리)을 키우고 광선은 그 둘레로 (운영자: 변형 OK, 알아볼 수만 있게, 얼굴은 크게)
+    "claude": dict(svg="claude.svg", half=0.12, h=0.22, hmin=0.04, power=0.6, dcap=0.40,
+                   disc=dict(r=0.46, sides=28), faces=3000,
+                   face=dict(cx=0.0, cy=0.02, eye_dx=0.16, eye_s=0.10, mouth_dy=-0.16, mouth_w=0.08,
+                             blush=(0.28, -0.10, 0.075))),
+    "gemini": dict(svg="gemini.svg", half=0.12, h=0.32, hmin=0.03, power=0.6, dcap=None,
+                   disc=None, faces=2600,
+                   face=dict(cx=0.0, cy=0.03, eye_dx=0.17, eye_s=0.10, mouth_dy=-0.16, mouth_w=0.08,
+                             blush=(0.29, -0.11, 0.07))),
+    # 챗GPT: 가운데를 큰 육각 얼굴판으로 덮고 매듭 꽃잎은 바깥에 남김
+    "chatgpt": dict(svg="openai.svg", half=0.10, h=0.22, hmin=0.05, power=0.5, dcap=0.35,
+                    disc=dict(r=0.47, sides=6, rot=30), faces=3800,
+                    face=dict(cx=0.0, cy=0.02, eye_dx=0.16, eye_s=0.10, mouth_dy=-0.16, mouth_w=0.08,
+                              blush=(0.27, -0.10, 0.07))),
 }
-
 # 제미나이 2025 아이콘 색 (위 빨강, 왼쪽 노랑, 아래 초록, 오른쪽·가운데 파랑)
 GEM_STOPS = [((0.0, 0.95), "#FC413D"), ((0.45, 0.45), "#969DFF"), ((-0.95, 0.0), "#FBBC04"),
              ((-0.4, -0.35), "#5FC27A"), ((0.0, -0.95), "#00B95C"), ((0.95, 0.0), "#3186FF"),
@@ -210,7 +214,7 @@ def body_color(key):
         base = hex2rgb("#D97757")
         return lambda c: base
     if key == "chatgpt":
-        base = hex2rgb("#F2F2EF")
+        base = hex2rgb("#B4B4AF")
         return lambda c: base
     stops = [(Vector((x, y)), hex2rgb(h)) for (x, y), h in GEM_STOPS]
 
@@ -256,7 +260,7 @@ def arc_tube(name, pts, rad, ring=6):
     return ob
 
 
-def add_face(key, body, root, cx, cy, eye_dx, eye_s, mouth_dy, mouth_w, mats):
+def add_face(key, body, root, cx, cy, eye_dx, eye_s, mouth_dy, mouth_w, mats, blush=None):
     dg = bpy.context.evaluated_depsgraph_get()
     bvh = BVHTree.FromObject(body, dg)
 
@@ -268,6 +272,8 @@ def add_face(key, body, root, cx, cy, eye_dx, eye_s, mouth_dy, mouth_w, mats):
         a = math.radians(200 + 140 * k / 8)
         mouth_xy.append((cx + mouth_w * math.cos(a), cy + mouth_dy + mouth_w * 0.9 + mouth_w * 0.9 * math.sin(a)))
     samples = [(cx - eye_dx, cy), (cx + eye_dx, cy)] + mouth_xy
+    if blush:
+        samples += [(cx - blush[0], cy + blush[1]), (cx + blush[0], cy + blush[1])]
     z0 = max(zat(x, y) for x, y in samples)  # 얼굴은 한 평면에 (울퉁불퉁한 면 위에 떠 있게)
     for side, sx in (("L", -1), ("R", 1)):
         e = lowpoly_ellipsoid(f"{key}_eye_{side}", eye_s * 0.78, eye_s, eye_s * 0.45)
@@ -278,6 +284,12 @@ def add_face(key, body, root, cx, cy, eye_dx, eye_s, mouth_dy, mouth_w, mats):
         hl.location = (eye_s * 0.28, eye_s * 0.38, eye_s * 0.36)
         hl.data.materials.append(mats["hl"])
         hl.parent = e
+    if blush:  # 볼터치 (발그레한 표정용, 나중에 켜고 끔)
+        for side, sx in (("L", -1), ("R", 1)):
+            b = lowpoly_ellipsoid(f"{key}_blush_{side}", blush[2] * 1.25, blush[2] * 0.75, 0.012, seg=8, rings=4)
+            b.location = (cx + sx * blush[0], cy + blush[1], z0 + 0.004)
+            b.data.materials.append(mats["blush"])
+            b.parent = root
     m = arc_tube(f"{key}_mouth_smile", [(x, y, z0 + 0.012) for x, y in mouth_xy], eye_s * 0.2)
     m.data.materials.append(mats["eye"])
     m.parent = root
@@ -335,14 +347,15 @@ def render(sc, path, w, h):
 def main():
     sc = setup_scene()
     mats = {"eye": material("eye", hex2rgb("#141414"), rough=0.25),
-            "hl": material("hl", (1, 1, 1), rough=0.2, emit=1.5)}
+            "hl": material("hl", (1, 1, 1), rough=0.2, emit=1.5),
+            "blush": material("blush", hex2rgb("#FF6F86"), rough=0.6, emit=0.25)}
     roots = {}
     for i, key in enumerate(ONLY):
         cfg = CHARS[key]
         root = link(bpy.data.objects.new(key, None))
         body = make_body(key, cfg)
         facet_colors(body, body_color(key), seed=11 + i)
-        body.data.materials.append(material(f"{key}_mat", vcol=True, rough=0.5))
+        body.data.materials.append(material(f"{key}_mat", vcol=True, rough=0.68))
         body.parent = root
         add_face(key, body, root, mats=mats, **cfg["face"])
         print(key, "faces", len(body.data.polygons))
