@@ -7,6 +7,8 @@
     "chatgpt": {"name": "Chris - Warm and Clear", "voice_id": "PDoCXqBQFGsvfO0hNkEs", "persona": "자신만만·말 많음"},
     "gemini":  {"name": "JY - Trendy K-Culture Vlog Girl", "voice_id": "bQlkYuipD5BHEhntA5iz", "persona": "발랄·빠름"},
     "man":     {"name": "Mr. K - Natural Korean Voice", "voice_id": "LKOcTG4J4tYTPR9DnLeM", "persona": "평범한 직장인"},
-    "jensen":  {"name": null, "voice_id": null, "persona": "열정적인 기조연설 톤 (Voice Design으로 새로 만드는 중, 실제 목소리 복제 아님)"}
+    "jensen":  {"name": "tokenwar-jensen-keynote (Voice Design A3)", "voice_id": "rXtw37U3vJXL0rMfFu0A",
+                "persona": "60대 후반 기술 발표 쇼맨, 따뜻한 중저음, 외국 억양 살짝, 킥킥 웃음. 일레븐랩스 Voice Design으로 새로 만든 목소리(실존 인물 복제 아님, 이름 넣지 않음)",
+                "note": "울림 없는 마른 녹음으로 요청해야 함. 이전 시안은 v3에서 소리가 잘려 깨졌음 (2026-11-18)"}
   }
 }
