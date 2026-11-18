@@ -1,0 +1,78 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>클로드에게 손 달아 주는 법 · 토큰전쟁</title><link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#000000;--fg:#FFFFFF;--ac:#00FF66;--mu:#8A948F}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg)}
+body{font-family:'Wanted Sans Variable','Wanted Sans',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  line-height:1.65;word-break:keep-all;overflow-wrap:break-word}
+main{max-width:680px;margin:0 auto;padding:40px 16px 64px}
+.brand{font-family:'Black Han Sans',sans-serif;color:var(--ac);font-size:20px;letter-spacing:.01em}
+h1{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:clamp(30px,8vw,44px);line-height:1.2;margin:18px 0 12px}
+h1 .hl{color:var(--ac)}
+.intro{color:#CFD6D2;font-size:18px;margin:0 0 28px}
+.rule{height:4px;background:var(--ac);margin:28px 0}
+.step{border-top:2px solid #2A3530;padding:22px 0}
+.step .k{font-family:'Black Han Sans',sans-serif;color:var(--ac);font-size:32px;line-height:1}
+.step .lb{color:var(--mu);font-weight:700;font-size:15px;margin-left:10px}
+h2{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:24px;line-height:1.3;margin:10px 0 6px}
+h3{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:22px;margin:0 0 10px}
+p{margin:6px 0;color:#CFD6D2}
+.pr{position:relative;margin:12px 0 4px;border:2px solid var(--ac);background:#0E1310}
+.pr pre{margin:0;padding:16px 16px 52px;white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere;
+  font-family:'JetBrains Mono',ui-monospace,Consolas,monospace;font-size:15px;line-height:1.6;color:var(--fg)}
+.pr button{position:absolute;right:0;bottom:0;border:0;background:var(--ac);color:var(--bg);
+  font-family:inherit;font-weight:700;font-size:15px;line-height:1;padding:12px 16px;cursor:pointer}
+ul{padding-left:20px;color:#CFD6D2}
+.src{color:var(--mu);font-size:14px;border-top:2px solid #2A3530;padding-top:16px;margin-top:32px}
+.src a{color:var(--mu)}
+.kv{list-style:none;padding:0;margin:6px 0}
+.kv li{margin:4px 0}
+.kv b{color:var(--fg);margin-right:6px}
+.notice{border-left:4px solid var(--ac);padding:4px 0 4px 14px;margin:0 0 28px}
+.notice ul{margin:6px 0}
+.notice a{color:var(--ac)}
+.grp{margin:18px 0 0}
+.grp h4{margin:0 0 2px;font-size:17px;font-weight:700;color:var(--ac)}
+.grp .gs{font-size:13px;color:var(--mu);margin:2px 0 0}
+.grp .gs a{color:var(--mu)}
+.foot{margin-top:28px;font-weight:700}
+.step.li{padding:14px 0}
+.step.li .lb{color:var(--fg);font-size:18px}
+.step.li .ex{display:block;width:100%;max-width:360px;margin:10px 0 0}
+.step.li .pr pre{padding:12px 96px 12px 16px;font-size:17px}
+.foot a{color:var(--ac)}
+.step.li .en{font-family:'JetBrains Mono',ui-monospace,Consolas,monospace;color:var(--ac);font-size:16px;margin-left:10px}
+.usage{margin:6px 0 0}
+.usage li{margin:6px 0}
+.step.li .rv{color:var(--mu);font-size:15px;margin:8px 0 2px}
+.step.li .rv b{font-family:'Black Han Sans',sans-serif;font-weight:400;color:var(--ac);font-size:26px;margin-left:6px}
+.step.li .rq{border-top:2px solid var(--ac);padding-top:8px;color:var(--fg);font-weight:700}
+.step.li.sm{padding:10px 0}
+.step.li.sm .k{font-size:22px}
+.step.li.sm .rv{display:inline;margin-left:10px}
+.step.li.sm .rv b{font-size:20px}
+.step.li .gs{font-size:13px;color:var(--mu)}
+.step.li .gs a{color:var(--mu)}
+
+.card{display:block;border:2px solid #2A3530;padding:18px;margin:14px 0;text-decoration:none;color:var(--fg)}
+.card:hover{border-color:var(--ac)}
+.card .t{font-family:'Black Han Sans',sans-serif;font-size:24px;color:var(--fg)}
+.card .d{color:#CFD6D2;font-size:15px;margin-top:4px}
+.shot{display:block;width:100%;height:auto;border:2px solid #2A3530;margin:12px 0 4px}
+</style></head><body><main><div class="brand"><a href="../" style="color:inherit;text-decoration:none">토큰전쟁 자료실</a></div>
+<h1>클로드에게 <span class="hl">손</span> 달아 주는 법</h1>
+<p class="intro">'클로드 인 크롬'(Claude in Chrome)을 깔면 클로드가 크롬 브라우저 옆 창에서 지금 보는 페이지를 읽고, 탭을 오가며 버튼을 누르고, 내용을 입력해 줘요.</p>
+<div class="notice"><h3>준비물</h3><ul>
+<li>클로드 유료 요금제 (Pro 이상)</li>
+<li>컴퓨터의 구글 크롬 (다른 브라우저·휴대폰은 안 돼요)</li></ul></div>
+<div class="step"><span class="k">1</span><span class="lb">확장 프로그램 설치</span><h2>크롬 웹 스토어에서 'Claude' 검색 → 'Chrome에 추가'</h2>
+<p>앤트로픽(Anthropic)이 만든 공식 확장 프로그램인지 꼭 확인하세요.</p></div>
+<div class="step"><span class="k">2</span><span class="lb">로그인·고정</span><h2>클로드 계정으로 로그인하고, 툴바에 고정</h2>
+<p>오른쪽 위 퍼즐 모양 아이콘 → 'Claude' 옆 압정을 누르면 늘 보여요. 처음에 묻는 권한을 허용해 주세요.</p></div>
+<div class="step"><span class="k">3</span><span class="lb">일 맡기기</span><h2>툴바의 클로드 아이콘 → 옆 창에서 부탁하기</h2>
+<div class="pr"><pre>지금 보고 있는 쇼핑몰에서 김밥 메뉴 가격을 표로 정리해 줘.</pre><button>복사</button></div>
+<p>클로드가 작업하다 확인이 필요한 일이 생기면 멈추고 물어봐요.</p></div>
+<div class="src">공식 안내: <a href="https://support.claude.com/en/articles/12012173-getting-started-with-claude-in-chrome">Getting started with Claude in Chrome</a><br>@tokenwar_ai · 팔로우하고 AI를 재밌게 배워 보세요</div>
+</main><script>document.querySelectorAll('.pr button').forEach(b=>b.onclick=()=>{navigator.clipboard.writeText(b.previousElementSibling.innerText);b.textContent='복사됨';setTimeout(()=>b.textContent='복사',1500)})</script></body></html>

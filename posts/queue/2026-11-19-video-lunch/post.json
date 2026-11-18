@@ -1,0 +1,37 @@
+{
+  "approved": true,
+  "approved_at": "2026-11-19T08:22:41+09:00",
+ "id": "2026-11-19-video-lunch",
+ "date": "2026-11-19",
+ "type": "video",
+ "format": "buzz",
+ "prebuilt": true,
+ "title": "그냥 내가 할게",
+ "topic": "클로드 인 크롬 · 점심 주문 콩트",
+ "caption": "클로드한테 점심 하나 시켜 봤습니다 🍙\n클로드에게 '손' 달아 주는 법은 프로필 링크(자료실)에 정리해 뒀어요.\n\n이제 클로드가 브라우저에서 탭을 오가며 버튼을 누르고, 내용을 입력해 줘요.\n그래서 김밥 한 줄만 부탁했는데… 질문이 끝나질 않네요 😅\n그리고 결제 버튼은 꼭 직접 누르라고 합니다.\n\n※ 콩트입니다. 화면 속 '토큰분식'은 지어낸 가게예요.\n※ '치즈김밥?' 목소리: SBS 런닝맨 (사나)",
+ "hashtags": [
+  "#클로드",
+  "#AI활용법",
+  "#점심메뉴",
+  "#토큰전쟁"
+ ],
+ "publish_at": "2026-11-19T08:22:40+09:00",
+ "rights": "parody",
+ "credit": "SBS 런닝맨 (사나 '치즈김밥' 목소리)",
+ "rights_note": "운영자 결정(2026-11-19): 사나 실제 목소리 1.5초 사용·캡션에 출처, 위험 감수. 3D 캐릭터·목소리·화면 UI 직접 제작",
+ "sources": [
+  {
+   "name": "ZDNet Korea",
+   "url": "https://zdnet.co.kr/view/?no=20261118095958"
+  },
+  {
+   "name": "Claude 공식 안내",
+   "url": "https://support.claude.com/en/articles/12012173-getting-started-with-claude-in-chrome"
+  },
+  {
+   "name": "스브스 트렌즈(SBS 런닝맨)",
+   "url": "https://www.youtube.com/watch?v=wFbJo6tunGo"
+  }
+ ],
+ "note": "3D 대화 릴스. 영상은 experiments/office/render.py 완성본(prebuilt, scripts/lunch.json), 다시 렌더링하지 않음"
+}
