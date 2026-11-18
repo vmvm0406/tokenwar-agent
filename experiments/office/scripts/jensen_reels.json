@@ -117,16 +117,17 @@
    "say": "[pleading] 지피티! 너도 나 좀 도와줘.",
    "sub": "지피티, 너도 나 좀 도와줘.",
    "emo": "sad",
-   "break": 6.8
+   "break": 6.8,
+   "model": "eleven_v3",
+   "seed": 42
   },
   {
    "who": "jensen",
-   "say": "언제까지 나를 조롱할까? 나는 평생 조롱받아야 하는 사람... 이야아?",
+   "say": "[frustrated] 언제까지 나를 죠롱할까? 나는 평생 죠롱받아야 하는 사람이야?",
    "sub": "언제까지 나를 조롱할까?|나는 평생 조롱받아야 하는 사람이야?",
    "emo": "sad",
-   "model": "eleven_multilingual_v2",
-   "break": 0.15,
-   "style": 0.5
+   "model": "eleven_v3",
+   "break": 0.12
   },
   {
    "who": "chatgpt",
@@ -628,11 +629,11 @@
  ],
  "cards": [
   {
-   "text": "AI에게 눈을 달아 주는 법!|프로필에 정리해 뒀어요.",
+   "text": "AI에게 눈을 달아 주는 법!|프로필에 정리해 뒀어요.|팔로우하고 AI를 재밌게 배워 보세요!",
    "kind": "end",
    "line": 13,
    "dt": 1.6,
-   "d": 3.0
+   "d": 3.6
   }
  ],
  "audio": [
@@ -661,7 +662,7 @@
    "vol": 0.3
   }
  ],
- "tail": 4.8,
+ "tail": 5.2,
  "sfx": [
   {
    "line": 4,

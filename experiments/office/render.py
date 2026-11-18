@@ -72,7 +72,12 @@ def tts_single(l):
     sys.path.insert(0, str(ROOT / "agent"))
     import tts
     v = VOICES["voices"][l["who"]]
-    body = {"text": l["say"], "model_id": l["model"], "voice_settings": {"stability": 0.5, "similarity_boost": 0.75, "style": l.get("style", 0.3)}}
+    if l["model"] == "eleven_v3":   # v3 한 줄짜리 (대화 기능보다 발음이 안정적일 때)
+        body = {"text": l["say"], "model_id": "eleven_v3", "language_code": "ko", "voice_settings": {"stability": 0.5}}
+    else:
+        body = {"text": l["say"], "model_id": l["model"], "voice_settings": {"stability": 0.5, "similarity_boost": 0.75, "style": l.get("style", 0.3)}}
+    if l.get("seed") is not None:
+        body["seed"] = l["seed"]
     h = hashlib.sha256(json.dumps([v["voice_id"], body], ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:20]
     f = CACHE / f"one_{h}.mp3"
     if not f.exists():
@@ -305,6 +310,8 @@ def build(script):
     shots[0]["t"] = 0
     cards = timed("cards")
     for c in cards:
+        if c.get("kind") == "end":          # 끝 화면은 영상 끝까지
+            c["d"] = round(dur - c["t"] + 0.1, 3)
         if "until_line" in c:
             c["d"] = round(lines[c["until_line"]]["t"] - c["t"], 3)
     clips = {cid: clip_frames(cid, c) for cid, c in script.get("clips", {}).items()}
