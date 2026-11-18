@@ -102,6 +102,48 @@ def level_mouth(body, radius_x=0.17, radius_z=0.09):
     return slope
 
 
+def flatten_mouth(body, rx=0.18, rz=0.09, iters=60):
+    """입 주변 흔적 지우기 (운영자 2026-11-18): 튀어나온 입술 굴곡을 이웃 평균으로 펴서 매끈한 피부 면으로. 앞뒤(y)만 움직임."""
+    bm = bmesh.new()
+    bm.from_mesh(body.data)
+    region = [v for v in bm.verts if v.co.y < -0.25 and abs(v.co.x - FACE_X) < rx and abs(v.co.z - MOUTH_Z) < rz]
+    inside = set(region)
+    for _ in range(iters):
+        new = {}
+        for v in region:
+            nb = [e.other_vert(v) for e in v.link_edges]
+            if nb:
+                new[v] = sum(n.co.y for n in nb) / len(nb)
+        for v, y in new.items():
+            w = (1 - ((v.co.x - FACE_X) / rx) ** 2) * (1 - ((v.co.z - MOUTH_Z) / rz) ** 2)
+            v.co.y += (y - v.co.y) * max(0.0, min(1.0, w * 1.6))
+    bm.to_mesh(body.data)
+    bm.free()
+    body.data.update()
+    for p in body.data.polygons:
+        p.use_smooth = False
+
+
+def crescent(name, w, depth, curve, t):
+    """웃는 초승달 입: 위는 얕은 호, 아래는 깊은 호, 양 끝에서 만남 (x=가로, z=세로, y=두께)."""
+    n = 10
+    top = [(w * (-1 + 2 * k / n), curve * (-1 + 2 * k / n) ** 2) for k in range(n + 1)]
+    bot = [(w * (1 - 2 * k / n), curve * (1 - 2 * k / n) ** 2 - depth * (1 - (1 - 2 * k / n) ** 2)) for k in range(1, n)]
+    pts = top + bot
+    bm = bmesh.new()
+    fr = [bm.verts.new((x, -t / 2, z)) for x, z in pts]
+    bk = [bm.verts.new((x, t / 2, z)) for x, z in pts]
+    bm.faces.new(fr)
+    bm.faces.new(list(reversed(bk)))
+    for i in range(len(pts)):
+        j = (i + 1) % len(pts)
+        bm.faces.new((fr[j], fr[i], bk[i], bk[j]))
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
+    ob = B.bm_to_obj(bm, name)
+    B.shade_flat(ob)
+    return ob
+
+
 def clean_mouth(body):
     """입 주변 면을 옆 피부색으로 다시 칠함 (한쪽만 붉던 입술 색이 삐뚤어 보이게 함). 입은 캐릭터 입선으로 새로 그림."""
     import numpy as np, random
@@ -113,9 +155,9 @@ def clean_mouth(body):
         dx, dz = abs(c.x - FACE_X), c.z - MOUTH_Z
         if c.y > -0.3:
             continue
-        if dx < 0.11 and abs(dz) < 0.05:
+        if dx < 0.16 and abs(dz) < 0.07:
             inner.append(p)
-        elif 0.11 <= dx < 0.2 and abs(dz) < 0.07:
+        elif 0.16 <= dx < 0.25 and abs(dz) < 0.09:
             ring.append(tuple(attr.data[p.loop_indices[0]].color)[:3])
     if not ring:
         return
@@ -173,16 +215,11 @@ def add_face_parts(body):
         hl.location = (x + 0.022, y - 0.016, EYE_Z + 0.008)
         hl.data.materials.append(lid_m)
         hl.parent = face
-    # 평소 입: 양 끝이 살짝 올라간 캐릭터 입선 (입꼬리 대칭)
-    pts = []
-    for k in range(9):
-        t = -1 + 2 * k / 8
-        x = FACE_X + 0.062 * t
-        pts.append((x, front_y(bvh, x, MOUTH_Z) - 0.006, MOUTH_Z + 0.014 * t * t))
-    ml = B.arc_tube("jensen_real_mouth_smile", pts, 0.0065, ring=5)
-    ml.data.materials.append(mat("jr_mouthline", "#2A1612", 0.5))
-    ml.parent = face
-    # 말할 때 입: 어두운 입 안 (평소엔 납작 → three.js가 높이를 키워 벌림)
+    # 평소 입: 얼굴 비율에 맞는 웃는 초승달 (실제 입 폭 ≈ 0.15, 운영자 2026-11-18 "입이 달려 있긴 해야지, 비율에 맞게")
+    ml = crescent("jensen_real_mouth_smile", 0.078, 0.034, 0.013, 0.03)
+    ml.location = (FACE_X, front_y(bvh, FACE_X, MOUTH_Z) - 0.006, MOUTH_Z)
+    ml.data.materials.append(mat("jr_mouthline", "#3A1215", 0.6))
+    ml.parent = face    # 말할 때 입: 어두운 입 안 (평소엔 납작 → three.js가 높이를 키워 벌림)
     my = front_y(bvh, FACE_X, MOUTH_Z) - 0.006
     m = B.lowpoly_ellipsoid("jensen_real_mouth_open", 0.07, 0.03, 0.02, seg=12, rings=4)
     m.rotation_euler = (math.radians(90), 0, 0)
@@ -236,6 +273,7 @@ def main():
         symmetrize(body, side)
     else:
         level_mouth(body)
+        flatten_mouth(body)
         clean_mouth(body)
     recolor(body)
     for m in body.data.materials:  # 넓은 조명이 검은 재킷에 하얗게 반사돼 회색으로 보이던 것 줄이기
