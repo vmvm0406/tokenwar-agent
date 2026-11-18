@@ -34,17 +34,18 @@ def hex2rgb(h):
 # 캐릭터 설정: 로고 파일, 두께, 부풀림, 얼굴 자리
 CHARS = {
     # 클로드: 가운데 몸(얼굴 자리)을 키우고 광선은 그 둘레로 (운영자: 변형 OK, 알아볼 수만 있게, 얼굴은 크게)
-    "claude": dict(svg="claude.svg", half=0.12, h=0.22, hmin=0.04, power=0.6, dcap=0.40,
-                   disc=dict(r=0.46, sides=28), faces=3000,
+    # 통통하게(운영자 레퍼런스 2026-11-18): 두껍고 둥근 단면(power 0.5) + 윤곽을 사방으로 부풀림(dilate) + 큼직한 면(faces)
+    "claude": dict(svg="claude.svg", half=0.12, h=0.40, hmin=0.05, power=0.5, dcap=0.46,
+                   disc=dict(r=0.46, sides=28), faces=1100, dilate=0.07,
                    face=dict(cx=0.0, cy=0.02, eye_dx=0.16, eye_s=0.10, mouth_dy=-0.16, mouth_w=0.08,
                              blush=(0.28, -0.10, 0.075))),
-    "gemini": dict(svg="gemini.svg", half=0.12, h=0.32, hmin=0.03, power=0.6, dcap=None,
-                   disc=None, faces=2600,
+    "gemini": dict(svg="gemini.svg", half=0.12, h=0.42, hmin=0.04, power=0.5, dcap=None,
+                   disc=None, faces=900, dilate=0.06,
                    face=dict(cx=0.0, cy=0.03, eye_dx=0.17, eye_s=0.10, mouth_dy=-0.16, mouth_w=0.08,
                              blush=(0.29, -0.11, 0.07))),
     # 챗GPT: 가운데를 큰 육각 얼굴판으로 덮고 매듭 꽃잎은 바깥에 남김
-    "chatgpt": dict(svg="openai.svg", half=0.10, h=0.22, hmin=0.05, power=0.5, dcap=0.35,
-                    disc=dict(r=0.47, sides=6, rot=30), faces=3800,
+    "chatgpt": dict(svg="openai.svg", half=0.10, h=0.36, hmin=0.06, power=0.5, dcap=0.40,
+                    disc=dict(r=0.47, sides=6, rot=30), faces=1700, dilate=0.025,
                     face=dict(cx=0.0, cy=0.02, eye_dx=0.16, eye_s=0.10, mouth_dy=-0.16, mouth_w=0.08,
                               blush=(0.27, -0.10, 0.07))),
 }
@@ -195,6 +196,22 @@ def material(name, rgb=None, rough=0.55, vcol=False, emit=0.0):
     return m
 
 
+def dilate(ob, dist):
+    """사방으로 통통하게: 법선 방향으로 밀고 → 다시 리메시(겹친 곳 정리) → 살짝 매끈하게."""
+    me = ob.data
+    n = len(me.vertices)
+    co = np.empty(n * 3)
+    nr = np.empty(n * 3)
+    me.vertices.foreach_get("co", co)
+    me.vertices.foreach_get("normal", nr)
+    me.vertices.foreach_set("co", co + nr * dist)
+    me.update()
+    remesh(ob, 0.012)
+    m = ob.modifiers.new("sm", "SMOOTH")
+    m.factor, m.iterations = 0.5, 6
+    apply_mod(ob, m)
+
+
 def make_body(key, cfg):
     bm = svg_bmesh(os.path.join(HERE, "logos", cfg["svg"]))
     solid_from_flat(bm, cfg["half"])
@@ -204,6 +221,8 @@ def make_body(key, cfg):
     ob = bm_to_obj(bm, f"{key}_body")
     remesh(ob, 0.010)
     inflate(ob, cfg["half"], cfg["h"], cfg["hmin"], cfg["power"], cfg["dcap"])
+    if cfg.get("dilate"):
+        dilate(ob, cfg["dilate"])
     decimate(ob, cfg["faces"])
     shade_flat(ob)
     return ob
@@ -312,8 +331,22 @@ def setup_scene():
     sc.view_settings.view_transform = "Standard"
     w = bpy.data.worlds.new("w")
     w.use_nodes = True
-    w.node_tree.nodes["Background"].inputs["Color"].default_value = (0.004, 0.004, 0.005, 1)
+    w.node_tree.nodes["Background"].inputs["Color"].default_value = (0.006, 0.008, 0.016, 1)
     sc.world = w
+
+    # 미리보기용 책상 + 뒤쪽 꼬마전구(흐릿한 빛망울). 캐릭터 glb에는 들어가지 않음.
+    bm = bmesh.new()
+    bmesh.ops.create_grid(bm, x_segments=1, y_segments=1, size=40)
+    desk = bm_to_obj(bm, "desk")
+    desk.data.materials.append(material("desk", hex2rgb("#3B2A20"), rough=0.75))
+    bulb = material("bulb", hex2rgb("#FFB35A"), emit=12.0)
+    rng = random.Random(3)
+    for k in range(26):
+        bm = bmesh.new()
+        bmesh.ops.create_uvsphere(bm, u_segments=8, v_segments=6, radius=rng.uniform(0.08, 0.16))
+        b = bm_to_obj(bm, f"bulb{k}")
+        b.location = (rng.uniform(-9, 9), rng.uniform(7, 12), rng.uniform(1.2, 5.5))
+        b.data.materials.append(bulb)
 
     def area(name, loc, energy, color, size):
         d = bpy.data.lights.new(name, "AREA")
@@ -322,15 +355,19 @@ def setup_scene():
         o.location = loc
         o.rotation_euler = (Vector((0, 0, 1.0)) - Vector(loc)).to_track_quat("-Z", "Y").to_euler()
         return o
-    area("key", (3.0, -5.0, 4.5), 1300, (1.0, 0.95, 0.88), 4)
-    area("fill", (-5.0, -3.5, 2.0), 450, (0.85, 0.9, 1.0), 5)
-    area("rim", (0.5, 4.5, 4.0), 1100, (1.0, 1.0, 1.0), 3)
+    area("key", (-3.0, -4.5, 4.5), 1500, (1.0, 0.86, 0.68), 4)   # 따뜻한 스탠드 빛
+    area("fill", (5.0, -3.5, 2.0), 300, (0.7, 0.8, 1.0), 5)       # 모니터 쪽 찬 빛
+    area("rim", (1.5, 4.5, 4.0), 900, (1.0, 0.8, 0.6), 3)
     return sc
 
 
-def camera(sc, loc, target, lens=50):
+def camera(sc, loc, target, lens=50, focus=None, fstop=1.4):
     cd = bpy.data.cameras.new("cam")
     cd.lens = lens
+    if focus is not None:  # 얕은 심도 (뒤 꼬마전구가 빛망울로)
+        cd.dof.use_dof = True
+        cd.dof.focus_distance = (Vector(focus) - Vector(loc)).length
+        cd.dof.aperture_fstop = fstop
     cam = link(bpy.data.objects.new("cam", cd))
     cam.location = loc
     cam.rotation_euler = (Vector(target) - Vector(loc)).to_track_quat("-Z", "Y").to_euler()
@@ -361,7 +398,7 @@ def main():
         print(key, "faces", len(body.data.polygons))
         # 로고 평면(XY, 앞 +Z)을 세워서 앞이 -Y(카메라 쪽). glTF에서는 앞이 +Z.
         root.rotation_euler = (math.radians(90), 0, 0)
-        root.location = ((i - (len(ONLY) - 1) / 2) * 2.5, 0, 1.08)
+        root.location = ((i - (len(ONLY) - 1) / 2) * 2.7, 0, 1.0 + cfg.get("dilate", 0))
         roots[key] = root
     bpy.context.view_layer.update()
 
@@ -377,12 +414,17 @@ def main():
 
     tag = "_".join(ONLY)
     n = len(ONLY)
-    camera(sc, (0.9, -4.0 - 2.1 * n, 1.6), (0, 0, 1.05), lens=50)
+    camera(sc, (0.9, -4.2 - 2.2 * n, 1.5), (0, 0, 1.0), lens=50, focus=(0, 0, 1.0), fstop=2.8)
     render(sc, os.path.join(OUT, f"preview_{tag}.png"), 1920, 1080)
+    home = {k: r.location.copy() for k, r in roots.items()}
     for key, root in roots.items():
-        x = root.location.x
-        camera(sc, (x + 1.5, -3.2, 1.45), (x, 0, 1.05), lens=50)
-        render(sc, os.path.join(OUT, f"q34_{key}.png"), 1080, 1080)
+        for k, r in roots.items():  # 클로즈업은 한 캐릭터만 가운데에 (조명이 같게)
+            r.location = home[k] if k != key else (0, 0, home[k].z)
+            r.location.y = 0 if k == key else 50
+        bpy.context.view_layer.update()
+        x, z = 0.0, root.location.z
+        camera(sc, (x + 1.3, -3.3, 1.25), (x, 0, z), lens=50, focus=(x, -0.3, z), fstop=1.2)
+        render(sc, os.path.join(OUT, f"q34_{key}.png"), 1080, 1350)
 
 
 main()
