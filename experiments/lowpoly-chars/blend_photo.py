@@ -45,6 +45,15 @@ ht.ellipse([880, 560, 945, 610], fill=255)                        # 오른쪽 �
 ht.ellipse([435, 560, 500, 610], fill=255)
 rm = np.maximum(rm, np.array(hand_top))
 clean = cv2.inpaint(arr, rm, 9, cv2.INPAINT_TELEA)
+# 볼 색 고르게 (운영자 2026-11-18 "볼 색깔들 피부색"): 잔결은 남기고 큰 명암(그늘·얼룩)만 얼굴 가운데 피부색으로.
+# 가운데(눈·코·입)는 그대로, 가장자리로 갈수록 세게.
+f = clean.astype(np.float32)
+low = cv2.GaussianBlur(f, (0, 0), 40)
+skin = np.median(low[700:900, 560:800].reshape(-1, 3), axis=0)
+yy, xx = np.mgrid[0:f.shape[0], 0:f.shape[1]]
+r = np.sqrt(((xx - 682) / 210.0) ** 2 + ((yy - 740) / 250.0) ** 2)
+wmap = (np.clip((r - 0.55) / 0.5, 0, 1) ** 1.2 * 0.9)[..., None]
+clean = np.clip(f + wmap * (skin - low), 0, 255).astype(np.uint8)
 photo = Image.fromarray(clean).filter(ImageFilter.MedianFilter(5))   # 잡티만 살짝 정리
 photo.crop((300, 480, 1080, 760)).save(HERE / "out" / "photo_noglasses.png")
 
@@ -64,6 +73,9 @@ for y in range(300, 440):
     a = int(200 * max(0.0, min(1.0, (430 - y) / 110)) ** 1.5)
     for x in range(400, 965):
         gp[x, y] = a
+gd = ImageDraw.Draw(grad)        # 관자놀이 모서리도 흰머리로 부드럽게 (이마 양옆 주황 조각 없앰)
+for cx in (440, 925):
+    gd.ellipse([cx - 70, 380, cx + 70, 600], fill=210)
 grad = grad.filter(ImageFilter.GaussianBlur(25))
 out = Image.composite(Image.new("RGB", painted.size, (172, 172, 168)), out, grad)
 out.save(HERE / "ref" / OUT_NAME)
