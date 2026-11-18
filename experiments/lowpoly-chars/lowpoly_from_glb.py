@@ -16,8 +16,8 @@ from mathutils.geometry import barycentric_transform
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import build as B  # noqa: E402
 
-a = sys.argv[sys.argv.index("--") + 1:]
-SRC, NAME = a[0], a[1]
+a = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+SRC, NAME = (a + [None, None])[:2]   # 다른 스크립트가 불러 쓸 때는 비어 있어도 됨
 FACES = int(a[2]) if len(a) > 2 and a[2].isdigit() else 3000
 
 
@@ -108,4 +108,5 @@ def main():
     B.render(sc, os.path.join(B.OUT, f"{NAME}_lp_q34.png"), 1080, 1350)
 
 
-main()
+if __name__ == "__main__":
+    main()

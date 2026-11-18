@@ -345,4 +345,5 @@ def main():
     B.render(sc, os.path.join(B.OUT, "jensen_real_talk.png"), 1080, 1350)
 
 
-main()
+if __name__ == "__main__":
+    main()

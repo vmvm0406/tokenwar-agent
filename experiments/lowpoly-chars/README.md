@@ -18,3 +18,9 @@
 2. 표정 세트: 눈(기본·감음·^^·놀람·찡그림), 입(웃음·벌림 아/이/우·시무룩·당황), 눈썹, 볼 → glb에 이름 붙은 부품으로 넣고 three.js가 켜고 끔
 3. 주인공 '나' (형식 미정)
 4. three.js 틀(`experiments/threejs-test`)에서 glb 불러 연기·카메라·자막
+
+## 젠슨 황 (2026-11-18)
+- 참고 사진: Wikimedia Commons "Jensen huang stanford 2026-04-30 011.jpg", Anders Eidesvik, CC BY 4.0 (게시물 크레딧에 표기).
+- 사진 → Hugging Face 무료 데모 TRELLIS(운영자 무료 계정 HF_TOKEN) → `ref/jensen_trellis.glb`(커밋 안 함, 형태 참고용).
+- `jensen_simple.py`: 참고 형태를 뭉개 단순화 → 큼직한 면 → 영역별 단색(피부·머리·재킷) → 매끈한 입술, 네모 눈, 하프림 안경, 머리 1.35배. 결과 `out/jensen.glb`.
+- 예전 시도: `lowpoly_from_glb.py`(질감 그대로 로우폴리), `jensen_real.py`(그 위에 부품) — 원본 흔적이 남아 운영자가 단순화 재제작을 택함.
