@@ -34,6 +34,25 @@ def to_px(x, z):
     return EYE_PX[0] + (x - FACE_X) * SX, EYE_PX[1] - (z - EYE_Z) * SZ
 
 
+def hair_relief(ob):
+    """머리 덩어리에 살짝 결 (운영자 2026-11-18 "머리가 너무 매끈한 덩어리, 살짝 보완"): 앞→뒤로 넘긴 다발 굴곡 + 조금 부풀림.
+    머리 영역만(정수리·뒤통수·귀 위 옆머리, z 1.55 위), 크기 최대 2.2cm로 작게."""
+    me = ob.data
+    me.update()
+    cl = lambda t: max(0.0, min(1.0, t))
+    for v in me.vertices:
+        co = v.co
+        dx = co.x - FACE_X
+        w = max(cl((co.z - 1.84) / 0.06), cl((co.z - 1.55) / 0.08) * cl((co.y + 0.1) / 0.1),
+                cl((co.z - 1.62) / 0.06) * cl((abs(dx) - 0.3) / 0.05) * cl((co.y + 0.35) / 0.08))
+        if w <= 0:
+            continue
+        ang = math.atan2(dx, -co.y)
+        ridge = max(0.0, math.sin(ang * 12 + co.y * 4.0)) ** 1.5
+        co += v.normal * (w * (0.01 + 0.012 * ridge))
+    me.update()
+
+
 def build_shape():
     L.SRC = os.path.join(REF, "jensen_trellis.glb")
     src_bm, _ = L.load_src()
@@ -108,6 +127,19 @@ def project_uv(ob, w, h):
             elif kind == "jacket":
                 px, py = 150 + (px % 400), JACKET_V + (py % 120)
             uv.data[li].uv = (min(max(px / w, 0), 1), 1 - min(max(py / h, 0), 1))
+
+
+def photo_bounds(py):
+    """사진에서 얼굴 피부(귀 포함)의 가로 범위 (가장자리에서 12px 안쪽)."""
+    import bisect
+    ys = [r[0] for r in PHOTO_OUTLINE]
+    i = min(max(bisect.bisect_left(ys, py), 1), len(ys) - 1)
+    (y0, l0, r0), (y1, l1, r1) = PHOTO_OUTLINE[i - 1], PHOTO_OUTLINE[i]
+    t = min(max((py - y0) / (y1 - y0), 0), 1)
+    l, r = l0 + (l1 - l0) * t + 12, r0 + (r1 - r0) * t - 12
+    if 590 < py < 760:          # 귀 높이는 귀까지
+        l, r = min(l, 365), max(r, 1010)
+    return l, r
 
 
 def to_model(px, py):
