@@ -69,6 +69,7 @@
 | `ANALYSIS.md` / `scripts/weekly-analysis.ps1` | 주간 계정 분석 (월요일 run-local.ps1 첫 실행에서 claude -p): 새 벤치마크 계정 찾기·목록 고치기(`data/benchmark_changes.md`), `data/weekly_insights.md` "이번 주 우리에게 바로 적용할 3가지" |
 | `experiments/` | 아직 매일 작업에 안 들어간 시제품 (릴스 CRT 화면 등). README에 렌더링 방법 |
 | `NEXT.md` | 이어서 할 일, 운영자 답을 기다리는 것 |
+| `.claude/skills/` | 프로젝트 스킬: ECC(MIT)에서 고른 4개 — blender-motion-state-inspection(뼈대·포즈 점검), video-editing, content-engine(대본), brand-voice(말투 고정). 출처 `ECC-NOTICE.md` (2026-11-18) |
 | `MIGRATION.md` | 새 노트북으로 옮기기: 설치·로그인·작업 스케줄러 등록·memory 복사·확인 (로컬 설정을 바꾸면 같이 고침) |
 
 ## Code 탭 운영: 세션 하나 + 필요할 때 하위 에이전트 (운영자 결정, 2026-11-18)
