@@ -337,6 +337,11 @@ def main():
     B.render(sc, os.path.join(B.OUT, "jensen_n64_front.png"), 1080, 1350)
     B.camera(sc, (2.3, -3.3, fz + 0.2), (FACE_X, 0, fz - 0.1), lens=50, focus=(FACE_X, -0.4, fz), fstop=2.4)
     B.render(sc, os.path.join(B.OUT, "jensen_n64_q34.png"), 1080, 1350)
+    if "--all" in args:   # 전체 확인: 옆·뒤
+        B.camera(sc, (4.2, -0.2, fz + 0.1), (FACE_X, 0, fz - 0.1), lens=50, focus=(FACE_X, 0, fz), fstop=2.4)
+        B.render(sc, os.path.join(B.OUT, "jensen_n64_side.png"), 1080, 1350)
+        B.camera(sc, (-1.5, 3.8, fz + 0.4), (FACE_X, 0, fz - 0.1), lens=50, focus=(FACE_X, 0, fz), fstop=2.4)
+        B.render(sc, os.path.join(B.OUT, "jensen_n64_back.png"), 1080, 1350)
 
 
 main()
