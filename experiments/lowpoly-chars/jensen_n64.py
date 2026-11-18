@@ -97,24 +97,46 @@ def build_shape():
     return ob
 
 
+COLLAR_Z, NAPE_Z = 1.07, 1.27   # 깃 선, 뒤통수 머리 끝 선
+
+
+def cut_seams(ob):
+    """경계선을 따라 모델을 실제로 자름 (운영자 2026-11-18 "매끈하지 못한 거 수정"): 큰 삼각형이 경계에 걸쳐 톱니가 생기던 것.
+    깃 선(z 1.07, 가로) · 뒤통수 머리 끝(z 1.27, 가로) — 면이 이 선에서 딱 끊겨 색 경계가 반듯해짐."""
+    bm = bmesh.new()
+    bm.from_mesh(ob.data)
+    for z in (COLLAR_Z, NAPE_Z):
+        geom = bm.verts[:] + bm.edges[:] + bm.faces[:]
+        bmesh.ops.bisect_plane(bm, geom=geom, plane_co=(0, 0, z), plane_no=(0, 0, 1), dist=0.0005)
+    bmesh.ops.triangulate(bm, faces=bm.faces[:])
+    bm.to_mesh(ob.data)
+    bm.free()
+    for p in ob.data.polygons:
+        p.use_smooth = SMOOTH
+
+
 def project_uv(ob, w, h):
     me = ob.data
     uv = me.uv_layers.new(name="UVMap")
     for p in me.polygons:
         n, c = p.normal, p.center
         # 정면 사진에 안 찍힌 면(옆·뒤·정수리)은 사진 배경이 묻으므로 같은 재질 띠에서 가져옴
-        if c.z > 1.13:
-            dx = abs(c.x - FACE_X)
-            if n.y > 0.25 or (n.z > 0.6 and c.z > 1.85) or (n.y > -0.4 and c.z > 1.5 and (dx > 0.28 or c.y > -0.3)):
-                kind = "hair"   # 뒤통수·정수리·옆머리만 (콧등은 정면 사진 그대로)
-            elif n.y > -0.4 and abs(c.x - FACE_X) > 0.3:   # 얼굴 가장자리(귀 쪽)만. 코 옆면은 정면 사진 그대로
-                kind = "skin"
-            elif (n.z < -0.2 and 1.30 < c.z < 1.43 and dx < 0.16) or (n.z < -0.3 and c.z < 1.17) or (n.y > -0.3 and dx > 0.16):   # 코 밑·턱 밑·옆면만  # 아래를 향한 면(코 밑·턱 밑)·옆을 향한 면: 정면 사진이 늘어나 얼룩지므로 피부 견본
-                kind = "skin"
-            else:
-                kind = "front"
+        # 경계는 cut_seams가 자른 선(NAPE_Z 뒤통수 머리 끝, COLLAR_Z 깃)에 맞춤 → 색 경계가 반듯함
+        dx = abs(c.x - FACE_X)
+        back = c.y > -0.05
+        if c.z > NAPE_Z and (c.y > -0.12 or n.y > 0.25 or (n.z > 0.6 and c.z > 1.85)
+                             or (n.y > -0.4 and c.z > 1.5 and (dx > 0.28 or c.y > -0.3))):
+            kind = "hair"                            # 정수리·옆머리·귀 뒤·뒤통수 (흰머리)
+        elif back and c.z > COLLAR_Z:
+            kind = "neck"                            # 뒷목: 사진 목 피부
+        elif back or c.z <= COLLAR_Z:
+            kind = "jacket" if n.y > 0.25 else "front"   # 깃·어깨·몸: 사진 재킷
+        elif n.z < -0.2 and 1.30 < c.z < 1.43 and dx < 0.16:
+            kind = "skin"                            # 코 밑만 피부 견본
+        elif n.y > -0.4 and dx > 0.16 or c.z < 1.13:
+            kind = "photo_side"                      # 볼 옆·귀 쪽·턱 옆·앞목: 사진 투영, 사진 얼굴 가장자리에서 멈춤
         else:
-            kind = "jacket" if n.y > 0.25 else "front"
+            kind = "front"
         for li in p.loop_indices:
             co = me.vertices[me.loops[li].vertex_index].co
             px, py = to_px(co.x, co.z)
@@ -126,6 +148,12 @@ def project_uv(ob, w, h):
                 py = 348 + min(max((2.0 - co.z) / 0.9, 0), 1) * 45
             elif kind == "jacket":
                 px, py = 150 + (px % 400), JACKET_V + (py % 120)
+            elif kind == "neck":    # 사진 목 피부 띠 (x 600~760, y 1030~1100)
+                px = 600 + min(max((co.x - FACE_X + 0.3) / 0.6, 0), 1) * 160
+                py = 1030 + min(max((1.25 - co.z) / 0.3, 0), 1) * 70
+            elif kind == "photo_side":
+                lo, hi = photo_bounds(py)
+                px = min(max(px, lo), hi)
             uv.data[li].uv = (min(max(px / w, 0), 1), 1 - min(max(py / h, 0), 1))
 
 
@@ -312,6 +340,7 @@ def main():
     photo = args[args.index("--photo") + 1] if "--photo" in args else "jensen_mixed.png"   # 그린 얼굴 + 사진 50% (blend_photo.py)   # 게임 그림처럼 단순화한 질감 (toon_texture.py)
     src = bpy.data.images.load(os.path.join(REF, photo))
     W, H = src.size
+    cut_seams(ob)
     fit_to_photo(ob)          # 사진 윤곽에 모형 폭 맞춤 (예전 눈대중 좁히기 narrow_head 대신)
     project_uv(ob, W, H)
     img = src
