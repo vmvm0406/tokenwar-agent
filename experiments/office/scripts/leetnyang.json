@@ -1,0 +1,669 @@
+{
+ "_note": "확정 대본 (운영자 2026-11-18) leetnyang.md. 화면 속 영상: out/clips (커밋 안 함), 처음 나올 때 출처 1.6초. 수사 보드 그림: scripts/leetnyang_board.jpg (허깅페이스 FLUX.1-schnell, 글자 없음, 가운데 빈 액자).",
+ "cast": [
+  {
+   "key": "man",
+   "human": true
+  },
+  {
+   "key": "claude",
+   "x": -0.33,
+   "z": 0.22,
+   "yaw": 0.3,
+   "size": 0.36
+  },
+  {
+   "key": "gemini",
+   "x": 0.0,
+   "z": 0.46,
+   "yaw": 0.0,
+   "size": 0.27
+  },
+  {
+   "key": "chatgpt",
+   "x": 0.33,
+   "z": 0.22,
+   "yaw": -0.3,
+   "size": 0.36
+  }
+ ],
+ "intro": {
+  "clip": "experiments/office/out/clips/jMv-dnfq2bg_a.mp4",
+  "from": 15.9,
+  "to": 18.4,
+  "fade": 0.3,
+  "pad": 0.3
+ },
+ "clips": {
+  "news": {
+   "file": "experiments/office/out/clips/jMv-dnfq2bg_a.mp4",
+   "from": 15.9,
+   "to": 18.6,
+   "land": true,
+   "credit": "엠빅뉴스"
+  },
+  "mimi1": {
+   "file": "experiments/office/out/clips/eqDX_z4CBxg_a.mp4",
+   "from": 30.0,
+   "to": 35.0,
+   "land": true,
+   "credit": "미미미누"
+  },
+  "mimi2": {
+   "file": "experiments/office/out/clips/MLRVBz-jkY0_a.mp4",
+   "from": 4.4,
+   "to": 10.2,
+   "land": true,
+   "credit": "미미미누"
+  },
+  "ytn": {
+   "file": "experiments/office/out/clips/lfVJzUzx2wE_a.mp4",
+   "from": 4.0,
+   "to": 10.0,
+   "land": true,
+   "credit": "YTN 사건영수증"
+  },
+  "skh": {
+   "file": "experiments/office/out/clips/yJc9O8ogyuM_a.mp4",
+   "from": 47.0,
+   "to": 53.7,
+   "land": true,
+   "res": 1920,
+   "credit": "영화 '살인의 추억'(2003)"
+  },
+  "board": {
+   "image": "experiments/office/scripts/leetnyang_board.jpg"
+  }
+ },
+ "lines": [
+  {
+   "who": "man",
+   "say": "[suspicious] 야... 이거 너희 중에 누구야?",
+   "sub": "야... 이거 너희 중에 누구야?",
+   "emo": "angry"
+  },
+  {
+   "who": "chatgpt",
+   "say": "[nervously] 목요일에 말씀드릴게요.",
+   "sub": "목요일에 말씀드릴게요.",
+   "emo": "embarrassed"
+  },
+  {
+   "who": "gemini",
+   "say": "[cheerfully] 저는 일단 아니에요!",
+   "sub": "저는 일단 아니에요!",
+   "emo": "happy"
+  },
+  {
+   "who": "claude",
+   "say": "[calmly] 리트냥이는 아직 의혹 중이에요. 목요일에 말해 준대잖아요.",
+   "sub": "리트냥이는 아직 의혹 중이에요.|목요일에 말해 준대잖아요.",
+   "emo": "neutral"
+  },
+  {
+   "who": "man",
+   "say": "[curious] 그러면 클로드 너가, 무슨 사건인지 간단하게 브리핑해 줘.",
+   "sub": "그러면 클로드 너가 무슨 사건인지|간단하게 브리핑해 줘.",
+   "emo": "neutral"
+  },
+  {
+   "who": "claude",
+   "say": "[cheerfully] 네, 영상들 보고 정리해 볼게요.",
+   "sub": "네, 영상들 보고 정리해 볼게요.",
+   "emo": "smile"
+  },
+  {
+   "who": "man",
+   "say": "[impressed] 클로드 너... 그림 실력 좀 늘었다...?",
+   "sub": "클로드 너... 그림 실력 좀 늘었다...?",
+   "emo": "surprised",
+   "break": 2.6
+  },
+  {
+   "who": "claude",
+   "say": "[casually] 아, 그거 뭐 연결해서 그래요.",
+   "sub": "아, 그거 뭐 연결해서 그래요.",
+   "emo": "smile",
+   "note": "* watch 스킬 + 허깅페이스 그림 연결"
+  },
+  {
+   "who": "chatgpt",
+   "say": "[thoughtfully] 근데... 그렇게 시험 통과한 사람들도, 아마 있지 않을까?",
+   "sub": "근데... 그렇게 시험 통과한 사람들도|아마 있지 않을까?",
+   "emo": "neutral"
+  },
+  {
+   "who": "claude",
+   "say": "[quietly] 그렇겠지.",
+   "sub": "그렇겠지.",
+   "emo": "neutral"
+  },
+  {
+   "who": "chatgpt",
+   "say": "[gasps] 헉!",
+   "emo": "surprised",
+   "overlay": {
+    "line": 9,
+    "dt": 6.35,
+    "vol": 0.7
+   }
+  },
+  {
+   "who": "gemini",
+   "say": "[gasps] 헉!",
+   "emo": "surprised",
+   "overlay": {
+    "line": 9,
+    "dt": 6.5,
+    "vol": 0.7
+   }
+  },
+  {
+   "who": "claude",
+   "say": "[gasps] 헉...!",
+   "emo": "surprised",
+   "overlay": {
+    "line": 9,
+    "dt": 6.65,
+    "vol": 0.7
+   }
+  }
+ ],
+ "tail": 9.8,
+ "screens": [
+  {
+   "t": 0,
+   "screen": "monitor",
+   "clip": "news",
+   "hold": true
+  },
+  {
+   "line": 1,
+   "dt": 0.0,
+   "screen": "monitor",
+   "clip": "mimi1"
+  },
+  {
+   "line": 2,
+   "dt": 0.0,
+   "screen": "monitor",
+   "clip": "mimi2"
+  },
+  {
+   "line": 3,
+   "dt": 0.1,
+   "screen": "monitor",
+   "clip": "ytn"
+  },
+  {
+   "line": 5,
+   "end": true,
+   "dt": 0.15,
+   "screen": "monitor",
+   "clip": "mimi1"
+  },
+  {
+   "line": 5,
+   "end": true,
+   "dt": 0.75,
+   "screen": "monitor",
+   "clip": "ytn"
+  },
+  {
+   "line": 5,
+   "end": true,
+   "dt": 1.35,
+   "screen": "monitor",
+   "clip": "mimi2"
+  },
+  {
+   "line": 5,
+   "end": true,
+   "dt": 1.95,
+   "screen": "monitor",
+   "bg": "board"
+  },
+  {
+   "line": 9,
+   "dt": 0.0,
+   "screen": "monitor",
+   "clip": "news",
+   "from": 1.0
+  },
+  {
+   "line": 9,
+   "dt": 0.55,
+   "screen": "monitor",
+   "bg": "board",
+   "clip": "skh",
+   "rect": [
+    0.368,
+    0.303,
+    0.251,
+    0.507
+   ],
+   "grow": {
+    "dt": 1.6,
+    "d": 2.6
+   },
+   "hold": true,
+   "noborder": true
+  }
+ ],
+ "shots": [
+  {
+   "t": 0,
+   "cam": "mon",
+   "z0": 1.25,
+   "z1": 1.5
+  },
+  {
+   "line": 0,
+   "dt": -0.15,
+   "cam": "wide"
+  },
+  {
+   "line": 1,
+   "dt": -0.1,
+   "cam": "close:chatgpt"
+  },
+  {
+   "line": 2,
+   "dt": -0.1,
+   "cam": "close:gemini"
+  },
+  {
+   "line": 3,
+   "dt": -0.1,
+   "cam": "close:claude"
+  },
+  {
+   "line": 4,
+   "dt": -0.1,
+   "cam": "close:man"
+  },
+  {
+   "line": 5,
+   "dt": -0.1,
+   "cam": "close:claude"
+  },
+  {
+   "line": 5,
+   "end": true,
+   "dt": 0.05,
+   "cam": "mon",
+   "z0": 1.0,
+   "z1": 1.15
+  },
+  {
+   "line": 6,
+   "dt": -0.1,
+   "cam": "close:man"
+  },
+  {
+   "line": 7,
+   "dt": -0.1,
+   "cam": "close:claude"
+  },
+  {
+   "line": 8,
+   "dt": -0.1,
+   "cam": "close:chatgpt"
+  },
+  {
+   "line": 9,
+   "dt": -0.1,
+   "cam": "close:claude"
+  },
+  {
+   "line": 9,
+   "end": true,
+   "dt": 0.2,
+   "cam": "mon",
+   "z0": 1.0,
+   "z1": 3.15,
+   "zd": 3.6
+  },
+  {
+   "line": 9,
+   "dt": 6.3,
+   "cam": "wide"
+  }
+ ],
+ "events": [
+  {
+   "line": 0,
+   "dt": 0.0,
+   "who": "man",
+   "do": "look",
+   "at": "claude"
+  },
+  {
+   "line": 0,
+   "dt": 0.7,
+   "who": "man",
+   "do": "look",
+   "at": "chatgpt"
+  },
+  {
+   "line": 0,
+   "dt": 0.0,
+   "who": "claude",
+   "do": "look",
+   "at": "man"
+  },
+  {
+   "line": 0,
+   "dt": 0.0,
+   "who": "chatgpt",
+   "do": "look",
+   "at": "man"
+  },
+  {
+   "line": 0,
+   "dt": 0.0,
+   "who": "gemini",
+   "do": "look",
+   "at": "man"
+  },
+  {
+   "line": 1,
+   "dt": 0.0,
+   "who": "claude",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 1,
+   "dt": 0.0,
+   "who": "chatgpt",
+   "do": "look",
+   "at": "camera"
+  },
+  {
+   "line": 1,
+   "dt": 0.1,
+   "who": "chatgpt",
+   "do": "tremble",
+   "d": 1.0
+  },
+  {
+   "line": 1,
+   "dt": 0.0,
+   "who": "man",
+   "do": "look",
+   "at": "chatgpt"
+  },
+  {
+   "line": 2,
+   "dt": 0.0,
+   "who": "man",
+   "do": "look",
+   "at": "gemini"
+  },
+  {
+   "line": 2,
+   "dt": 0.05,
+   "who": "gemini",
+   "do": "hop"
+  },
+  {
+   "line": 3,
+   "dt": 0.0,
+   "who": "claude",
+   "do": "look",
+   "at": "man"
+  },
+  {
+   "line": 3,
+   "dt": 0.0,
+   "who": "man",
+   "do": "look",
+   "at": "claude"
+  },
+  {
+   "line": 3,
+   "dt": 0.0,
+   "who": "chatgpt",
+   "do": "look",
+   "at": "claude"
+  },
+  {
+   "line": 3,
+   "dt": 0.0,
+   "who": "gemini",
+   "do": "look",
+   "at": "claude"
+  },
+  {
+   "line": 4,
+   "dt": 0.2,
+   "who": "man",
+   "do": "tilt",
+   "d": 1.4
+  },
+  {
+   "line": 5,
+   "dt": 0.1,
+   "who": "claude",
+   "do": "nod"
+  },
+  {
+   "line": 5,
+   "end": true,
+   "dt": 0.0,
+   "who": "claude",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 5,
+   "end": true,
+   "dt": 0.0,
+   "who": "man",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 6,
+   "dt": 0.0,
+   "who": "man",
+   "do": "look",
+   "at": "claude"
+  },
+  {
+   "line": 7,
+   "dt": 0.0,
+   "who": "claude",
+   "do": "look",
+   "at": "man"
+  },
+  {
+   "line": 8,
+   "dt": 0.0,
+   "who": "chatgpt",
+   "do": "look",
+   "at": "claude"
+  },
+  {
+   "line": 8,
+   "dt": 0.0,
+   "who": "man",
+   "do": "look",
+   "at": "chatgpt"
+  },
+  {
+   "line": 9,
+   "dt": 0.0,
+   "who": "claude",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 9,
+   "end": true,
+   "dt": 0.0,
+   "who": "man",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 9,
+   "end": true,
+   "dt": 0.0,
+   "who": "chatgpt",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 9,
+   "end": true,
+   "dt": 0.0,
+   "who": "gemini",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 9,
+   "dt": 6.3,
+   "who": "man",
+   "emo": "surprised"
+  },
+  {
+   "line": 9,
+   "dt": 6.4,
+   "who": "chatgpt",
+   "do": "hop"
+  },
+  {
+   "line": 9,
+   "dt": 6.55,
+   "who": "gemini",
+   "do": "hop"
+  },
+  {
+   "line": 9,
+   "dt": 6.7,
+   "who": "claude",
+   "do": "hop"
+  },
+  {
+   "line": 9,
+   "dt": 7.4,
+   "who": "claude",
+   "do": "look",
+   "at": "camera"
+  },
+  {
+   "line": 9,
+   "dt": 7.55,
+   "who": "chatgpt",
+   "do": "look",
+   "at": "camera"
+  },
+  {
+   "line": 9,
+   "dt": 7.7,
+   "who": "gemini",
+   "do": "look",
+   "at": "camera"
+  },
+  {
+   "line": 9,
+   "dt": 7.8,
+   "who": "man",
+   "do": "look",
+   "at": "camera"
+  }
+ ],
+ "cards": [
+  {
+   "t": 0,
+   "d": 2.8,
+   "kind": "title",
+   "text": "리트 만점자 'AI 부정행위' 의혹"
+  },
+  {
+   "t": 0.85,
+   "d": 1.6,
+   "kind": "sub",
+   "y": 1060,
+   "text": "그거 제가 목요일날 말씀드릴게요."
+  },
+  {
+   "line": 9,
+   "dt": 9.1,
+   "kind": "end",
+   "text": "팔로우하고|AI를 재밌게 배워 보세요!"
+  }
+ ],
+ "audio": [
+  {
+   "line": 9,
+   "end": true,
+   "dt": 0.6,
+   "clip": "skh",
+   "from": 47.6,
+   "to": 53.7,
+   "vol": 0.35
+  }
+ ],
+ "sfx": [
+  {
+   "line": 1,
+   "dt": 0.0,
+   "kind": "swipe"
+  },
+  {
+   "line": 2,
+   "dt": 0.0,
+   "kind": "swipe"
+  },
+  {
+   "line": 3,
+   "dt": 0.1,
+   "kind": "swipe"
+  },
+  {
+   "line": 5,
+   "end": true,
+   "dt": 0.15,
+   "kind": "swipe"
+  },
+  {
+   "line": 5,
+   "end": true,
+   "dt": 0.75,
+   "kind": "swipe"
+  },
+  {
+   "line": 5,
+   "end": true,
+   "dt": 1.35,
+   "kind": "swipe"
+  },
+  {
+   "line": 5,
+   "end": true,
+   "dt": 1.95,
+   "kind": "ding"
+  },
+  {
+   "line": 9,
+   "dt": 0.0,
+   "kind": "swipe"
+  },
+  {
+   "line": 9,
+   "dt": 0.55,
+   "kind": "swipe"
+  },
+  {
+   "line": 9,
+   "end": true,
+   "dt": 3.6,
+   "kind": "boom",
+   "vol": 0.8
+  }
+ ]
+}

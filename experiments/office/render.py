@@ -144,14 +144,28 @@ CLIP_FPS = 15
 
 def clip_frames(cid, c):
     """화면 속 릴스: 구간을 15fps 작은 JPEG로 (out/clipframes/<id>/). 원본·프레임 모두 커밋 안 함."""
+    """선택 필드 (리트냥이, 2026-11-18): "land": true → 가로 영상(뉴스·영화)을 16:9로 (모니터 꽉 채움, "res" 가로 픽셀, 기본 1280),
+    "image": 경로 → 정지 그림 한 장 (수사 보드 등, from/to 없음)."""
     d = HERE / "out" / "clipframes" / cid
-    if not d.exists() or not any(d.iterdir()):
+    key = json.dumps(c, sort_keys=True)
+    if d.exists() and (d / "key.txt").exists() and (d / "key.txt").read_text(encoding="utf-8") != key:
+        shutil.rmtree(d)          # 구간·해상도를 바꾸면 다시 뽑음
+    if not d.exists() or not any(d.glob("*.jpg")):
         d.mkdir(parents=True, exist_ok=True)
-        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", str(c["from"]), "-to", str(c["to"]), "-i", str(ROOT / c["file"]),
-                        "-vf", f"fps={CLIP_FPS},scale=360:640:force_original_aspect_ratio=increase,crop=360:640", "-q:v", "4",
-                        str(d / "%04d.jpg")], check=True)
+        if c.get("image"):
+            subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(ROOT / c["image"]), "-q:v", "2", str(d / "0001.jpg")], check=True)
+        else:
+            if c.get("land"):
+                w = int(c.get("res", 1280)); h = w * 9 // 16
+                vf = f"fps={CLIP_FPS},scale={w}:{h}:force_original_aspect_ratio=increase,crop={w}:{h}"
+            else:
+                vf = f"fps={CLIP_FPS},scale=360:640:force_original_aspect_ratio=increase,crop=360:640"
+            subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", str(c["from"]), "-to", str(c["to"]), "-i", str(ROOT / c["file"]),
+                            "-vf", vf, "-q:v", "3" if c.get("land") else "4", str(d / "%04d.jpg")], check=True)
+        (d / "key.txt").write_text(key, encoding="utf-8")
     n = len(list(d.glob("*.jpg")))
-    return {"n": n, "fps": CLIP_FPS, "base": f"/experiments/office/out/clipframes/{cid}/", "credit": c.get("credit", "")}
+    return {"n": n, "fps": CLIP_FPS, "base": f"/experiments/office/out/clipframes/{cid}/", "credit": c.get("credit", ""),
+            "land": bool(c.get("land") or c.get("image"))}
 
 
 def whisper_align(mp3, says):
@@ -422,6 +436,7 @@ def encode(tl, frames_dir, mp4):
         "crunch": "anoisesrc=d=0.08:c=pink:a=0.9:r=44100,bandpass=f=2600:w=1800,afade=t=out:st=0.02:d=0.06,volume=0.5",
         "pop": "aevalsrc='0.4*sin(2*PI*190*t)*exp(-t*28)':d=0.18:s=44100",
         "tiptoe": "aevalsrc='0.22*sin(2*PI*880*t)*exp(-t*40)':d=0.1:s=44100",
+        "boom": "aevalsrc='0.55*sin(2*PI*52*t)*exp(-t*1.6)+0.18*sin(2*PI*104*t)*exp(-t*3)':d=2.4:s=44100",   # 쿵 (긴장되는 순간)
     }
     for i, x in enumerate(tl.get("sfx", [])):
         d = int(x["t"] * 1000)

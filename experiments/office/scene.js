@@ -65,14 +65,21 @@ async function loadClips(clips) {
   await Promise.all(jobs);
 }
 function makeScreen(w, h, landscape) {
-  const cv = document.createElement('canvas'); cv.width = landscape ? 640 : 360; cv.height = landscape ? 400 : 640;
+  // 모니터는 크게 (카메라가 다가가 화면을 꽉 채워도 덜 흐리게, 리트냥이 2026-11-18). 비율은 화면 판(0.8x0.46)과 같게
+  const cv = document.createElement('canvas'); cv.width = landscape ? 1920 : 360; cv.height = landscape ? 1104 : 640;
   const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
   const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: tex, toneMapped: false }));
   return { cv, g: cv.getContext('2d'), tex, mesh: m, landscape };
 }
-function clipFrame(id, dt) {   // 시각 dt(초)의 프레임 (끝나면 반복)
+function clipFrame(id, dt, hold) {   // 시각 dt(초)의 프레임 (끝나면 반복, hold면 마지막 장면에서 멈춤)
   const c = S.clips[id], imgs = CLIPIMG[id];
-  return imgs[Math.floor(Math.max(0, dt) * c.fps) % imgs.length];
+  const k = Math.floor(Math.max(0, dt) * c.fps);
+  return imgs[hold ? Math.min(k, imgs.length - 1) : k % imgs.length];
+}
+function cover(g, im, x, y, w, h) {   // 그림을 칸에 꽉 채우기 (비율 유지, 넘치는 쪽 잘라냄)
+  const iw = im.naturalWidth || im.width, ih = im.naturalHeight || im.height;
+  const s = Math.max(w / iw, h / ih), sw = w / s, sh = h / s;
+  g.drawImage(im, (iw - sw) / 2, (ih - sh) / 2, sw, sh, x, y, w, h);
 }
 const SWIPE = 0.35;
 function drawScreen(sc, name, t) {
@@ -80,13 +87,26 @@ function drawScreen(sc, name, t) {
   const cur = list[list.length - 1], prev = list[list.length - 2];
   const g = sc.g, W2 = sc.cv.width, H2 = sc.cv.height;
   g.fillStyle = '#05070a'; g.fillRect(0, 0, W2, H2);
-  const put = (s, off) => {   // 세로 릴스를 화면에 (모니터는 가운데 세로로, 양옆 어둡게 = 인스타 웹)
-    if (!s || !s.clip) return;
-    const im = clipFrame(s.clip, t - s.t);
-    if (sc.landscape) { const h = H2, w = h * 9 / 16; g.drawImage(im, (W2 - w) / 2, off * H2, w, h); }
+  // 화면 일정 선택 필드 (리트냥이 2026-11-18): bg(바탕 그림 clip id), rect [x,y,w,h](0~1, 바탕 위 액자 칸), grow {dt, d}(액자 칸이 화면 전체로 커짐), hold(마지막 장면에서 멈춤), from(클립 시작 초), noborder(액자 테두리 안 그림: 바탕 그림에 액자가 있을 때)
+  const put = (s, off) => {   // 세로 릴스를 화면에 (모니터는 가운데 세로로, 양옆 어둡게 = 인스타 웹). 가로 영상(land)은 꽉 채움
+    if (!s) return;
+    if (s.bg) cover(g, clipFrame(s.bg, 0), 0, off * H2, W2, H2);
+    if (!s.clip && !s.rect) return;
+    let [rx, ry, rw, rh] = s.rect || [0, 0, 1, 1];
+    if (s.rect && s.grow) {
+      const u = ease((t - s.t - (s.grow.dt || 0)) / (s.grow.d || 1));
+      rx = lerp(rx, 0, u); ry = lerp(ry, 0, u); rw = lerp(rw, 1, u); rh = lerp(rh, 1, u);
+    }
+    const X = rx * W2, Y = ry * H2 + off * H2, WW = rw * W2, HH = rh * H2;
+    if (s.rect && !s.noborder) { const b = Math.max(4, WW * 0.03); g.fillStyle = '#efe9dc'; g.fillRect(X - b, Y - b, WW + 2 * b, HH + 2 * b); g.fillStyle = '#0a0a0a'; g.fillRect(X, Y, WW, HH); }
+    if (!s.clip) return;
+    const im = clipFrame(s.clip, t - s.t + (s.from || 0), s.hold);
+    if (S.clips[s.clip].land || s.rect) cover(g, im, X, Y, WW, HH);
+    else if (sc.landscape) { const h = H2, w = h * 9 / 16; g.drawImage(im, (W2 - w) / 2, off * H2, w, h); }
     else g.drawImage(im, 0, off * H2, W2, H2);
   };
-  if (cur && prev && cur.clip && prev.clip && t - cur.t < SWIPE) {   // 위로 넘기기
+  const shown = (s) => s && (s.clip || s.bg);
+  if (shown(cur) && shown(prev) && !cur.cut && t - cur.t < SWIPE) {   // 위로 넘기기
     const u = ease((t - cur.t) / SWIPE);
     put(prev, -u); put(cur, 1 - u);
   } else put(cur, 0);
@@ -487,6 +507,17 @@ function camFor(s, t) {
     const hu = Object.values(cast).find((c) => c.human), f = POS[hu.key].face;
     return { pos: f.clone().add(new THREE.Vector3(0.1, 0.06, 2.7)), look: f.clone().add(new THREE.Vector3(0, -0.06, 0)), focus: f.clone().add(new THREE.Vector3(0, 0, 1.2)), ap: 0.02, phone: u };
   }
+  if (kind === 'mon') {   // 모니터 정면으로 다가가기 (리트냥이 2026-11-18): z0→z1 (1 = 모니터 가로가 화면 가로에 꼭 맞음, 약 3.1 = 세로까지 꽉 채움),
+    // zd(초, 확대에 걸리는 시간, 기본 컷 길이), ox/oy(모니터 안 겨냥 위치 -0.5~0.5). 카메라와 화면 사이 물건(캐릭터)은 가까운 자르기 면으로 안 보이게
+    const m = SCR.monitor.mesh, c = m.getWorldPosition(new THREE.Vector3()), q = m.getWorldQuaternion(new THREE.Quaternion());
+    const n = new THREE.Vector3(0, 0, 1).applyQuaternion(q), right = new THREE.Vector3(1, 0, 0).applyQuaternion(q), up = new THREE.Vector3(0, 1, 0).applyQuaternion(q);
+    const hf = Math.atan(Math.tan(THREE.MathUtils.degToRad(18)) * W / H), fitW = 0.4 / Math.tan(hf);
+    const uz = ease(clamp((t - s.t) / (s.zd || Math.max(0.5, nextT - s.t))));
+    const z = Math.exp(lerp(Math.log(s.z0 || 1), Math.log(s.z1 || s.z0 || 1), uz)), d = fitW / z;
+    look = c.clone().addScaledVector(right, (s.ox || 0) * 0.8).addScaledVector(up, (s.oy || 0) * 0.46);
+    pos = look.clone().addScaledVector(n, d);
+    return { pos, look, focus: look.clone(), ap: 0.0004, near: Math.max(0.05, d - 0.1) };
+  }
   if (kind === 'wide') {
     look = new THREE.Vector3(0, deskY + 0.5, -0.15);
     pos = new THREE.Vector3(0.05, deskY + 0.85, 3.25);
@@ -545,6 +576,17 @@ function cards(t) {
       g2.font = '700 34px Wanted'; g2.textAlign = 'left';
       g2.fillStyle = 'rgba(0,0,0,0.55)'; g2.fillRect(64, 296, g2.measureText(c.text).width + 32, 54);
       g2.fillStyle = '#00FF66'; g2.fillText(c.text, 80, 324);
+    } else if (c.kind === 'title') {   // 훅 제목 (위쪽, 초록 큰 글자, 리트냥이 2026-11-18)
+      g2.font = '700 62px Wanted';
+      const rows = wrap(c.text, 900), lh = 80, w = Math.max(...rows.map((r) => g2.measureText(r).width)) + 56;
+      g2.fillStyle = 'rgba(0,0,0,0.82)'; g2.fillRect((W - w) / 2, 300, w, rows.length * lh + 34);
+      g2.fillStyle = '#00FF66'; rows.forEach((r, i) => g2.fillText(r, W / 2, 300 + 17 + lh * (i + 0.5)));
+    } else if (c.kind === 'sub') {     // 화면 속 영상의 말 자막 (대사 자막과 같은 자리·모양)
+      g2.font = '700 50px Wanted';
+      const rows = wrap(c.text, 780), lh = 66, pad = 26, w = Math.max(...rows.map((r) => g2.measureText(r).width)) + pad * 2, h = rows.length * lh + pad * 1.4;
+      const y = c.y || 360;
+      g2.fillStyle = 'rgba(0,0,0,0.62)'; g2.beginPath(); g2.roundRect((W - w) / 2, y, w, h, 14); g2.fill();
+      g2.fillStyle = '#fff'; rows.forEach((r, i) => g2.fillText(r, W / 2, y + pad * 0.7 + lh * (i + 0.5)));
     } else if (c.kind === 'time') {
       g2.fillStyle = 'rgba(0,0,0,0.88)'; g2.fillRect(0, 0, W, H);
       g2.font = '700 96px Wanted'; g2.fillStyle = '#fff'; g2.fillText(c.text, W / 2, H / 2 - 40);
@@ -568,6 +610,8 @@ window.twFrame = (t) => {
   for (const k in cast) (cast[k].human ? animHuman : animAI)(cast[k], t);
   const cam = camFor(shotAt(t), t);
   camera.position.copy(cam.pos); camera.lookAt(cam.look); camera.updateMatrixWorld();
+  const near = cam.near || 0.05;
+  if (camera.near !== near) { camera.near = near; camera.updateProjectionMatrix(); if (bokeh.uniforms.nearClip) bokeh.uniforms.nearClip.value = near; }
   bokeh.uniforms.focus.value = camera.position.distanceTo(cam.focus);
   bokeh.uniforms.aperture.value = cam.ap; bokeh.uniforms.maxblur.value = 0.014;
   composer.render();
