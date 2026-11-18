@@ -29,7 +29,7 @@
  ],
  "intro": {
   "clip": "experiments/office/out/clips/jMv-dnfq2bg_a.mp4",
-  "from": 15.9,
+  "from": 14.6,
   "to": 18.4,
   "fade": 0.3,
   "pad": 0.3
@@ -37,31 +37,35 @@
  "clips": {
   "news": {
    "file": "experiments/office/out/clips/jMv-dnfq2bg_a.mp4",
-   "from": 15.9,
+   "from": 14.6,
    "to": 18.6,
    "land": true,
-   "credit": "엠빅뉴스"
+   "credit": "엠빅뉴스",
+   "res": 1920
   },
   "mimi1": {
    "file": "experiments/office/out/clips/eqDX_z4CBxg_a.mp4",
    "from": 30.0,
    "to": 35.0,
    "land": true,
-   "credit": "미미미누"
+   "credit": "미미미누",
+   "res": 1920
   },
   "mimi2": {
    "file": "experiments/office/out/clips/MLRVBz-jkY0_a.mp4",
    "from": 4.4,
    "to": 10.2,
    "land": true,
-   "credit": "미미미누"
+   "credit": "미미미누",
+   "res": 1920
   },
   "ytn": {
    "file": "experiments/office/out/clips/lfVJzUzx2wE_a.mp4",
    "from": 4.0,
    "to": 10.0,
    "land": true,
-   "credit": "YTN 사건영수증"
+   "credit": "YTN 사건영수증",
+   "res": 1920
   },
   "skh": {
    "file": "experiments/office/out/clips/yJc9O8ogyuM_a.mp4",
@@ -130,9 +134,11 @@
   },
   {
    "who": "chatgpt",
-   "say": "[thoughtfully] 근데 이미 우리 같은 AI 사용해서 시험 봐서 합격한 사람... 널렸을 것 같은데...",
-   "sub": "근데 이미 우리 같은 AI 사용해서|시험 봐서 합격한 사람|널렸을 것 같은데...",
-   "emo": "neutral"
+   "say": "[thoughtfully] 근데 이미 우리 같은 AI 사용해서 시험 합격한 사람... 널려 있을 것 같은데...",
+   "sub": "근데 이미 우리 같은 AI 사용해서|시험 합격한 사람|널려 있을 것 같은데...",
+   "emo": "neutral",
+   "break": 0.15,
+   "seed": 5
   },
   {
    "who": "gemini",
@@ -160,17 +166,6 @@
     "end": true,
     "dt": 1.67,
     "vol": 0.7
-   }
-  },
-  {
-   "who": "claude",
-   "say": "[startled] 앗...!",
-   "emo": "surprised",
-   "overlay": {
-    "line": 9,
-    "end": true,
-    "dt": 1.85,
-    "vol": 0.75
    }
   }
  ],
@@ -743,16 +738,23 @@
  "cards": [
   {
    "t": 0,
-   "d": 2.8,
+   "d": 3.9,
    "kind": "title",
    "text": "리트 만점자 'AI 부정행위' 의혹"
   },
   {
-   "t": 0.85,
-   "d": 1.6,
+   "t": 0.1,
+   "d": 2.05,
    "kind": "sub",
    "y": 1060,
-   "text": "그거 제가 목요일날 말씀드릴게요."
+   "text": "다만 과외를 하신 건 맞는 거죠?"
+  },
+  {
+   "t": 2.2,
+   "d": 1.5,
+   "kind": "sub",
+   "y": 1060,
+   "text": "그거 제가 목요일에 말씀드릴게요."
   },
   {
    "line": 9,
@@ -770,7 +772,7 @@
    "clip": "skh",
    "from": 47.0,
    "to": 53.4,
-   "vol": 0.35
+   "vol": 0.2
   }
  ],
  "sfx": [
@@ -834,9 +836,16 @@
   {
    "line": 9,
    "end": true,
+   "dt": 0.05,
+   "kind": "tension",
+   "vol": 0.55
+  },
+  {
+   "line": 9,
+   "end": true,
    "dt": 4.45,
    "kind": "boom",
-   "vol": 0.8
+   "vol": 0.5
   }
  ],
  "props": {
@@ -845,5 +854,8 @@
    "z": 0.43,
    "yaw": 0.35
   }
- }
+ },
+ "ss": 1.5,
+ "jpeg": 0.97,
+ "crf": 14
 }

@@ -161,7 +161,7 @@ def clip_frames(cid, c):
             else:
                 vf = f"fps={CLIP_FPS},scale=360:640:force_original_aspect_ratio=increase,crop=360:640"
             subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", str(c["from"]), "-to", str(c["to"]), "-i", str(ROOT / c["file"]),
-                            "-vf", vf, "-q:v", "3" if c.get("land") else "4", str(d / "%04d.jpg")], check=True)
+                            "-vf", vf, "-q:v", "2" if c.get("land") else "4", str(d / "%04d.jpg")], check=True)
         (d / "key.txt").write_text(key, encoding="utf-8")
     n = len(list(d.glob("*.jpg")))
     return {"n": n, "fps": CLIP_FPS, "base": f"/experiments/office/out/clipframes/{cid}/", "credit": c.get("credit", ""),
@@ -347,7 +347,7 @@ def build(script):
     clips = {cid: clip_frames(cid, c) for cid, c in script.get("clips", {}).items()}
     return {"cast": script["cast"], "lines": lines, "events": timed("events"), "shots": shots, "dur": round(dur, 3), "fps": FPS,
             "parts": parts, "intro": intro, "lead": lead, "clips": clips, "clipsrc": script.get("clips", {}),
-            "screens": sorted(timed("screens"), key=lambda s: s["t"]), "cards": cards, "audio": timed("audio"), "props": script.get("props", {}), "sfx": timed("sfx")}
+            "screens": sorted(timed("screens"), key=lambda s: s["t"]), "ss": script.get("ss", 1), "jpeg": script.get("jpeg", 0.92), "crf": script.get("crf", 18), "cards": cards, "audio": timed("audio"), "props": script.get("props", {}), "sfx": timed("sfx")}
 
 
 def check_pron(tl, script):
@@ -439,7 +439,12 @@ def encode(tl, frames_dir, mp4):
         "tiptoe": "aevalsrc='0.22*sin(2*PI*880*t)*exp(-t*40)':d=0.1:s=44100",
         "click": "anoisesrc=d=0.04:c=white:a=0.9:r=44100,highpass=f=2500,afade=t=out:st=0.005:d=0.035,volume=0.8",   # 마우스 딸깍
         "scribble": "anoisesrc=d=2.2:c=pink:a=0.8:r=44100,bandpass=f=3200:w=2600,volume='0.32*(0.55+0.45*sin(2*PI*6.5*t))':eval=frame,afade=t=in:d=0.1,afade=t=out:st=1.9:d=0.3",   # 슥슥 그리기
-        "boom":"aevalsrc='0.55*sin(2*PI*52*t)*exp(-t*1.6)+0.18*sin(2*PI*104*t)*exp(-t*3)':d=2.4:s=44100",   # 쿵 (긴장되는 순간)
+        # 긴장감 배경음 (리트냥이 2026-11-18 '살인의 긴장감 브금 짧게, 너무 크게는 말고'): 낮게 맴도는 소리(맥놀이) + 점점 커지는 불협 떨림 + 심장 박동, 7초
+        "tension": "aevalsrc='(0.16*sin(2*PI*55*t)+0.11*sin(2*PI*58.3*t)+0.06*sin(2*PI*82.4*t))"
+                   "+0.045*min(1\\,t/5)*(sin(2*PI*622*t)+0.8*sin(2*PI*659*t))*(0.55+0.45*sin(2*PI*8*t))"
+                   "+0.4*exp(-mod(t\\,0.82)*16)*sin(2*PI*46*t)+0.25*exp(-mod(t+0.62\\,0.82)*20)*sin(2*PI*40*t)'"
+                   ":d=7:s=44100,afade=t=in:d=0.5,afade=t=out:st=5.8:d=1.2",
+        "boom": "aevalsrc='0.55*sin(2*PI*52*t)*exp(-t*1.6)+0.18*sin(2*PI*104*t)*exp(-t*3)':d=2.4:s=44100",   # 쿵 (긴장되는 순간)
     }
     for i, x in enumerate(tl.get("sfx", [])):
         d = int(x["t"] * 1000)
@@ -450,7 +455,7 @@ def encode(tl, frames_dir, mp4):
     fc = ";".join(fl) + ";" + "".join(labs) + f"amix=inputs={len(labs)}:normalize=0,apad,loudnorm=I=-14:TP=-1.5[a]"
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-framerate", str(FPS), "-i", str(frames_dir / "f%05d.jpg")] + ins +
                    ["-filter_complex", fc, "-map", "0:v", "-map", "[a]", "-t", str(tl["dur"]), "-c:v", "libx264", "-pix_fmt", "yuv420p",
-                    "-crf", "18", "-preset", "medium", "-c:a", "aac", "-b:a", "192k", "-ar", "44100", "-movflags", "+faststart", str(mp4)], check=True)
+                    "-crf", str(tl.get("crf", 18)), "-preset", "slow" if tl.get("crf", 18) < 18 else "medium", "-c:a", "aac", "-b:a", "192k", "-ar", "44100", "-movflags", "+faststart", str(mp4)], check=True)
 
 
 def main():

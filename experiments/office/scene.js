@@ -287,7 +287,9 @@ window.twInit = async (script) => {
   S = script;
   await document.fonts.load('700 50px Wanted', '가A');
   renderer = new THREE.WebGLRenderer({ antialias: false, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(1); renderer.setSize(W, H);
+  // 화질 (리트냥이 2026-11-18 '화질 좋게'): 대본 "ss"(기본 1) 배 크기로 그린 뒤 1080x1920으로 줄임 → 가장자리 매끈
+  const SS = S.ss || 1;
+  renderer.setPixelRatio(1); renderer.setSize(W * SS, H * SS);
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
   scene = new THREE.Scene(); scene.background = new THREE.Color(0x1d1611);
@@ -389,12 +391,13 @@ window.twInit = async (script) => {
     REMOTE.g = g; POS.remote = { x: r.x, face: REMOTE.btn.getWorldPosition(new THREE.Vector3()) };
   }
   camera = new THREE.PerspectiveCamera(36, W / H, 0.05, 40);
-  const rt = new THREE.WebGLRenderTarget(W, H, { type: THREE.HalfFloatType, samples: 4 });
-  composer = new EffectComposer(renderer, rt); composer.setPixelRatio(1); composer.setSize(W, H);
+  const rt = new THREE.WebGLRenderTarget(W * SS, H * SS, { type: THREE.HalfFloatType, samples: 4 });
+  composer = new EffectComposer(renderer, rt); composer.setPixelRatio(1); composer.setSize(W * SS, H * SS);
   composer.addPass(new RenderPass(scene, camera));
   bokeh = new BokehPass(scene, camera, { focus: 2, aperture: 0.004, maxblur: 0.012 }); composer.addPass(bokeh);
   composer.addPass(new OutputPass());
   out = document.createElement('canvas'); out.width = W; out.height = H; g2 = out.getContext('2d');
+  g2.imageSmoothingEnabled = true; g2.imageSmoothingQuality = 'high';
   const gl = renderer.getContext(), dbg = gl.getExtension('WEBGL_debug_renderer_info');
   return { renderer: dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : '', deskY, cast: Object.keys(cast) };
 };
@@ -725,6 +728,6 @@ window.twFrame = (t) => {
     g2.fillStyle = 'rgba(255,255,255,0.9)'; g2.fillText(tx, 76, 1216);
   }
   cards(t);
-  return out.toDataURL('image/jpeg', 0.92);
+  return out.toDataURL('image/jpeg', S.jpeg || 0.92);
 };
 window.twReady = true;
