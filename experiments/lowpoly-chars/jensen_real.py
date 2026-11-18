@@ -59,6 +59,22 @@ HEAD_SCALE = 1.35                  # 캐릭터화: 머리를 몸보다 크게 (�
 PIVOT = Vector((FACE_X, 0.0, 1.08))  # 목 아래 (여기 위로 머리가 커짐)
 
 
+def symmetrize(body, side):
+    """좌우 대칭 (운영자 2026-11-18 "입이 삐뚤어진 느낌"): 코 x를 가운데로, 한쪽 반을 거울로 복사. side = X(+x 반 유지) | -X(-x 반 유지)."""
+    bm = bmesh.new()
+    bm.from_mesh(body.data)
+    for v in bm.verts:
+        v.co.x -= FACE_X
+    bmesh.ops.symmetrize(bm, input=bm.verts[:] + bm.edges[:] + bm.faces[:], direction=side, dist=0.002)
+    for v in bm.verts:
+        v.co.x += FACE_X
+    bm.to_mesh(body.data)
+    bm.free()
+    body.data.update()
+    for p in body.data.polygons:
+        p.use_smooth = False
+
+
 def stylize(body, face):
     """얼굴형·머리·코·입 모양은 실물 그대로 두고, 머리(+얼굴 부품)를 목 기준으로 키움. 목 1.00~1.13은 부드럽게 이어짐."""
     me = body.data
@@ -97,12 +113,12 @@ def add_face_parts(body):
         x = FACE_X + sx * EYE_DX
         y = front_y(bvh, x, EYE_Z) - 0.008
         # 네모 눈 (운영자 2026-11-18: 실제 눈은 이상함, "네모네모로 캐릭터다 싶게"). 모서리만 살짝 깎은 세로 직사각형
-        e = box(f"jensen_real_eye_{sd}", 0.05, 0.02, 0.08, 0.01)
+        e = box(f"jensen_real_eye_{sd}", 0.085, 0.02, 0.045, 0.01)   # 가로로 긴 네모 (운영자 2026-11-18)
         e.location = (x, y - 0.004, EYE_Z)
         e.data.materials.append(eye_m)
         e.parent = face
         hl = box(f"jensen_real_eyehl_{sd}", 0.016, 0.008, 0.016, 0.002)
-        hl.location = (x + 0.011, y - 0.016, EYE_Z + 0.022)
+        hl.location = (x + 0.022, y - 0.016, EYE_Z + 0.008)
         hl.data.materials.append(lid_m)
         hl.parent = face
     # 말할 때 입: 어두운 입 안 (평소엔 납작 → three.js가 높이를 키워 벌림)
@@ -154,6 +170,8 @@ def main():
             if o.name == "key":
                 o.data.energy = 900   # 실물 피부가 날아가지 않게
     body = load()
+    side = sys.argv[sys.argv.index("--sym") + 1] if "--sym" in sys.argv else "X"
+    symmetrize(body, side)
     recolor(body)
     for m in body.data.materials:  # 넓은 조명이 검은 재킷에 하얗게 반사돼 회색으로 보이던 것 줄이기
         bsdf = m.node_tree.nodes.get("Principled BSDF")
@@ -172,7 +190,7 @@ def main():
     bpy.ops.export_scene.gltf(filepath=os.path.join(B.OUT, "jensen_real_head.glb"), export_format="GLB", use_selection=True, export_vertex_color="ACTIVE")
     fz = 1.72   # 커진 머리의 얼굴 높이쯤
     B.camera(sc, (0.0, -4.4, fz + 0.1), (FACE_X, 0, fz - 0.1), lens=50, focus=(FACE_X, -0.6, fz), fstop=2.4)
-    B.render(sc, os.path.join(B.OUT, "jensen_real_front.png"), 1080, 1350)
+    B.render(sc, os.path.join(B.OUT, f"jensen_real_front_{ {chr(88): chr(112), chr(45)+chr(88): chr(110)}[side] }.png"), 1080, 1350)
     B.camera(sc, (2.4, -3.7, fz + 0.2), (FACE_X, 0, fz - 0.15), lens=50, focus=(FACE_X, -0.5, fz), fstop=2.4)
     B.render(sc, os.path.join(B.OUT, "jensen_real_q34.png"), 1080, 1350)
     bpy.data.objects["jensen_real_mouth_open"].hide_render = False   # 말하는 모습 시험
