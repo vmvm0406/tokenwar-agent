@@ -1,0 +1,568 @@
+{
+ "_note": "확정 대본 (운영자 2026-11-19) gemini_tasks.md 3차: 남자 + 클로드, 클로드가 크롬으로 점심 주문. '치즈김밥?'은 사나 실제 목소리(SBS 런닝맨, 스브스 트렌즈 wFbJo6tunGo) + 얼굴 50%.",
+ "ss": 2,
+ "jpeg": 0.98,
+ "crf": 12,
+ "cast": [
+  {
+   "key": "man",
+   "human": true
+  },
+  {
+   "key": "claude",
+   "x": -0.26,
+   "z": 0.24,
+   "yaw": 0.3,
+   "size": 0.38
+  }
+ ],
+ "clips": {
+  "sana": {
+   "file": "experiments/office/out/clips/wFbJo6tunGo.mp4",
+   "from": 9.45,
+   "to": 10.95,
+   "land": true,
+   "res": 1920,
+   "credit": "SBS 런닝맨"
+  },
+  "l1_newtab": {
+   "image": "experiments/office/scripts/ui/l1_newtab.jpg"
+  },
+  "l2_menu": {
+   "image": "experiments/office/scripts/ui/l2_menu.jpg"
+  },
+  "l3_option": {
+   "image": "experiments/office/scripts/ui/l3_option.jpg"
+  },
+  "l4_cart": {
+   "image": "experiments/office/scripts/ui/l4_cart.jpg"
+  },
+  "l5_soldout": {
+   "image": "experiments/office/scripts/ui/l5_soldout.jpg"
+  }
+ },
+ "lines": [
+  {
+   "who": "man",
+   "say": "[exhausted, mumbling] 클로드... 점심 하나만 시켜 줘.",
+   "sub": "클로드... 점심 하나만 시켜 줘.",
+   "emo": "sleepy"
+  },
+  {
+   "who": "claude",
+   "say": "네! 브라우저 열게요.",
+   "sub": "네! 브라우저 열게요.",
+   "emo": "happy",
+   "model": "eleven_multilingual_v2",
+   "style": 0.45
+  },
+  {
+   "who": "claude",
+   "say": "[thinking] 점심엔 김밥이 좋겠어요. 참치김밥? 김치김밥?",
+   "sub": "점심엔 김밥이 좋겠어요.|참치김밥? 김치김밥?",
+   "emo": "smile",
+   "break": 0.15
+  },
+  {
+   "who": "claude",
+   "say": "",
+   "sub": "치즈김밥?",
+   "emo": "happy",
+   "clipvoice": {
+    "file": "experiments/office/out/clips/wFbJo6tunGo.mp4",
+    "from": 9.45,
+    "to": 10.95
+   }
+  },
+  {
+   "who": "man",
+   "say": "[mumbling] ...참치.",
+   "sub": "...참치.",
+   "emo": "sleepy",
+   "break": 0.25
+  },
+  {
+   "who": "claude",
+   "say": "[cheerfully] 한 줄이요, 두 줄이요? 단무지는요? 수저 필요하세요?",
+   "sub": "한 줄이요, 두 줄이요?|단무지는요?|수저 필요하세요?",
+   "emo": "smile"
+  },
+  {
+   "who": "man",
+   "say": "[exhausted] 응... 응... 응...",
+   "sub": "응... 응... 응...",
+   "emo": "sleepy"
+  },
+  {
+   "who": "claude",
+   "say": "[proudly] 다 담았어요! 결제 버튼만 직접 눌러 주세요.",
+   "sub": "다 담았어요!|결제 버튼만 직접 눌러 주세요.",
+   "emo": "happy"
+  },
+  {
+   "who": "man",
+   "say": "[sighs] ...그냥 내가 주문하는 게 빠르겠다.",
+   "sub": "...그냥 내가 주문하는 게 빠르겠다.",
+   "emo": "neutral"
+  },
+  {
+   "who": "claude",
+   "say": "[awkwardly] ...처음부터 다시 할까요?",
+   "sub": "...처음부터 다시 할까요?",
+   "emo": "embarrassed",
+   "break": 2.2
+  }
+ ],
+ "tail": 3.6,
+ "screens": [
+  {
+   "line": 1,
+   "end": true,
+   "dt": 0.0,
+   "screen": "monitor",
+   "clip": "l1_newtab",
+   "cut": true,
+   "cursor": [
+    [
+     0,
+     0.7,
+     0.8
+    ],
+    [
+     0.5,
+     0.5,
+     0.47,
+     1
+    ]
+   ]
+  },
+  {
+   "line": 2,
+   "dt": 0.3,
+   "screen": "monitor",
+   "clip": "l2_menu",
+   "cut": true,
+   "cursor": [
+    [
+     0,
+     0.5,
+     0.47
+    ],
+    [
+     0.6,
+     0.22,
+     0.405
+    ],
+    [
+     1.6,
+     0.22,
+     0.405
+    ],
+    [
+     2.0,
+     0.22,
+     0.56
+    ]
+   ]
+  },
+  {
+   "line": 3,
+   "dt": 0.0,
+   "screen": "monitor",
+   "clip": "l2_menu",
+   "cut": true,
+   "cursor": [
+    [
+     0,
+     0.22,
+     0.56
+    ],
+    [
+     0.4,
+     0.22,
+     0.72
+    ]
+   ]
+  },
+  {
+   "line": 4,
+   "end": true,
+   "dt": 0.2,
+   "screen": "monitor",
+   "clip": "l2_menu",
+   "cut": true,
+   "cursor": [
+    [
+     0,
+     0.22,
+     0.72
+    ],
+    [
+     0.4,
+     0.22,
+     0.405,
+     1
+    ]
+   ]
+  },
+  {
+   "line": 5,
+   "dt": 0.0,
+   "screen": "monitor",
+   "clip": "l3_option",
+   "cut": true,
+   "cursor": [
+    [
+     0,
+     0.5,
+     0.4
+    ],
+    [
+     0.5,
+     0.085,
+     0.525,
+     1
+    ],
+    [
+     1.3,
+     0.085,
+     0.66,
+     1
+    ],
+    [
+     2.1,
+     0.085,
+     0.79,
+     1
+    ]
+   ]
+  },
+  {
+   "line": 7,
+   "dt": 0.0,
+   "screen": "monitor",
+   "clip": "l4_cart",
+   "cut": true,
+   "cursor": [
+    [
+     0,
+     0.3,
+     0.5
+    ],
+    [
+     0.8,
+     0.5,
+     0.71
+    ]
+   ]
+  },
+  {
+   "line": 8,
+   "end": true,
+   "dt": 0.55,
+   "screen": "monitor",
+   "clip": "l5_soldout",
+   "cut": true
+  }
+ ],
+ "shots": [
+  {
+   "t": 0,
+   "cam": "wide"
+  },
+  {
+   "line": 0,
+   "dt": 0.3,
+   "cam": "close:man"
+  },
+  {
+   "line": 1,
+   "dt": -0.1,
+   "cam": "close:claude"
+  },
+  {
+   "line": 1,
+   "end": true,
+   "dt": 0.0,
+   "cam": "mon",
+   "z0": 1.0,
+   "z1": 1.06
+  },
+  {
+   "line": 2,
+   "dt": -0.1,
+   "cam": "close:claude"
+  },
+  {
+   "line": 2,
+   "dt": 1.6,
+   "cam": "mon",
+   "z0": 1.05,
+   "z1": 1.12
+  },
+  {
+   "line": 3,
+   "dt": -0.05,
+   "cam": "close:claude"
+  },
+  {
+   "line": 4,
+   "dt": -0.9,
+   "cam": "close:man"
+  },
+  {
+   "line": 5,
+   "dt": -0.1,
+   "cam": "mon",
+   "z0": 1.0,
+   "z1": 1.08
+  },
+  {
+   "line": 6,
+   "dt": -0.1,
+   "cam": "close:man"
+  },
+  {
+   "line": 7,
+   "dt": -0.1,
+   "cam": "close:claude"
+  },
+  {
+   "line": 7,
+   "end": true,
+   "dt": 0.1,
+   "cam": "mon",
+   "z0": 1.0,
+   "z1": 1.1
+  },
+  {
+   "line": 8,
+   "dt": -0.1,
+   "cam": "close:man"
+  },
+  {
+   "line": 8,
+   "end": true,
+   "dt": 0.35,
+   "cam": "mon",
+   "z0": 1.0,
+   "z1": 1.15
+  },
+  {
+   "line": 9,
+   "dt": -0.2,
+   "cam": "close:claude"
+  },
+  {
+   "line": 9,
+   "end": true,
+   "dt": 0.5,
+   "cam": "wide"
+  }
+ ],
+ "events": [
+  {
+   "line": 0,
+   "dt": 0,
+   "who": "claude",
+   "do": "look",
+   "at": "man"
+  },
+  {
+   "line": 1,
+   "end": true,
+   "dt": 0,
+   "who": "claude",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 1,
+   "end": true,
+   "dt": 0.1,
+   "who": "claude",
+   "do": "work",
+   "d": 2.5
+  },
+  {
+   "line": 3,
+   "dt": 0.0,
+   "who": "claude",
+   "do": "hop"
+  },
+  {
+   "line": 5,
+   "dt": 0,
+   "who": "claude",
+   "do": "look",
+   "at": "man"
+  },
+  {
+   "line": 5,
+   "dt": 0.1,
+   "who": "claude",
+   "do": "work",
+   "d": 2.6
+  },
+  {
+   "line": 7,
+   "dt": 0,
+   "who": "claude",
+   "do": "look",
+   "at": "man"
+  },
+  {
+   "line": 8,
+   "dt": 0,
+   "who": "man",
+   "do": "sigh"
+  },
+  {
+   "line": 8,
+   "dt": 0,
+   "who": "man",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 8,
+   "end": true,
+   "dt": 0.6,
+   "who": "man",
+   "emo": "surprised"
+  },
+  {
+   "line": 8,
+   "end": true,
+   "dt": 0.6,
+   "who": "claude",
+   "emo": "surprised"
+  },
+  {
+   "line": 8,
+   "end": true,
+   "dt": 0.6,
+   "who": "claude",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 9,
+   "dt": 0,
+   "who": "claude",
+   "do": "look",
+   "at": "man"
+  },
+  {
+   "line": 9,
+   "end": true,
+   "dt": 0.4,
+   "who": "man",
+   "emo": "sleepy"
+  },
+  {
+   "t": 0,
+   "who": "man",
+   "do": "slump",
+   "d": 19.9,
+   "amt": 1.0
+  },
+  {
+   "line": 4,
+   "dt": -0.75,
+   "who": "man",
+   "do": "lift",
+   "d": 1.1
+  },
+  {
+   "line": 9,
+   "end": true,
+   "dt": 0.4,
+   "who": "man",
+   "do": "slump",
+   "d": 4.0,
+   "amt": 1.0
+  }
+ ],
+ "cards": [
+  {
+   "line": 3,
+   "dt": 0.0,
+   "d": 1.5,
+   "kind": "ghost",
+   "clip": "sana",
+   "x": 330,
+   "y": 500,
+   "w": 460,
+   "h": 560,
+   "alpha": 0.5,
+   "crop": [
+    0.39,
+    0.08,
+    0.25,
+    0.5
+   ]
+  },
+  {
+   "line": 3,
+   "dt": 0.0,
+   "d": 1.6,
+   "kind": "tag",
+   "text": "목소리: SBS 런닝맨 사나"
+  },
+  {
+   "line": 9,
+   "end": true,
+   "dt": 1.4,
+   "kind": "end",
+   "text": "클로드에게 '손' 달아 주는 법!|프로필에 정리해 뒀어요|팔로우하고 AI를 재밌게 배워 보세요!"
+  }
+ ],
+ "sfx": [
+  {
+   "line": 1,
+   "end": true,
+   "dt": 0.0,
+   "kind": "pop"
+  },
+  {
+   "line": 2,
+   "dt": 0.3,
+   "kind": "click"
+  },
+  {
+   "line": 4,
+   "end": true,
+   "dt": 0.6,
+   "kind": "click"
+  },
+  {
+   "line": 5,
+   "dt": 0.5,
+   "kind": "click"
+  },
+  {
+   "line": 5,
+   "dt": 1.3,
+   "kind": "click"
+  },
+  {
+   "line": 5,
+   "dt": 2.1,
+   "kind": "click"
+  },
+  {
+   "line": 8,
+   "end": true,
+   "dt": 0.45,
+   "kind": "click"
+  },
+  {
+   "line": 8,
+   "end": true,
+   "dt": 0.6,
+   "kind": "fail",
+   "vol": 0.8
+  }
+ ]
+}

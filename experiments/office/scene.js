@@ -109,6 +109,21 @@ function drawReveal(g, s, im, t, off, W2, H2) {
     g.restore();
   }
 }
+// 화면 위 마우스 커서 (운영자 2026-11-19): cursor [[초, x, y, 1(클릭)], ...] (x·y는 0~1, 화면 일정 시작 기준 초)
+function drawCursor(g, path, r, W2, H2) {
+  if (!path.length || r < path[0][0]) return;
+  let i = 0; while (i < path.length - 1 && r >= path[i + 1][0]) i++;
+  const a = path[i], b = path[Math.min(i + 1, path.length - 1)];
+  const u = b[0] > a[0] ? ease((r - a[0]) / (b[0] - a[0])) : 1;
+  const x = lerp(a[1], b[1], Math.min(1, u)) * W2, y = lerp(a[2], b[2], Math.min(1, u)) * H2, s = H2 / 14;
+  for (const p of path) if (p[3] && r >= p[0] && r < p[0] + 0.35) {   // 클릭 물결
+    const k = (r - p[0]) / 0.35; g.strokeStyle = `rgba(0,255,102,${1 - k})`; g.lineWidth = s * 0.08;
+    g.beginPath(); g.arc(p[1] * W2, p[2] * H2, s * (0.3 + 0.7 * k), 0, Math.PI * 2); g.stroke();
+  }
+  g.save(); g.translate(x, y); g.fillStyle = '#fff'; g.strokeStyle = '#000'; g.lineWidth = s * 0.06;
+  g.beginPath(); g.moveTo(0, 0); g.lineTo(0, s); g.lineTo(s * 0.27, s * 0.76); g.lineTo(s * 0.46, s * 1.15); g.lineTo(s * 0.6, s * 1.08);
+  g.lineTo(s * 0.42, s * 0.7); g.lineTo(s * 0.75, s * 0.7); g.closePath(); g.fill(); g.stroke(); g.restore();
+}
 const SWIPE = 0.35;
 function drawScreen(sc, name, t) {
   const list = S.screens.filter((s) => s.screen === name && s.t <= t);
@@ -139,6 +154,7 @@ function drawScreen(sc, name, t) {
     const u = ease((t - cur.t) / SWIPE);
     put(prev, -u); put(cur, 1 - u);
   } else put(cur, 0);
+  if (cur && cur.cursor) drawCursor(g, cur.cursor, t - cur.t, W2, H2);
   sc.tex.needsUpdate = true;
   // 지금 이 화면에 나오는 영상 id (출처 표시는 twFrame에서: 화면이 카메라에 보일 때만, 처음 1.6초)
   return cur && cur.clip ? cur.clip : null;
@@ -260,7 +276,7 @@ async function loadAI(key, height) {
 
 // ---------- 조립 ----------
 let renderer, composer, bokeh, scene, camera, cast = {}, S, POS = {}, deskY = 0.74, out, g2;
-const SCR = {}, PHONE = { g: null, pos: new THREE.Vector3(), mode: 'none' }, POP = { g: null }, REMOTE = {}, CREDIT_SEEN = {};
+const SCR = {}, PHONE = { g: null, pos: new THREE.Vector3(), mode: 'none' }, POP = { g: null }, REMOTE = {}, CREDIT_SEEN = {}, RAIN = {};
 // 젠슨 폰 위치: face(얼굴 앞, 화면이 젠슨 쪽) / show(at 쪽으로 내밂, 화면이 그쪽) / down(책상에 엎어 둠)
 function phonePose(mode, at) {
   const hu = Object.values(cast).find((c) => c.human);
@@ -300,7 +316,12 @@ window.twInit = async (script) => {
   key.shadow.mapSize.set(2048, 2048); key.shadow.bias = -0.0004; key.shadow.normalBias = 0.02; scene.add(key);
   const rim = new THREE.DirectionalLight(0x9fc8ff, 1.2); rim.position.set(2.4, 2.6, -3); scene.add(rim);
   const monLight = new THREE.PointLight(0x66ffaa, 0.15, 2); monLight.position.set(0.7, 1.2, -0.05); scene.add(monLight);
-  scene.add(new THREE.HemisphereLight(0xffe8d0, 0x3a2418, 0.45));
+  const hemi = new THREE.HemisphereLight(0xffe8d0, 0x3a2418, 0.45); scene.add(hemi);
+  if (S.props && S.props.night) {   // 비 오는 밤 (운영자 2026-11-19): 푸르고 어둡게 + 책상 스탠드 불빛
+    key.color.set(0x8ea6e8); key.intensity = 1.15; rim.intensity = 0.7; hemi.intensity = 0.2; hemi.color.set(0x9fb0d8);
+    scene.environmentIntensity = 0.28; scene.background = new THREE.Color(0x0d0f16);
+    const lamp = new THREE.PointLight(0xffc27a, 1.1, 2.6); lamp.position.set(-0.75, 1.35, 0.15); scene.add(lamp);
+  }
 
   // 사람: 키 1.55(큰 머리 비율), 앉힘
   for (const p of S.cast.filter((p) => p.human)) {
@@ -324,6 +345,13 @@ window.twInit = async (script) => {
     POS[hum.key] = { x: 0, face: hum.bones.head.getWorldPosition(new THREE.Vector3()).add(new THREE.Vector3(0, 0.16, 0.12)) };
   }
   buildOffice(scene, deskY);
+  if (S.props && S.props.rain) {   // 창밖 빗줄기 (캔버스에 매 프레임 그림)
+    const cv = document.createElement('canvas'); cv.width = 520; cv.height = 300;
+    const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 1.5), new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false }));
+    m.position.set(-0.2, 2.0, -2.06); scene.add(m);
+    RAIN.cv = cv; RAIN.g = cv.getContext('2d'); RAIN.tex = tex;
+  }
   // AI: 책상 위 (높이 0.34)
   for (const p of S.cast.filter((p) => !p.human)) {
     const c = await loadAI(p.key, p.size || 0.34);
@@ -532,6 +560,14 @@ function animHuman(c, t) {
   rotW(B.head, Y, lookYaw(who, t));
   rotW(B.head, X, -0.04 * open * Math.sin(t * 9));                             // 말할 때 살짝 끄덕끄덕
   for (const e of evs(who, 'nod')) if (t > e.t && t < e.t + 1) rotW(B.head, X, 0.25 * Math.sin(Math.PI * 2 * (t - e.t) / 0.5));
+  for (const e of evs(who, 'slump')) {   // 책상에 엎드림 (운영자 2026-11-19 점심 편): amt 0~1, d 동안 유지
+    const r = t - e.t, d = e.d || 2; if (r < 0 || r > d + 0.6) continue;
+    const k = ease(r / 0.5) * (1 - ease((r - d) / 0.6)) * (e.amt || 1);
+    rotW(B.spine, X, 0.55 * k); rotW(B.head, X, 0.35 * k);
+  }
+  for (const e of evs(who, 'lift')) {   // 엎드린 채 고개만 살짝 듦 (치즈김밥에 반응)
+    const b = bump(t, e.t, e.d || 0.9); rotW(B.head, X, -0.45 * b); rotW(B.spine, X, -0.12 * b);
+  }
   for (const e of evs(who, 'startle')) {   // 사람 화들짝: 몸·고개를 뒤로 젖힘
     const r = t - e.t; if (r < 0 || r > 1.8) continue;
     const k = r < 0.18 ? ease(r / 0.18) : 1 - ease((r - 1.0) / 0.8);
@@ -664,6 +700,11 @@ function cards(t) {
       g2.font = '700 34px Wanted'; g2.textAlign = 'left';
       g2.fillStyle = 'rgba(0,0,0,0.55)'; g2.fillRect(64, 296, g2.measureText(c.text).width + 32, 54);
       g2.fillStyle = '#00FF66'; g2.fillText(c.text, 80, 324);
+    } else if (c.kind === 'ghost') {   // 화면 위 반투명 영상 (운영자 2026-11-19: 사나 목소리 때 클로드에 얼굴 50%): clip, x,y,w,h(px), alpha, crop [x,y,w,h](0~1)
+      const im = clipFrame(c.clip, t - c.t, true), iw = im.naturalWidth, ih = im.naturalHeight, cr = c.crop || [0, 0, 1, 1];
+      g2.globalAlpha = clamp(u) * (c.alpha || 0.5);
+      g2.save(); g2.beginPath(); g2.ellipse(c.x + c.w / 2, c.y + c.h / 2, c.w / 2, c.h / 2, 0, 0, Math.PI * 2); g2.clip();
+      g2.drawImage(im, cr[0] * iw, cr[1] * ih, cr[2] * iw, cr[3] * ih, c.x, c.y, c.w, c.h); g2.restore();
     } else if (c.kind === 'title') {   // 훅 제목 (위쪽, 초록 큰 글자, 리트냥이 2026-11-18)
       g2.font = '700 62px Wanted';
       const rows = wrap(c.text, 900), lh = 80, w = Math.max(...rows.map((r) => g2.measureText(r).width)) + 56;
@@ -695,6 +736,17 @@ function cards(t) {
 window.twFrame = (t) => {
   if (PHONE.g) updatePhone(t);
   for (const k in cast) (cast[k].human ? animHuman : animAI)(cast[k], t);
+  if (RAIN.g) {   // 빗줄기: 위치는 시각으로 정해짐 (프레임 순서와 무관)
+    const g = RAIN.g, w = RAIN.cv.width, h = RAIN.cv.height; g.clearRect(0, 0, w, h);
+    g.strokeStyle = 'rgba(190,210,255,0.55)'; g.lineWidth = 1.6;
+    for (let k = 0; k < 140; k++) {
+      const sp = 1.6 + (k * 37 % 11) / 11, x0 = (k * 97.3) % w, y0 = ((k * 53.1) % h + t * sp * h) % (h + 40) - 30;
+      g.beginPath(); g.moveTo(x0, y0); g.lineTo(x0 - 4, y0 + 22); g.stroke();
+    }
+    g.fillStyle = 'rgba(200,220,255,0.35)';
+    for (let k = 0; k < 40; k++) { const x0 = (k * 131.7) % w, y0 = (k * 71.3 + t * 18 * (1 + k % 3)) % h; g.beginPath(); g.arc(x0, y0, 2.2, 0, 7); g.fill(); }
+    RAIN.tex.needsUpdate = true;
+  }
   if (REMOTE.btn) {   // 리모컨 빨간 버튼: 눌린 동안 들어가고 빛남
     const on = S.events.some((e) => e.do === 'press' && t >= e.t + 0.3 && t < e.t + 0.62);
     REMOTE.btn.position.y = on ? 0.008 : 0.012; REMOTE.btnMat.emissiveIntensity = on ? 2.2 : 0.0;

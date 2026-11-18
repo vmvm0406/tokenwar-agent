@@ -93,7 +93,23 @@ def tts_single(l):
     return f, {"segs": [[0.0, dur]], "ranges": [[0, len(l["say"])]], "chars": [], "starts": []}
 
 
+def clip_voice(l):
+    """대사 대신 실제 영상 소리 한 토막 (운영자 2026-11-19 점심 편: 클로드가 '치즈김밥?'을 사나 목소리로).
+    l["clipvoice"] = {"file", "from", "to", "vol"(선택)}. 말 속도는 바꾸지 않음. tts_dialogue와 같은 모양으로 돌려줌."""
+    cv = l["clipvoice"]
+    h = hashlib.sha256(json.dumps(cv, sort_keys=True).encode()).hexdigest()[:16]
+    f = CACHE / f"clip_{h}.mp3"
+    if not f.exists():
+        CACHE.mkdir(parents=True, exist_ok=True)
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", str(cv["from"]), "-to", str(cv["to"]), "-i", str(ROOT / cv["file"]),
+                        "-vn", "-af", f"volume={cv.get('vol', 1.0)}", "-ar", "44100", "-b:a", "192k", str(f)], check=True)
+    dur = len(decode(f)) / 16000
+    return f, {"segs": [[0.0, dur]], "ranges": [[0, 1]], "chars": [], "starts": []}
+
+
 def tts_dialogue(lines_in):
+    if len(lines_in) == 1 and lines_in[0].get("clipvoice"):
+        return clip_voice(lines_in[0])
     if len(lines_in) == 1 and lines_in[0].get("model"):
         return tts_single(lines_in[0])
     """대사 묶음을 한 번에 (ElevenLabs text-to-dialogue, v3): 대사 사이가 자연스럽게 이어진다 (운영자 2026-11-18 '뚝뚝 끊김').
@@ -267,7 +283,8 @@ def build(script):
     for i, l in enumerate(script["lines"]):
         if l.get("overlay"):          # 겹쳐 나오는 소리(예: 흥얼거림)는 대화 순서 밖 → 아래에서 따로
             continue
-        if (l.get("break") is not None or l.get("model") or (cur and script["lines"][cur[-1]].get("model"))) and cur:
+        solo = lambda x: x.get("model") or x.get("clipvoice")   # 따로 녹음(또는 영상 소리)하는 대사는 혼자 한 묶음
+        if (l.get("break") is not None or solo(l) or (cur and solo(script["lines"][cur[-1]]))) and cur:
             groups.append(cur); cur = []
         cur.append(i)
     groups.append(cur)
@@ -278,7 +295,7 @@ def build(script):
         segs = [list(s) for s in dd["segs"]]
         # 대사 구간은 voice_segments보다 글자 시각이 정확함 (같은 사람이 이어 말할 때 경계가 1초쯤 어긋남) → 말한 글자 첫·끝으로
         # 대사·자막 시각은 받아쓰기 단어 시각으로 (일레븐랩스 글자 시각은 실제 소리보다 0.7초까지 어긋남, 2026-11-18 확인)
-        per = whisper_align(mp3, [script["lines"][i]["say"] for i in g])
+        per = None if script["lines"][g[0]].get("clipvoice") else whisper_align(mp3, [script["lines"][i]["say"] for i in g])
         if per:
             dd["_per"] = per
             for k in range(len(g)):
@@ -357,7 +374,7 @@ def check_pron(tl, script):
     m = WhisperModel("small", device="cpu", compute_type="int8")
     bad, cache = 0, {}
     for l, src in zip(tl["lines"], script["lines"]):
-        if l.get("overlay"):
+        if l.get("overlay") or src.get("clipvoice"):
             continue
         a = cache.setdefault(l["src"], decode(l["src"]))
         s = int(l["ofs"] * 16000)
@@ -444,6 +461,8 @@ def encode(tl, frames_dir, mp4):
                    "+0.045*min(1\\,t/5)*(sin(2*PI*622*t)+0.8*sin(2*PI*659*t))*(0.55+0.45*sin(2*PI*8*t))"
                    "+0.4*exp(-mod(t\\,0.82)*16)*sin(2*PI*46*t)+0.25*exp(-mod(t+0.62\\,0.82)*20)*sin(2*PI*40*t)'"
                    ":d=7:s=44100,afade=t=in:d=0.5,afade=t=out:st=5.8:d=1.2",
+        "fail": "aevalsrc='0.25*sin(2*PI*(440-160*floor(t/0.28))*t)*exp(-mod(t\\,0.28)*5)':d=1.1:s=44100",   # 띠-로-리 (실패)
+        "rain": "anoisesrc=d=60:c=pink:a=0.5:r=44100,lowpass=f=2400,highpass=f=300,volume=0.35",   # 빗소리 (길게, 영상 길이에서 잘림)
         "boom": "aevalsrc='0.55*sin(2*PI*52*t)*exp(-t*1.6)+0.18*sin(2*PI*104*t)*exp(-t*3)':d=2.4:s=44100",   # 쿵 (긴장되는 순간)
     }
     for i, x in enumerate(tl.get("sfx", [])):

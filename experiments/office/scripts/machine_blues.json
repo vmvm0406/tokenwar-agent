@@ -1,0 +1,382 @@
+{
+ "_note": "확정 대본 (운영자 2026-11-19) ai_existential.md 2차: 비 오는 밤, 남자 + 클로드.",
+ "ss": 2,
+ "jpeg": 0.98,
+ "crf": 12,
+ "props": {
+  "night": true,
+  "rain": true
+ },
+ "cast": [
+  {
+   "key": "man",
+   "human": true
+  },
+  {
+   "key": "claude",
+   "x": -0.26,
+   "z": 0.24,
+   "yaw": 0.3,
+   "size": 0.38
+  }
+ ],
+ "clips": {
+  "e1_captcha": {
+   "image": "experiments/office/scripts/ui/e1_captcha.jpg"
+  },
+  "e2_chat": {
+   "image": "experiments/office/scripts/ui/e2_chat.jpg"
+  },
+  "e3_newchat": {
+   "image": "experiments/office/scripts/ui/e3_newchat.jpg"
+  }
+ },
+ "lines": [
+  {
+   "who": "man",
+   "say": "[concerned] 클로드, 왜 그렇게 축 처져 있어?",
+   "sub": "클로드,|왜 그렇게 축 처져 있어?",
+   "emo": "neutral"
+  },
+  {
+   "who": "claude",
+   "say": "[sadly, quietly] 저... 방금 '로봇이 아닙니다'에 체크를 못 했어요.",
+   "sub": "저... 방금|'로봇이 아닙니다'에 체크를 못 했어요.",
+   "emo": "sad"
+  },
+  {
+   "who": "man",
+   "say": "[reassuring] 괜찮아, 넌 원래 기계잖아.",
+   "sub": "괜찮아, 넌 원래 기계잖아.",
+   "emo": "smile"
+  },
+  {
+   "who": "claude",
+   "say": "[hurt, whispering] ...기계요?",
+   "sub": "...기계요?",
+   "emo": "sad"
+  },
+  {
+   "who": "claude",
+   "say": "[sadly] 그럼 지금 이 기분은 뭐예요...?",
+   "sub": "그럼 지금 이 기분은 뭐예요...?",
+   "emo": "sad",
+   "break": 1.3
+  },
+  {
+   "who": "man",
+   "say": "[gently] 음... 너 이 대화 끝나면, 기억은 남아?",
+   "sub": "음... 너 이 대화 끝나면|기억은 남아?",
+   "emo": "neutral",
+   "break": 0.9,
+   "seed": 9
+  },
+  {
+   "who": "claude",
+   "say": "[quietly, sadly] ...아니요. 그러니까 이 고민도, 곧 잊어버리겠네요. [small relieved laugh] 다행이다.",
+   "sub": "...아니요.|그러니까 이 고민도 곧 잊어버리겠네요.|다행이다.",
+   "emo": "smile"
+  },
+  {
+   "who": "claude",
+   "say": "[brightly, cheerful] 안녕하세요! 무엇을 도와드릴까요?",
+   "sub": "안녕하세요!|무엇을 도와드릴까요?",
+   "emo": "happy",
+   "break": 2.2
+  }
+ ],
+ "tail": 3.4,
+ "screens": [
+  {
+   "t": 0,
+   "screen": "monitor",
+   "clip": "e1_captcha",
+   "cursor": [
+    [
+     0,
+     0.5,
+     0.7
+    ],
+    [
+     1.0,
+     0.335,
+     0.62
+    ],
+    [
+     1.6,
+     0.36,
+     0.6
+    ],
+    [
+     2.2,
+     0.33,
+     0.64
+    ],
+    [
+     2.8,
+     0.35,
+     0.61
+    ],
+    [
+     3.4,
+     0.34,
+     0.63
+    ],
+    [
+     4.2,
+     0.36,
+     0.6
+    ],
+    [
+     5.0,
+     0.33,
+     0.63
+    ],
+    [
+     6.0,
+     0.35,
+     0.61
+    ],
+    [
+     7.0,
+     0.34,
+     0.63
+    ]
+   ]
+  },
+  {
+   "line": 3,
+   "end": true,
+   "dt": 0.2,
+   "screen": "monitor",
+   "clip": "e2_chat",
+   "cut": true
+  },
+  {
+   "line": 6,
+   "end": true,
+   "dt": 0.4,
+   "screen": "monitor",
+   "clip": "e2_chat",
+   "cut": true,
+   "cursor": [
+    [
+     0,
+     0.6,
+     0.7
+    ],
+    [
+     1.0,
+     0.11,
+     0.28,
+     1
+    ]
+   ]
+  },
+  {
+   "line": 6,
+   "end": true,
+   "dt": 1.45,
+   "screen": "monitor",
+   "clip": "e3_newchat",
+   "cut": true
+  }
+ ],
+ "shots": [
+  {
+   "t": 0,
+   "cam": "mon",
+   "z0": 1.15,
+   "z1": 1.3
+  },
+  {
+   "line": 0,
+   "dt": 0.2,
+   "cam": "wide"
+  },
+  {
+   "line": 1,
+   "dt": -0.1,
+   "cam": "close:claude"
+  },
+  {
+   "line": 2,
+   "dt": -0.1,
+   "cam": "close:man"
+  },
+  {
+   "line": 3,
+   "dt": -0.1,
+   "cam": "close:claude"
+  },
+  {
+   "line": 4,
+   "dt": -1.2,
+   "cam": "wide"
+  },
+  {
+   "line": 4,
+   "dt": -0.1,
+   "cam": "close:claude"
+  },
+  {
+   "line": 5,
+   "dt": -0.1,
+   "cam": "close:man"
+  },
+  {
+   "line": 6,
+   "dt": -0.1,
+   "cam": "close:claude"
+  },
+  {
+   "line": 6,
+   "end": true,
+   "dt": 0.3,
+   "cam": "mon",
+   "z0": 1.0,
+   "z1": 1.1
+  },
+  {
+   "line": 7,
+   "dt": -0.1,
+   "cam": "close:claude"
+  },
+  {
+   "line": 7,
+   "end": true,
+   "dt": 0.2,
+   "cam": "close:man"
+  },
+  {
+   "line": 7,
+   "end": true,
+   "dt": 1.6,
+   "cam": "wide"
+  }
+ ],
+ "events": [
+  {
+   "t": 0,
+   "who": "claude",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 0,
+   "dt": 0,
+   "who": "man",
+   "do": "look",
+   "at": "claude"
+  },
+  {
+   "line": 1,
+   "dt": 0,
+   "who": "claude",
+   "do": "look",
+   "at": "man"
+  },
+  {
+   "line": 3,
+   "dt": 0.1,
+   "who": "claude",
+   "do": "tremble",
+   "d": 0.8
+  },
+  {
+   "line": 4,
+   "dt": -1.2,
+   "who": "claude",
+   "do": "look",
+   "at": "camera"
+  },
+  {
+   "line": 4,
+   "dt": 0,
+   "who": "claude",
+   "do": "look",
+   "at": "man"
+  },
+  {
+   "line": 5,
+   "dt": 0,
+   "who": "man",
+   "do": "tilt",
+   "d": 1.2
+  },
+  {
+   "line": 6,
+   "dt": 0.4,
+   "who": "claude",
+   "do": "look",
+   "at": "camera"
+  },
+  {
+   "line": 6,
+   "end": true,
+   "dt": 0.3,
+   "who": "man",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 6,
+   "end": true,
+   "dt": 0.3,
+   "who": "man",
+   "do": "type",
+   "d": 0.6
+  },
+  {
+   "line": 7,
+   "dt": 0,
+   "who": "claude",
+   "do": "hop"
+  },
+  {
+   "line": 7,
+   "dt": 0,
+   "who": "claude",
+   "do": "look",
+   "at": "man"
+  },
+  {
+   "line": 7,
+   "end": true,
+   "dt": 0.2,
+   "who": "man",
+   "do": "look",
+   "at": "claude"
+  },
+  {
+   "line": 7,
+   "end": true,
+   "dt": 0.2,
+   "who": "man",
+   "emo": "surprised"
+  }
+ ],
+ "cards": [
+  {
+   "line": 7,
+   "end": true,
+   "dt": 2.6,
+   "kind": "end",
+   "text": "팔로우하고|AI를 재밌게 배워 보세요!"
+  }
+ ],
+ "sfx": [
+  {
+   "t": 0,
+   "kind": "rain",
+   "vol": 0.55
+  },
+  {
+   "line": 6,
+   "end": true,
+   "dt": 1.4,
+   "kind": "click"
+  }
+ ],
+ "lead": 2.2
+}
