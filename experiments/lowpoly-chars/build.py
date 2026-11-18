@@ -295,7 +295,8 @@ def d_mouth(name, w, h, t, n=10):
     return ob
 
 
-def add_face(key, body, root, cx, cy, eye_dx, eye_s, mouth_dy, mouth_w, mats, blush=None):
+def add_face(key, body, root, cx, cy, eye_dx, eye_s, mouth_dy, mouth_w, mats, blush=None,
+             eye_aspect=1.0, brows=False, grin=False):
     dg = bpy.context.evaluated_depsgraph_get()
     bvh = BVHTree.FromObject(body, dg)
 
@@ -332,7 +333,7 @@ def add_face(key, body, root, cx, cy, eye_dx, eye_s, mouth_dy, mouth_w, mats, bl
         ex = sx * eye_dx
         # 눈: 기본 / 크게(놀람) / ^^(기쁨) / 감음(졸림·민망)
         for var, k in (("open", 1.0), ("wide", 1.3)):
-            e = put(lowpoly_ellipsoid(f"{key}_eye_{var}_{side}", s * 0.78 * k, s * k, s * 0.45 * k), "eye", (ex, 0, s * 0.15))
+            e = put(lowpoly_ellipsoid(f"{key}_eye_{var}_{side}", s * 0.78 * k, s * k * eye_aspect, s * 0.45 * k), "eye", (ex, 0, s * 0.15))
             hl = lowpoly_ellipsoid(f"{key}_eyehl_{var}_{side}", s * 0.26 * k, s * 0.26 * k, s * 0.15, seg=6, rings=4)
             hl.data.materials.append(mats["hl"])
             hl.parent = e
@@ -344,6 +345,9 @@ def add_face(key, body, root, cx, cy, eye_dx, eye_s, mouth_dy, mouth_w, mats, bl
             y0 = s * 1.45
             pts = [(ex - sx * s * 0.6, y0 + tilt * s * 0.25, 0.02), (ex, y0, 0.02), (ex + sx * s * 0.6, y0 - tilt * s * 0.25, 0.02)]
             put(arc_tube(f"{key}_brow_{var}_{side}", pts, s * 0.16), "eye")
+        if brows:  # 평소 눈썹 (사람 캐릭터)
+            pts = [(ex - sx * s * 0.75, s * 1.15, 0.02), (ex - sx * s * 0.1, s * 1.42, 0.02), (ex + sx * s * 0.7, s * 1.3, 0.02)]
+            put(arc_tube(f"{key}_brow_neutral_{side}", pts, s * 0.2), "brow" if "brow" in mats else "eye")
         if blush:  # 볼터치
             put(lowpoly_ellipsoid(f"{key}_blush_{side}", blush[2] * 1.25, blush[2] * 0.75, 0.012, seg=8, rings=4),
                 "blush", (sx * blush[0], blush[1], 0.004))
@@ -357,6 +361,12 @@ def add_face(key, body, root, cx, cy, eye_dx, eye_s, mouth_dy, mouth_w, mats, bl
     put(lowpoly_ellipsoid(f"{key}_mouth_o", mw * 0.5, mw * 0.62, s * 0.25, seg=10, rings=6), "inner", (0, my - mw * 0.1, 0.01))
     wav = [(-mw + 2 * mw * k / 8, my + (s * 0.18 if k % 2 else -s * 0.18), 0.02) for k in range(9)]
     put(arc_tube(f"{key}_mouth_wavy", wav, s * 0.16), "eye")
+    if grin:  # 이가 보이는 큰 웃음 (젠슨 황 트레이드마크)
+        g = put(d_mouth(f"{key}_mouth_grin", mw * 1.4, mw * 0.8, s * 0.18), "inner", (0, my + mw * 0.55, 0.02))
+        t = lowpoly_ellipsoid(f"{key}_teeth", mw * 1.2, mw * 0.2, s * 0.1, seg=10, rings=4)
+        t.data.materials.append(mats.get("teeth", mats["hl"]))
+        t.parent = g
+        t.location = (0, -mw * 0.17, s * 0.08)
     # 땀방울 (당황) — 이마 오른쪽 위
     sw = put(lowpoly_ellipsoid(f"{key}_sweat", s * 0.45, s * 0.7, s * 0.3, seg=8, rings=6), "sweat",
              (eye_dx + s * 1.4, s * 1.3, s * 0.1))
@@ -365,16 +375,17 @@ def add_face(key, body, root, cx, cy, eye_dx, eye_s, mouth_dy, mouth_w, mats, bl
 
 # 감정 → 켤 부품 (나머지는 끔). three.js 재생기도 같은 표를 쓴다 (out/emotions.json).
 EMOTIONS = {
-    "neutral":     ["eye_open", "mouth_smile"],
-    "happy":       ["eye_happy", "mouth_open", "blush"],
-    "surprised":   ["eye_wide", "mouth_o"],
+    "neutral":     ["eye_open", "brow_neutral", "mouth_smile"],
+    "happy":       ["eye_happy", "brow_neutral", "mouth_open", "blush"],
+    "surprised":   ["eye_wide", "brow_neutral", "mouth_o"],
     "sad":         ["eye_open", "brow_sad", "mouth_frown"],
     "angry":       ["eye_open", "brow_angry", "mouth_flat"],
-    "embarrassed": ["eye_closed", "mouth_wavy", "blush", "sweat"],
-    "sleepy":      ["eye_closed", "mouth_flat"],
+    "embarrassed": ["eye_closed", "brow_neutral", "mouth_wavy", "blush", "sweat"],
+    "sleepy":      ["eye_closed", "brow_neutral", "mouth_flat"],
 }
 FACE_PARTS = ["eye_open", "eye_wide", "eye_happy", "eye_closed", "brow_angry", "brow_sad", "blush",
-              "mouth_smile", "mouth_frown", "mouth_flat", "mouth_open", "mouth_o", "mouth_wavy", "sweat"]
+              "mouth_smile", "mouth_frown", "mouth_flat", "mouth_open", "mouth_o", "mouth_wavy", "sweat",
+              "brow_neutral", "mouth_grin"]   # 뒤 둘은 사람 캐릭터만 (없으면 무시)
 
 
 def part_of(name, key):
@@ -386,8 +397,8 @@ def part_of(name, key):
     return None
 
 
-def set_emotion(root, key, emo):
-    on = set(EMOTIONS[emo])
+def set_emotion(root, key, emo, table=None):
+    on = set((table or EMOTIONS)[emo])
     for o in root.children_recursive:
         if o.name.startswith(f"{key}_eyehl_"):
             continue
@@ -541,4 +552,5 @@ def main():
         render(sc, os.path.join(OUT, f"q34_{key}.png"), 1080, 1350)
 
 
-main()
+if __name__ == "__main__":
+    main()
