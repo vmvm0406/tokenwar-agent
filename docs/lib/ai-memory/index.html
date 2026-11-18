@@ -1,0 +1,88 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>클로드 기억력 높이는 방법 · 토큰전쟁</title><link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#000000;--fg:#FFFFFF;--ac:#00FF66;--mu:#8A948F}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg)}
+body{font-family:'Wanted Sans Variable','Wanted Sans',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  line-height:1.65;word-break:keep-all;overflow-wrap:break-word}
+main{max-width:680px;margin:0 auto;padding:40px 16px 64px}
+.brand{font-family:'Black Han Sans',sans-serif;color:var(--ac);font-size:20px;letter-spacing:.01em}
+h1{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:clamp(30px,8vw,44px);line-height:1.2;margin:18px 0 12px}
+h1 .hl{color:var(--ac)}
+.intro{color:#CFD6D2;font-size:18px;margin:0 0 28px}
+.rule{height:4px;background:var(--ac);margin:28px 0}
+.step{border-top:2px solid #2A3530;padding:22px 0}
+.step .k{font-family:'Black Han Sans',sans-serif;color:var(--ac);font-size:32px;line-height:1}
+.step .lb{color:var(--mu);font-weight:700;font-size:15px;margin-left:10px}
+h2{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:24px;line-height:1.3;margin:10px 0 6px}
+h3{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:22px;margin:0 0 10px}
+p{margin:6px 0;color:#CFD6D2}
+.pr{position:relative;margin:12px 0 4px;border:2px solid var(--ac);background:#0E1310}
+.pr pre{margin:0;padding:16px 16px 52px;white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere;
+  font-family:'JetBrains Mono',ui-monospace,Consolas,monospace;font-size:15px;line-height:1.6;color:var(--fg)}
+.pr button{position:absolute;right:0;bottom:0;border:0;background:var(--ac);color:var(--bg);
+  font-family:inherit;font-weight:700;font-size:15px;line-height:1;padding:12px 16px;cursor:pointer}
+ul{padding-left:20px;color:#CFD6D2}
+.src{color:var(--mu);font-size:14px;border-top:2px solid #2A3530;padding-top:16px;margin-top:32px}
+.src a{color:var(--mu)}
+.kv{list-style:none;padding:0;margin:6px 0}
+.kv li{margin:4px 0}
+.kv b{color:var(--fg);margin-right:6px}
+.notice{border-left:4px solid var(--ac);padding:4px 0 4px 14px;margin:0 0 28px}
+.notice ul{margin:6px 0}
+.notice a{color:var(--ac)}
+.grp{margin:18px 0 0}
+.grp h4{margin:0 0 2px;font-size:17px;font-weight:700;color:var(--ac)}
+.grp .gs{font-size:13px;color:var(--mu);margin:2px 0 0}
+.grp .gs a{color:var(--mu)}
+.foot{margin-top:28px;font-weight:700}
+.step.li{padding:14px 0}
+.step.li .lb{color:var(--fg);font-size:18px}
+.step.li .ex{display:block;width:100%;max-width:360px;margin:10px 0 0}
+.step.li .pr pre{padding:12px 96px 12px 16px;font-size:17px}
+.foot a{color:var(--ac)}
+.step.li .en{font-family:'JetBrains Mono',ui-monospace,Consolas,monospace;color:var(--ac);font-size:16px;margin-left:10px}
+.usage{margin:6px 0 0}
+.usage li{margin:6px 0}
+.step.li .rv{color:var(--mu);font-size:15px;margin:8px 0 2px}
+.step.li .rv b{font-family:'Black Han Sans',sans-serif;font-weight:400;color:var(--ac);font-size:26px;margin-left:6px}
+.step.li .rq{border-top:2px solid var(--ac);padding-top:8px;color:var(--fg);font-weight:700}
+.step.li.sm{padding:10px 0}
+.step.li.sm .k{font-size:22px}
+.step.li.sm .rv{display:inline;margin-left:10px}
+.step.li.sm .rv b{font-size:20px}
+.step.li .gs{font-size:13px;color:var(--mu)}
+.step.li .gs a{color:var(--mu)}
+
+.card{display:block;border:2px solid #2A3530;padding:18px;margin:14px 0;text-decoration:none;color:var(--fg)}
+.card:hover{border-color:var(--ac)}
+.card .t{font-family:'Black Han Sans',sans-serif;font-size:24px;color:var(--fg)}
+.card .d{color:#CFD6D2;font-size:15px;margin-top:4px}
+.shot{display:block;width:100%;height:auto;border:2px solid #2A3530;margin:12px 0 4px}
+</style></head><body><main><div class="brand"><a href="../" style="color:inherit;text-decoration:none">토큰전쟁 자료실</a></div>
+<h1>클로드 <span class="hl">기억력</span> 높이는 방법</h1>
+<p class="intro">클로드는 대화를 새로 열면 앞의 일을 잊어요. 폴더에 <b>CLAUDE.md</b>라는 메모 파일을 하나 두면, 클로드 코드가 새 대화를 열 때마다 그 파일부터 읽고 시작해요. 내 소개, 하는 일, 지킬 규칙을 한 번만 적어 두면 돼요.</p>
+<div class="notice"><h3>먼저 해 둘 것</h3><ul>
+<li><a href="../ai-eyes/">AI에게 눈을 달아 주는 법</a> 1~2단계 (클로드 앱 설치, 'Code' 열기)</li></ul></div>
+<div class="step"><span class="k">1</span><span class="lb">메모 파일 만들기</span><h2>아래 문장을 그대로 붙여 넣기</h2>
+<div class="pr"><pre>이 폴더에 CLAUDE.md 파일을 만들어 줘. 앞으로 새 대화를 열어도 기억해야 할 것들을 여기에 적을 거야. 나에 대해 몇 가지 물어보고 채워 줘.</pre><button>복사</button></div>
+<p>클로드가 몇 가지를 물어보고 파일을 채워 줘요. .md는 글자만 들어 있는 메모 파일이에요.</p></div>
+<div class="step"><span class="k">2</span><span class="lb">이렇게 적어 두면 좋아요</span><h2>짧게, 항목별로</h2>
+<div class="pr"><pre># 나에 대해
+- 직장인, 마케팅 일을 함
+- 대답은 짧게, 존댓말로
+
+# 지금 하는 일
+- 인스타 계정 운영 (하루 릴스 1개)
+
+# 꼭 지킬 것
+- 결제·삭제는 하기 전에 꼭 물어보기</pre><button>복사</button></div></div>
+<div class="step"><span class="k">3</span><span class="lb">기억 더하기</span><h2>대화 중에 생긴 규칙은 바로 적어 달라고</h2>
+<div class="pr"><pre>방금 정한 거 CLAUDE.md에 추가해 줘.</pre><button>복사</button></div>
+<p>새 대화를 열어도 클로드가 이 파일을 읽고 그대로 일해요.</p></div>
+<div class="step"><span class="k">✓</span><span class="lb">결과 예시</span><h2>토큰전쟁 계정도 이렇게 운영해요</h2>
+<p>디자인 색, 말투, 하면 안 되는 것까지 CLAUDE.md 한 파일에 적어 두니, 새 대화를 열 때마다 처음부터 다시 설명하지 않아도 클로드가 규칙대로 일해요.</p></div>
+<div class="src">@tokenwar_ai · 팔로우하고 AI를 재밌게 배워 보세요</div>
+</main><script>document.querySelectorAll('.pr button').forEach(b=>b.onclick=()=>{navigator.clipboard.writeText(b.previousElementSibling.innerText);b.textContent='복사됨';setTimeout(()=>b.textContent='복사',1500)})</script></body></html>
