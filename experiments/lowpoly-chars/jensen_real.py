@@ -162,7 +162,13 @@ def paint_lips(body, w=0.1, up=0.028, lo=0.036):
         p.use_smooth = False
     rng = random.Random(9)
     attr = body.data.color_attributes[0]
-    upper, lower, line = B.hex2rgb("#A9454E"), B.hex2rgb("#BD5A60"), B.hex2rgb("#5C1F25")
+    # 자연스러운 입술색 (운영자 2026-11-18 "색은 자연스럽게"): 옆 피부색에서 붉은 기만 살짝 더한 톤.
+    import numpy as np
+    ring = [tuple(attr.data[p.loop_indices[0]].color)[:3] for p in body.data.polygons
+            if p.normal.y < -0.15 and w * 1.1 < abs(p.center.x - FACE_X) < w * 1.9 and abs(p.center.z - MOUTH_Z) < 0.06]
+    skin = np.median(np.array(ring), axis=0) if ring else np.array(B.hex2rgb("#D7A07A"))
+    tint = lambda r, g, b: tuple(float(v) for v in skin * np.array((r, g, b)))
+    upper, lower, line = tint(0.88, 0.5, 0.5), tint(0.98, 0.58, 0.57), tint(0.5, 0.27, 0.27)
     for p in body.data.polygons:
         c = p.center
         if p.normal.y > -0.15:   # 앞을 향한 면만 (얼굴이 살짝 돌아가 있어 y 높이로 거르면 한쪽이 빠짐)
@@ -179,7 +185,9 @@ def paint_lips(body, w=0.1, up=0.028, lo=0.036):
         elif -lo * span ** 0.7 < dz < 0:
             col = lower
         if col:
-            k = 1 + rng.uniform(-0.06, 0.06)
+            edge = max(0.0, (dx - 0.75) / 0.25)            # 입꼬리 쪽은 피부색으로 서서히
+            col = [col[i] * (1 - edge * 0.6) + skin[i] * edge * 0.6 for i in range(3)]
+            k = 1 + rng.uniform(-0.04, 0.04)
             for li in p.loop_indices:
                 attr.data[li].color = (col[0] * k, col[1] * k, col[2] * k, 1)
 
