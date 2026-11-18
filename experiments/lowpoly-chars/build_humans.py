@@ -222,11 +222,38 @@ def make_blocky_head(key, cfg):
                                     or c.y < -0.32
                                     or (abs(c.x) > 0.3 and c.y < 0.06 and c.z > -0.17))(f.calc_center_median())]
     bmesh.ops.delete(bm, geom=kill, context="FACES")
+    # 경계선 다듬기 (운영자 2026-11-18): 지운 자리 가장자리 정점을 이마선·귀 둘레·뒷머리 끝 선 위로 옮겨 지그재그 없앰
+    for _ in range(2):
+        edge = {v for e in bm.edges if len(e.link_faces) == 1 for v in e.verts}
+        for v in edge:
+            c = v.co
+            if abs(c.x) > 0.28 and c.y < 0.12 and c.z > -0.2:
+                c.y = 0.06 if c.y > -0.05 else c.y                       # 귀 위 둘레: 수평선
+                if c.y < 0.06 and c.z > -0.17:
+                    c.z = -0.17                                          # 귀 뒤 세로선
+            elif c.y < -0.24:
+                c.y = -0.32 + 0.04 * (abs(c.x) / 0.4) ** 2               # 뒷머리 끝: 살짝 둥근 선
+            elif c.z > 0.0:
+                c.y = hairline(c.x)                                      # 이마선 곡선
+        bmesh.ops.smooth_vert(bm, verts=list(edge), factor=0.5, use_axis_x=True, use_axis_y=True, use_axis_z=False)
     hair = B.bm_to_obj(bm, f"{key}_hair")
     B.shade_flat(hair)
     hc, hd = B.hex2rgb(cfg["hair"]), B.hex2rgb("#4E4E4B")
     # 가르마 선과 판 사이 그늘은 짙게
-    B.facet_colors(hair, lambda c: hd if (-0.16 < c.x < -0.1 and c.y > 0.2 and c.z > -0.25) else hc, jitter=0.07, seed=8)
+    # 젠슨 황 머리 질감: 윗머리는 밝은 은색, 옆·뒤로 갈수록 짙은 회색, 가르마에서 뒤로 넘긴 결(줄무늬)
+    top_c, side_c = B.hex2rgb("#8A8A86"), B.hex2rgb("#55554F")
+    def hair_col(c):
+        if -0.16 < c.x < -0.1 and c.y > 0.2 and c.z > -0.25:
+            return hd                                            # 가르마
+        t = max(0.0, min(1.0, (c.y - 0.05) / 0.3))               # 높을수록 밝게
+        base = [side_c[i] + (top_c[i] - side_c[i]) * t for i in range(3)]
+        # 결: 윗머리는 x 방향으로, 옆머리는 높이 방향으로 띠 → 앞뒤로 흐르는 줄
+        u = c.x + 0.13 if t > 0.5 else c.y + 0.6 * c.z
+        k = 0.68 if math.sin(u * 38.0) > 0.35 else 1.0
+        if c.z < -0.2:
+            k *= 0.9                                             # 뒤통수 조금 더 짙게
+        return [v * k for v in base]
+    B.facet_colors(hair, hair_col, jitter=0.06, seed=8)
     hair.data.materials.append(B.material(f"{key}_hair_mat", vcol=True, rough=0.8))
     return head, hair
 
@@ -657,6 +684,12 @@ def main():
         bpy.context.view_layer.update()
         B.camera(sc, (1.5, -4.0, 1.5), (0, 0, 1.1), lens=50, focus=(0, -0.3, 1.2), fstop=2.0)
         B.render(sc, os.path.join(OUT, f"q34_{key}.png"), 1080, 1350)
+        if "--all" in argv:   # 옆·뒤 확인
+            B.camera(sc, (3.8, -0.2, 1.9), (0, 0, 1.6), lens=50, focus=(0, 0, 1.6), fstop=2.4)
+            B.render(sc, os.path.join(OUT, f"side_{key}.png"), 1080, 1350)
+            B.camera(sc, (-1.4, 3.6, 2.0), (0, 0, 1.6), lens=50, focus=(0, 0, 1.6), fstop=2.4)
+            B.render(sc, os.path.join(OUT, f"back_{key}.png"), 1080, 1350)
+            B.camera(sc, (1.5, -4.0, 1.5), (0, 0, 1.1), lens=50, focus=(0, -0.3, 1.2), fstop=2.0)
         test_pose(ao, True)
         bpy.context.view_layer.update()
         B.render(sc, os.path.join(OUT, f"pose_{key}.png"), 1080, 1350)
