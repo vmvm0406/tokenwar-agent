@@ -36,16 +36,16 @@ CHARS = {
     # 클로드: 가운데 몸(얼굴 자리)을 키우고 광선은 그 둘레로 (운영자: 변형 OK, 알아볼 수만 있게, 얼굴은 크게)
     # 통통하게(운영자 레퍼런스 2026-11-18): 두껍고 둥근 단면(power 0.5) + 윤곽을 사방으로 부풀림(dilate) + 큼직한 면(faces)
     "claude": dict(svg="claude.svg", half=0.12, h=0.40, hmin=0.05, power=0.5, dcap=0.46,
-                   disc=dict(r=0.46, sides=28), faces=1100, dilate=0.07,
+                   disc=dict(r=0.46, sides=28), faces=2400, dilate=0.07,
                    face=dict(cx=0.0, cy=0.02, eye_dx=0.16, eye_s=0.10, mouth_dy=-0.16, mouth_w=0.08,
                              blush=(0.28, -0.10, 0.075))),
     "gemini": dict(svg="gemini.svg", half=0.12, h=0.42, hmin=0.04, power=0.5, dcap=None,
-                   disc=None, faces=900, dilate=0.06,
+                   disc=None, faces=2000, dilate=0.06,
                    face=dict(cx=0.0, cy=0.03, eye_dx=0.17, eye_s=0.10, mouth_dy=-0.16, mouth_w=0.08,
                              blush=(0.29, -0.11, 0.07))),
     # 챗GPT: 가운데를 큰 육각 얼굴판으로 덮고 매듭 꽃잎은 바깥에 남김
     "chatgpt": dict(svg="openai.svg", half=0.10, h=0.36, hmin=0.06, power=0.5, dcap=0.40,
-                    disc=dict(r=0.47, sides=6, rot=30), faces=1700, dilate=0.025,
+                    disc=dict(r=0.47, sides=6, rot=30), faces=3200, dilate=0.025,
                     face=dict(cx=0.0, cy=0.02, eye_dx=0.16, eye_s=0.10, mouth_dy=-0.16, mouth_w=0.08,
                               blush=(0.27, -0.10, 0.07))),
 }
@@ -165,7 +165,7 @@ def inflate(ob, half, h, hmin, power, dcap=None):
     me.update()
 
 
-def facet_colors(ob, color_fn, jitter=0.07, seed=1):
+def facet_colors(ob, color_fn, jitter=0.11, seed=1):   # 면마다 명암 차이 크게 → 다각형이 보이게 (운영자 2026-11-18)
     """면마다 색 하나 (평면 다각형 느낌). color_fn(중심 xyz) → 선형 rgb."""
     me = ob.data
     attr = me.color_attributes.new("Col", "FLOAT_COLOR", "CORNER")
@@ -208,7 +208,7 @@ def dilate(ob, dist):
     me.update()
     remesh(ob, 0.012)
     m = ob.modifiers.new("sm", "SMOOTH")
-    m.factor, m.iterations = 0.5, 6
+    m.factor, m.iterations = 0.5, 3      # 덜 매끈하게 → 각이 보이게
     apply_mod(ob, m)
 
 

@@ -25,24 +25,27 @@ FACES = dict(head=1400, hair=1000, body=4200)
 FACET_SMOOTH, FACET_JITTER = 1, 0.11   # 덜 매끈하게 + 면마다 명암 차이 → 각이 보이게
 HUMANS = {
     "jensen": dict(
-        skin="#D7A07A", hair="#7E7E7A", top="#1A1A1C", top_rough=0.32, tee="#34343A",
+        skin="#C98F6A", hair="#8E8E8A", top="#1A1A1C", top_rough=0.32, tee="#34343A",
         pants="#25272E", shoes="#111111", sleeves="top",
         # 얼굴 (운영자 2026-11-18 "얼굴형 더 잘"): 각지고 넓은 턱, 웃는 볼, 큰 코, 가는 눈, 짙은 눈썹, 이 보이는 큰 웃음
-        head_shapes=[("e", (0, 0.02, -0.02), (0.40, 0.38, 0.39)),          # 윗머리
-                     ("e", (0, -0.16, 0.04), (0.40, 0.21, 0.34)),          # 넓고 각진 턱
-                     ("e", (0.21, -0.11, 0.27), (0.14, 0.11, 0.10)),       # 웃는 볼
-                     ("e", (-0.21, -0.11, 0.27), (0.14, 0.11, 0.10)),
-                     ("e", (0, -0.06, 0.40), (0.07, 0.06, 0.055))],        # 코
+        # 느낌만 살린 로우폴리 (운영자 2026-11-18 "코 옆으로 넓고, 안경, 사각 얼굴형, 비율"): 사각 턱·각진 턱 모서리·넓은 코
+        head_shapes=[("e", (0, 0.06, -0.03), (0.39, 0.37, 0.38)),          # 윗머리
+                     ("e", (0, -0.17, 0.03), (0.38, 0.24, 0.33)),          # 넓은 아래 얼굴
+                     ("e", (0.2, -0.26, 0.04), (0.15, 0.1, 0.24)),         # 턱 모서리 (사각 얼굴형, 매끈하게)
+                     ("e", (-0.2, -0.26, 0.04), (0.15, 0.1, 0.24)),
+                     ("e", (0, -0.08, 0.40), (0.09, 0.065, 0.065)),        # 넓은 코끝
+                     ("e", (0.075, -0.11, 0.36), (0.055, 0.045, 0.05)),    # 큰 콧볼
+                     ("e", (-0.075, -0.11, 0.36), (0.055, 0.045, 0.05))],
         hair_main=((0, 0.15, -0.13), (0.43, 0.40, 0.40)),       # 앞머리 라인을 올리고 뒤로 (이마가 넓게 보이게)       # 옆은 짧고 뒤로 넘긴 은회색 머리
         # 참고: 엔비디아 공식 'Toy Jensen' — 옆 가르마로 한쪽에 볼륨 있게 넘긴 은회색 머리(짙은 줄무늬)
         hair_extra=[((0.05, 0.42, 0.04), (0.34, 0.13, 0.25)),   # 위로 세워 뒤로 넘긴 볼륨 (앞으로 내려오지 않게)
                     ((0.14, 0.40, -0.14), (0.27, 0.13, 0.26)), ((-0.18, 0.34, -0.12), (0.2, 0.11, 0.24))],
-        hair_streak="#55555A",
+        hair_streak="#8E8E8A",
         brow="#3B3936", glasses="#1C1C1E",   # 안경 (운영자 2026-11-18)
         face=dict(eye_s=0.064, eye_aspect=0.62, eye_dx=0.15, mouth_w=0.075, mouth_dy=-0.20, brows=True, grin=True),
         emo={"neutral": ["eye_open", "brow_neutral", "mouth_grin"],
              "happy": ["eye_happy", "brow_neutral", "mouth_grin", "blush"]},
-        collar=True),
+        collar=True, blocky=True, fashion="jensen", blocky_head=True),   # 각진 블록 몸 + 젠슨 황 패션 (운영자 2026-11-18)
     "man": dict(
         skin="#E2AE86", hair="#2B211C", top="#7FA6D4", top_rough=0.7, tee=None,
         pants="#3A3F4A", shoes="#5B3B29", sleeves="top",
@@ -108,9 +111,77 @@ def blob(name, shapes, faces, color, rough=0.68, voxel=0.018, smooth=4, jitter=0
     return ob
 
 
+def rounded_box(bm, center, size, round_=0.35, cuts=3, top_scale=1.0, matrix=None):
+    """모서리를 둥글린 상자 (각진 면 유지). size=(가로 x, 세로 y, 앞뒤 z) 반지름. top_scale: 위쪽 가로 비율."""
+    tmp = bmesh.new()
+    bmesh.ops.create_cube(tmp, size=2.0)
+    bmesh.ops.subdivide_edges(tmp, edges=tmp.edges[:], cuts=cuts, use_grid_fill=True)
+    for v in tmp.verts:
+        p = v.co.copy()
+        p = p * (1 - round_) + p.normalized() * 1.25 * round_
+        k = 1.0 + (top_scale - 1.0) * max(0.0, p.y)
+        v.co = Vector((center[0] + p.x * size[0] * k, center[1] + p.y * size[1], center[2] + p.z * size[2]))
+        if matrix is not None:
+            v.co = matrix @ v.co
+    me = bpy.data.meshes.new("_rb")
+    tmp.to_mesh(me)
+    tmp.free()
+    bm.from_mesh(me)
+    bpy.data.meshes.remove(me)
+
+
+def make_blocky_head(key, cfg):
+    """각진 블록 머리 (운영자 2026-11-18 "원통형 같은 거 붙이지 말고 각지게, 전체적인 느낌만"):
+    둥근 모서리 상자 하나로 사각 얼굴 + 각진 넓은 코 + 각진 귀 / 머리카락은 각진 판 두 개."""
+    from mathutils import Matrix
+    bm = bmesh.new()
+    rounded_box(bm, (0, -0.02, 0), (0.39, 0.42, 0.37), round_=0.3, cuts=2, top_scale=0.95)      # 사각 얼굴
+    rounded_box(bm, (0, -0.09, 0.39), (0.085, 0.06, 0.06), round_=0.2, cuts=1)                   # 넓은 코
+    for sx in (1, -1):
+        rounded_box(bm, (0.4 * sx, -0.02, 0), (0.05, 0.09, 0.06), round_=0.2, cuts=1)           # 귀
+    bmesh.ops.triangulate(bm, faces=bm.faces[:])
+    head = B.bm_to_obj(bm, f"{key}_head")
+    B.remesh(head, 0.02)
+    B.decimate(head, 600)
+    B.shade_flat(head)
+    sk = B.hex2rgb(cfg["skin"])
+    B.facet_colors(head, lambda c: sk, jitter=0.08, seed=7)
+    head.data.materials.append(B.material(f"{key}_head_mat", vcol=True, rough=0.72))
+    bm = bmesh.new()
+    rounded_box(bm, (0, 0.2, -0.06), (0.425, 0.26, 0.42), round_=0.3, cuts=2)                    # 머리 덮개 (위·옆·뒤)
+    tilt = Matrix.Rotation(math.radians(-18), 4, "X")
+    rounded_box(bm, (0, 0.38, 0.1), (0.36, 0.08, 0.2), round_=0.25, cuts=1, matrix=tilt)        # 앞머리: 위로 넘긴 판
+    bmesh.ops.triangulate(bm, faces=bm.faces[:])
+    hair = B.bm_to_obj(bm, f"{key}_hair")
+    B.remesh(hair, 0.022)
+    B.decimate(hair, 420)
+    # 얼굴 앞쪽은 파냄: 이마선 아래 앞면 정점을 머리 안으로
+    for v in hair.data.vertices:
+        if v.co.z > 0.12 and v.co.y < 0.2:
+            v.co.z = min(v.co.z, 0.12 + max(0.0, v.co.y - 0.05))
+    hair.data.update()
+    B.shade_flat(hair)
+    hc = B.hex2rgb(cfg["hair"])
+    B.facet_colors(hair, lambda c: hc, jitter=0.1, seed=8)
+    hair.data.materials.append(B.material(f"{key}_hair_mat", vcol=True, rough=0.8))
+    return head, hair
+
+
 def make_head(key, cfg, mats):
     """머리는 로고 캐릭터와 같은 좌표(앞 +Z, 위 +Y)로 만들고 얼굴 부품을 붙인 뒤 세운다."""
     grp = B.link(bpy.data.objects.new(f"{key}_headgrp", None))
+    if cfg.get("blocky_head"):
+        head, hair = make_blocky_head(key, cfg)
+        head.parent = grp
+        hair.parent = grp
+        bpy.context.view_layer.update()
+        m2 = {**mats, "brow": B.material(f"{key}_brow", B.hex2rgb(cfg.get("brow", "#222222")), rough=0.8),
+              "teeth": B.material("teeth", B.hex2rgb("#F4F1EA"), rough=0.35)}
+        fc = {**FACE, **cfg.get("face", {})}
+        B.add_face(key, head, grp, mats=m2, **fc)
+        if cfg.get("glasses"):
+            add_glasses(key, fc, cfg["glasses"])
+        return grp
     skin = cfg.get("head_shapes") or [("e", (0, 0, 0), (0.42, 0.40, 0.40)),   # 머리
                                       ("e", (0, -0.07, 0.40), (0.05, 0.045, 0.04))]  # 코
     skin = skin + [("e", (0.41, -0.02, 0), (0.06, 0.10, 0.07)),       # 귀
@@ -382,6 +453,12 @@ def paint_hips(c):
     return None
 
 
+def paint_hips_silver(c):
+    if c.z > pz(0.83):
+        return "#B8BCC2" if (abs(c.x) < 0.045 and c.y < -0.12) else BELT
+    return None
+
+
 def paint_leg(cx):
     return lambda c: PANTS_D if (abs(c.x - cx) < 0.014 and c.y < -0.08) else None   # 바지 앞 주름선
 
@@ -400,18 +477,43 @@ def torso_seams():
     return S
 
 
+# 젠슨 황 패션: 열린 검정 가죽 재킷(은색 지퍼 두 줄, 넓은 깃) + 안에 검정 티
+JACKET_COLLAR, ZIP, TEE_BLACK, JACKET_HEM = "#2A2A2E", "#A9AEB5", "#0E0E10", "#141416"
+
+
+def paint_jacket(c):
+    ax = abs(c.x)
+    if c.y < -0.1 and ax < 0.07:
+        return TEE_BLACK                               # 열린 앞섶 사이 검정 티
+    if c.y < -0.1 and ax < 0.085:
+        return ZIP                                     # 양쪽 은색 지퍼
+    if c.z > pz(1.2) and ax < 0.22:
+        return JACKET_COLLAR                           # 넓은 깃
+    if c.z < pz(0.9):
+        return JACKET_HEM                              # 밑단 밴드
+    return None
+
+
+def jacket_seams():
+    return [((0.07, 0, 0), (1, 0, 0)), ((-0.07, 0, 0), (1, 0, 0)), ((0.085, 0, 0), (1, 0, 0)), ((-0.085, 0, 0), (1, 0, 0)),
+            ((0.22, 0, 0), (1, 0, 0)), ((-0.22, 0, 0), (1, 0, 0)), ((0, 0, pz(1.2)), (0, 0, 1)), ((0, 0, pz(0.9)), (0, 0, 1)),
+            ((0, -0.1, 0), (0, 1, 0))]
+
+
 def make_blocky_body(key, cfg, ao):
     """각진 블록 몸: 부위마다 상자 하나를 뼈에 붙임 (관절에서 블록째 꺾임)."""
     top, pants, skin, shoes = cfg["top"], cfg["pants"], cfg["skin"], cfg["shoes"]
+    jensen = cfg.get("fashion") == "jensen"
+    torso_paint, torso_s, top_rough = (paint_jacket, jacket_seams(), 0.38) if jensen else (paint_torso, torso_seams(), 0.75)
     parts = [
-        (block(f"{key}_torso", (0, 0, 0.86), (0, 0, 1.30), 0.56, 0.32, top, taper=1.12, paint=paint_torso, seams=torso_seams()), "spine"),
+        (block(f"{key}_torso", (0, 0, 0.86), (0, 0, 1.30), 0.56, 0.32, top, taper=1.12, paint=torso_paint, seams=torso_s, rough=top_rough), "spine"),
         (block(f"{key}_neck", (0, 0, 1.26), (0, 0, 1.46), 0.15, 0.15, skin), "neck"),
-        (block(f"{key}_hips", (0, 0, 0.72), (0, 0, 0.90), 0.52, 0.31, pants, paint=paint_hips, seams=[((0, 0, pz(0.83)), (0, 0, 1)), ((0.045, 0, 0), (1, 0, 0)), ((-0.045, 0, 0), (1, 0, 0)), ((0, -0.12, 0), (0, 1, 0))]), "hips"),
+        (block(f"{key}_hips", (0, 0, 0.72), (0, 0, 0.90), 0.52, 0.31, pants, paint=(paint_hips_silver if jensen else paint_hips), seams=[((0, 0, pz(0.83)), (0, 0, 1)), ((0.045, 0, 0), (1, 0, 0)), ((-0.045, 0, 0), (1, 0, 0)), ((0, -0.12, 0), (0, 1, 0))]), "hips"),
     ]
     for sd, sx in (("L", 1), ("R", -1)):
         parts += [
             (block(f"{key}_uarm{sd}", (0.36 * sx, 0, 1.27), (0.47 * sx, 0, 0.97), 0.17, 0.17, top, arm=True), f"upper_arm.{sd}"),
-            (block(f"{key}_larm{sd}", (0.47 * sx, 0, 0.99), (0.525 * sx, -0.02, 0.71), 0.155, 0.155, top, paint=paint_sleeve, seams=[((0, 0, pz(0.78, arm=True)), (0, 0, 1))], arm=True), f"lower_arm.{sd}"),
+            (block(f"{key}_larm{sd}", (0.47 * sx, 0, 0.99), (0.525 * sx, -0.02, 0.71), 0.155, 0.155, top, paint=(None if jensen else paint_sleeve), seams=[((0, 0, pz(0.78, arm=True)), (0, 0, 1))], arm=True), f"lower_arm.{sd}"),
             (block(f"{key}_hand{sd}", (0.525 * sx, -0.02, 0.72), (0.54 * sx, -0.025, 0.58), 0.12, 0.09, skin, bevel=0.015, arm=True), f"lower_arm.{sd}"),
             (block(f"{key}_thigh{sd}", (0.155 * sx, 0, 0.84), (0.155 * sx, 0, 0.44), 0.22, 0.24, pants, paint=paint_leg(0.155 * sx), seams=[((0.155 * sx + 0.014, 0, 0), (1, 0, 0)), ((0.155 * sx - 0.014, 0, 0), (1, 0, 0)), ((0, -0.08, 0), (0, 1, 0))]), f"thigh.{sd}"),
             (block(f"{key}_shin{sd}", (0.155 * sx, 0, 0.47), (0.155 * sx, 0, 0.11), 0.2, 0.22, pants, paint=paint_leg(0.155 * sx), seams=[((0.155 * sx + 0.014, 0, 0), (1, 0, 0)), ((0.155 * sx - 0.014, 0, 0), (1, 0, 0)), ((0, -0.08, 0), (0, 1, 0))]), f"shin.{sd}"),
