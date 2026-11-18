@@ -78,14 +78,15 @@
  "lines": [
   {
    "who": "man",
-   "say": "[suspicious] 야... 이거 너희 중에 누구야?",
-   "sub": "야... 이거 너희 중에 누구야?",
-   "emo": "angry"
+   "say": "[angry] 야, 너네 시험 때 막 답 알려 주고 그런 거야? 이거 너희 중에 누구야?",
+   "sub": "야, 너네 시험 때|막 답 알려 주고 그런 거야?|이거 너희 중에 누구야?",
+   "emo": "angry",
+   "seed": 7
   },
   {
    "who": "chatgpt",
-   "say": "[nervously] 목요일에 말씀드릴게요.",
-   "sub": "목요일에 말씀드릴게요.",
+   "say": "[hesitant, avoiding the question] 음... 목요일에 말씀드릴게요.",
+   "sub": "음... 목요일에 말씀드릴게요.",
    "emo": "embarrassed"
   },
   {
@@ -102,8 +103,8 @@
   },
   {
    "who": "man",
-   "say": "[curious] 그러면 클로드 너가, 무슨 사건인지 간단하게 브리핑해 줘.",
-   "sub": "그러면 클로드 너가 무슨 사건인지|간단하게 브리핑해 줘.",
+   "say": "[curious] 클로드 너가 좀 잘 아는 것 같은데, 그러면 무슨 사건인지 간단하게 브리핑해 줘.",
+   "sub": "클로드 너가 좀 잘 아는 것 같은데,|그러면 무슨 사건인지|간단하게 브리핑해 줘.",
    "emo": "neutral"
   },
   {
@@ -117,7 +118,7 @@
    "say": "[impressed] 클로드 너... 그림 실력 좀 늘었다...?",
    "sub": "클로드 너... 그림 실력 좀 늘었다...?",
    "emo": "surprised",
-   "break": 2.6
+   "break": 3.9
   },
   {
    "who": "claude",
@@ -133,18 +134,13 @@
    "emo": "neutral"
   },
   {
-   "who": "claude",
-   "say": "[quietly] 그렇겠지.",
-   "sub": "그렇겠지.",
-   "emo": "neutral"
-  },
-  {
    "who": "chatgpt",
    "say": "[gasps] 헉!",
    "emo": "surprised",
    "overlay": {
-    "line": 9,
-    "dt": 6.35,
+    "line": 8,
+    "end": true,
+    "dt": 0.45,
     "vol": 0.7
    }
   },
@@ -153,23 +149,25 @@
    "say": "[gasps] 헉!",
    "emo": "surprised",
    "overlay": {
-    "line": 9,
-    "dt": 6.5,
+    "line": 8,
+    "end": true,
+    "dt": 0.55,
     "vol": 0.7
    }
   },
   {
    "who": "claude",
-   "say": "[gasps] 헉...!",
+   "say": "[startled] 앗...!",
    "emo": "surprised",
    "overlay": {
-    "line": 9,
-    "dt": 6.65,
-    "vol": 0.7
+    "line": 8,
+    "end": true,
+    "dt": 0.2,
+    "vol": 0.75
    }
   }
  ],
- "tail": 9.8,
+ "tail": 7.6,
  "screens": [
   {
    "t": 0,
@@ -198,56 +196,60 @@
   {
    "line": 5,
    "end": true,
-   "dt": 0.15,
+   "dt": 0.1,
    "screen": "monitor",
    "clip": "mimi1"
   },
   {
    "line": 5,
    "end": true,
-   "dt": 0.75,
+   "dt": 0.5,
    "screen": "monitor",
    "clip": "ytn"
   },
   {
    "line": 5,
    "end": true,
-   "dt": 1.35,
+   "dt": 0.9,
    "screen": "monitor",
    "clip": "mimi2"
   },
   {
    "line": 5,
    "end": true,
-   "dt": 1.95,
+   "dt": 1.3,
+   "screen": "monitor",
+   "bg": "board",
+   "reveal": {
+    "d": 2.3
+   },
+   "cut": true
+  },
+  {
+   "line": 6,
+   "dt": -0.5,
    "screen": "monitor",
    "bg": "board"
   },
   {
-   "line": 9,
+   "line": 8,
+   "end": true,
    "dt": 0.0,
-   "screen": "monitor",
-   "clip": "news",
-   "from": 1.0
-  },
-  {
-   "line": 9,
-   "dt": 0.55,
    "screen": "monitor",
    "bg": "board",
    "clip": "skh",
    "rect": [
-    0.368,
-    0.303,
-    0.251,
-    0.507
+    0.42,
+    0.4,
+    0.16,
+    0.2
    ],
    "grow": {
-    "dt": 1.6,
-    "d": 2.6
+    "dt": 0.0,
+    "d": 0.35
    },
    "hold": true,
-   "noborder": true
+   "cut": true
   }
  ],
  "shots": [
@@ -293,7 +295,21 @@
    "dt": 0.05,
    "cam": "mon",
    "z0": 1.0,
-   "z1": 1.15
+   "z1": 1.1
+  },
+  {
+   "line": 5,
+   "end": true,
+   "dt": 2.1,
+   "cam": "close:claude"
+  },
+  {
+   "line": 5,
+   "end": true,
+   "dt": 2.9,
+   "cam": "mon",
+   "z0": 1.05,
+   "z1": 1.1
   },
   {
    "line": 6,
@@ -308,43 +324,35 @@
   {
    "line": 8,
    "dt": -0.1,
-   "cam": "close:chatgpt"
+   "cam": "two:claude:chatgpt"
   },
   {
-   "line": 9,
-   "dt": -0.1,
-   "cam": "close:claude"
-  },
-  {
-   "line": 9,
+   "line": 8,
    "end": true,
-   "dt": 0.2,
+   "dt": 0.3,
+   "cam": "wide",
+   "dx": 0.2,
+   "back": 1.15
+  },
+  {
+   "line": 8,
+   "end": true,
+   "dt": 1.6,
    "cam": "mon",
    "z0": 1.0,
    "z1": 3.15,
-   "zd": 3.6
+   "zd": 2.2
   },
   {
-   "line": 9,
-   "dt": 6.3,
-   "cam": "wide"
+   "line": 8,
+   "end": true,
+   "dt": 5.0,
+   "cam": "wide",
+   "dx": 0.2,
+   "back": 1.15
   }
  ],
  "events": [
-  {
-   "line": 0,
-   "dt": 0.0,
-   "who": "man",
-   "do": "look",
-   "at": "claude"
-  },
-  {
-   "line": 0,
-   "dt": 0.7,
-   "who": "man",
-   "do": "look",
-   "at": "chatgpt"
-  },
   {
    "line": 0,
    "dt": 0.0,
@@ -367,6 +375,27 @@
    "at": "man"
   },
   {
+   "line": 0,
+   "dt": 0.0,
+   "who": "man",
+   "do": "look",
+   "at": "claude"
+  },
+  {
+   "line": 0,
+   "dt": 1.0,
+   "who": "man",
+   "do": "look",
+   "at": "chatgpt"
+  },
+  {
+   "line": 0,
+   "dt": 2.0,
+   "who": "man",
+   "do": "look",
+   "at": "gemini"
+  },
+  {
    "line": 1,
    "dt": 0.0,
    "who": "claude",
@@ -376,23 +405,23 @@
   {
    "line": 1,
    "dt": 0.0,
-   "who": "chatgpt",
-   "do": "look",
-   "at": "camera"
-  },
-  {
-   "line": 1,
-   "dt": 0.1,
-   "who": "chatgpt",
-   "do": "tremble",
-   "d": 1.0
-  },
-  {
-   "line": 1,
-   "dt": 0.0,
    "who": "man",
    "do": "look",
    "at": "chatgpt"
+  },
+  {
+   "line": 1,
+   "dt": 0.2,
+   "who": "chatgpt",
+   "do": "look",
+   "at": "gemini"
+  },
+  {
+   "line": 1,
+   "dt": 0.3,
+   "who": "chatgpt",
+   "do": "tremble",
+   "d": 1.2
   },
   {
    "line": 2,
@@ -408,6 +437,13 @@
    "do": "hop"
   },
   {
+   "line": 2,
+   "dt": 0.0,
+   "who": "chatgpt",
+   "do": "look",
+   "at": "man"
+  },
+  {
    "line": 3,
    "dt": 0.0,
    "who": "claude",
@@ -434,13 +470,6 @@
    "who": "gemini",
    "do": "look",
    "at": "claude"
-  },
-  {
-   "line": 4,
-   "dt": 0.2,
-   "who": "man",
-   "do": "tilt",
-   "d": 1.4
   },
   {
    "line": 5,
@@ -465,6 +494,14 @@
    "at": "monitor"
   },
   {
+   "line": 5,
+   "end": true,
+   "dt": 0.1,
+   "who": "claude",
+   "do": "work",
+   "d": 3.6
+  },
+  {
    "line": 6,
    "dt": 0.0,
    "who": "man",
@@ -472,7 +509,7 @@
    "at": "claude"
   },
   {
-   "line": 7,
+   "line": 6,
    "dt": 0.0,
    "who": "claude",
    "do": "look",
@@ -483,7 +520,7 @@
    "dt": 0.0,
    "who": "chatgpt",
    "do": "look",
-   "at": "claude"
+   "at": "man"
   },
   {
    "line": 8,
@@ -493,87 +530,116 @@
    "at": "chatgpt"
   },
   {
-   "line": 9,
-   "dt": 0.0,
+   "line": 8,
+   "dt": 0.1,
    "who": "claude",
    "do": "look",
    "at": "monitor"
   },
   {
-   "line": 9,
+   "line": 8,
+   "dt": 0.3,
+   "who": "claude",
+   "do": "work",
+   "d": 3.0
+  },
+  {
+   "line": 8,
    "end": true,
-   "dt": 0.0,
+   "dt": -0.08,
+   "who": "claude",
+   "do": "press"
+  },
+  {
+   "line": 8,
+   "end": true,
+   "dt": 0.25,
    "who": "man",
    "do": "look",
    "at": "monitor"
   },
   {
-   "line": 9,
+   "line": 8,
    "end": true,
-   "dt": 0.0,
+   "dt": 0.25,
    "who": "chatgpt",
    "do": "look",
    "at": "monitor"
   },
   {
-   "line": 9,
+   "line": 8,
    "end": true,
-   "dt": 0.0,
+   "dt": 0.25,
    "who": "gemini",
    "do": "look",
    "at": "monitor"
   },
   {
-   "line": 9,
-   "dt": 6.3,
+   "line": 8,
+   "end": true,
+   "dt": 0.3,
    "who": "man",
    "emo": "surprised"
   },
   {
-   "line": 9,
-   "dt": 6.4,
-   "who": "chatgpt",
-   "do": "hop"
-  },
-  {
-   "line": 9,
-   "dt": 6.55,
-   "who": "gemini",
-   "do": "hop"
-  },
-  {
-   "line": 9,
-   "dt": 6.7,
+   "line": 8,
+   "end": true,
+   "dt": 0.2,
    "who": "claude",
    "do": "hop"
   },
   {
-   "line": 9,
-   "dt": 7.4,
+   "line": 8,
+   "end": true,
+   "dt": 0.45,
+   "who": "chatgpt",
+   "do": "hop"
+  },
+  {
+   "line": 8,
+   "end": true,
+   "dt": 0.55,
+   "who": "gemini",
+   "do": "hop"
+  },
+  {
+   "line": 8,
+   "end": true,
+   "dt": 5.15,
    "who": "claude",
    "do": "look",
    "at": "camera"
   },
   {
-   "line": 9,
-   "dt": 7.55,
+   "line": 8,
+   "end": true,
+   "dt": 5.3,
    "who": "chatgpt",
    "do": "look",
    "at": "camera"
   },
   {
-   "line": 9,
-   "dt": 7.7,
+   "line": 8,
+   "end": true,
+   "dt": 5.45,
    "who": "gemini",
    "do": "look",
    "at": "camera"
   },
   {
-   "line": 9,
-   "dt": 7.8,
+   "line": 8,
+   "end": true,
+   "dt": 5.6,
    "who": "man",
    "do": "look",
    "at": "camera"
+  },
+  {
+   "line": 8,
+   "end": true,
+   "dt": 5.1,
+   "who": "claude",
+   "emo": "embarrassed"
   }
  ],
  "cards": [
@@ -591,20 +657,21 @@
    "text": "그거 제가 목요일날 말씀드릴게요."
   },
   {
-   "line": 9,
-   "dt": 9.1,
+   "line": 8,
+   "end": true,
+   "dt": 6.6,
    "kind": "end",
    "text": "팔로우하고|AI를 재밌게 배워 보세요!"
   }
  ],
  "audio": [
   {
-   "line": 9,
+   "line": 8,
    "end": true,
-   "dt": 0.6,
+   "dt": 0.0,
    "clip": "skh",
-   "from": 47.6,
-   "to": 53.7,
+   "from": 47.0,
+   "to": 53.4,
    "vol": 0.35
   }
  ],
@@ -627,41 +694,49 @@
   {
    "line": 5,
    "end": true,
-   "dt": 0.15,
+   "dt": 0.1,
    "kind": "swipe"
   },
   {
    "line": 5,
    "end": true,
-   "dt": 0.75,
+   "dt": 0.5,
    "kind": "swipe"
   },
   {
    "line": 5,
    "end": true,
-   "dt": 1.35,
+   "dt": 0.9,
    "kind": "swipe"
   },
   {
    "line": 5,
    "end": true,
-   "dt": 1.95,
+   "dt": 1.3,
+   "kind": "scribble"
+  },
+  {
+   "line": 5,
+   "end": true,
+   "dt": 3.6,
    "kind": "ding"
   },
   {
-   "line": 9,
-   "dt": 0.0,
-   "kind": "swipe"
-  },
-  {
-   "line": 9,
-   "dt": 0.55,
-   "kind": "swipe"
-  },
-  {
-   "line": 9,
+   "line": 8,
    "end": true,
-   "dt": 3.6,
+   "dt": -0.05,
+   "kind": "click"
+  },
+  {
+   "line": 8,
+   "end": true,
+   "dt": 0.02,
+   "kind": "pop"
+  },
+  {
+   "line": 8,
+   "end": true,
+   "dt": 3.4,
    "kind": "boom",
    "vol": 0.8
   }

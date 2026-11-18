@@ -81,6 +81,34 @@ function cover(g, im, x, y, w, h) {   // 그림을 칸에 꽉 채우기 (비율 
   const s = Math.max(w / iw, h / ih), sw = w / s, sh = h / s;
   g.drawImage(im, (iw - sw) / 2, (ih - sh) / 2, sw, sh, x, y, w, h);
 }
+// 그림이 그려지는 화면 (리트냥이 2026-11-18 "클로드가 그리는 게 티 나게"): reveal {d} 동안
+// 흰 종이 → 연필 밑그림(흑백)이 왼쪽부터 → 색이 칠해짐, 그리는 자리에 연필. 글자 없음.
+function drawReveal(g, s, im, t, off, W2, H2) {
+  const u = clamp((t - s.t) / (s.reveal.d || 2)), y0 = off * H2;
+  g.fillStyle = '#f3efe6'; g.fillRect(0, y0, W2, H2);
+  const a = clamp(u / 0.62), b = clamp((u - 0.45) / 0.55);     // 밑그림 진행, 색칠 진행
+  const rows = 4, rh = H2 / rows;
+  const band = (p, filter) => {                                  // 줄마다 왼→오른쪽으로 (사람이 칠하듯)
+    if (p <= 0) return;
+    g.save(); g.beginPath();
+    const done = p * rows;
+    for (let r = 0; r < rows; r++) { const f = clamp(done - r); if (f > 0) g.rect(0, y0 + r * rh, W2 * f, rh + 1); }
+    g.clip(); g.filter = filter; cover(g, im, 0, y0, W2, H2); g.restore();
+  };
+  band(a, 'grayscale(1) contrast(1.5) brightness(1.08)');
+  band(b, 'none');
+  if (u < 1) {                                                    // 연필 (지금 그리는 자리)
+    const p = b > 0 ? b : a, done = p * rows, r = Math.min(rows - 1, Math.floor(done));
+    const x = W2 * clamp(done - r), y = y0 + r * rh + rh * (0.5 + 0.35 * Math.sin(t * 23));
+    g.save(); g.translate(x, y); g.rotate(-0.75);
+    const L = H2 * 0.34, Wd = L * 0.13;
+    g.fillStyle = '#f2c230'; g.fillRect(0, -Wd / 2, L, Wd);        // 몸통
+    g.fillStyle = '#e9b48a'; g.beginPath(); g.moveTo(0, -Wd / 2); g.lineTo(-Wd * 1.3, 0); g.lineTo(0, Wd / 2); g.fill();   // 깎은 나무
+    g.fillStyle = '#222'; g.beginPath(); g.moveTo(-Wd * 0.85, -Wd * 0.17); g.lineTo(-Wd * 1.3, 0); g.lineTo(-Wd * 0.85, Wd * 0.17); g.fill();   // 심
+    g.fillStyle = '#e88a9a'; g.fillRect(L, -Wd / 2, Wd * 0.9, Wd);  // 지우개
+    g.restore();
+  }
+}
 const SWIPE = 0.35;
 function drawScreen(sc, name, t) {
   const list = S.screens.filter((s) => s.screen === name && s.t <= t);
@@ -90,7 +118,8 @@ function drawScreen(sc, name, t) {
   // 화면 일정 선택 필드 (리트냥이 2026-11-18): bg(바탕 그림 clip id), rect [x,y,w,h](0~1, 바탕 위 액자 칸), grow {dt, d}(액자 칸이 화면 전체로 커짐), hold(마지막 장면에서 멈춤), from(클립 시작 초), noborder(액자 테두리 안 그림: 바탕 그림에 액자가 있을 때)
   const put = (s, off) => {   // 세로 릴스를 화면에 (모니터는 가운데 세로로, 양옆 어둡게 = 인스타 웹). 가로 영상(land)은 꽉 채움
     if (!s) return;
-    if (s.bg) cover(g, clipFrame(s.bg, 0), 0, off * H2, W2, H2);
+    if (s.bg && s.reveal) { drawReveal(g, s, clipFrame(s.bg, 0), t, off, W2, H2); }
+    else if (s.bg) cover(g, clipFrame(s.bg, 0), 0, off * H2, W2, H2);
     if (!s.clip && !s.rect) return;
     let [rx, ry, rw, rh] = s.rect || [0, 0, 1, 1];
     if (s.rect && s.grow) {
@@ -387,6 +416,11 @@ function animAI(c, t) {
   for (const e of evs(who, 'nod')) rx += 0.22 * Math.sin(Math.PI * 2 * clamp((t - e.t) / 0.5)) * (t > e.t && t < e.t + 1.0 ? 1 : 0);
   for (const e of evs(who, 'shake')) ry += 0.3 * Math.sin(Math.PI * 4 * clamp((t - e.t) / 0.8)) * (t > e.t && t < e.t + 0.8 ? 1 : 0);
   for (const e of evs(who, 'tilt')) rz += 0.22 * ease((t - e.t) / 0.25) * (1 - ease((t - e.t - (e.d || 1.2)) / 0.3));
+  for (const e of evs(who, 'work')) if (t > e.t && t < e.t + (e.d || 2)) {   // 바쁘게 작업 (모니터 쪽으로 기울어 꼼지락, 리트냥이 2026-11-18)
+    const k = ease((t - e.t) / 0.25) * (1 - ease((t - e.t - (e.d || 2) + 0.25) / 0.25));
+    rx += 0.16 * k; rz += 0.07 * k * Math.sin(t * 15); y += 0.012 * k * Math.abs(Math.sin(t * 11));
+  }
+  for (const e of evs(who, 'press')) { const b = bump(t, e.t, 0.22); rx += 0.4 * b; sy -= 0.1 * b; }   // 꾹 누르기 (실수로 클릭)
   for (const e of evs(who, 'tremble')) if (t > e.t && t < e.t + (e.d || 1)) jx += 0.0022 * Math.sin(t * 55);   // 운영자: 부들거림 작게
   let chew = 0;
   for (const e of evs(who, 'munch')) if (t > e.t && t < e.t + (e.d || 3)) {   // 팝콘 냠냠 (말 안 할 때 입 오물오물 + 통통)
@@ -519,8 +553,10 @@ function camFor(s, t) {
     return { pos, look, focus: look.clone(), ap: 0.0004, near: Math.max(0.05, d - 0.1) };
   }
   if (kind === 'wide') {
-    look = new THREE.Vector3(0, deskY + 0.5, -0.15);
-    pos = new THREE.Vector3(0.05, deskY + 0.85, 3.25);
+    // 선택: dx(오른쪽으로 옮김, 모니터까지 넣기), back(뒤로 물러남 배수) — 리트냥이 2026-11-18
+    const dx = s.dx || 0, bk = s.back || 1;
+    look = new THREE.Vector3(dx, deskY + 0.5, -0.15);
+    pos = new THREE.Vector3(0.05 + dx, deskY + 0.5 + 0.35 * bk, -0.15 + 3.4 * bk);
     focus = look.clone(); ap = 0.0012;
   } else if (kind === 'close') {
     const f = POS[a].face.clone(), human = cast[a].human, sz = POS[a].size || 0.4;

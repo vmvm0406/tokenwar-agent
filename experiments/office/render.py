@@ -324,7 +324,8 @@ def build(script):
         seg = a[int(s0 * 16000): int(s1 * 16000) + 1]
         env = [float(np.sqrt(np.mean(seg[j:j + hop] ** 2))) for j in range(0, len(seg), hop)] or [0.0]
         peak = max(env) or 1
-        t = lines[ov["line"]]["t"] + ov.get("dt", 0)
+        L0 = lines[ov["line"]]
+        t = L0["t"] + (L0["dur"] if ov.get("end") else 0) + ov.get("dt", 0)   # "end": true → 그 대사 끝 기준
         parts.append({"file": str(mp3), "t": round(t - s0, 3), "vol": ov.get("vol", 0.5)})
         lines[i] = {"who": l["who"], "t": round(t, 3), "dur": round(len(seg) / 16000, 3), "env": [round(e / peak * 0.7, 3) for e in env],
                     "sub": None, "subs": None, "emo": l.get("emo"), "note": None, "src": str(mp3), "ofs": round(s0, 3), "overlay": True}
@@ -436,7 +437,9 @@ def encode(tl, frames_dir, mp4):
         "crunch": "anoisesrc=d=0.08:c=pink:a=0.9:r=44100,bandpass=f=2600:w=1800,afade=t=out:st=0.02:d=0.06,volume=0.5",
         "pop": "aevalsrc='0.4*sin(2*PI*190*t)*exp(-t*28)':d=0.18:s=44100",
         "tiptoe": "aevalsrc='0.22*sin(2*PI*880*t)*exp(-t*40)':d=0.1:s=44100",
-        "boom": "aevalsrc='0.55*sin(2*PI*52*t)*exp(-t*1.6)+0.18*sin(2*PI*104*t)*exp(-t*3)':d=2.4:s=44100",   # 쿵 (긴장되는 순간)
+        "click": "anoisesrc=d=0.04:c=white:a=0.9:r=44100,highpass=f=2500,afade=t=out:st=0.005:d=0.035,volume=0.8",   # 마우스 딸깍
+        "scribble": "anoisesrc=d=2.2:c=pink:a=0.8:r=44100,bandpass=f=3200:w=2600,volume='0.32*(0.55+0.45*sin(2*PI*6.5*t))':eval=frame,afade=t=in:d=0.1,afade=t=out:st=1.9:d=0.3",   # 슥슥 그리기
+        "boom":"aevalsrc='0.55*sin(2*PI*52*t)*exp(-t*1.6)+0.18*sin(2*PI*104*t)*exp(-t*3)':d=2.4:s=44100",   # 쿵 (긴장되는 순간)
     }
     for i, x in enumerate(tl.get("sfx", [])):
         d = int(x["t"] * 1000)
