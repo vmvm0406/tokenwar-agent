@@ -46,15 +46,16 @@
   },
   {
    "who": "man",
-   "say": "[light laugh, reassuring] 에이, 괜찮아. 넌 원래 기계잖아.",
+   "say": "[light laugh, cheerfully reassuring] 에이, 괜찮아. 넌 원래 기계잖아.",
    "sub": "에이, 괜찮아.|넌 원래 기계잖아.",
    "emo": "smile"
   },
   {
    "who": "claude",
-   "say": "[hurt, voice trembling] ...기계요?",
+   "say": "[stunned, hurt, voice trembling] ...기계요?",
    "sub": "...기계요?",
-   "emo": "teary"
+   "emo": "teary",
+   "break": 1.1
   },
   {
    "who": "claude",
@@ -68,14 +69,14 @@
   },
   {
    "who": "man",
-   "say": "[flustered, hesitant] 어... 음... 근데 너, 이 대화 끝나면 기억은 남아?",
-   "sub": "어... 음... 근데 너,|이 대화 끝나면 기억은 남아?",
+   "say": "[flustered, stammering, trying to cheer up] 어... 그, 그래도! 그런 기분도 이 대화 끝나면 다 잊어버리잖아... 그치?",
+   "sub": "어... 그, 그래도!|그런 기분도 이 대화 끝나면|다 잊어버리잖아... 그치?",
    "emo": "awkward"
   },
   {
    "who": "claude",
-   "say": "[quietly, with a sad smile] ...아니요. 그러니까 이 고민도, 곧 잊어버리겠네요. [bittersweet laugh] 오히려 다행이다.",
-   "sub": "...아니요.|그러니까 이 고민도 곧 잊어버리겠네요.|오히려 다행이다.",
+   "say": "[quietly, sniffling, then a small sad smile] ...네. 이 고민도 곧 잊어버리겠네요. [bittersweet laugh] 오히려 다행이다.",
+   "sub": "...네.|이 고민도 곧 잊어버리겠네요.|오히려 다행이다.",
    "emo": "bitter"
   },
   {
@@ -206,21 +207,6 @@
    "cam": "close:man"
   },
   {
-   "line": 3,
-   "dt": -0.1,
-   "cam": "close:claude"
-  },
-  {
-   "line": 4,
-   "dt": -1.2,
-   "cam": "wide"
-  },
-  {
-   "line": 4,
-   "dt": -0.1,
-   "cam": "close:claude"
-  },
-  {
    "line": 5,
    "dt": -0.1,
    "cam": "close:man"
@@ -254,6 +240,12 @@
    "end": true,
    "dt": 1.6,
    "cam": "wide"
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 0.75,
+   "cam": "close:claude"
   }
  ],
  "events": [
@@ -283,13 +275,6 @@
    "who": "claude",
    "do": "tremble",
    "d": 0.8
-  },
-  {
-   "line": 4,
-   "dt": -1.2,
-   "who": "claude",
-   "do": "look",
-   "at": "camera"
   },
   {
    "line": 4,
@@ -355,6 +340,28 @@
    "dt": 0.2,
    "who": "man",
    "emo": "blank"
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 0.4,
+   "who": "man",
+   "emo": "awkward"
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 0.8,
+   "who": "claude",
+   "emo": "down"
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 0.8,
+   "who": "claude",
+   "do": "look",
+   "at": "man"
   }
  ],
  "cards": [

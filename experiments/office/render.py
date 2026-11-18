@@ -300,7 +300,10 @@ def build(script):
             dd["_per"] = per
             for k in range(len(g)):
                 if per[k]:
-                    segs[k] = [max(0.0, per[k][0][1] - 0.15), per[k][-1][2] + 0.12]
+                    w0, w1 = max(0.0, per[k][0][1] - 0.15), per[k][-1][2] + 0.12
+                    # 받아쓰기가 못 알아들은 대사('응... 응...' 등)는 구간이 너무 짧게 잡힘 → 일레븐랩스 구간 그대로 (운영자 2026-11-19)
+                    if (w1 - w0) >= 0.35 * (segs[k][1] - segs[k][0]):
+                        segs[k] = [w0, w1]
         # "cut_after": "조롱받" → 그 글자까지만 들리고 소리를 툭 끊음 (팝콘에 맞아 말이 끊김, 운영자 2026-11-18)
         mutes = []
         for k, i in enumerate(g):
