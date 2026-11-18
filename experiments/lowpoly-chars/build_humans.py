@@ -48,7 +48,7 @@ HUMANS = {
         pants="#3A3F4A", shoes="#5B3B29", sleeves="top",
         hair_main=((0, 0.12, -0.05), (0.46, 0.44, 0.44)),
         hair_extra=[((0, 0.30, 0.15), (0.37, 0.10, 0.12))],  # 앞머리: 이마에 붙게 (운영자 2026-11-18 "앞머리 왜 튀어나왔어")
-        brow="#241C18", face=dict(brows=True), blocky=True, glasses="#2A2A2E",   # 각진 블록 몸 + 안경 (운영자 2026-11-18)
+        brow="#241C18", face=dict(brows=True), blocky=True, glasses="#2A2A2E", glasses_style="round",   # 각진 블록 몸 + 얇은 원형테 (운영자 2026-11-18)
         collar=False),
 }
 FACE = dict(cx=0.0, cy=0.0, eye_dx=0.15, eye_s=0.075, mouth_dy=-0.17, mouth_w=0.06, blush=(0.26, -0.10, 0.06))
@@ -129,9 +129,31 @@ def make_head(key, cfg, mats):
           "teeth": B.material("teeth", B.hex2rgb("#F4F1EA"), rough=0.35)}
     fc = {**FACE, **cfg.get("face", {})}
     B.add_face(key, head, grp, mats=m2, **fc)
-    if cfg.get("glasses"):
+    if cfg.get("glasses") and cfg.get("glasses_style") == "round":
+        add_round_glasses(key, fc, cfg["glasses"])
+    elif cfg.get("glasses"):
         add_glasses(key, fc, cfg["glasses"])
     return grp
+
+
+def add_round_glasses(key, fc, color):
+    """얇은 원형테 안경 (일반 남성, 운영자 2026-11-18 "젠슨 황과 똑같은 안경 말고 얇은 원형테"): 위아래 같은 굵기."""
+    face = bpy.data.objects[f"{key}_face"]
+    z0 = face.location.z
+    s, dx = fc["eye_s"], fc["eye_dx"]
+    r, zf, t = s * 1.35, s * 0.8, s * 0.07
+    m = B.material(f"{key}_glasses", B.hex2rgb(color), rough=0.3)
+
+    def tube(name, pts, rad):
+        ob = B.arc_tube(name, pts, rad, ring=5)
+        ob.data.materials.append(m)
+        ob.parent = face
+    for sd, sx in (("L", -1), ("R", 1)):
+        ex = sx * dx
+        tube(f"{key}_glasses_rim_{sd}", [(ex + r * math.cos(math.radians(a)), s * 0.1 + r * math.sin(math.radians(a)), zf) for a in range(0, 361, 15)], t)
+        x_out = ex + sx * r
+        tube(f"{key}_glasses_arm_{sd}", [(x_out, s * 0.25, zf), (sx * 0.40, s * 0.3, zf - 0.12), (sx * 0.42, s * 0.2, -z0 + 0.02)], t)
+    tube(f"{key}_glasses_bridge", [(-dx + r, s * 0.35, zf), (0, s * 0.55, zf + 0.01), (dx - r, s * 0.35, zf)], t)
 
 
 def add_glasses(key, fc, color):
@@ -301,7 +323,7 @@ def attach(ob, ao, bone):
     ob.matrix_world = mw
 
 
-def block(name, a, b, w, d, color, rough=0.75, taper=1.0, bevel=0.018, paint=None, cuts=5, arm=False):
+def block(name, a, b, w, d, color, rough=0.75, taper=1.0, bevel=0.018, paint=None, cuts=5, arm=False, seams=None):
     a, b = pv(a, arm), pv(b, arm)
     """a→b 축을 따라 늘인 상자 (가로 w, 앞뒤 d), 모서리 살짝 깎음. taper = b쪽 끝 크기 비율. 운영자 2026-11-18 레퍼런스처럼 각진 블록 몸."""
     from mathutils import Matrix
@@ -313,11 +335,15 @@ def block(name, a, b, w, d, color, rough=0.75, taper=1.0, bevel=0.018, paint=Non
         k = 1.0 + (taper - 1.0) * (v.co.z + 0.5)
         v.co = Vector((v.co.x * w * k, v.co.y * d * k, (v.co.z + 0.5) * L))
     bmesh.ops.bevel(bm, geom=bm.edges[:], offset=bevel, segments=1, affect="EDGES")
-    if paint and cuts:   # 옷 디테일을 면 색으로 그리려면 면을 잘게 (모양은 그대로 상자)
+    if paint and cuts and not seams:   # 옷 디테일을 면 색으로 그리려면 면을 잘게 (모양은 그대로 상자)
         bmesh.ops.subdivide_edges(bm, edges=bm.edges[:], cuts=cuts, use_grid_fill=True)
     bmesh.ops.triangulate(bm, faces=bm.faces[:])
     q = (b - a).normalized().to_track_quat("Z", "Y")
     bmesh.ops.transform(bm, matrix=Matrix.Translation(a) @ q.to_matrix().to_4x4(), verts=bm.verts[:])
+    for co, no in (seams or []):   # 옷 무늬 선을 따라 실제로 잘라 경계를 반듯하게 (운영자 2026-11-18 "경계 다듬고")
+        bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], plane_co=co, plane_no=no, dist=0.0003)
+    if seams:
+        bmesh.ops.triangulate(bm, faces=bm.faces[:])
     ob = B.bm_to_obj(bm, name)
     B.shade_flat(ob)
     base = B.hex2rgb(color)
@@ -364,22 +390,32 @@ def paint_shoe(c):
     return SOLE if c.z < 0.035 else None
 
 
+def torso_seams():
+    z0 = pz(1.1)
+    S = [((0.02, 0, z0), (1, 0, -0.55)), ((-0.02, 0, z0), (-1, 0, -0.55)), ((0, 0, z0), (0, 0, 1)),   # V넥
+         ((0, 0, pz(1.22)), (0, 0, 1)), ((0.17, 0, 0), (1, 0, 0)), ((-0.17, 0, 0), (1, 0, 0)),         # 깃
+         ((0.014, 0, 0), (1, 0, 0)), ((-0.014, 0, 0), (1, 0, 0)),                                     # 단추 줄
+         ((0.08, 0, 0), (1, 0, 0)), ((0.2, 0, 0), (1, 0, 0)), ((0, 0, pz(1.02)), (0, 0, 1)), ((0, 0, pz(1.14)), (0, 0, 1)),  # 주머니
+         ((0, 0, pz(0.9)), (0, 0, 1)), ((0, -0.12, 0), (0, 1, 0)), ((0, -0.14, 0), (0, 1, 0))]       # 밑단, 앞면
+    return S
+
+
 def make_blocky_body(key, cfg, ao):
     """각진 블록 몸: 부위마다 상자 하나를 뼈에 붙임 (관절에서 블록째 꺾임)."""
     top, pants, skin, shoes = cfg["top"], cfg["pants"], cfg["skin"], cfg["shoes"]
     parts = [
-        (block(f"{key}_torso", (0, 0, 0.86), (0, 0, 1.30), 0.56, 0.32, top, taper=1.12, paint=paint_torso, cuts=10), "spine"),
+        (block(f"{key}_torso", (0, 0, 0.86), (0, 0, 1.30), 0.56, 0.32, top, taper=1.12, paint=paint_torso, seams=torso_seams()), "spine"),
         (block(f"{key}_neck", (0, 0, 1.26), (0, 0, 1.46), 0.15, 0.15, skin), "neck"),
-        (block(f"{key}_hips", (0, 0, 0.72), (0, 0, 0.90), 0.52, 0.31, pants, paint=paint_hips, cuts=8), "hips"),
+        (block(f"{key}_hips", (0, 0, 0.72), (0, 0, 0.90), 0.52, 0.31, pants, paint=paint_hips, seams=[((0, 0, pz(0.83)), (0, 0, 1)), ((0.045, 0, 0), (1, 0, 0)), ((-0.045, 0, 0), (1, 0, 0)), ((0, -0.12, 0), (0, 1, 0))]), "hips"),
     ]
     for sd, sx in (("L", 1), ("R", -1)):
         parts += [
             (block(f"{key}_uarm{sd}", (0.36 * sx, 0, 1.27), (0.47 * sx, 0, 0.97), 0.17, 0.17, top, arm=True), f"upper_arm.{sd}"),
-            (block(f"{key}_larm{sd}", (0.47 * sx, 0, 0.99), (0.525 * sx, -0.02, 0.71), 0.155, 0.155, top, paint=paint_sleeve, arm=True), f"lower_arm.{sd}"),
+            (block(f"{key}_larm{sd}", (0.47 * sx, 0, 0.99), (0.525 * sx, -0.02, 0.71), 0.155, 0.155, top, paint=paint_sleeve, seams=[((0, 0, pz(0.78, arm=True)), (0, 0, 1))], arm=True), f"lower_arm.{sd}"),
             (block(f"{key}_hand{sd}", (0.525 * sx, -0.02, 0.72), (0.54 * sx, -0.025, 0.58), 0.12, 0.09, skin, bevel=0.015, arm=True), f"lower_arm.{sd}"),
-            (block(f"{key}_thigh{sd}", (0.155 * sx, 0, 0.84), (0.155 * sx, 0, 0.44), 0.22, 0.24, pants, paint=paint_leg(0.155 * sx), cuts=8), f"thigh.{sd}"),
-            (block(f"{key}_shin{sd}", (0.155 * sx, 0, 0.47), (0.155 * sx, 0, 0.11), 0.2, 0.22, pants, paint=paint_leg(0.155 * sx), cuts=8), f"shin.{sd}"),
-            (block(f"{key}_shoe{sd}", (0.155 * sx, -0.05, 0.0), (0.155 * sx, -0.05, 0.13), 0.2, 0.32, shoes, rough=0.5, paint=paint_shoe), f"shin.{sd}"),
+            (block(f"{key}_thigh{sd}", (0.155 * sx, 0, 0.84), (0.155 * sx, 0, 0.44), 0.22, 0.24, pants, paint=paint_leg(0.155 * sx), seams=[((0.155 * sx + 0.014, 0, 0), (1, 0, 0)), ((0.155 * sx - 0.014, 0, 0), (1, 0, 0)), ((0, -0.08, 0), (0, 1, 0))]), f"thigh.{sd}"),
+            (block(f"{key}_shin{sd}", (0.155 * sx, 0, 0.47), (0.155 * sx, 0, 0.11), 0.2, 0.22, pants, paint=paint_leg(0.155 * sx), seams=[((0.155 * sx + 0.014, 0, 0), (1, 0, 0)), ((0.155 * sx - 0.014, 0, 0), (1, 0, 0)), ((0, -0.08, 0), (0, 1, 0))]), f"shin.{sd}"),
+            (block(f"{key}_shoe{sd}", (0.155 * sx, -0.05, 0.0), (0.155 * sx, -0.05, 0.13), 0.2, 0.32, shoes, rough=0.5, paint=paint_shoe, seams=[((0, 0, 0.035), (0, 0, 1))]), f"shin.{sd}"),
         ]
     for ob, bone in parts:
         attach(ob, ao, bone)
