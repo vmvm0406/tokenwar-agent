@@ -57,6 +57,15 @@ d.ellipse([940, 575, 1040, 780], fill=int(255 * amt))
 d.polygon([(470, 900), (895, 900), (840, 1150), (520, 1150)], fill=int(255 * amt))   # 턱 옆·목
 mask = mask.filter(ImageFilter.GaussianBlur(35))
 out = Image.composite(photo, painted, mask)
+# 앞머리 → 이마: 머리 회색이 이마 위쪽으로 부드럽게 옅어지게 (운영자 2026-11-18 "여기 자연스럽게 이어줘")
+grad = Image.new("L", painted.size, 0)
+gp = grad.load()
+for y in range(300, 440):
+    a = int(200 * max(0.0, min(1.0, (430 - y) / 110)) ** 1.5)
+    for x in range(400, 965):
+        gp[x, y] = a
+grad = grad.filter(ImageFilter.GaussianBlur(25))
+out = Image.composite(Image.new("RGB", painted.size, (172, 172, 168)), out, grad)
 out.save(HERE / "ref" / OUT_NAME)
 out.crop((330, 300, 1060, 1060)).save(HERE / "out" / "mixed_face_preview.png")
 print(HERE / "ref" / OUT_NAME)

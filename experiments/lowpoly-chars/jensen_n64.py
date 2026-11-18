@@ -48,8 +48,8 @@ def hair_relief(ob):
         if w <= 0:
             continue
         ang = math.atan2(dx, -co.y)
-        ridge = max(0.0, math.sin(ang * 12 + co.y * 4.0)) ** 1.5
-        co += v.normal * (w * (0.01 + 0.012 * ridge))
+        ridge = max(0.0, math.sin(ang * 8 + co.y * 3.0)) ** 2
+        co += v.normal * (w * (0.012 + 0.004 * ridge))   # 굴곡은 아주 약하게 (운영자 2026-11-18 "머리통이 쭈그러졌어")
     me.update()
 
 
@@ -101,7 +101,32 @@ def build_shape():
 
 
 COLLAR_Z, NAPE_Z = 1.07, 1.27
+COLLAR_Z0, COLLAR_TILT = 1.085, 0.217   # 비스듬한 깃: z = 1.085 + 0.217*y (앞 y -0.35 → 1.01, 뒤 y 0.3 → 1.15) — 운영자 2026-11-18 "목 경계 다듬기"
+
+
+def collar_z(y):
+    return COLLAR_Z0 + COLLAR_TILT * y
 EAR_X, EAR_Y, EAR_Z = 0.45, -0.02, 1.48     # 귀 (얼굴 가운데에서 옆으로, 앞뒤, 높이)   # 깃 선, 뒤통수 머리 끝 선
+
+
+EAR_RY, EAR_RZ = 0.1, 0.13
+
+
+def ear_planes():
+    """귀 테두리(옆에서 본 타원 y-z)에 접하는 평면 8개: (점, 바깥쪽 법선)."""
+    out = []
+    for k in range(8):
+        a = math.radians(45 * k)
+        p = (0, EAR_Y + EAR_RY * math.cos(a), EAR_Z + EAR_RZ * math.sin(a))
+        out.append((p, (0, math.cos(a) / EAR_RY, math.sin(a) / EAR_RZ)))
+    return out
+
+
+def in_ear(c):
+    dx = abs(c.x - FACE_X)
+    if dx < EAR_X - 0.06:
+        return False
+    return all((c.y - p[1]) * n[1] + (c.z - p[2]) * n[2] < 0 for p, n in ear_planes())
 
 
 def cut_seams(ob):
@@ -109,9 +134,16 @@ def cut_seams(ob):
     깃 선(z 1.07, 가로) · 뒤통수 머리 끝(z 1.27, 가로) — 면이 이 선에서 딱 끊겨 색 경계가 반듯해짐."""
     bm = bmesh.new()
     bm.from_mesh(ob.data)
-    for z in (COLLAR_Z, NAPE_Z):
+    planes = [((0, 0, z), (0, 0, 1)) for z in (NAPE_Z, 1.62)]
+    planes.append(((0, 0, COLLAR_Z0), (0, -COLLAR_TILT, 1)))                 # 깃: 앞은 낮고 뒤는 높게 (실제 깃 모양)
+    planes += [(co, no) for co, no in ear_planes()]                             # 귀 테두리: 타원에 가까운 팔각형
+    for sx in (1, -1):
+        # 관자놀이 머리선: dx = 0.30 + 0.5*(1.80 - z)  (운영자 2026-11-18 "너무 세모야")
+        planes.append(((FACE_X + sx * 0.30, 0, 1.80), (sx * 1.0, 0, 0.5)))
+        planes.append(((FACE_X + sx * (EAR_X - 0.06), 0, 0), (1, 0, 0)))          # 귀 안쪽 테두리
+    for co, no in planes:
         geom = bm.verts[:] + bm.edges[:] + bm.faces[:]
-        bmesh.ops.bisect_plane(bm, geom=geom, plane_co=(0, 0, z), plane_no=(0, 0, 1), dist=0.0005)
+        bmesh.ops.bisect_plane(bm, geom=geom, plane_co=co, plane_no=no, dist=0.0005)
     bmesh.ops.triangulate(bm, faces=bm.faces[:])
     bm.to_mesh(ob.data)
     bm.free()
@@ -128,16 +160,18 @@ def project_uv(ob, w, h):
         # 경계는 cut_seams가 자른 선(NAPE_Z 뒤통수 머리 끝, COLLAR_Z 깃)에 맞춤 → 색 경계가 반듯함
         dx = abs(c.x - FACE_X)
         back = c.y > -0.05
-        is_ear = abs(c.z - EAR_Z) < 0.13 and dx > EAR_X - 0.06 and abs(c.y - EAR_Y) < 0.1
+        is_ear = in_ear(c)
         if is_ear:
             kind = "photo_side"                      # 귀: 사진 귀 질감
+        elif dx > 0.25 and collar_z(c.y) < c.z < EAR_Z - 0.06 and c.y < 0.15 and dx < 0.5:
+            kind = "neck"                            # 귀 밑·턱 뒤: 머리카락 대신 목 피부 (운영자 2026-11-18)
         elif c.z > NAPE_Z and (c.y > -0.12 or n.y > 0.25 or (n.z > 0.6 and c.z > 1.85)
                                or (n.y > -0.4 and c.z > 1.5 and (dx > 0.28 or c.y > -0.3))
                                or (c.z > 1.62 and dx > 0.30 + max(0.0, 1.80 - c.z) * 0.5)):   # 관자놀이도 흰머리 (사진처럼 이마 좁게)
             kind = "hair"                            # 정수리·옆머리·귀 뒤·뒤통수 (흰머리)
-        elif back and c.z > COLLAR_Z:
+        elif back and c.z > collar_z(c.y):
             kind = "neck"                            # 뒷목: 사진 목 피부
-        elif back or c.z <= COLLAR_Z:
+        elif back or c.z <= collar_z(c.y):
             kind = "jacket" if n.y > 0.25 else "front"   # 깃·어깨·몸: 사진 재킷
         elif n.z < -0.2 and 1.30 < c.z < 1.43 and dx < 0.16:
             kind = "skin"                            # 코 밑만 피부 견본
@@ -159,9 +193,12 @@ def project_uv(ob, w, h):
             elif kind == "neck":    # 사진 목 피부 띠 (x 600~760, y 1030~1100)
                 px = 600 + min(max((co.x - FACE_X + 0.3) / 0.6, 0), 1) * 160
                 py = 1030 + min(max((1.25 - co.z) / 0.3, 0), 1) * 70
-            elif kind == "photo_side":
+            elif kind == "photo_side":   # 사진 얼굴 가장자리 밖은 거울처럼 접어 피부 질감이 이어지게 (늘어난 줄무늬 없앰)
                 lo, hi = photo_bounds(py)
-                px = min(max(px, lo), hi)
+                if px < lo:
+                    px = min(hi, lo + (lo - px))
+                elif px > hi:
+                    px = max(lo, hi - (px - hi))
             uv.data[li].uv = (min(max(px / w, 0), 1), 1 - min(max(py / h, 0), 1))
 
 
@@ -289,8 +326,14 @@ def fit_to_photo(ob):
         i = bisect.bisect_left(tz, z)
         (z0, f0), (z1, f1) = sm[i - 1], sm[i]
         return f0 + (f1 - f0) * (z - z0) / (z1 - z0)
+    top_f = sm[-1][1]
     for v in me.vertices:
-        v.co.x = FACE_X + (v.co.x - FACE_X) * factor(v.co.z)
+        f = factor(v.co.z)
+        dx = abs(v.co.x - FACE_X)   # 옆머리는 윗머리만큼만 좁힘 (운영자 2026-11-18 "옆머리 볼륨은 윗머리 볼륨 정도로")
+        side = max(0.0, min(1.0, (v.co.z - 1.55) / 0.1)) * max(0.0, min(1.0, (dx - 0.26) / 0.08))
+        if f < top_f:
+            f = f + (top_f - f) * side
+        v.co.x = FACE_X + (v.co.x - FACE_X) * f
     me.update()
     print("fit", " ".join(f"{z:.2f}:{f:.2f}" for z, f in sm[::6]))
 
@@ -350,6 +393,7 @@ def main():
     W, H = src.size
     cut_seams(ob)
     fit_to_photo(ob)          # 사진 윤곽에 모형 폭 맞춤 (예전 눈대중 좁히기 narrow_head 대신)
+    cut_seams(ob)             # 폭을 맞춘 뒤 경계선을 따라 자름 (분류 기준선과 정확히 겹침)
     project_uv(ob, W, H)
     img = src
     if TEX:   # 해상도를 줄일 때만 (경로를 바꾸면 Blender가 그 경로의 예전 파일을 다시 불러오므로 먼저 지움)
