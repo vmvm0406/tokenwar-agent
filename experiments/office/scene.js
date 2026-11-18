@@ -311,6 +311,8 @@ window.twInit = async (script) => {
     }
     POP.rest = new THREE.Vector3(gp.x - 0.17, deskY, (gp.z ?? 0.2) + 0.1);
     POP.g.position.copy(POP.rest); scene.add(POP.g);
+    POP.spill = [];
+    for (let k = 0; k < 14; k++) { const sp = new THREE.Mesh(new THREE.IcosahedronGeometry(0.013, 0), pc); sp.visible = false; scene.add(sp); POP.spill.push(sp); }
   }
   camera = new THREE.PerspectiveCamera(36, W / H, 0.05, 40);
   const rt = new THREE.WebGLRenderTarget(W, H, { type: THREE.HalfFloatType, samples: 4 });
@@ -375,7 +377,7 @@ function animAI(c, t) {
   let x = c.baseX;
   const mv = evs(who, 'move').sort((a, b) => a.t - b.t);
   if (mv.length) {
-    const X0 = (v) => v === 'home' ? c.baseX : v === 'off' ? 1.5 : v;
+    const X0 = (v) => v === 'home' ? c.baseX : v === 'off' ? 0.9 : v;   // off = 화면 바로 밖 (멀면 들어오는 모습이 안 보임)
     x = X0(mv[0].from ?? 'off');
     for (const e of mv) {
       if (t < e.t) break;
@@ -396,6 +398,29 @@ function animAI(c, t) {
       const head = new THREE.Vector3(x, deskY + y + c.size * 0.98, c.root.position.z);
       POP.g.position.copy(head).lerp(POP.rest, v);
       if (v > 0 && v < 1) POP.g.position.y += 0.08 * Math.sin(Math.PI * v);
+      POP.g.rotation.set(0, 0, 0);
+      // 젠슨이 팝콘 통을 던짐 (운영자 2026-11-18): 통이 젠슨 손으로 → 포물선으로 지피티 머리에 거꾸로 씌워짐 + 팝콘이 쏟아짐
+      const th = S.events.find((e) => e.do === 'throw');
+      if (th && t >= th.t) {
+        const hu = Object.values(cast).find((q) => q.human), hand = POS[hu.key].face.clone().add(new THREE.Vector3(0.1, -0.32, 0.3));
+        const capPos = new THREE.Vector3(x, deskY + y + c.size * 1.02, c.root.position.z);
+        const a1 = ease((t - th.t) / 0.25), a2 = clamp((t - th.t - 0.3) / 0.35);
+        if (t < th.t + 0.3) POP.g.position.copy(POP.rest).lerp(hand, a1);
+        else {
+          POP.g.position.copy(hand).lerp(capPos, a2);
+          POP.g.position.y += 0.18 * Math.sin(Math.PI * a2);
+          POP.g.rotation.x = Math.PI * a2;                       // 날아가며 뒤집힘
+          if (a2 >= 1) POP.g.position.y += 0.1;                  // 거꾸로 씌워진 통 (가장자리가 머리에 걸침)
+        }
+        POP.hand = t < th.t + 0.3 ? POP.g.position.clone() : null;
+        for (const [k, s] of (POP.spill || []).entries()) {        // 쏟아진 팝콘: 머리에서 튀어 책상으로
+          const tt = t - th.t - 0.62;
+          s.visible = tt > 0;
+          if (tt <= 0) continue;
+          const vx = Math.cos(k * 2.4) * 0.35, vz = Math.sin(k * 2.4) * 0.2 + 0.1, vy = 0.5 + 0.3 * ((k * 7) % 5) / 5;
+          s.position.set(capPos.x + vx * tt, Math.max(deskY + 0.01, capPos.y + vy * tt - 4.9 * tt * tt), capPos.z + vz * tt);
+        }
+      }
     }
   }
   c.root.position.x = x;
@@ -425,6 +450,16 @@ function animHuman(c, t) {
     aim(B['upper_arm.R'], null, elbow.sub(sh), u);
     const el = B['lower_arm.R'].getWorldPosition(new THREE.Vector3());
     aim(B['lower_arm.R'], null, forehead.clone().sub(el), u);
+  }
+  for (const e of evs(who, 'throw')) {                                          // 팝콘 던지기: 통 쪽으로 뻗었다가 위로 휙
+    const r = t - e.t;
+    if (r < 0 || r > 1.1 || !POP.rest) continue;
+    const u = r < 0.3 ? ease(r / 0.3) : 1 - ease((r - 0.55) / 0.5);
+    const tgt = r < 0.3 ? POP.rest.clone().add(new THREE.Vector3(0, 0.12, 0)) : POP.rest.clone().add(new THREE.Vector3(0.1, 0.55, 0.2));
+    const sh = B['upper_arm.R'].getWorldPosition(new THREE.Vector3());
+    aim(B['upper_arm.R'], null, tgt.clone().sub(sh), u);
+    const el = B['lower_arm.R'].getWorldPosition(new THREE.Vector3());
+    aim(B['lower_arm.R'], null, tgt.clone().sub(el), u);
   }
   if (PHONE.g && PHONE.mode !== 'none' && PHONE.hold > 0.01) {                 // 오른손으로 폰 들기
     const u = PHONE.hold, ph = PHONE.g.position.clone();
@@ -481,7 +516,7 @@ function wrap(text, maxW) {
   if (cur) out.push(cur); return out;
 }
 function caption(t) {
-  const l = S.lines.find((l) => t >= l.t - 0.05 && t <= l.t + l.dur + 0.15);
+  const l = S.lines.find((l) => !l.overlay && t >= l.t - 0.05 && t <= l.t + l.dur + 0.15);
   if (!l || !l.sub) return;
   g2.font = '700 50px Wanted';
   let text = l.sub;   // 호흡에 맞게 나눈 조각 중 지금 것
@@ -513,10 +548,14 @@ function cards(t) {
     } else if (c.kind === 'time') {
       g2.fillStyle = 'rgba(0,0,0,0.88)'; g2.fillRect(0, 0, W, H);
       g2.font = '700 96px Wanted'; g2.fillStyle = '#fff'; g2.fillText(c.text, W / 2, H / 2 - 40);
-    } else {
-      g2.fillStyle = 'rgba(0,0,0,0.78)'; g2.fillRect(0, 980, W, 250);
-      g2.font = '700 48px Wanted'; g2.fillStyle = '#00FF66';
-      wrap(c.text, 920).forEach((r, i, a) => g2.fillText(r, W / 2, 1105 + (i - (a.length - 1) / 2) * 64));
+    } else {   // 끝: 화면 전환 → 빈 검은 화면에 안내 (운영자 2026-11-18)
+      g2.globalAlpha = 1; g2.fillStyle = `rgba(0,0,0,${clamp(u * 1.2)})`; g2.fillRect(0, 0, W, H);
+      g2.globalAlpha = clamp(u);
+      const [head, ...rest] = c.text.split('|');
+      g2.font = '700 64px Wanted'; g2.fillStyle = '#00FF66';
+      const hr = wrap(head, 880); hr.forEach((r, i) => g2.fillText(r, W / 2, 820 + i * 84));
+      g2.font = '700 46px Wanted'; g2.fillStyle = '#ffffff';
+      rest.forEach((r, i) => g2.fillText(r, W / 2, 820 + hr.length * 84 + 40 + i * 64));
     }
     g2.restore();
   }

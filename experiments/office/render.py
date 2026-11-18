@@ -129,7 +129,7 @@ def whisper_align(mp3, says):
     대본과 받아쓰기 글자를 difflib으로 짝짓고, 못 짝지은 글자는 앞뒤 시각으로 메움. 결과는 mp3 옆 .wa.json 캐시."""
     import difflib
     import re as _re
-    cache = Path(str(mp3) + ".wa.json")
+    cache = Path(str(mp3) + ".wa2.json")
     key = json.dumps(says, ensure_ascii=False)
     if cache.exists():
         c = json.loads(cache.read_text(encoding="utf-8"))
@@ -141,7 +141,10 @@ def whisper_align(mp3, says):
     hc = []                                   # 받아쓴 글자와 시각
     for sg in segs:
         for w in sg.words:
-            chs = [ch for ch in w.word if ch.isalnum()]
+            word = w.word
+            for en, ko in (("GPT", "지피티"), ("gpt", "지피티"), ("AI", "에이아이")):   # 받아쓰기가 영어로 적은 이름
+                word = word.replace(en, ko)
+            chs = [ch for ch in word if ch.isalnum()]
             for j, ch in enumerate(chs):
                 a = w.start + (w.end - w.start) * j / max(1, len(chs))
                 hc.append((ch, a, a + (w.end - w.start) / max(1, len(chs))))
@@ -218,13 +221,15 @@ def build(script):
     lead = (intro["to"] - intro["from"] + intro.get("pad", 0.3)) if intro else LEAD
     groups, cur = [], []
     for i, l in enumerate(script["lines"]):
+        if l.get("overlay"):          # 겹쳐 나오는 소리(예: 흥얼거림)는 대화 순서 밖 → 아래에서 따로
+            continue
         if l.get("break") and cur:
             groups.append(cur); cur = []
         cur.append(i)
     groups.append(cur)
     hop, lines, parts, t0 = 16000 // FPS, [None] * len(script["lines"]), [], lead
-    for g in groups:
-        t0 += script["lines"][g[0]].get("break", 0) if g[0] else 0
+    for gi, g in enumerate(groups):
+        t0 += script["lines"][g[0]].get("break", 0) if gi else 0
         mp3, dd = tts_dialogue([script["lines"][i] for i in g])
         segs = [list(s) for s in dd["segs"]]
         # 대사 구간은 voice_segments보다 글자 시각이 정확함 (같은 사람이 이어 말할 때 경계가 1초쯤 어긋남) → 말한 글자 첫·끝으로
@@ -251,6 +256,21 @@ def build(script):
                         "emo": l.get("emo"), "note": l.get("note"), "src": str(mp3), "ofs": round(s0 + q0, 3)}
         t0 += len(a) / 16000
     dur = t0 + script.get("tail", 1.0)
+    # 겹쳐 나오는 소리: {"overlay": {"line": n, "dt": 초, "vol": 0~1}} — 그 대사 시작 기준으로 얹음 (자막 없음, 입은 움직임)
+    for i, l in enumerate(script["lines"]):
+        if not l.get("overlay"):
+            continue
+        ov = l["overlay"]
+        mp3, dd = tts_dialogue([l])
+        a = decode(mp3)
+        s0, s1 = trim_silence(a)
+        seg = a[int(s0 * 16000): int(s1 * 16000) + 1]
+        env = [float(np.sqrt(np.mean(seg[j:j + hop] ** 2))) for j in range(0, len(seg), hop)] or [0.0]
+        peak = max(env) or 1
+        t = lines[ov["line"]]["t"] + ov.get("dt", 0)
+        parts.append({"file": str(mp3), "t": round(t - s0, 3), "vol": ov.get("vol", 0.5)})
+        lines[i] = {"who": l["who"], "t": round(t, 3), "dur": round(len(seg) / 16000, 3), "env": [round(e / peak * 0.7, 3) for e in env],
+                    "sub": None, "subs": None, "emo": l.get("emo"), "note": None, "src": str(mp3), "ofs": round(s0, 3), "overlay": True}
 
     def at(e):
         return e["t"] if "t" in e else lines[e["line"]]["t"] + e.get("dt", 0)
@@ -274,6 +294,8 @@ def check_pron(tl, script):
     m = WhisperModel("small", device="cpu", compute_type="int8")
     bad, cache = 0, {}
     for l, src in zip(tl["lines"], script["lines"]):
+        if l.get("overlay"):
+            continue
         a = cache.setdefault(l["src"], decode(l["src"]))
         s = int(l["ofs"] * 16000)
         seg = a[max(0, s - 1600): s + int(l["dur"] * 16000) + 1600]
@@ -337,7 +359,7 @@ def encode(tl, frames_dir, mp4):
                                f"aformat=sample_rates=44100:channel_layouts=stereo,volume=0.9")
     for p in tl["parts"]:
         d = int(p["t"] * 1000)
-        add(p["file"], f"aformat=sample_rates=44100:channel_layouts=stereo,adelay={d}|{d}")
+        add(p["file"], f"aformat=sample_rates=44100:channel_layouts=stereo,volume={p.get('vol', 1.0)},adelay={d}|{d}")
     for x in tl.get("audio", []):
         c = tl["clipsrc"][x["clip"]]
         d = int(x["t"] * 1000)

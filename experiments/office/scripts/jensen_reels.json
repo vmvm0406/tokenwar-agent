@@ -114,22 +114,41 @@
   },
   {
    "who": "jensen",
-   "say": "[tired] 지피티, 너라도 좀 도와줘. 언제까지 나를 조롱할까? 나는 평생 조롱받아야 하는 사람이야?",
-   "sub": "지피티, 너라도 좀 도와줘.|언제까지 나를 조롱할까?|나는 평생 조롱받아야 하는 사람이야?",
+   "say": "[pleading] 지피티! 너도 나 좀 도와줘.",
+   "sub": "지피티, 너도 나 좀 도와줘.",
    "emo": "sad",
-   "break": 8.0
+   "break": 6.8
+  },
+  {
+   "who": "jensen",
+   "say": "[frustrated] 언제까지 나를 조, 롱할까? 나는 평생 조, 롱받아야 하는 사람이야?",
+   "sub": "언제까지 나를 조롱할까?|나는 평생 조롱받아야 하는 사람이야?",
+   "emo": "sad"
   },
   {
    "who": "chatgpt",
-   "say": "[cheerful] 젠슨 황... 너 정말 핵심을 찔렀어!",
-   "sub": "젠슨 황...|너 정말 핵심을 찔렀어 👈",
-   "emo": "smile"
+   "say": "[singing softly to herself] 첩 줘~ 첩첩 줘~ 첩 줘~",
+   "sub": null,
+   "emo": "happy",
+   "overlay": {
+    "line": 11,
+    "dt": 0.4,
+    "vol": 0.5
+   }
+  },
+  {
+   "who": "chatgpt",
+   "say": "[cheerful] 젠슨 황... 너 정말 핵심을 찔렀어. 너는 조롱받—",
+   "sub": "젠슨 황...|너 정말 핵심을 찔렀어 👈|너는 조롱받...",
+   "emo": "smile",
+   "break": 0.35
   },
   {
    "who": "jensen",
    "say": "[angry sigh] 하아...",
    "sub": "하아...",
-   "emo": "angry"
+   "emo": "angry",
+   "break": 0.9
   }
  ],
  "screens": [
@@ -158,27 +177,21 @@
   },
   {
    "line": 10,
-   "dt": -7.6,
+   "dt": -6.6,
    "screen": "monitor",
    "clip": "r3"
   },
   {
    "line": 10,
-   "dt": -4.8,
+   "dt": -3.8,
    "screen": "monitor",
    "clip": "r2"
   },
   {
-   "line": 10,
-   "dt": -2.0,
+   "line": 11,
+   "dt": 1.0,
    "screen": "monitor",
    "clip": "r3"
-  },
-  {
-   "line": 11,
-   "dt": -0.5,
-   "screen": "monitor",
-   "clip": "r1"
   }
  ],
  "events": [
@@ -344,103 +357,68 @@
   },
   {
    "line": 10,
-   "dt": -7.0,
+   "dt": -6.4,
    "who": "claude",
    "emo": "embarrassed"
   },
   {
    "line": 10,
-   "dt": -6.8,
+   "dt": -6.0,
    "who": "claude",
    "do": "tremble",
    "d": 1.0
   },
   {
    "line": 10,
-   "dt": -4.2,
+   "dt": -3.4,
+   "who": "claude",
+   "do": "tremble",
+   "d": 1.0
+  },
+  {
+   "line": 11,
+   "dt": 1.4,
    "who": "claude",
    "do": "tremble",
    "d": 1.0
   },
   {
    "line": 10,
-   "dt": -1.6,
-   "who": "claude",
-   "do": "tremble",
-   "d": 1.0
-  },
-  {
-   "line": 10,
-   "dt": -7.0,
+   "dt": -5.8,
    "who": "chatgpt",
    "do": "move",
-   "x": 0.62,
-   "d": 2.2,
+   "x": 0.5,
+   "d": 1.9,
    "style": "sneak",
    "from": "off"
   },
   {
    "line": 10,
-   "dt": -7.0,
+   "dt": -5.8,
    "who": "chatgpt",
    "emo": "neutral"
   },
   {
    "line": 10,
-   "dt": -4.6,
+   "dt": -3.9,
    "who": "chatgpt",
    "do": "look",
    "at": "monitor"
   },
   {
    "line": 10,
-   "dt": -4.6,
+   "dt": -3.6,
    "who": "chatgpt",
    "emo": "happy"
   },
   {
    "line": 10,
-   "dt": -3.9,
+   "dt": -2.3,
    "who": "chatgpt",
    "do": "move",
    "x": "off",
-   "d": 0.9,
+   "d": 1.0,
    "style": "hop"
-  },
-  {
-   "line": 10,
-   "dt": -2.9,
-   "who": "chatgpt",
-   "do": "carry"
-  },
-  {
-   "line": 10,
-   "dt": -2.7,
-   "who": "chatgpt",
-   "do": "move",
-   "x": "home",
-   "d": 1.2,
-   "style": "hop"
-  },
-  {
-   "line": 10,
-   "dt": -1.4,
-   "who": "chatgpt",
-   "do": "put"
-  },
-  {
-   "line": 10,
-   "dt": -1.2,
-   "who": "chatgpt",
-   "do": "look",
-   "at": "monitor"
-  },
-  {
-   "line": 10,
-   "dt": -1.1,
-   "who": "chatgpt",
-   "do": "munch",
-   "d": 14.0
   },
   {
    "line": 10,
@@ -451,32 +429,109 @@
   },
   {
    "line": 10,
-   "dt": -0.5,
+   "dt": -0.3,
    "who": "jensen",
    "emo": "sad"
   },
   {
    "line": 11,
+   "dt": 0.2,
+   "who": "chatgpt",
+   "do": "carry"
+  },
+  {
+   "line": 11,
+   "dt": 0.4,
+   "who": "chatgpt",
+   "do": "move",
+   "x": "home",
+   "d": 2.8,
+   "style": "hop"
+  },
+  {
+   "line": 11,
+   "dt": 0.4,
+   "who": "chatgpt",
+   "emo": "happy"
+  },
+  {
+   "line": 11,
+   "dt": 3.3,
+   "who": "chatgpt",
+   "do": "put"
+  },
+  {
+   "line": 11,
+   "dt": 3.5,
+   "who": "chatgpt",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 11,
+   "dt": 3.6,
+   "who": "chatgpt",
+   "do": "munch",
+   "d": 4.0
+  },
+  {
+   "line": 13,
+   "dt": 0.0,
+   "who": "chatgpt",
+   "emo": "smile"
+  },
+  {
+   "line": 13,
    "dt": 0.0,
    "who": "chatgpt",
    "do": "look",
    "at": "jensen"
   },
   {
-   "line": 11,
-   "dt": 0.0,
-   "who": "chatgpt",
-   "emo": "smile"
+   "line": 14,
+   "dt": -0.75,
+   "who": "jensen",
+   "do": "throw"
   },
   {
-   "line": 12,
-   "dt": -0.1,
+   "line": 14,
+   "dt": -0.75,
+   "who": "jensen",
+   "emo": "angry"
+  },
+  {
+   "line": 14,
+   "dt": -0.3,
+   "who": "chatgpt",
+   "emo": "surprised"
+  },
+  {
+   "line": 14,
+   "dt": -0.28,
+   "who": "chatgpt",
+   "do": "hop"
+  },
+  {
+   "line": 14,
+   "dt": 0.4,
+   "who": "chatgpt",
+   "emo": "embarrassed"
+  },
+  {
+   "line": 14,
+   "dt": 0.2,
+   "who": "claude",
+   "emo": "surprised"
+  },
+  {
+   "line": 14,
+   "dt": 0.6,
    "who": "jensen",
    "do": "sigh"
   },
   {
-   "line": 12,
-   "dt": 0.0,
+   "line": 14,
+   "dt": 0.6,
    "who": "jensen",
    "do": "look",
    "at": "camera"
@@ -548,32 +603,37 @@
   },
   {
    "line": 10,
-   "dt": -7.2,
-   "cam": "wide"
-  },
-  {
-   "line": 10,
-   "dt": 0.0,
+   "dt": -0.1,
    "cam": "close:jensen"
   },
   {
    "line": 11,
+   "dt": 0.2,
+   "cam": "wide"
+  },
+  {
+   "line": 13,
    "dt": -0.1,
    "cam": "close:chatgpt"
   },
   {
-   "line": 12,
-   "dt": -0.1,
+   "line": 14,
+   "dt": -0.8,
+   "cam": "wide"
+  },
+  {
+   "line": 14,
+   "dt": 0.5,
    "cam": "close:jensen"
   }
  ],
  "cards": [
   {
-   "text": "클로드에 영상 보는 스킬 다는 법 → 프로필에 정리해 뒀어요",
+   "text": "클로드에 영상 보는 스킬 다는 법|프로필에 정리해 뒀어요",
    "kind": "end",
-   "line": 12,
-   "dt": 1.4,
-   "d": 2.2
+   "line": 14,
+   "dt": 1.6,
+   "d": 3.0
   }
  ],
  "audio": [
@@ -587,7 +647,7 @@
   },
   {
    "line": 10,
-   "dt": -7.6,
+   "dt": -6.6,
    "clip": "r3",
    "from": 0.0,
    "to": 2.7,
@@ -595,30 +655,14 @@
   },
   {
    "line": 10,
-   "dt": -4.8,
+   "dt": -3.8,
    "clip": "r2",
    "from": 0.0,
-   "to": 2.7,
+   "to": 3.2,
    "vol": 0.3
-  },
-  {
-   "line": 10,
-   "dt": -2.0,
-   "clip": "r3",
-   "from": 0.0,
-   "to": 2.2,
-   "vol": 0.16
-  },
-  {
-   "line": 11,
-   "dt": -0.5,
-   "clip": "r1",
-   "from": 1.2,
-   "to": 5.9,
-   "vol": 0.14
   }
  ],
- "tail": 3.4,
+ "tail": 4.8,
  "sfx": [
   {
    "line": 4,
@@ -640,133 +684,86 @@
   },
   {
    "line": 10,
-   "dt": -4.8,
-   "kind": "swipe"
-  },
-  {
-   "line": 10,
-   "dt": -2.0,
+   "dt": -3.8,
    "kind": "swipe"
   },
   {
    "line": 11,
-   "dt": -0.5,
+   "dt": 1.0,
    "kind": "swipe",
-   "vol": 0.6
+   "vol": 0.5
   },
   {
-   "line": 10,
-   "dt": -1.4,
+   "line": 11,
+   "dt": 3.3,
    "kind": "pop",
    "vol": 0.8
   },
   {
    "line": 10,
-   "dt": -6.95,
+   "dt": -5.75,
    "kind": "tiptoe",
    "vol": 0.6
   },
   {
    "line": 10,
-   "dt": -6.45,
+   "dt": -5.27,
    "kind": "tiptoe",
    "vol": 0.6
   },
   {
    "line": 10,
-   "dt": -5.95,
+   "dt": -4.79,
    "kind": "tiptoe",
    "vol": 0.6
   },
   {
    "line": 10,
-   "dt": -5.45,
+   "dt": -4.3100000000000005,
    "kind": "tiptoe",
    "vol": 0.6
   },
   {
-   "line": 10,
-   "dt": -1.0,
+   "line": 11,
+   "dt": 3.6,
    "kind": "crunch",
-   "vol": 0.55
+   "vol": 0.5
   },
   {
-   "line": 10,
-   "dt": -0.44999999999999996,
+   "line": 11,
+   "dt": 4.15,
    "kind": "crunch",
-   "vol": 0.55
+   "vol": 0.5
   },
   {
-   "line": 10,
-   "dt": 0.10000000000000009,
+   "line": 11,
+   "dt": 4.7,
    "kind": "crunch",
-   "vol": 0.55
+   "vol": 0.5
   },
   {
-   "line": 10,
-   "dt": 0.6500000000000001,
+   "line": 11,
+   "dt": 5.25,
    "kind": "crunch",
-   "vol": 0.55
+   "vol": 0.5
   },
   {
-   "line": 10,
-   "dt": 1.2000000000000002,
-   "kind": "crunch",
-   "vol": 0.55
+   "line": 14,
+   "dt": -0.6,
+   "kind": "swipe",
+   "vol": 0.8
   },
   {
-   "line": 10,
-   "dt": 1.75,
-   "kind": "crunch",
-   "vol": 0.55
+   "line": 14,
+   "dt": -0.3,
+   "kind": "pop",
+   "vol": 1.0
   },
   {
-   "line": 10,
-   "dt": 2.3000000000000003,
-   "kind": "crunch",
-   "vol": 0.55
-  },
-  {
-   "line": 10,
-   "dt": 2.8500000000000005,
-   "kind": "crunch",
-   "vol": 0.55
-  },
-  {
-   "line": 10,
-   "dt": 3.4000000000000004,
-   "kind": "crunch",
-   "vol": 0.55
-  },
-  {
-   "line": 10,
-   "dt": 3.95,
-   "kind": "crunch",
-   "vol": 0.55
-  },
-  {
-   "line": 10,
-   "dt": 4.5,
-   "kind": "crunch",
-   "vol": 0.55
-  },
-  {
-   "line": 10,
-   "dt": 5.050000000000001,
-   "kind": "crunch",
-   "vol": 0.55
-  },
-  {
-   "line": 10,
-   "dt": 5.6000000000000005,
-   "kind": "crunch",
-   "vol": 0.55
-  },
-  {
-   "line": 10,
-   "dt": 6.15,
-   "kind": "crunch",
-   "vol": 0.55
+   "line": 14,
+   "dt": -0.28,
+   "kind": "boing",
+   "vol": 0.6
   }
  ],
  "props": {
