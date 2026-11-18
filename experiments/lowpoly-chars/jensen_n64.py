@@ -139,6 +139,34 @@ def add_glasses3d(ob):
     return parts
 
 
+HEAD_W, JAW_W = 0.88, 0.84   # 머리 가로 비율 (운영자 2026-11-18 "정면이 너무 넓다"): 위쪽 12%, 볼·턱 16% 좁힘
+
+
+def x_scale(z):
+    """높이별 가로 배율: 어깨(z<1.0)=1 → 목에서 서서히 → 볼·턱(1.13~1.35)=JAW_W → 눈 위(1.5~)=HEAD_W."""
+    sm = lambda t: t * t * (3 - 2 * t)
+    if z < 1.0:
+        return 1.0
+    if z < 1.13:
+        return 1.0 + (JAW_W - 1.0) * sm((z - 1.0) / 0.13)
+    if z < 1.35:
+        return JAW_W
+    if z < 1.5:
+        return JAW_W + (HEAD_W - JAW_W) * sm((z - 1.35) / 0.15)
+    return HEAD_W
+
+
+def narrow_head(ob, glasses):
+    """질감(UV)·안경을 입힌 뒤에 좁혀서 그린 눈·코·입·안경도 같이 좁아짐."""
+    for v in ob.data.vertices:
+        v.co.x = FACE_X + (v.co.x - FACE_X) * x_scale(v.co.z)
+    ob.data.update()
+    for g in glasses:
+        for v in g.data.vertices:
+            v.co.x = FACE_X + (v.co.x - FACE_X) * x_scale(v.co.z)
+        g.data.update()
+
+
 def material(img):
     m = bpy.data.materials.new("jensen_n64_mat")
     m.use_nodes = True
@@ -178,6 +206,7 @@ def main():
         img.save()
     ob.data.materials.append(material(img))
     glasses = add_glasses3d(ob)
+    narrow_head(ob, glasses)
     print("faces", len(ob.data.polygons), "TEX", TEX, "photo", photo, "img", tuple(img.size))
     bpy.ops.object.select_all(action="DESELECT")
     ob.select_set(True)
