@@ -1,0 +1,183 @@
+"""젠슨 황 실물 로우폴리 마무리 (운영자 2026-11-18 "실물을 그대로 로우폴리화", "이 방향으로").
+
+입력: out/jensen_real_lp.glb (lowpoly_from_glb.py가 공개 사진 → TRELLIS 3D → 로우폴리로 만든 흉상, 키 2.2 기준)
+하는 일: 재킷을 검정으로 다시 칠함(질감이 회갈색으로 나옴) · 가는 실제 눈(깜박임용) · 하프림 안경(위테만 굵게)
+        · 말할 때 입(어두운 입 안, 크기로 벌림) — 실물 얼굴이라 만화 표정 대신 입·눈꺼풀만 움직임(운영자 결정).
+얼굴 위치는 probe(정면 직교 렌더)로 잰 값: 코끝 x -0.11, 눈 z 1.60, 입 z 1.25, 얼굴이 살짝 왼쪽으로 돌아감.
+
+실행: & "C:\\Program Files\\Blender Foundation\\Blender 5.3\\blender.exe" --background --python experiments/lowpoly-chars/jensen_real.py -- [--quick]
+결과: out/jensen_real_head.glb, out/jensen_real_front.png, out/jensen_real_q34.png, out/jensen_real_talk.png
+"""
+import bpy, bmesh, os, sys, math
+from mathutils import Vector
+from mathutils.bvhtree import BVHTree
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import build as B  # noqa: E402
+
+FACE_X = -0.10        # 얼굴 가운데 (코끝 x -0.109)
+EYE_Z, EYE_DX = 1.595, 0.165
+MOUTH_Z = 1.255
+JACKET, TEE = "#17171A", "#26262A"
+
+
+def load():
+    before = set(bpy.data.objects)
+    bpy.ops.import_scene.gltf(filepath=os.path.join(B.OUT, "jensen_real_lp.glb"))
+    ob = [o for o in bpy.data.objects if o not in before and o.type == "MESH"][0]   # 책상·전구 말고 불러온 흉상
+    ob.name = "jensen_real_body"
+    return ob
+
+
+def recolor(ob):
+    """목 아래 = 검정 가죽 재킷, 가슴 가운데 V = 짙은 회색 티셔츠. 면 색 흔들기는 build.facet_colors와 같게."""
+    import random
+    rng = random.Random(7)
+    attr = ob.data.color_attributes[0]   # glb에서 불러오면 이름이 Color로 바뀜
+    jc, tc = B.hex2rgb(JACKET), B.hex2rgb(TEE)
+    for p in ob.data.polygons:
+        c = ob.matrix_world @ p.center
+        dx = abs(c.x - FACE_X)
+        if c.z > 1.13 or (c.z > 1.0 and dx < 0.24):   # 턱·목 앞은 피부 그대로
+            continue
+        col = tc if (c.y < -0.25 and c.z > 0.55 and dx < 0.06 + (c.z - 0.55) * 0.22) else jc
+        k = 1 + rng.uniform(-0.12, 0.12)
+        for li in p.loop_indices:
+            attr.data[li].color = (col[0] * k, col[1] * k, col[2] * k, 1)
+
+
+def front_y(bvh, x, z):
+    hit = bvh.ray_cast(Vector((x, -3, z)), Vector((0, 1, 0)))
+    return hit[0].y if hit[0] else -0.45
+
+
+def mat(name, hexc, rough=0.4, emit=0.0):
+    return B.material(name, B.hex2rgb(hexc), rough=rough, emit=emit)
+
+
+HEAD_SCALE = 1.35                  # 캐릭터화: 머리를 몸보다 크게 (운영자 2026-11-18 "실제 비율 말고 조금 캐릭터화")
+PIVOT = Vector((FACE_X, 0.0, 1.08))  # 목 아래 (여기 위로 머리가 커짐)
+
+
+def stylize(body, face):
+    """얼굴형·머리·코·입 모양은 실물 그대로 두고, 머리(+얼굴 부품)를 목 기준으로 키움. 목 1.00~1.13은 부드럽게 이어짐."""
+    me = body.data
+    for v in me.vertices:
+        t = min(1.0, max(0.0, (v.co.z - 1.00) / 0.13))
+        s = 1 + (HEAD_SCALE - 1) * (t * t * (3 - 2 * t))
+        v.co = PIVOT + (v.co - PIVOT) * s
+    me.update()
+    from mathutils import Matrix
+    S = Matrix.Translation(PIVOT) @ Matrix.Scale(HEAD_SCALE, 4) @ Matrix.Translation(-PIVOT)
+    bpy.context.view_layer.update()
+    for o in face.children:
+        o.matrix_world = S @ o.matrix_world
+
+
+def box(name, w, d, h, bev):
+    """모서리를 깎은 상자 (x=너비, y=두께, z=높이)."""
+    bm = bmesh.new()
+    bmesh.ops.create_cube(bm, size=1.0)
+    for v in bm.verts:
+        v.co.x *= w
+        v.co.y *= d
+        v.co.z *= h
+    bmesh.ops.bevel(bm, geom=bm.edges[:], offset=bev, segments=1, affect="EDGES")
+    ob = B.bm_to_obj(bm, name)
+    B.shade_flat(ob)
+    return ob
+
+
+def add_face_parts(body):
+    dg = bpy.context.evaluated_depsgraph_get()
+    bvh = BVHTree.FromObject(body, dg)
+    face = B.link(bpy.data.objects.new("jensen_real_face", None))
+    eye_m, lid_m = mat("jr_eye", "#1A1310", 0.2), mat("jr_hl", "#FFFFFF", 0.2, emit=1.0)
+    for sd, sx in (("L", -1), ("R", 1)):
+        x = FACE_X + sx * EYE_DX
+        y = front_y(bvh, x, EYE_Z) - 0.008
+        # 네모 눈 (운영자 2026-11-18: 실제 눈은 이상함, "네모네모로 캐릭터다 싶게"). 모서리만 살짝 깎은 세로 직사각형
+        e = box(f"jensen_real_eye_{sd}", 0.05, 0.02, 0.08, 0.01)
+        e.location = (x, y - 0.004, EYE_Z)
+        e.data.materials.append(eye_m)
+        e.parent = face
+        hl = box(f"jensen_real_eyehl_{sd}", 0.016, 0.008, 0.016, 0.002)
+        hl.location = (x + 0.011, y - 0.016, EYE_Z + 0.022)
+        hl.data.materials.append(lid_m)
+        hl.parent = face
+    # 말할 때 입: 어두운 입 안 (평소엔 납작 → three.js가 높이를 키워 벌림)
+    my = front_y(bvh, FACE_X, MOUTH_Z) - 0.006
+    m = B.lowpoly_ellipsoid("jensen_real_mouth_open", 0.07, 0.03, 0.02, seg=12, rings=4)
+    m.rotation_euler = (math.radians(90), 0, 0)
+    m.location = (FACE_X, my, MOUTH_Z - 0.01)
+    m.data.materials.append(mat("jr_mouth", "#3A0F14", 0.6))
+    m.parent = face
+    m.hide_render = True   # 평소엔 숨김, 말할 때만 (three.js가 켜고 높이로 벌림)
+    add_glasses(bvh, face)
+    return face
+
+
+def add_glasses(bvh, face):
+    """하프림(브로우라인): 위테만 굵은 검정, 아래는 가는 은색. 실제 사진의 사각형에 가까운 렌즈."""
+    black, wire = mat("jr_frame", "#151517", 0.3), mat("jr_wire", "#AEB3BA", 0.25)
+    rx, rz = 0.115, 0.07
+    zc = EYE_Z - 0.008
+
+    def tube(name, pts, r, m):
+        o = B.arc_tube(name, pts, r, ring=5)
+        o.data.materials.append(m)
+        o.parent = face
+        return o
+
+    def rim(xc, y, t):
+        c, s = math.cos(math.radians(t)), math.sin(math.radians(t))
+        return (xc + rx * math.copysign(abs(c) ** 0.45, c), y, zc + rz * math.copysign(abs(s) ** 0.6, s))
+    inner = []
+    for sd, sx in (("L", -1), ("R", 1)):
+        xc = FACE_X + sx * EYE_DX
+        y = front_y(bvh, xc, EYE_Z) - 0.045
+        tube(f"jensen_real_glasses_top_{sd}", [rim(xc, y, t) for t in range(-12, 193, 12)], 0.016, black)
+        tube(f"jensen_real_glasses_wire_{sd}", [rim(xc, y, t) for t in range(192, 349, 12)], 0.004, wire)
+        outer = (xc + sx * rx, y, zc + 0.02)
+        ear_x = FACE_X + sx * 0.44
+        tube(f"jensen_real_glasses_arm_{sd}", [outer, (ear_x * 0.95, y + 0.25, zc + 0.03), (ear_x, 0.05, zc + 0.0)], 0.009, black)
+        inner.append((xc - sx * rx, y, zc + 0.03))
+    tube("jensen_real_glasses_bridge", [inner[0], (FACE_X, inner[0][1] - 0.005, zc + 0.045), inner[1]], 0.008, black)
+
+
+def main():
+    quick = "--quick" in sys.argv
+    sc = B.setup_scene()
+    for o in bpy.data.objects:
+        if o.type == "LIGHT":
+            o.data.use_shadow = False
+            if o.name == "key":
+                o.data.energy = 900   # 실물 피부가 날아가지 않게
+    body = load()
+    recolor(body)
+    for m in body.data.materials:  # 넓은 조명이 검은 재킷에 하얗게 반사돼 회색으로 보이던 것 줄이기
+        bsdf = m.node_tree.nodes.get("Principled BSDF")
+        if bsdf:
+            bsdf.inputs["Roughness"].default_value = 0.85
+            if "Specular IOR Level" in bsdf.inputs:
+                bsdf.inputs["Specular IOR Level"].default_value = 0.2
+    face = add_face_parts(body)
+    stylize(body, face)
+    bpy.context.view_layer.update()
+    bpy.ops.object.select_all(action="DESELECT")
+    body.select_set(True)
+    for c in face.children_recursive:
+        c.select_set(True)
+    face.select_set(True)
+    bpy.ops.export_scene.gltf(filepath=os.path.join(B.OUT, "jensen_real_head.glb"), export_format="GLB", use_selection=True, export_vertex_color="ACTIVE")
+    fz = 1.72   # 커진 머리의 얼굴 높이쯤
+    B.camera(sc, (0.0, -4.4, fz + 0.1), (FACE_X, 0, fz - 0.1), lens=50, focus=(FACE_X, -0.6, fz), fstop=2.4)
+    B.render(sc, os.path.join(B.OUT, "jensen_real_front.png"), 1080, 1350)
+    B.camera(sc, (2.4, -3.7, fz + 0.2), (FACE_X, 0, fz - 0.15), lens=50, focus=(FACE_X, -0.5, fz), fstop=2.4)
+    B.render(sc, os.path.join(B.OUT, "jensen_real_q34.png"), 1080, 1350)
+    bpy.data.objects["jensen_real_mouth_open"].hide_render = False   # 말하는 모습 시험
+    B.camera(sc, (0.0, -4.4, fz + 0.1), (FACE_X, 0, fz - 0.1), lens=50, focus=(FACE_X, -0.6, fz), fstop=2.4)
+    B.render(sc, os.path.join(B.OUT, "jensen_real_talk.png"), 1080, 1350)
+
+
+main()

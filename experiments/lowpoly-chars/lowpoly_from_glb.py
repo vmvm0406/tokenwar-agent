@@ -99,7 +99,7 @@ def main():
     print("faces", len(lp.data.polygons), "texture", img.name if img else None)
     bpy.ops.object.select_all(action="DESELECT")
     lp.select_set(True)
-    bpy.ops.export_scene.gltf(filepath=os.path.join(B.OUT, f"{NAME}_lp.glb"), export_format="GLB", use_selection=True)
+    bpy.ops.export_scene.gltf(filepath=os.path.join(B.OUT, f"{NAME}_lp.glb"), export_format="GLB", use_selection=True, export_vertex_color="ACTIVE")
     zs = [v.co.z for v in lp.data.vertices]
     top = max(zs)
     B.camera(sc, (0, -4.2, top * 0.72), (0, 0, top * 0.68), lens=50, focus=(0, -0.3, top * 0.7), fstop=2.4)

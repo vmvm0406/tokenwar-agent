@@ -286,7 +286,7 @@ def main():
         ao.select_set(True)
         for c in ao.children_recursive:
             c.select_set(True)
-        bpy.ops.export_scene.gltf(filepath=os.path.join(OUT, f"{key}.glb"), export_format="GLB", use_selection=True)
+        bpy.ops.export_scene.gltf(filepath=os.path.join(OUT, f"{key}.glb"), export_format="GLB", use_selection=True, export_vertex_color="ACTIVE")
         ao.location = loc
 
     for o in bpy.data.objects:  # 연속 렌더에서 그림자가 꼬여 까매지는 일 방지

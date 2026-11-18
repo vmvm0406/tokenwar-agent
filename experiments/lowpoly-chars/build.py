@@ -530,7 +530,7 @@ def main():
         root.select_set(True)
         for c in root.children_recursive:
             c.select_set(True)
-        bpy.ops.export_scene.gltf(filepath=os.path.join(OUT, f"{key}.glb"), export_format="GLB", use_selection=True)
+        bpy.ops.export_scene.gltf(filepath=os.path.join(OUT, f"{key}.glb"), export_format="GLB", use_selection=True, export_vertex_color="ACTIVE")
         root.location = loc
 
     for key, root in roots.items():
