@@ -72,7 +72,10 @@ def sample_colors(lp, src_bm, img):
             uvs = [Vector((*l[uv].uv, 0)) for l in f.loops]
             u = barycentric_transform(loc, *tri, *uvs)
             x = int((u.x % 1.0) * (w - 1)); y = int((u.y % 1.0) * (h - 1))
-            col = tuple(px[y, x, :3])
+            c3 = px[y, x, :3]
+            if img.colorspace_settings.name.lower().startswith("srgb"):  # 8비트 질감은 sRGB 값 → 선형으로
+                c3 = np.where(c3 <= 0.04045, c3 / 12.92, ((c3 + 0.055) / 1.055) ** 2.4)
+            col = tuple(float(v) for v in c3)
         for li in p.loop_indices:
             attr.data[li].color = (*col, 1.0)
 
