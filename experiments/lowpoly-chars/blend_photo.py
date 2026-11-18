@@ -62,6 +62,18 @@ out_f = out_f + face * 0.4 * dark
 out_f = out_f * (1 - face * 0.1)          # 피부를 조금 어둡게 (운영자 2026-11-18 "밝기 조금 낮춰, 젠슨 황처럼")
 clean = np.clip(out_f, 0, 255).astype(np.uint8)
 photo = Image.fromarray(clean).filter(ImageFilter.MedianFilter(5))   # 잡티만 살짝 정리
+# 눈·코·입은 선명하게 (운영자 2026-11-18 "눈 코 입 잘 보이게"): 그 영역만 정리 전 사진 + 샤프닝 + 대비
+from PIL import ImageEnhance
+sharp = Image.fromarray(clean).filter(ImageFilter.UnsharpMask(radius=3, percent=90, threshold=2))
+sharp = ImageEnhance.Contrast(sharp).enhance(1.12)
+fm = Image.new("L", painted.size, 0)
+fd = ImageDraw.Draw(fm)
+for ex, ey in ((580, 600), (785, 610)):
+    fd.ellipse([ex - 70, ey - 40, ex + 70, ey + 40], fill=255)       # 눈
+fd.ellipse([610, 640, 755, 790], fill=255)                            # 코
+fd.ellipse([575, 800, 790, 905], fill=255)                            # 입
+fm = fm.filter(ImageFilter.GaussianBlur(18))
+photo = Image.composite(sharp, photo, fm)
 photo.crop((300, 480, 1080, 760)).save(HERE / "out" / "photo_noglasses.png")
 
 # 2) 얼굴·귀·목(턱 옆 포함)만 사진
