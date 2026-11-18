@@ -36,6 +36,18 @@ def build_shape(src_bm):
     me = bpy.data.meshes.new("jensen_src")
     src_bm.to_mesh(me)
     ob = B.link(bpy.data.objects.new("jensen_body", me.copy()))
+    # 젠슨 황 코: 넓고 끝이 둥근 코 + 큰 콧방울 (단순화하면 뾰족해져서 다시 빚음, 운영자 2026-11-18 "눈코입 모양 살리기")
+    bm = bmesh.new()
+    bm.from_mesh(ob.data)
+    from mathutils import Matrix
+    for c, r in (((J.FACE_X, -0.56, 1.405), (0.082, 0.07, 0.066)),          # 코끝(둥글게)
+                 ((J.FACE_X - 0.075, -0.505, 1.385), (0.055, 0.052, 0.045)),  # 콧방울
+                 ((J.FACE_X + 0.075, -0.505, 1.385), (0.055, 0.052, 0.045)),
+                 ((J.FACE_X, -0.5, 1.5), (0.04, 0.05, 0.09))):              # 콧대
+        bmesh.ops.create_uvsphere(bm, u_segments=16, v_segments=10, radius=1.0,
+                                  matrix=Matrix.Translation(Vector(c)) @ Matrix.Diagonal((*r, 1)))
+    bm.to_mesh(ob.data)
+    bm.free()
     B.remesh(ob, 0.028)                      # 굵게: 잔 굴곡 지움
     m = ob.modifiers.new("sm", "SMOOTH")
     m.factor, m.iterations = 0.6, 12
@@ -113,7 +125,25 @@ def classify(ob, src_bm, img):
     ob.data.materials.append(B.material("jensen_mat", vcol=True, rough=0.8))
 
 
-def add_lips(body, face, w=0.1, up=0.026, lo=0.034):
+def jensen_eyes(face, body):
+    """젠슨 황 눈: 가로로 길고 가늘게, 바깥 끝이 살짝 처지게 + 짙은 눈썹(윗테 바로 아래)."""
+    brow_m = J.mat("jensen_brow", "#3B3A38", 0.7)
+    bvh = BVHTree.FromObject(body, bpy.context.evaluated_depsgraph_get())
+    for sd, sx in (("L", -1), ("R", 1)):
+        e = bpy.data.objects[f"jensen_real_eye_{sd}"]
+        e.scale = (1.15, 1, 0.72)
+        e.rotation_euler = (0, math.radians(7 * sx), 0)      # 바깥 끝이 아래로
+        hl = bpy.data.objects[f"jensen_real_eyehl_{sd}"]
+        hl.location.z -= 0.004
+        b = J.box(f"jensen_brow_{sd}", 0.1, 0.014, 0.017, 0.004)
+        bx, bz = e.location.x - sx * 0.004, e.location.z + 0.085      # 윗테 바로 위로 보이게, 이마 표면에 붙임
+        b.location = (bx, J.front_y(bvh, bx, bz) - 0.004, bz)
+        b.rotation_euler = (0, math.radians(5 * sx), 0)
+        b.data.materials.append(brow_m)
+        b.parent = face
+
+
+def add_lips(body, face, w=0.115, up=0.019, lo=0.036):
     """얼굴 표면에 딱 붙는 매끈한 윗입술·아랫입술 (원래 사진 비율, 자연스러운 색). 가운데 입술선은 두 조각 사이 가는 틈."""
     dg = bpy.context.evaluated_depsgraph_get()
     bvh = BVHTree.FromObject(body, dg)
@@ -127,10 +157,10 @@ def add_lips(body, face, w=0.1, up=0.026, lo=0.034):
             span = 1 - t * t
             if top:
                 bow = 1 - 0.35 * math.exp(-(t / 0.18) ** 2)      # 큐피드 활
-                pts.append((t * w, gap + up * span * bow))
+                pts.append((t * w, gap + up * span * bow - 0.012 * t * t))
             else:
-                pts.append((t * w, -gap - lo * span ** 0.7))
-        base = [(t * w * 0.98, (gap if top else -gap)) for t in [1 - 2 * k / n for k in range(1, n)]]
+                pts.append((t * w, -gap - lo * span ** 0.7 - 0.012 * t * t))
+        base = [(t * w * 0.98, (gap if top else -gap) - 0.012 * t * t) for t in [1 - 2 * k / n for k in range(1, n)]]
         return pts + base
 
     for name, top, hexc in (("jensen_lip_upper", True, "#A75D5A"), ("jensen_lip_lower", False, "#B96A65")):
@@ -154,7 +184,7 @@ def add_lips(body, face, w=0.1, up=0.026, lo=0.034):
         t = -0.95 + 1.9 * k / 12
         X = J.FACE_X + t * w
         hit = bvh.ray_cast(Vector((X, -3, J.MOUTH_Z)), Vector((0, 1, 0)))
-        line.append((X, (hit[0].y if hit[0] else -0.45) - 0.002, J.MOUTH_Z))
+        line.append((X, (hit[0].y if hit[0] else -0.45) - 0.002, J.MOUTH_Z - 0.012 * t * t))
     lt = B.arc_tube("jensen_lip_line", line, 0.0035, ring=5)
     lt.data.materials.append(J.mat("jensen_lip_line_m", "#5E2626", 0.5))
     lt.parent = face
@@ -173,6 +203,7 @@ def main():
     body = build_shape(src_bm)
     classify(body, src_bm, img)
     face = J.add_face_parts(body)
+    jensen_eyes(face, body)
     add_lips(body, face)
     J.stylize(body, face)
     for o in face.children:   # 이 판에서는 덧붙인 입선 없음 (입술은 면에 칠함)
