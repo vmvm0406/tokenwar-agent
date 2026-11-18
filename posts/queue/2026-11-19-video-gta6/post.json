@@ -15,9 +15,9 @@
   "#AI활용법",
   "#토큰전쟁"
  ],
- "publish_at": "2026-11-18T23:12:31+09:00",
+ "publish_at": "2026-11-18T23:21:22+09:00",
  "rights": "original",
  "credit": "직접 제작 (3D 캐릭터·목소리 일레븐랩스 Starter·화면 그림 직접, 팀원 얼굴 허깅페이스 FLUX.1-Kontext)",
- "note": "3D 대화 릴스 셋째 편. 영상은 experiments/office/render.py 완성본(prebuilt, scripts/gta6.json), 다시 렌더링하지 않음. 게임 실제 화면 안 씀",
+ "note": "3D 대화 릴스 셋째 편. 영상은 experiments/office/render.py 완성본(prebuilt, scripts/gta6.json), 다시 렌더링하지 않음. 게임 실제 화면 안 씀 / 첫 게시(Df4srf-jXUg)는 운영자가 지움 → 썸네일 'GTA6 출시'로 바꿔 다시 게시 (운영자 2026-11-18)",
  "rights_note": "출시 정보 출처: gamesradar·techradar·pcgamesn 보도(2026-11-18 확인)"
 }
