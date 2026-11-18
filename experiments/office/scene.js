@@ -43,9 +43,58 @@ function facePartsOf(root, key) {
 // emo + 말하는 중(open 0..1) + 눈 깜빡임 → 부품 켜고 끄기
 function setFace(c, emo, open, blinking) {
   const on = new Set((EMO_OVERRIDE[c.key] || {})[emo] || EMO[emo] || EMO.neutral);
-  if (open > 0.35) { MOUTHS.forEach((m) => on.delete(m)); on.add(c.key === 'jensen' ? 'mouth_grin' : 'mouth_open'); }
+  if (open > 0.35) { const grin = on.has('mouth_grin'); MOUTHS.forEach((m) => on.delete(m)); on.add(grin ? 'mouth_grin' : 'mouth_open'); }   // 말할 때 입: 웃는 표정이면 웃는 입 그대로
   if (blinking && on.has('eye_open')) { on.delete('eye_open'); on.add('eye_closed'); }
   for (const p in c.parts) c.parts[p].forEach((o) => { o.visible = on.has(p); });
+}
+
+const OFFICE = {};
+
+// ---------- 화면 속 릴스 (폰·모니터·태블릿) ----------
+// clips: {id: {n, fps, base, credit}} → 프레임 이미지 미리 불러 둠. screens 일정: {screen, clip|null, t}.
+const CLIPIMG = {};
+async function loadClips(clips) {
+  const jobs = [];
+  for (const id in clips) {
+    const c = clips[id]; CLIPIMG[id] = [];
+    for (let k = 1; k <= c.n; k++) {
+      const im = new Image(); im.src = `${c.base}${String(k).padStart(4, '0')}.jpg`;
+      CLIPIMG[id].push(im); jobs.push(im.decode().catch(() => 0));
+    }
+  }
+  await Promise.all(jobs);
+}
+function makeScreen(w, h, landscape) {
+  const cv = document.createElement('canvas'); cv.width = landscape ? 640 : 360; cv.height = landscape ? 400 : 640;
+  const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: tex, toneMapped: false }));
+  return { cv, g: cv.getContext('2d'), tex, mesh: m, landscape };
+}
+function clipFrame(id, dt) {   // 시각 dt(초)의 프레임 (끝나면 반복)
+  const c = S.clips[id], imgs = CLIPIMG[id];
+  return imgs[Math.floor(Math.max(0, dt) * c.fps) % imgs.length];
+}
+const SWIPE = 0.35;
+function drawScreen(sc, name, t) {
+  const list = S.screens.filter((s) => s.screen === name && s.t <= t);
+  const cur = list[list.length - 1], prev = list[list.length - 2];
+  const g = sc.g, W2 = sc.cv.width, H2 = sc.cv.height;
+  g.fillStyle = '#05070a'; g.fillRect(0, 0, W2, H2);
+  const put = (s, off) => {   // 세로 릴스를 화면에 (모니터는 가운데 세로로, 양옆 어둡게 = 인스타 웹)
+    if (!s || !s.clip) return;
+    const im = clipFrame(s.clip, t - s.t);
+    if (sc.landscape) { const h = H2, w = h * 9 / 16; g.drawImage(im, (W2 - w) / 2, off * H2, w, h); }
+    else g.drawImage(im, 0, off * H2, W2, H2);
+  };
+  if (cur && prev && cur.clip && prev.clip && t - cur.t < SWIPE) {   // 위로 넘기기
+    const u = ease((t - cur.t) / SWIPE);
+    put(prev, -u); put(cur, 1 - u);
+  } else put(cur, 0);
+  sc.tex.needsUpdate = true;
+  // 출처는 그 릴스가 처음 나올 때만 1.6초 작게 (운영자 2026-11-18 "잠깐 띄우고 없애")
+  if (!cur || !cur.clip) return null;
+  const first = S.screens.find((s) => s.clip === cur.clip);
+  return t - first.t < 1.6 ? S.clips[cur.clip].credit : null;
 }
 
 // ---------- 소품 (로우폴리, 면 명암) ----------
@@ -74,7 +123,9 @@ function buildOffice(scene, deskY) {
   const glow = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.46), new THREE.MeshStandardMaterial({ color: 0x0b1a12, emissive: 0x00ff66, emissiveIntensity: 0.18 }));
   glow.position.set(0, 0.42, 0.021); mon.add(glow);
   box(mon, 0.08, 0.16, 0.06, 0x24262c, 0, 0.1, -0.02); box(mon, 0.3, 0.02, 0.2, 0x24262c, 0, 0.01, 0);
-  mon.position.set(0.82, deskY, -0.22); mon.rotation.y = -0.55; scene.add(mon);
+  mon.position.set(0.66, deskY, -0.2); mon.rotation.y = -0.5; scene.add(mon);
+  void scr;
+  OFFICE.mon = mon; OFFICE.monGlow = glow;
   box(scene, 0.62, 0.025, 0.2, 0x2c2f36, -0.05, deskY + 0.012, -0.12, 0.5);      // 키보드
   const mug = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.045, 0.11, 8), mat(0xe8e2d6, 0.5));
   mug.position.set(-0.85, deskY + 0.055, -0.1); mug.castShadow = true; scene.add(mug);
@@ -111,7 +162,14 @@ async function loadHuman(key, file, height) {
   const root = await load(`/assets/characters/${file}.glb`);
   const bones = {};
   // GLTFLoader가 이름의 '.'을 지움 (thigh.L → thighL) → 원래 이름으로도 부를 수 있게
-  root.traverse((o) => { if (o.isBone) { bones[o.name] = o; bones[o.name.replace(/([LR])$/, '.$1')] = o; } if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  root.traverse((o) => {
+    if (o.isBone) { bones[o.name] = o; bones[o.name.replace(/([LR])$/, '.$1')] = o; }
+    if (o.isMesh) {
+      o.castShadow = true; o.receiveShadow = true;
+      // 얼굴 그림(텍스처)이 있는 재질은 꼭짓점 색을 곱하지 않음 (블렌더는 텍스처만 씀 → 곱하면 얼굴이 주황·어둡게 나옴)
+      for (const m of [].concat(o.material)) if (m && m.map) { m.vertexColors = false; m.needsUpdate = true; }
+    }
+  });
   const box3 = new THREE.Box3().setFromObject(root), h = box3.max.y - box3.min.y;
   root.scale.setScalar(height / h);
   const c = { key, root, bones, parts: facePartsOf(root, key), human: true };
@@ -142,6 +200,28 @@ async function loadAI(key, height) {
 
 // ---------- 조립 ----------
 let renderer, composer, bokeh, scene, camera, cast = {}, S, POS = {}, deskY = 0.74, out, g2;
+const SCR = {}, PHONE = { g: null, pos: new THREE.Vector3(), mode: 'none' }, POP = { g: null };
+// 젠슨 폰 위치: face(얼굴 앞, 화면이 젠슨 쪽) / show(at 쪽으로 내밂, 화면이 그쪽) / down(책상에 엎어 둠)
+function phonePose(mode, at) {
+  const hu = Object.values(cast).find((c) => c.human);
+  const face = POS[hu.key].face;
+  if (mode === 'face') { const p = face.clone().add(new THREE.Vector3(-0.03, -0.13, 0.28)); return { p, look: face.clone() }; }
+  if (mode === 'show') { const T = POS[at].face; const p = face.clone().lerp(T, 0.66).add(new THREE.Vector3(0, 0.06, 0)); return { p, look: T.clone() }; }
+  const p = new THREE.Vector3(-0.32, deskY + 0.006, -0.2); return { p, look: p.clone().add(new THREE.Vector3(0, 1, 0.001)) };
+}
+function updatePhone(t) {
+  const ev = S.events.filter((e) => e.do === 'phone' && e.t <= t).sort((a, b) => a.t - b.t);
+  if (!ev.length) { PHONE.g.visible = false; PHONE.mode = 'none'; return; }
+  PHONE.g.visible = true;
+  const cur = ev[ev.length - 1], prev = ev[ev.length - 2];
+  const B = phonePose(cur.mode, cur.at), A = prev ? phonePose(prev.mode, prev.at) : B;
+  const u = prev ? ease((t - cur.t) / 0.45) : 1;
+  PHONE.g.position.copy(A.p).lerp(B.p, u);
+  const look = A.look.clone().lerp(B.look, u);
+  PHONE.g.lookAt(look);
+  PHONE.g.updateMatrixWorld(true);
+  PHONE.mode = cur.mode; PHONE.hold = cur.mode === 'down' ? 1 - u : (prev && prev.mode === 'down' ? u : 1);
+}
 window.twInit = async (script) => {
   S = script;
   await document.fonts.load('700 50px Wanted', '가A');
@@ -185,9 +265,51 @@ window.twInit = async (script) => {
   for (const p of S.cast.filter((p) => !p.human)) {
     const c = await loadAI(p.key, p.size || 0.34);
     c.root.position.set(p.x, deskY, p.z ?? 0.2);
-    c.baseYaw = p.yaw || 0;
+    c.baseYaw = p.yaw || 0; c.baseX = p.x; c.size = p.size || 0.34;
     scene.add(c.root); cast[p.key] = c;
     POS[p.key] = { x: p.x, size: p.size || 0.34, face: new THREE.Vector3(p.x, deskY + (p.size || 0.34) * 0.55, (p.z ?? 0.2) + 0.1) };
+  }
+  // 화면 속 릴스·소품
+  if (S.clips) await loadClips(S.clips);
+  SCR.monitor = makeScreen(0.8, 0.46, true);
+  SCR.monitor.mesh.position.copy(OFFICE.monGlow.position).add(new THREE.Vector3(0, 0, 0.002));
+  OFFICE.mon.add(SCR.monitor.mesh); OFFICE.monGlow.visible = false;
+  OFFICE.mon.updateMatrixWorld(true);
+  POS.monitor = { x: 0, face: SCR.monitor.mesh.getWorldPosition(new THREE.Vector3()) };
+  // 폰 (젠슨 손)
+  PHONE.g = new THREE.Group();
+  const pb = new THREE.Mesh(new THREE.BoxGeometry(0.082, 0.165, 0.009), mat(0x15161a, 0.35)); PHONE.g.add(pb);
+  SCR.phone = makeScreen(0.074, 0.1316, false); SCR.phone.mesh.position.z = 0.0052; PHONE.g.add(SCR.phone.mesh);
+  scene.add(PHONE.g);
+  // 지피티 태블릿 + 팝콘
+  const gp = S.cast.find((p) => p.key === 'chatgpt');
+  if (gp && S.props && S.props.tablet) {
+    const tb = new THREE.Group();
+    tb.add(new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.2, 0.01), mat(0x1b1c20, 0.4)));
+    SCR.tablet = makeScreen(0.112, 0.199 * 0.92, false); SCR.tablet.mesh.position.z = 0.0058; tb.add(SCR.tablet.mesh);
+    const stand = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.012, 0.08), mat(0x2b2d33)); stand.position.set(0, -0.1, -0.03); tb.add(stand);
+    tb.position.set(gp.x + 0.22, deskY + 0.11, (gp.z ?? 0.2) + 0.06);
+    tb.lookAt(new THREE.Vector3(gp.x - 0.25, deskY + 0.12, 1.6)); tb.rotateX(-0.12);
+    scene.add(tb); tb.updateMatrixWorld(true);
+    POS.tablet = { x: tb.position.x, face: tb.position.clone() };
+  }
+  if (gp && S.props && S.props.popcorn) {
+    // 팝콘 통 (한 덩어리로 움직임: 지피티가 머리에 이고 들어와 옆에 내려놓음)
+    POP.g = new THREE.Group();
+    const stripes = document.createElement('canvas'); stripes.width = 64; stripes.height = 8;
+    const sg = stripes.getContext('2d'); for (let k = 0; k < 8; k++) { sg.fillStyle = k % 2 ? '#f4efe6' : '#d8302c'; sg.fillRect(k * 8, 0, 8, 8); }
+    const stx = new THREE.CanvasTexture(stripes); stx.colorSpace = THREE.SRGBColorSpace;
+    const bucket = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.038, 0.1, 16, 1, true), new THREE.MeshStandardMaterial({ map: stx, roughness: 0.6, side: THREE.DoubleSide }));
+    bucket.position.set(0, 0.05, 0); bucket.castShadow = true; POP.g.add(bucket);
+    const pc = new THREE.MeshStandardMaterial({ color: 0xfff1c8, roughness: 0.9, flatShading: true });
+    for (let k = 0; k < 16; k++) {
+      const a = k * 2.39, r = 0.012 + 0.03 * ((k * 7) % 5) / 5;
+      const p = new THREE.Mesh(new THREE.IcosahedronGeometry(0.013, 0), pc);
+      p.position.set(r * Math.cos(a), 0.1 + 0.012 * ((k * 3) % 4) / 3, r * Math.sin(a));
+      POP.g.add(p);
+    }
+    POP.rest = new THREE.Vector3(gp.x - 0.17, deskY, (gp.z ?? 0.2) + 0.1);
+    POP.g.position.copy(POP.rest); scene.add(POP.g);
   }
   camera = new THREE.PerspectiveCamera(36, W / H, 0.05, 40);
   const rt = new THREE.WebGLRenderTarget(W, H, { type: THREE.HalfFloatType, samples: 4 });
@@ -243,11 +365,31 @@ function animAI(c, t) {
   for (const e of evs(who, 'shake')) ry += 0.3 * Math.sin(Math.PI * 4 * clamp((t - e.t) / 0.8)) * (t > e.t && t < e.t + 0.8 ? 1 : 0);
   for (const e of evs(who, 'tilt')) rz += 0.22 * ease((t - e.t) / 0.25) * (1 - ease((t - e.t - (e.d || 1.2)) / 0.3));
   for (const e of evs(who, 'tremble')) if (t > e.t && t < e.t + (e.d || 1)) jx += 0.0022 * Math.sin(t * 55);   // 운영자: 부들거림 작게
+  let chew = 0;
+  for (const e of evs(who, 'munch')) if (t > e.t && t < e.t + (e.d || 3)) {   // 팝콘 냠냠 (말 안 할 때 입 오물오물 + 통통)
+    chew = Math.sin(t * 13) > 0.2 ? 0.6 : 0; sy += 0.03 * Math.abs(Math.sin(t * 6.5));
+  }
+  // 등장: 오른쪽 밖에서 통통 뛰며 들어옴 (enter 전에는 화면 밖), 팝콘은 머리에 이고 와서 옆에 내려놓음
+  let x = c.baseX;
+  const en = evs(who, 'enter')[0];
+  if (en) {
+    const d = en.d || 1.6, u = clamp((t - en.t) / d);
+    x = lerp(1.45, c.baseX, ease(u));
+    if (t < en.t + d) { y += 0.06 * Math.abs(Math.sin(Math.PI * (t - en.t) / 0.32)); ry += -0.5 * (1 - u); }
+    if (t < en.t) x = 3;
+    if (POP.g) {
+      const put = en.t + d + 0.15, v = ease((t - put) / 0.35);
+      const head = new THREE.Vector3(x, deskY + y + c.size * 0.98, c.root.position.z);
+      POP.g.position.copy(head).lerp(POP.rest, v);
+      if (v > 0 && v < 1) POP.g.position.y += 0.08 * Math.sin(Math.PI * v);
+    }
+  }
+  c.root.position.x = x;
   c.root.position.y = deskY + y;
   c.sq.scale.set(1 / Math.sqrt(sy), sy, 1 / Math.sqrt(sy));
   c.root.rotation.set(rx, ry, rz);
   c.sq.position.x = jx;
-  setFace(c, stateOf(who, t), open, blinkAt(who, t));
+  setFace(c, stateOf(who, t), Math.max(open, open > 0.05 ? 0 : chew), blinkAt(who, t));
 }
 function animHuman(c, t) {
   const B = c.bones, who = c.key, open = speaking(who, t);
@@ -270,6 +412,15 @@ function animHuman(c, t) {
     const el = B['lower_arm.R'].getWorldPosition(new THREE.Vector3());
     aim(B['lower_arm.R'], null, forehead.clone().sub(el), u);
   }
+  if (PHONE.g && PHONE.mode !== 'none' && PHONE.hold > 0.01) {                 // 오른손으로 폰 들기
+    const u = PHONE.hold, ph = PHONE.g.position.clone();
+    const sh = B['upper_arm.R'].getWorldPosition(new THREE.Vector3());
+    const elbow = sh.clone().lerp(ph, 0.5).add(new THREE.Vector3(-0.1, -0.16, -0.02));
+    aim(B['upper_arm.R'], null, elbow.sub(sh), u);
+    const el = B['lower_arm.R'].getWorldPosition(new THREE.Vector3());
+    aim(B['lower_arm.R'], null, ph.sub(el), u);
+    if (PHONE.mode === 'face') rotW(B.head, X, 0.18 * u);                       // 폰 내려다보기
+  }
   for (const e of evs(who, 'type')) if (t > e.t && t < e.t + (e.d || 2)) {   // 타자
     rotW(B['lower_arm.L'], X, 0.06 * Math.sin(t * 22)); rotW(B['lower_arm.R'], X, 0.06 * Math.sin(t * 22 + 1.7));
   }
@@ -283,6 +434,10 @@ function camFor(s, t) {
   const [kind, a, b] = s.cam.split(':');
   const nextT = (S.shots.find((x) => x.t > s.t) || { t: S.dur }).t, u = clamp((t - s.t) / Math.max(0.5, nextT - s.t));
   let look, pos, focus, ap;
+  if (kind === 'phone') {   // 폰 화면은 2D로 덮음(phoneOverlay). 뒤는 젠슨 가까이(흐리게)
+    const hu = Object.values(cast).find((c) => c.human), f = POS[hu.key].face;
+    return { pos: f.clone().add(new THREE.Vector3(0.1, 0.06, 2.7)), look: f.clone().add(new THREE.Vector3(0, -0.06, 0)), focus: f.clone().add(new THREE.Vector3(0, 0, 1.2)), ap: 0.02, phone: u };
+  }
   if (kind === 'wide') {
     look = new THREE.Vector3(0, deskY + 0.5, -0.15);
     pos = new THREE.Vector3(0.05, deskY + 0.85, 3.25);
@@ -290,8 +445,8 @@ function camFor(s, t) {
   } else if (kind === 'close') {
     const f = POS[a].face.clone(), human = cast[a].human, sz = POS[a].size || 0.4;
     look = f.clone().add(new THREE.Vector3(0, human ? -0.06 : -0.04, 0));
-    const d = human ? 1.05 : sz * 3.4;   // AI가 화면 높이의 절반쯤
-    pos = f.clone().add(new THREE.Vector3(human ? 0.08 : 0.06 * d, human ? 0.04 : 0.12 * d, d));
+    const d = human ? 2.7 : sz * 3.4;   // AI가 화면 높이의 절반쯤 / 사람은 얼굴+어깨
+    pos = f.clone().add(new THREE.Vector3(human ? 0.1 : 0.06 * d, human ? 0.06 : 0.12 * d, d));
     focus = f; ap = human ? 0.008 : 0.016;   // 뒤(사람·벽)는 흐리게
   } else {   // two:a:b — 세로 화면에 둘이 다 들어오게 거리 계산 (가로 시야 약 20.7°)
     const fa = POS[a].face, fb = POS[b].face, m = fa.clone().add(fb).multiplyScalar(0.5);
@@ -315,15 +470,47 @@ function caption(t) {
   const l = S.lines.find((l) => t >= l.t - 0.05 && t <= l.t + l.dur + 0.15);
   if (!l || !l.sub) return;
   g2.font = '700 50px Wanted';
-  const rows = wrap(l.sub, 780), lh = 66, pad = 26;
+  let text = l.sub;   // 호흡에 맞게 나눈 조각 중 지금 것
+  if (l.subs && l.subs.length > 1) { const r = t - l.t; text = (l.subs.find((s) => r < s.t1) || l.subs[l.subs.length - 1]).text; }
+  const rows = wrap(text, 780), lh = 66, pad = 26;
   const w = Math.max(...rows.map((r) => g2.measureText(r).width)) + pad * 2, h = rows.length * lh + pad * 1.4;
   const x = (W - w) / 2, y = 360;
   g2.fillStyle = 'rgba(0,0,0,0.62)'; g2.beginPath(); g2.roundRect(x, y, w, h, 14); g2.fill();
   g2.fillStyle = '#fff'; g2.textAlign = 'center'; g2.textBaseline = 'middle';
   rows.forEach((r, i) => g2.fillText(r, W / 2, y + pad * 0.7 + lh * (i + 0.5)));
+  if (l.note) {   // 작은 설명 (예: 어떤 스킬인지)
+    g2.font = '700 30px Wanted'; g2.fillStyle = 'rgba(0,0,0,0.55)';
+    const nw = g2.measureText(l.note).width + 28; g2.fillRect((W - nw) / 2, y + h + 14, nw, 46);
+    g2.fillStyle = '#00FF66'; g2.fillText(l.note, W / 2, y + h + 37);
+  }
+}
+
+// 카드: tag(왼쪽 위 작은 글자) / time("3시간 뒤" 화면 전체) / end(마지막 안내)
+function cards(t) {
+  for (const c of S.cards || []) {
+    if (t < c.t || t > c.t + (c.d || 1)) continue;
+    const u = Math.min(1, (t - c.t) / 0.15, (c.t + (c.d || 1) - t) / 0.15);
+    g2.save(); g2.globalAlpha = clamp(u); g2.textAlign = 'center'; g2.textBaseline = 'middle';
+    if (c.kind === 'tag') {
+      g2.font = '700 34px Wanted'; g2.textAlign = 'left';
+      g2.fillStyle = 'rgba(0,0,0,0.55)'; g2.fillRect(64, 296, g2.measureText(c.text).width + 32, 54);
+      g2.fillStyle = '#00FF66'; g2.fillText(c.text, 80, 324);
+    } else if (c.kind === 'time') {
+      g2.fillStyle = 'rgba(0,0,0,0.88)'; g2.fillRect(0, 0, W, H);
+      g2.font = '700 96px Wanted'; g2.fillStyle = '#fff'; g2.fillText(c.text, W / 2, H / 2 - 40);
+    } else {
+      g2.fillStyle = 'rgba(0,0,0,0.78)'; g2.fillRect(0, 980, W, 250);
+      g2.font = '700 48px Wanted'; g2.fillStyle = '#00FF66';
+      wrap(c.text, 920).forEach((r, i, a) => g2.fillText(r, W / 2, 1105 + (i - (a.length - 1) / 2) * 64));
+    }
+    g2.restore();
+  }
 }
 
 window.twFrame = (t) => {
+  if (PHONE.g) updatePhone(t);
+  let credit = null;
+  for (const name in SCR) { const cr = drawScreen(SCR[name], name, t); if (cr && !credit) credit = cr; }
   for (const k in cast) (cast[k].human ? animHuman : animAI)(cast[k], t);
   const cam = camFor(shotAt(t), t);
   camera.position.copy(cam.pos); camera.lookAt(cam.look); camera.updateMatrixWorld();
@@ -331,7 +518,19 @@ window.twFrame = (t) => {
   bokeh.uniforms.aperture.value = cam.ap; bokeh.uniforms.maxblur.value = 0.014;
   composer.render();
   g2.drawImage(renderer.domElement, 0, 0, W, H);
+  if (cam.phone !== undefined && SCR.phone) {   // 첫 장면: 젠슨 폰 화면 클로즈업 → 천천히 물러남
+    const s = lerp(1.08, 0.74, ease(cam.phone)), pw = W * s, ph = pw * 16 / 9, bz = 26 * s;
+    const x = (W - pw) / 2, y = (H - ph) / 2 + 40 * ease(cam.phone);
+    g2.save(); g2.fillStyle = '#0d0e11'; g2.beginPath(); g2.roundRect(x - bz, y - bz * 2.4, pw + bz * 2, ph + bz * 4.8, 70 * s); g2.fill();
+    g2.beginPath(); g2.roundRect(x, y, pw, ph, 44 * s); g2.clip(); g2.drawImage(SCR.phone.cv, x, y, pw, ph); g2.restore();
+  }
   caption(t);
+  if (credit) {   // 화면 속 릴스 출처
+    g2.font = '700 26px Wanted'; g2.textAlign = 'left'; g2.textBaseline = 'middle';
+    g2.fillStyle = 'rgba(0,0,0,0.5)'; const tx = `영상 출처: ${credit}`; g2.fillRect(64, 1196, g2.measureText(tx).width + 24, 40);
+    g2.fillStyle = 'rgba(255,255,255,0.9)'; g2.fillText(tx, 76, 1216);
+  }
+  cards(t);
   return out.toDataURL('image/jpeg', 0.92);
 };
 window.twReady = true;

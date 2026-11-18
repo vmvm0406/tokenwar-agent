@@ -1,0 +1,529 @@
+{
+ "_note": "확정 대본 (운영자 2026-11-18) jensen_reels.md. 화면 속 릴스: out/clips (커밋 안 함), 출처 표기.",
+ "cast": [
+  {
+   "key": "jensen",
+   "human": true,
+   "file": "jensen_toon"
+  },
+  {
+   "key": "claude",
+   "x": -0.27,
+   "z": 0.24,
+   "yaw": 0.25,
+   "size": 0.32
+  },
+  {
+   "key": "chatgpt",
+   "x": 0.27,
+   "z": 0.24,
+   "yaw": -0.25,
+   "size": 0.32
+  }
+ ],
+ "intro": {
+  "clip": "experiments/office/out/clips/DfwQoOyiEKs.mp4",
+  "from": 0.0,
+  "to": 5.9,
+  "fade": 1.2,
+  "pad": 0.35
+ },
+ "clips": {
+  "r1": {
+   "file": "experiments/office/out/clips/DfwQoOyiEKs.mp4",
+   "from": 0.0,
+   "to": 6.0,
+   "credit": "@aipago"
+  },
+  "r2": {
+   "file": "experiments/office/out/clips/Df09-zBibsg.mp4",
+   "from": 0.0,
+   "to": 4.0,
+   "credit": "@aipago"
+  },
+  "r3": {
+   "file": "experiments/office/out/clips/Dfs_O4OAFl5.mp4",
+   "from": 0.0,
+   "to": 4.0,
+   "credit": "@woo__high"
+  }
+ },
+ "lines": [
+  {
+   "who": "claude",
+   "say": "[curious] 무슨 영상 보고 계신 거예요? 저도 보여 주세요!",
+   "sub": "무슨 영상 보고 계신 거예요?|저도 보여 주세요!",
+   "emo": "neutral"
+  },
+  {
+   "who": "jensen",
+   "say": "[sighs] 하... 이거 봐 봐.",
+   "sub": "하… 이거 봐 봐…",
+   "emo": "sad"
+  },
+  {
+   "who": "claude",
+   "say": "[sad] 음, 어디요? 저는 영상을 볼 수 없나 봐요.",
+   "sub": "음… 어디요?|저는 영상을 볼 수 없나 봐요…",
+   "emo": "sad"
+  },
+  {
+   "who": "jensen",
+   "say": "잠깐만, 영상 볼 수 있게 스킬 달아 줄게.",
+   "sub": "잠깐만,|영상 볼 수 있게 스킬 달아 줄게.",
+   "emo": "neutral",
+   "note": "* claude-video의 /watch 스킬 (클로드 코드)"
+  },
+  {
+   "who": "claude",
+   "say": "[gasps] 와! 눈앞이 보여요!",
+   "sub": "와… 눈앞이 보여요!",
+   "emo": "surprised"
+  },
+  {
+   "who": "claude",
+   "say": "[excited] 아까 그 영상, 다시 보여 주세요!",
+   "sub": "아까 그 영상,|다시 보여 주세요!",
+   "emo": "happy"
+  },
+  {
+   "who": "claude",
+   "say": "[stifles laughter] 흡, 아, 안 웃었어요.",
+   "sub": "흡… 아, 안 웃었어요.",
+   "emo": "embarrassed"
+  },
+  {
+   "who": "jensen",
+   "say": "[annoyed] 웃지 말고, 해결 방법 좀 찾아봐.",
+   "sub": "웃지 말고,|해결 방법 좀 찾아봐.",
+   "emo": "angry"
+  },
+  {
+   "who": "claude",
+   "say": "[seriously] 네, 관련 자료 조금만 더 찾아볼게요.",
+   "sub": "네…|관련 자료 조금만 더 찾아볼게요.",
+   "emo": "neutral"
+  },
+  {
+   "who": "jensen",
+   "break": 3.6,
+   "say": "[tired] 지피티, 너라도 좀 도와줘. 언제까지 나를 조롱할까? 나는 평생 조롱받아야 하는 사람이야?",
+   "sub": "지피티, 너라도 좀 도와줘.|언제까지 나를 조롱할까?|나는 평생 조롱받아야 하는 사람이야?",
+   "emo": "sad"
+  },
+  {
+   "who": "chatgpt",
+   "say": "[chewing popcorn] 젠슨 황... 너, 정말 핵심을 찔렀어.",
+   "sub": "젠슨 황…|너 정말 핵심을 찔렀어 👈",
+   "emo": "smile"
+  },
+  {
+   "who": "jensen",
+   "say": "[angry sigh] 하아...",
+   "sub": "하아…",
+   "emo": "angry"
+  }
+ ],
+ "screens": [
+  {
+   "screen": "phone",
+   "clip": "r1",
+   "t": 0.0
+  },
+  {
+   "screen": "phone",
+   "clip": "r1",
+   "line": 1,
+   "dt": 0.3
+  },
+  {
+   "screen": "phone",
+   "clip": "r1",
+   "line": 5,
+   "dt": 0.4
+  },
+  {
+   "screen": "phone",
+   "clip": null,
+   "line": 7,
+   "dt": 0.2
+  },
+  {
+   "screen": "monitor",
+   "clip": "r3",
+   "line": 8,
+   "dt": 0.2
+  },
+  {
+   "screen": "monitor",
+   "clip": "r2",
+   "line": 8,
+   "dt": 2.6
+  },
+  {
+   "screen": "monitor",
+   "clip": "r3",
+   "line": 9,
+   "dt": -1.6
+  },
+  {
+   "screen": "monitor",
+   "clip": "r1",
+   "line": 9,
+   "dt": 1.8
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "who": "jensen",
+   "do": "phone",
+   "mode": "face"
+  },
+  {
+   "t": 0.0,
+   "who": "jensen",
+   "emo": "sad"
+  },
+  {
+   "t": 5.6,
+   "who": "jensen",
+   "do": "sigh"
+  },
+  {
+   "line": 0,
+   "dt": 0.0,
+   "who": "claude",
+   "do": "look",
+   "at": "jensen"
+  },
+  {
+   "line": 0,
+   "dt": 0.2,
+   "who": "claude",
+   "do": "tilt",
+   "d": 1.6
+  },
+  {
+   "line": 0,
+   "dt": 0.0,
+   "who": "jensen",
+   "do": "look",
+   "at": "claude"
+  },
+  {
+   "line": 1,
+   "dt": 0.3,
+   "who": "jensen",
+   "do": "phone",
+   "mode": "show",
+   "at": "claude"
+  },
+  {
+   "line": 2,
+   "dt": 0.0,
+   "who": "claude",
+   "do": "shake"
+  },
+  {
+   "line": 3,
+   "dt": -0.2,
+   "who": "jensen",
+   "do": "phone",
+   "mode": "face"
+  },
+  {
+   "line": 3,
+   "dt": 0.0,
+   "who": "jensen",
+   "do": "look",
+   "at": "camera"
+  },
+  {
+   "line": 4,
+   "dt": -0.15,
+   "who": "claude",
+   "do": "hop"
+  },
+  {
+   "line": 5,
+   "dt": 0.4,
+   "who": "jensen",
+   "do": "phone",
+   "mode": "show",
+   "at": "claude"
+  },
+  {
+   "line": 5,
+   "dt": 0.4,
+   "who": "jensen",
+   "do": "look",
+   "at": "claude"
+  },
+  {
+   "line": 6,
+   "dt": 0.0,
+   "who": "claude",
+   "do": "tremble",
+   "d": 1.6
+  },
+  {
+   "line": 7,
+   "dt": 0.2,
+   "who": "jensen",
+   "do": "phone",
+   "mode": "down"
+  },
+  {
+   "line": 8,
+   "dt": 0.0,
+   "who": "claude",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 8,
+   "dt": 1.0,
+   "who": "claude",
+   "emo": "embarrassed"
+  },
+  {
+   "line": 8,
+   "dt": 1.2,
+   "who": "claude",
+   "do": "tremble",
+   "d": 1.0
+  },
+  {
+   "line": 8,
+   "dt": 3.4,
+   "who": "claude",
+   "do": "tremble",
+   "d": 1.0
+  },
+  {
+   "line": 9,
+   "dt": -2.4,
+   "who": "jensen",
+   "emo": "sad"
+  },
+  {
+   "line": 9,
+   "dt": 0.0,
+   "who": "jensen",
+   "do": "look",
+   "at": "chatgpt"
+  },
+  {
+   "line": 11,
+   "dt": -0.1,
+   "who": "jensen",
+   "do": "sigh"
+  },
+  {
+   "line": 11,
+   "dt": 0.0,
+   "who": "jensen",
+   "do": "look",
+   "at": "camera"
+  },
+  {
+   "line": 9,
+   "dt": -3.3,
+   "who": "chatgpt",
+   "do": "enter",
+   "d": 1.6
+  },
+  {
+   "line": 9,
+   "dt": -3.3,
+   "who": "chatgpt",
+   "emo": "happy"
+  },
+  {
+   "line": 9,
+   "dt": -1.4,
+   "who": "chatgpt",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 9,
+   "dt": -1.2,
+   "who": "chatgpt",
+   "do": "munch",
+   "d": 14.0
+  },
+  {
+   "line": 10,
+   "dt": 0.0,
+   "who": "chatgpt",
+   "do": "look",
+   "at": "jensen"
+  },
+  {
+   "line": 10,
+   "dt": 0.0,
+   "who": "chatgpt",
+   "emo": "smile"
+  },
+  {
+   "line": 9,
+   "dt": -3.3,
+   "who": "claude",
+   "do": "look",
+   "at": "chatgpt"
+  },
+  {
+   "line": 9,
+   "dt": -1.6,
+   "who": "claude",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 9,
+   "dt": -1.4,
+   "who": "claude",
+   "do": "tremble",
+   "d": 1.2
+  },
+  {
+   "line": 9,
+   "dt": 2.0,
+   "who": "claude",
+   "do": "tremble",
+   "d": 1.2
+  },
+  {
+   "line": 9,
+   "dt": 4.8,
+   "who": "claude",
+   "do": "tremble",
+   "d": 1.2
+  }
+ ],
+ "shots": [
+  {
+   "t": 0.0,
+   "cam": "phone:jensen"
+  },
+  {
+   "t": 5.55,
+   "cam": "close:jensen"
+  },
+  {
+   "line": 0,
+   "dt": -0.1,
+   "cam": "close:claude"
+  },
+  {
+   "line": 1,
+   "dt": -0.05,
+   "cam": "two:jensen:claude"
+  },
+  {
+   "line": 2,
+   "dt": 0.0,
+   "cam": "close:claude"
+  },
+  {
+   "line": 3,
+   "dt": -0.05,
+   "cam": "close:jensen"
+  },
+  {
+   "line": 4,
+   "dt": -0.2,
+   "cam": "close:claude"
+  },
+  {
+   "line": 5,
+   "dt": 0.2,
+   "cam": "two:jensen:claude"
+  },
+  {
+   "line": 6,
+   "dt": -0.05,
+   "cam": "close:claude"
+  },
+  {
+   "line": 7,
+   "dt": -0.05,
+   "cam": "close:jensen"
+  },
+  {
+   "line": 8,
+   "dt": 0.0,
+   "cam": "two:claude:monitor"
+  },
+  {
+   "line": 9,
+   "dt": -3.4,
+   "cam": "wide"
+  },
+  {
+   "line": 10,
+   "dt": -0.1,
+   "cam": "close:chatgpt"
+  },
+  {
+   "line": 11,
+   "dt": -0.1,
+   "cam": "close:jensen"
+  }
+ ],
+ "cards": [
+  {
+   "text": "패러디",
+   "kind": "tag",
+   "t": 0.0,
+   "until_line": 2
+  },
+  {
+   "text": "클로드에 영상 보는 스킬 다는 법 → 프로필에 정리해 뒀어요",
+   "kind": "end",
+   "line": 11,
+   "dt": 1.4,
+   "d": 2.2
+  }
+ ],
+ "audio": [
+  {
+   "clip": "r3",
+   "line": 8,
+   "dt": 0.2,
+   "from": 0.0,
+   "to": 2.4,
+   "vol": 0.28
+  },
+  {
+   "clip": "r2",
+   "line": 8,
+   "dt": 2.6,
+   "from": 0.0,
+   "to": 2.8,
+   "vol": 0.28
+  },
+  {
+   "clip": "r3",
+   "line": 9,
+   "dt": -1.6,
+   "from": 0.0,
+   "to": 3.2,
+   "vol": 0.2
+  },
+  {
+   "clip": "r1",
+   "line": 9,
+   "dt": 1.8,
+   "from": 1.2,
+   "to": 5.9,
+   "vol": 0.16
+  }
+ ],
+ "tail": 3.4,
+ "props": {
+  "popcorn": true
+ }
+}
