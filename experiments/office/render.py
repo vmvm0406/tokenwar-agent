@@ -217,7 +217,7 @@ def split_subs_aligned(sub, d, k, line_t0):
     for i, p in enumerate(parts):
         acc += cnt(p)
         if i < len(parts) - 1:
-            j = min(len(spoken) - 1, round(acc / total * len(spoken)))
+            j = min(len(spoken) - 1, acc)   # 자막 글자 순서 = 말한 글자 순서 (비율로 하면 잘린 대사에서 어긋남)
             cut = max(prev, spoken[j] - line_t0 - 0.05)
         else:
             cut = 1e9
@@ -455,7 +455,7 @@ def main():
         asyncio.run(shoot(tl, frames, out, a.gpu, True))
         print("\n".join(str(out / f"still_{k:04d}.jpg") for k in frames))
         return
-    fd = out / "frames"
+    fd = out / f"frames_{sp.stem}"   # 대본마다 따로 (두 영상을 동시에 만들어도 안 섞이게)
     if fd.exists():
         shutil.rmtree(fd)
     fd.mkdir()
