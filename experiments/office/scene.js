@@ -877,11 +877,19 @@ function cards(t) {
       const glowA = 0.16 * clamp(r / 0.8) * (1 - clamp((r - stop - 1.0) / 2.5));
       if (glowA > 0) { const gr = g2.createRadialGradient(tx, ty, 10, tx, ty, 260); gr.addColorStop(0, `rgba(0,255,102,${glowA})`); gr.addColorStop(1, 'rgba(0,255,102,0)'); g2.fillStyle = gr; g2.fillRect(tx - 260, ty - 260, 520, 520); }
       for (let k = 0; k < 80; k++) {
-        const born = k * 0.13; if (born >= stop) break;
+        const born = k * (c.every || 0.13); if (born >= stop) break;
         const q = (r - born) / 1.6; if (q < 0 || q > 1) continue;
         const ang = rd(k) * Math.PI * 2, R = 700 + 200 * rd(k + 9), sx = tx + Math.cos(ang) * R, sy = ty + Math.sin(ang) * R * 1.2;
         const e = q * q * (3 - 2 * q), x = lerp(sx, tx, e), y = lerp(sy, ty, e), sc = 1 - 0.8 * e, a = Math.min(1, q / 0.15) * (1 - clamp((q - 0.85) / 0.15)) * (y > 300 && y < 500 ? 0.2 : 1);   // 자막 띠 위에서는 흐리게
         g2.save(); g2.globalAlpha = clamp(u) * a; g2.translate(x, y); g2.rotate((rd(k + 3) - 0.5) * 0.8 + q * 2 * (rd(k + 5) - 0.5)); g2.scale(sc, sc);
+        if (c.icons === 'money') {   // 지폐·동전 (기본소득 편 표지 2026-11-19)
+          g2.textAlign = 'center'; g2.textBaseline = 'middle';
+          if (k % 3 === 2) { g2.fillStyle = '#f2c230'; g2.beginPath(); g2.arc(0, 0, 46, 0, 7); g2.fill(); g2.fillStyle = '#c99a12'; g2.beginPath(); g2.arc(0, 0, 36, 0, 7); g2.fill();
+            g2.font = '700 44px Wanted'; g2.fillStyle = '#fff3c4'; g2.fillText('₩', 0, 2); }
+          else { g2.fillStyle = '#7fcf8a'; g2.fillRect(-95, -48, 190, 96); g2.strokeStyle = '#2f7a3c'; g2.lineWidth = 6; g2.strokeRect(-85, -38, 170, 76);
+            g2.fillStyle = '#2f7a3c'; g2.beginPath(); g2.arc(0, 0, 26, 0, 7); g2.fill(); g2.font = '700 36px Wanted'; g2.fillStyle = '#d9f5dd'; g2.fillText('₩', 0, 2); }
+          g2.restore(); continue;
+        }
         g2.fillStyle = '#f4f4f0'; g2.beginPath(); g2.moveTo(-55, -72); g2.lineTo(30, -72); g2.lineTo(55, -47); g2.lineTo(55, 72); g2.lineTo(-55, 72); g2.closePath(); g2.fill();
         g2.fillStyle = '#c9c9c2'; g2.beginPath(); g2.moveTo(30, -72); g2.lineTo(30, -47); g2.lineTo(55, -47); g2.fill();
         g2.font = '700 22px Wanted'; g2.textAlign = 'left'; g2.textBaseline = 'middle'; g2.fillStyle = k % 3 ? '#222' : '#00a844'; g2.fillText(LB[k % LB.length], -42, -48);

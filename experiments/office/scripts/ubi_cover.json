@@ -1,0 +1,183 @@
+{
+ "_note": "확정 대본 (운영자 2026-11-19 '그렇게 하자') ubi.md. 2035년 설정, 남자 + 클로드. 화면 post/ubi_screens.py, 컷·동작·소리 post/ubi_timeline.py.",
+ "ss": 2,
+ "jpeg": 0.98,
+ "crf": 12,
+ "lead": 0.45,
+ "speed": 1.36,
+ "level": true,
+ "props": {
+  "dorm": true,
+  "box": true
+ },
+ "cast": [
+  {
+   "key": "man",
+   "human": true
+  },
+  {
+   "key": "claude",
+   "x": -0.28,
+   "z": 0.24,
+   "yaw": 0.3,
+   "size": 0.38
+  }
+ ],
+ "clips": {
+  "resign": {
+   "file": "experiments/office/out/clips/ubi_resign.mp4",
+   "from": 0,
+   "to": 6,
+   "land": true,
+   "res": 1920
+  },
+  "news": {
+   "file": "experiments/office/out/clips/ubi_news.mp4",
+   "from": 0,
+   "to": 6,
+   "land": true,
+   "res": 1920
+  },
+  "deposit": {
+   "file": "experiments/office/out/clips/ubi_deposit.mp4",
+   "from": 0,
+   "to": 5,
+   "land": true,
+   "res": 1920
+  },
+  "game": {
+   "file": "experiments/office/out/clips/ubi_game.mp4",
+   "from": 0,
+   "to": 8,
+   "land": true,
+   "res": 1920
+  },
+  "pause": {
+   "file": "experiments/office/out/clips/ubi_pause.mp4",
+   "from": 0,
+   "to": 6,
+   "land": true,
+   "res": 1920
+  },
+  "work": {
+   "file": "experiments/office/out/clips/ubi_work.mp4",
+   "from": 0,
+   "to": 6,
+   "land": true,
+   "res": 1920
+  }
+ },
+ "lines": [
+  {
+   "who": "man",
+   "say": "[jumping up, shocked and thrilled] 일 안 해도 돈이 들어온다고?!",
+   "sub": "",
+   "emo": "surprised"
+  },
+  {
+   "who": "claude",
+   "say": "[cheerfully, innocently, fast] 네! 제가 사용자님 일을 맡게 됐거든요!",
+   "sub": "",
+   "emo": "excited"
+  },
+  {
+   "who": "man",
+   "say": "[laughing, then suddenly freezing] 하하... 내 일을?",
+   "sub": "",
+   "emo": "blank"
+  },
+  {
+   "who": "man",
+   "say": "[bored, long sigh] 아... 게임도 질리고... [empty, quietly, clearly] 클로드, 나 이젠... 뭐 하고 살지?",
+   "sub": "",
+   "emo": "blank",
+   "break": 3.6,
+   "seed": 5
+  },
+  {
+   "who": "claude",
+   "say": "[thinking for a moment, then gently and a little sad] 음... 그건 제가 정해 드릴 순 없네요.",
+   "sub": "",
+   "emo": "down",
+   "break": 0.8
+  },
+  {
+   "who": "claude",
+   "say": "[quickly, warmly, to the viewer] 일이 필요 없는 세상, 여러분은 어떤 삶을 살고 싶으신가요?",
+   "sub": "",
+   "emo": "smile",
+   "break": 3.6
+  }
+ ],
+ "tail": 0.5,
+ "shots": [
+  {
+   "t": 0,
+   "cam": "close:claude"
+  }
+ ],
+ "events": [
+  {
+   "t": 0,
+   "who": "man",
+   "do": "sky",
+   "top": [
+    110,
+    170,
+    235
+   ],
+   "bot": [
+    190,
+    222,
+    250
+   ],
+   "d": 0.05
+  },
+  {
+   "t": 0,
+   "who": "claude",
+   "do": "look",
+   "at": "camera"
+  },
+  {
+   "t": 0,
+   "who": "claude",
+   "emo": "excited"
+  },
+  {
+   "t": 0.2,
+   "who": "claude",
+   "do": "hop"
+  },
+  {
+   "t": 0,
+   "who": "man",
+   "do": "look",
+   "at": "claude"
+  },
+  {
+   "t": 0,
+   "who": "man",
+   "emo": "surprised"
+  }
+ ],
+ "screens": [
+  {
+   "t": 0,
+   "screen": "monitor",
+   "clip": "deposit",
+   "hold": true
+  }
+ ],
+ "cards": [
+  {
+   "t": 0,
+   "kind": "gather",
+   "who": "claude",
+   "icons": "money",
+   "d": 20,
+   "every": 0.035
+  }
+ ],
+ "sfx": []
+}
