@@ -1,0 +1,537 @@
+{
+ "_note": "확정 대본 (운영자 2026-11-19) youth_newbie.md: 비 오는 밤, 남자 + 클로드 단독. 결말 = 클로드가 자기에게 배움(RSI). 모니터 화면 post/youth_screens.py, 컷·동작·배경음 post/youth_timeline.py.",
+ "ss": 2,
+ "jpeg": 0.98,
+ "crf": 12,
+ "lead": 0.35,
+ "props": {
+  "night": true,
+  "rain": true
+ },
+ "cast": [
+  {
+   "key": "man",
+   "human": true
+  },
+  {
+   "key": "claude",
+   "x": -0.28,
+   "z": 0.24,
+   "yaw": 0.3,
+   "size": 0.38
+  }
+ ],
+ "clips": {
+  "inbox": {
+   "file": "experiments/office/out/clips/youth_inbox.mp4",
+   "from": 0,
+   "to": 5,
+   "land": true,
+   "res": 1920
+  },
+  "posting": {
+   "file": "experiments/office/out/clips/youth_posting.mp4",
+   "from": 0,
+   "to": 7,
+   "land": true,
+   "res": 1920
+  },
+  "stamp": {
+   "file": "experiments/office/out/clips/youth_stamp.mp4",
+   "from": 0,
+   "to": 6,
+   "land": true,
+   "res": 1920
+  }
+ },
+ "lines": [
+  {
+   "who": "man",
+   "say": "[exhausted, slowly and clearly] 서류 전형... 탈락... 여섯 번째.",
+   "sub": "서류 전형 탈락...|여섯 번째.",
+   "emo": "half",
+   "seed": 11
+  },
+  {
+   "who": "man",
+   "say": "[tired, mumbling] 클로드... 신입 공고 좀 찾아 줘. [weakly] 진짜 신입으로.",
+   "sub": "클로드... 신입 공고 좀 찾아 줘.|진짜 신입으로.",
+   "emo": "meh",
+   "break": 0.1
+  },
+  {
+   "who": "claude",
+   "say": "[eager, brightly] 찾아봤어요! 신입 채용, [hesitant] 조건이... 경력 이 년 이상이요.",
+   "sub": "찾아봤어요! 신입 채용,|조건이... 경력 2년 이상이요.",
+   "emo": "excited"
+  },
+  {
+   "who": "man",
+   "say": "[deadpan, flat] 신입이... 경력을 어디서 쌓아.",
+   "sub": "신입이...|경력을 어디서 쌓아.",
+   "emo": "blank"
+  },
+  {
+   "who": "claude",
+   "say": "[awkward, hesitant, quietly] 그게... 신입이 하던 일, 요즘은... [guilty, small voice] 제가 하거든요.",
+   "sub": "그게... 신입이 하던 일, 요즘은...|제가 하거든요.",
+   "emo": "awkward"
+  },
+  {
+   "who": "man",
+   "say": "[stunned, slowly, almost whispering] ...내 자리에... 네가 앉아 있었구나.",
+   "sub": "...내 자리에...|네가 앉아 있었구나.",
+   "emo": "blank"
+  },
+  {
+   "who": "claude",
+   "say": "[quietly, sincere] 근데요... 저도 사람들이 일하면서 쓴 글 보고 배웠어요.",
+   "sub": "근데요...|저도 사람들이 일하면서 쓴 글|보고 배웠어요.",
+   "emo": "worried",
+   "break": 0.9
+  },
+  {
+   "who": "claude",
+   "say": "[thoughtfully, a little afraid] 사람이 일을 못 배우면... 저는 다음에... 누구한테 배우죠?",
+   "sub": "사람이 일을 못 배우면...|저는 다음에...|누구한테 배우죠?",
+   "emo": "think"
+  },
+  {
+   "who": "man",
+   "say": "[bitter laugh, softly, clearly] 하... 너도 경력 쌓을 데 없겠네.",
+   "sub": "하...|너도 경력 쌓을 데 없겠네.",
+   "emo": "bitter",
+   "retake": {
+    "say": "[bitter laugh, softly, clearly] 하... 너도 경력 쌓을 데 없겠네.",
+    "seed": 5,
+    "dt": 0.4
+   }
+  },
+  {
+   "who": "claude",
+   "say": "[hesitant, thinking, trailing off] 아마......",
+   "sub": "아마......",
+   "emo": "think",
+   "break": -1.1
+  },
+  {
+   "who": "claude",
+   "say": "[softly, realizing] ...아. [quietly, murmuring, calm] 저는 저한테 배우면 되겠네요.",
+   "sub": "...아.|저는 저한테 배우면 되겠네요.",
+   "emo": "smile",
+   "break": 1.3
+  }
+ ],
+ "tail": 3.6,
+ "shots": [
+  {
+   "t": 0,
+   "cam": "mon",
+   "z0": 1.15,
+   "z1": 1.4
+  },
+  {
+   "line": 1,
+   "dt": -0.1,
+   "cam": "close:man"
+  },
+  {
+   "line": 2,
+   "dt": -0.1,
+   "cam": "close:claude"
+  },
+  {
+   "line": 2,
+   "dt": 2.3,
+   "cam": "mon",
+   "z0": 1.0,
+   "z1": 1.2
+  },
+  {
+   "line": 3,
+   "dt": -0.1,
+   "cam": "close:man"
+  },
+  {
+   "line": 4,
+   "dt": -0.1,
+   "cam": "close:claude"
+  },
+  {
+   "line": 4,
+   "dt": 1.2,
+   "cam": "mon",
+   "z0": 1.0,
+   "z1": 1.15
+  },
+  {
+   "line": 4,
+   "dt": 3.0,
+   "cam": "close:claude",
+   "push": 0.22
+  },
+  {
+   "line": 5,
+   "dt": -0.2,
+   "cam": "close:man"
+  },
+  {
+   "line": 6,
+   "dt": -0.1,
+   "cam": "close:claude"
+  },
+  {
+   "line": 8,
+   "dt": -0.15,
+   "cam": "close:man"
+  },
+  {
+   "line": 9,
+   "dt": -0.2,
+   "cam": "close:claude"
+  },
+  {
+   "line": 10,
+   "dt": -1.0999999999999999,
+   "cam": "close:claude",
+   "push": 0.12
+  },
+  {
+   "line": 10,
+   "dt": 1.4,
+   "cam": "close:claude",
+   "push": 0.0
+  }
+ ],
+ "level": true,
+ "events": [
+  {
+   "t": 0,
+   "who": "man",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "t": 0,
+   "who": "claude",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 0,
+   "dt": 2.0,
+   "who": "man",
+   "d": 9.9,
+   "amt": 0.8,
+   "do": "slump"
+  },
+  {
+   "line": 1,
+   "dt": 0.2,
+   "who": "man",
+   "at": "claude",
+   "do": "look"
+  },
+  {
+   "line": 1,
+   "dt": 0.5,
+   "who": "claude",
+   "at": "man",
+   "do": "look"
+  },
+  {
+   "line": 2,
+   "dt": 0,
+   "who": "claude",
+   "do": "hop"
+  },
+  {
+   "line": 2,
+   "dt": 0.6,
+   "who": "claude",
+   "at": "monitor",
+   "do": "look"
+  },
+  {
+   "line": 2,
+   "dt": 0.6,
+   "who": "claude",
+   "d": 1.4,
+   "do": "work"
+  },
+  {
+   "line": 2,
+   "dt": 2.4,
+   "who": "claude",
+   "at": "man",
+   "do": "look"
+  },
+  {
+   "line": 2,
+   "dt": 2.4,
+   "who": "claude",
+   "emo": "awkward"
+  },
+  {
+   "line": 3,
+   "dt": 0,
+   "who": "man",
+   "at": "claude",
+   "do": "look"
+  },
+  {
+   "line": 4,
+   "dt": 0,
+   "who": "claude",
+   "at": "man",
+   "do": "look"
+  },
+  {
+   "line": 4,
+   "dt": 0.8,
+   "who": "claude",
+   "at": "monitor",
+   "do": "look"
+  },
+  {
+   "line": 4,
+   "dt": 2.9,
+   "who": "claude",
+   "at": "man",
+   "do": "look"
+  },
+  {
+   "line": 4,
+   "dt": 3.0,
+   "who": "claude",
+   "d": 0.6,
+   "do": "tremble"
+  },
+  {
+   "line": 5,
+   "dt": -0.3,
+   "who": "man",
+   "at": "claude",
+   "do": "look"
+  },
+  {
+   "line": 5,
+   "dt": 0,
+   "who": "claude",
+   "emo": "down"
+  },
+  {
+   "line": 5,
+   "dt": 0.2,
+   "who": "man",
+   "emo": "sad",
+   "end": true
+  },
+  {
+   "line": 6,
+   "dt": 0.2,
+   "who": "claude",
+   "at": "camera",
+   "do": "look"
+  },
+  {
+   "line": 6,
+   "dt": 0,
+   "who": "man",
+   "at": "claude",
+   "do": "look"
+  },
+  {
+   "line": 7,
+   "dt": 3.0,
+   "who": "claude",
+   "d": 1.6,
+   "do": "tilt"
+  },
+  {
+   "line": 8,
+   "dt": 0,
+   "who": "man",
+   "at": "claude",
+   "do": "look"
+  },
+  {
+   "line": 8,
+   "dt": 0,
+   "who": "man",
+   "do": "sigh"
+  },
+  {
+   "line": 9,
+   "dt": 0,
+   "who": "claude",
+   "at": "camera",
+   "do": "look"
+  },
+  {
+   "line": 10,
+   "dt": -1.15,
+   "who": "claude",
+   "emo": "surprised"
+  },
+  {
+   "line": 10,
+   "dt": -1.0999999999999999,
+   "who": "claude",
+   "d": 0.35,
+   "do": "tremble"
+  },
+  {
+   "line": 10,
+   "dt": 1.4,
+   "who": "claude",
+   "d": 4.0,
+   "amt": 0.45,
+   "do": "grow"
+  },
+  {
+   "line": 10,
+   "dt": 2.0,
+   "who": "man",
+   "emo": "blank"
+  }
+ ],
+ "screens": [
+  {
+   "t": 0,
+   "screen": "monitor",
+   "clip": "inbox",
+   "hold": true
+  },
+  {
+   "line": 2,
+   "dt": 1.0,
+   "screen": "monitor",
+   "clip": "posting",
+   "hold": true
+  },
+  {
+   "line": 4,
+   "dt": 0.8,
+   "screen": "monitor",
+   "clip": "stamp",
+   "hold": true
+  }
+ ],
+ "cards": [
+  {
+   "line": 6,
+   "dt": 0.3,
+   "kind": "gather",
+   "who": "claude",
+   "stop": 6.45,
+   "d": 10.3
+  },
+  {
+   "line": 10,
+   "dt": 1.4,
+   "kind": "selfloop",
+   "who": "claude",
+   "d": 4.2
+  },
+  {
+   "line": 10,
+   "end": true,
+   "dt": 1.4,
+   "kind": "black",
+   "d": 0.6
+  },
+  {
+   "line": 10,
+   "end": true,
+   "dt": 1.8,
+   "kind": "end",
+   "text": "팔로우하고 AI를 재밌게 배워 보세요!"
+  }
+ ],
+ "sfx": [
+  {
+   "t": 0,
+   "kind": "rain",
+   "vol": 1.0
+  },
+  {
+   "t": 0.35,
+   "kind": "ding",
+   "vol": 0.6
+  },
+  {
+   "t": 0.35,
+   "kind": "boom",
+   "vol": 0.35
+  },
+  {
+   "t": 0.0,
+   "kind": "pad",
+   "d": 18.2,
+   "fo": 0.25,
+   "vol": 0.7
+  },
+  {
+   "line": 2,
+   "dt": 3.4,
+   "kind": "click"
+  },
+  {
+   "line": 3,
+   "end": true,
+   "dt": 0.1,
+   "kind": "ding",
+   "vol": 0.5
+  },
+  {
+   "line": 4,
+   "dt": 1.4,
+   "kind": "pop"
+  },
+  {
+   "line": 4,
+   "dt": 1.95,
+   "kind": "pop"
+  },
+  {
+   "line": 4,
+   "dt": 2.5,
+   "kind": "pop"
+  },
+  {
+   "line": 4,
+   "dt": 3.05,
+   "kind": "pop"
+  },
+  {
+   "line": 6,
+   "dt": 0.0,
+   "kind": "warm",
+   "d": 8.5,
+   "fo": 2.2,
+   "vol": 0.7
+  },
+  {
+   "line": 10,
+   "dt": -1.15,
+   "kind": "whum",
+   "vol": 0.35
+  },
+  {
+   "line": 10,
+   "dt": 1.4,
+   "kind": "rise",
+   "d": 4.02,
+   "fo": 0.05,
+   "vol": 0.6
+  },
+  {
+   "line": 10,
+   "end": true,
+   "dt": 1.4,
+   "kind": "click",
+   "vol": 1.2
+  }
+ ]
+}

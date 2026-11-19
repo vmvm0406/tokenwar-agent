@@ -565,6 +565,8 @@ function animAI(c, t) {
     rx -= 0.28 * k; if (r > 0.3 && r < 0.9) jx += 0.004 * Math.sin(t * 60);
   }
   for (const e of evs(who, 'tremble')) if (t > e.t && t < e.t + (e.d || 1)) jx += 0.0022 * Math.sin(t * 55);   // 운영자: 부들거림 작게
+  let grow = 1;   // 점점 커짐 (신입 자리 편 2026-11-19: 스스로 업그레이드), amt 최종 배수-1, d 걸리는 시간, 갈수록 빨라짐
+  for (const e of evs(who, 'grow')) { const k = clamp((t - e.t) / (e.d || 4)); grow *= 1 + (e.amt || 0.4) * k * k; }
   let chew = 0;
   for (const e of evs(who, 'munch')) if (t > e.t && t < e.t + (e.d || 3)) {   // 팝콘 냠냠 (말 안 할 때 입 오물오물 + 통통)
     chew = Math.sin(t * 13) > 0.2 ? 0.6 : 0; sy += 0.03 * Math.abs(Math.sin(t * 6.5));
@@ -622,7 +624,7 @@ function animAI(c, t) {
   }
   c.root.position.x = x;
   c.root.position.y = deskY + y;
-  c.sq.scale.set(1 / Math.sqrt(sy), sy, 1 / Math.sqrt(sy));
+  c.sq.scale.set(grow / Math.sqrt(sy), grow * sy, grow / Math.sqrt(sy));
   c.root.rotation.set(rx, ry, rz);
   c.sq.position.x = jx;
   setFace(c, stateOf(who, t), Math.max(open, open > 0.05 ? 0 : chew), blinkAt(who, t));
@@ -715,7 +717,16 @@ function camFor(s, t) {
     pos = look.clone().addScaledVector(n, d);
     return { pos, look, focus: look.clone(), ap: 0.0004, near: Math.max(0.05, d - 0.1) };
   }
-  if (kind === 'wide') {
+  if (kind === 'group') {   // group:a,b,c — 여럿이 다 들어오게 위에서 살짝 내려다봄 (신입 자리 편 고리). edge: 이 사람을 화면 가장자리에 걸치게, elev: 높이(기본 0.4)
+    const ks = a.split(','), F = ks.map((k) => POS[k].face);
+    let x0 = Math.min(...ks.map((k) => POS[k].face.x - (POS[k].size || 0.4) * 0.7)), x1 = Math.max(...ks.map((k) => POS[k].face.x + (POS[k].size || 0.4) * 0.7));
+    if (s.edge) x1 = Math.max(x1, POS[s.edge].face.x - (s.edgeIn ?? 0.02));
+    const cy = F.reduce((q, f) => q + f.y, 0) / F.length, cz = F.reduce((q, f) => q + f.z, 0) / F.length;
+    const dd = ((x1 - x0) / 2) / Math.tan(THREE.MathUtils.degToRad(10.3));
+    look = new THREE.Vector3((x0 + x1) / 2, cy - 0.04, cz);
+    pos = look.clone().add(new THREE.Vector3(0, dd * (s.elev ?? 0.4), dd));
+    focus = look.clone(); ap = 0.002;
+  } else if (kind === 'wide') {
     // 선택: dx(오른쪽으로 옮김, 모니터까지 넣기), back(뒤로 물러남 배수) — 리트냥이 2026-11-18
     const dx = s.dx || 0, bk = s.back || 1;
     look = new THREE.Vector3(dx, deskY + 0.5, -0.15);
@@ -735,7 +746,7 @@ function camFor(s, t) {
     pos = m.clone().add(new THREE.Vector3(0.03, 0.1 * d, d));
     focus = m; ap = 0.003;
   }
-  pos.lerp(look, 0.07 * ease(u));   // 천천히 다가가기
+  pos.lerp(look, 0.07 * ease(u) + (s.push || 0));   // 천천히 다가가기 (+ push: 툭 확대, 신입 자리 편)
   return { pos, look, focus, ap };
 }
 
@@ -780,6 +791,64 @@ function cards(t) {
       g2.globalAlpha = clamp(u) * (c.alpha || 0.5);
       g2.save(); g2.beginPath(); g2.ellipse(c.x + c.w / 2, c.y + c.h / 2, c.w / 2, c.h / 2, 0, 0, Math.PI * 2); g2.clip();
       g2.drawImage(im, cr[0] * iw, cr[1] * ih, cr[2] * iw, cr[3] * ih, c.x, c.y, c.w, c.h); g2.restore();
+    } else if (c.kind === 'black') {   // 탁 꺼짐 (신입 자리 편 2026-11-19): 바로 검은 화면
+      g2.globalAlpha = 1; g2.fillStyle = '#000'; g2.fillRect(0, 0, W, H);
+    } else if (c.kind === 'gather') {   // 문서 그림이 캐릭터에게 날아와 모임 (신입 자리 편 2026-11-19): who, stop(초, 이때부터 새 문서 없음)
+      const r = t - c.t, v = POS[c.who].face.clone(); v.project(camera);
+      const tx = (v.x + 1) / 2 * W, ty = (1 - v.y) / 2 * H, stop = c.stop ?? 99, LB = ['회의록', '보고서', '메모', '인수인계', '업무 일지', '질문', '답변', '교육 자료'];
+      const rd = (k) => { const x = Math.sin(k * 127.1) * 43758.5453; return x - Math.floor(x); };
+      const glowA = 0.16 * clamp(r / 0.8) * (1 - clamp((r - stop - 1.0) / 2.5));
+      if (glowA > 0) { const gr = g2.createRadialGradient(tx, ty, 10, tx, ty, 260); gr.addColorStop(0, `rgba(0,255,102,${glowA})`); gr.addColorStop(1, 'rgba(0,255,102,0)'); g2.fillStyle = gr; g2.fillRect(tx - 260, ty - 260, 520, 520); }
+      for (let k = 0; k < 80; k++) {
+        const born = k * 0.13; if (born >= stop) break;
+        const q = (r - born) / 1.6; if (q < 0 || q > 1) continue;
+        const ang = rd(k) * Math.PI * 2, R = 700 + 200 * rd(k + 9), sx = tx + Math.cos(ang) * R, sy = ty + Math.sin(ang) * R * 1.2;
+        const e = q * q * (3 - 2 * q), x = lerp(sx, tx, e), y = lerp(sy, ty, e), sc = 1 - 0.8 * e, a = Math.min(1, q / 0.15) * (1 - clamp((q - 0.85) / 0.15)) * (y > 300 && y < 500 ? 0.2 : 1);   // 자막 띠 위에서는 흐리게
+        g2.save(); g2.globalAlpha = clamp(u) * a; g2.translate(x, y); g2.rotate((rd(k + 3) - 0.5) * 0.8 + q * 2 * (rd(k + 5) - 0.5)); g2.scale(sc, sc);
+        g2.fillStyle = '#f4f4f0'; g2.beginPath(); g2.moveTo(-55, -72); g2.lineTo(30, -72); g2.lineTo(55, -47); g2.lineTo(55, 72); g2.lineTo(-55, 72); g2.closePath(); g2.fill();
+        g2.fillStyle = '#c9c9c2'; g2.beginPath(); g2.moveTo(30, -72); g2.lineTo(30, -47); g2.lineTo(55, -47); g2.fill();
+        g2.font = '700 22px Wanted'; g2.textAlign = 'left'; g2.textBaseline = 'middle'; g2.fillStyle = k % 3 ? '#222' : '#00a844'; g2.fillText(LB[k % LB.length], -42, -48);
+        g2.fillStyle = '#bdbdb6'; for (let j = 0; j < 4; j++) g2.fillRect(-42, -18 + j * 22, 84 - (j % 2) * 26, 8);
+        g2.restore();
+      }
+    } else if (c.kind === 'selfloop') {   // 한 캐릭터를 감싸고 도는 글자 고리 + '클로드 vN' (신입 자리 편 2026-11-19, 스스로 업그레이드)
+      const r = t - c.t, v = POS[c.who].face.clone(); v.project(camera);
+      const cx = (v.x + 1) / 2 * W, cy = (1 - v.y) / 2 * H, sz = (c.r || 470) * (1 + 0.12 * Math.min(1, r / 4));
+      const gr = g2.createRadialGradient(cx, cy, 20, cx, cy, sz * 1.3), ga = 0.22 * clamp(r / 1.2);
+      gr.addColorStop(0, `rgba(0,255,102,${ga})`); gr.addColorStop(1, 'rgba(0,255,102,0)'); g2.fillStyle = gr; g2.fillRect(cx - sz * 1.4, cy - sz * 1.4, sz * 2.8, sz * 2.8);
+      const lap = 0.15 * r + 0.09 * r * r, N = Math.min(80, Math.floor(16 + r * 18)), GL = '가나다라글학습배움01AI문장말코드';
+      g2.save(); g2.font = '700 34px Wanted'; g2.textAlign = 'center'; g2.textBaseline = 'middle'; g2.shadowColor = '#00FF66'; g2.shadowBlur = 16;
+      for (let k = 0; k < N; k++) {
+        const a = (k / N + lap) * Math.PI * 2, ring = k % 2 ? 1 : 0.82, x = cx + Math.cos(a) * sz * ring, y = cy + Math.sin(a) * sz * 0.55 * ring;
+        g2.fillStyle = `rgba(0,255,102,${clamp(r / 0.6) * (0.55 + 0.45 * Math.sin(k * 1.7 + r * 6))})`; g2.fillText(GL[k % GL.length], x, y);
+      }
+      g2.restore(); g2.save(); g2.globalAlpha = clamp(u);
+      const ver = Math.max(2, Math.floor(Math.pow(r * 1.5 + 1.2, 3.6)));
+      g2.font = '700 64px Wanted'; g2.textAlign = 'center'; g2.textBaseline = 'middle';
+      const tx = `클로드 v${ver.toLocaleString()}`, tw = g2.measureText(tx).width + 60;
+      g2.fillStyle = 'rgba(0,0,0,0.7)'; g2.fillRect((W - tw) / 2, 1130, tw, 100);
+      g2.fillStyle = '#00FF66'; g2.fillText(tx, W / 2, 1182); g2.restore();
+    } else if (c.kind === 'loop') {   // AI끼리 서로의 글로 배우는 고리 (신입 자리 편 2026-11-19): who [AI들], 글자가 얼굴 사이를 돌며 점점 빨라짐 + '학습 n회차'
+      const r = t - c.t, pts = c.who.map((k) => { const v = POS[k].face.clone(); v.project(camera); return [(v.x + 1) / 2 * W, (1 - v.y) / 2 * H]; });
+      const mx = pts.reduce((s, p) => s + p[0], 0) / pts.length, my = pts.reduce((s, p) => s + p[1], 0) / pts.length;
+      const P = pts.map(([x, y]) => [mx + (x - mx) * 1.35, my + (y - my) * 1.35 - 20]);
+      const n = P.length, at = (u) => {   // 닫힌 캣멀롬 곡선 위 점 (u 0~1)
+        const f = ((u % 1) + 1) % 1 * n, i = Math.floor(f), s = f - i, p0 = P[(i + n - 1) % n], p1 = P[i], p2 = P[(i + 1) % n], p3 = P[(i + 2) % n];
+        const q = (a, b, c2, d) => 0.5 * (2 * b + (-a + c2) * s + (2 * a - 5 * b + 4 * c2 - d) * s * s + (-a + 3 * b - 3 * c2 + d) * s * s * s);
+        return [q(p0[0], p1[0], p2[0], p3[0]), q(p0[1], p1[1], p2[1], p3[1])];
+      };
+      const lap = 0.18 * r + 0.07 * r * r, N = Math.min(90, Math.floor(14 + r * 16)), GL = '가나다라글학습배움01AI문장말';
+      g2.save(); g2.font = '700 34px Wanted'; g2.textAlign = 'center'; g2.textBaseline = 'middle'; g2.shadowColor = '#00FF66'; g2.shadowBlur = 16;
+      for (let k = 0; k < N; k++) {
+        const [x, y] = at(k / N + lap), a = clamp(Math.min(1, r / 0.6)) * (0.55 + 0.45 * Math.sin(k * 1.7 + r * 6));
+        g2.globalAlpha *= 1; g2.fillStyle = `rgba(0,255,102,${a})`; g2.fillText(GL[k % GL.length], x, y);
+      }
+      g2.restore(); g2.save(); g2.globalAlpha = clamp(u);
+      const cnt = Math.floor(Math.pow(r * 1.6 + 1, 3.4));
+      g2.font = '700 64px Wanted'; g2.textAlign = 'center'; g2.textBaseline = 'middle';
+      const tx = `학습 ${cnt.toLocaleString()}회차`, tw = g2.measureText(tx).width + 60;
+      g2.fillStyle = 'rgba(0,0,0,0.7)'; g2.fillRect((W - tw) / 2, 1130, tw, 100);
+      g2.fillStyle = '#00FF66'; g2.fillText(tx, W / 2, 1182); g2.restore();
     } else if (c.kind === 'title') {   // 훅 제목 (위쪽, 초록 큰 글자, 리트냥이 2026-11-18)
       g2.font = '700 62px Wanted';
       const rows = wrap(c.text, 900), lh = 80, w = Math.max(...rows.map((r) => g2.measureText(r).width)) + 56;

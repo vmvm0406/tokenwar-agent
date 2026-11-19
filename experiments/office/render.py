@@ -344,8 +344,10 @@ def build(script):
                     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", f"{r0:.3f}", "-to", f"{r1:.3f}", "-i", str(f2),
                                     "-af", f"atempo={k_:.4f}", "-b:a", "192k", str(f3)], check=True)
                 b3 = decode(f3)
-                mutes.append([round(s0 + q0 - 0.02, 3), round(s0 + q0 + max(old_d, len(b3) / 16000) + 0.05, 3)])
-                parts.append({"file": str(f3), "t": round(t0 + s0 + q0, 3), "mute": []})
+                sh = rt.get("dt", 0.0)   # 다시 녹음한 줄을 조금 뒤로 (앞 대사 끝과 겹칠 때, 신입 자리 편)
+                mutes.append([round(s0 + q0 + max(0.0, sh) - 0.02, 3), round(s0 + q0 + sh + max(old_d, len(b3) / 16000) + 0.05, 3)])
+                parts.append({"file": str(f3), "t": round(t0 + s0 + q0 + sh, 3), "mute": []})
+                lines[i]["t"] = round(lines[i]["t"] + sh, 3)
                 env = [float(np.sqrt(np.mean(b3[j:j + hop] ** 2))) for j in range(0, len(b3), hop)] or [0.0]
                 peak = max(env) or 1
                 lines[i].update(dur=round(len(b3) / 16000, 3), env=[round(e / peak, 3) for e in env], src=str(f3), ofs=0.0,
@@ -498,12 +500,21 @@ def encode(tl, frames_dir, mp4):
         "fail": "aevalsrc='0.25*sin(2*PI*(440-160*floor(t/0.28))*t)*exp(-mod(t\\,0.28)*5)':d=1.1:s=44100",   # 띠-로-리 (실패)
         "rain": "anoisesrc=d=60:c=pink:a=0.5:r=44100,lowpass=f=2400,highpass=f=300,volume=0.35",   # 빗소리 (길게, 영상 길이에서 잘림)
         "boom": "aevalsrc='0.55*sin(2*PI*52*t)*exp(-t*1.6)+0.18*sin(2*PI*104*t)*exp(-t*3)':d=2.4:s=44100",   # 쿵 (긴장되는 순간)
+        # 배경음 (신입 자리 편 2026-11-19 '배경음도 조금씩'): 길게 만들어 두고 sfx의 d(길이)·fo(끝 페이드)로 자름
+        "pad": "aevalsrc='0.05*(sin(2*PI*110*t)+0.7*sin(2*PI*130.8*t)+0.6*sin(2*PI*164.8*t)+0.25*sin(2*PI*220*t))*(0.75+0.25*sin(2*PI*0.2*t))':d=40:s=44100,lowpass=f=900,afade=t=in:d=1.5",   # 쓸쓸한 단조 패드
+        "warm": "aevalsrc='0.045*(sin(2*PI*130.8*t)+0.8*sin(2*PI*164.8*t)+0.7*sin(2*PI*196*t)+0.4*sin(2*PI*261.6*t))*(0.8+0.2*sin(2*PI*0.3*t))':d=40:s=44100,lowpass=f=1200,afade=t=in:d=1.2",   # 따뜻한 장조 화음
+        "whum": "aevalsrc='0.4*sin(2*PI*62*t)*min(1\\,t/0.25)*exp(-t*1.4)+0.12*sin(2*PI*124*t)*exp(-t*2)':d=2.2:s=44100",   # 낮은 '웅' (깨달음)
+        "rise": "aevalsrc='0.07*sin(2*PI*(220*t+45*t*t))*(0.6+0.4*sin(2*PI*(3*t+1.2*t*t)))+0.04*sin(2*PI*(330*t+70*t*t))':d=12:s=44100,afade=t=in:d=0.6",   # 점점 높아지고 빨라지는 떨림 (가속)
     }
     for i, x in enumerate(tl.get("sfx", [])):
         d = int(x["t"] * 1000)
         ins.extend(["-f", "lavfi", "-i", SFX[x["kind"]]])
         k = len([v for v in ins if v == "-i"])
-        fl.append(f"[{k}:a]aformat=sample_rates=44100:channel_layouts=stereo,volume={x.get('vol', 1.0)},adelay={d}|{d}[x{i}]")
+        cut = ""
+        if x.get("d"):   # 길이 자르기 + 끝 페이드 (배경음)
+            fo = x.get("fo", 0.4)
+            cut = f",atrim=0:{x['d']},afade=t=out:st={max(0, x['d'] - fo):.2f}:d={fo}"
+        fl.append(f"[{k}:a]aformat=sample_rates=44100:channel_layouts=stereo{cut},volume={x.get('vol', 1.0)},adelay={d}|{d}[x{i}]")
         labs.append(f"[x{i}]")
     fc = ";".join(fl) + ";" + "".join(labs) + f"amix=inputs={len(labs)}:normalize=0,apad,loudnorm=I=-14:TP=-1.5[a]"
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-framerate", str(FPS), "-i", str(frames_dir / "f%05d.jpg")] + ins +
