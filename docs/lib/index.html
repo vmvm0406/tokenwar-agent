@@ -60,11 +60,37 @@ ul{padding-left:20px;color:#CFD6D2}
 .card:hover{border-color:var(--ac)}
 .card .t{font-family:'Black Han Sans',sans-serif;font-size:24px;color:var(--fg)}
 .card .d{color:#CFD6D2;font-size:15px;margin-top:4px}
+.tabs{display:flex;border-bottom:2px solid #2A3530;margin:0 0 6px}
+.tabs a{flex:1;text-align:center;padding:12px 0;font-family:'Black Han Sans',sans-serif;font-size:20px;color:var(--mu);text-decoration:none;border-bottom:4px solid transparent;margin-bottom:-2px}
+.tabs a.on{color:var(--ac);border-bottom-color:var(--ac)}
+.term{border-top:2px solid #2A3530;padding:20px 0}
+.term .t{font-family:'Black Han Sans',sans-serif;font-size:26px}
+.term .en{font-family:'Wanted Sans',sans-serif;font-weight:700;font-size:14px;color:var(--mu);margin-left:8px}
+.term .ko{color:var(--ac);font-weight:700;margin:2px 0 6px}
+.term .ex{color:var(--mu);font-size:15px}
 </style></head><body><main><div class="brand">토큰전쟁</div>
-<h1>AI 자료실</h1><p class="intro">릴스에 나온 AI 도구·방법을 하나씩 정리해 둡니다.</p>
+<h1>AI 자료실</h1><p class="intro">릴스에 나온 AI 활용법과 용어를 하나씩 정리해 둡니다.</p>
+<nav class="tabs"><a href="#how" data-t="how">활용법</a><a href="#terms" data-t="terms">용어</a></nav>
+<section id="how" class="pane">
 <a class="card" href="shorts-cut/"><div class="t">긴 영상, 쇼츠로 자동으로 자르는 법</div><div class="d">긴 방송·강의에서 재밌는 부분만 세로 쇼츠 파일로</div></a>
 <a class="card" href="ai-hands/"><div class="t">클로드에게 손 달아 주는 법</div><div class="d">클로드 인 크롬: 브라우저에서 클릭·입력을 대신</div></a>
 <a class="card" href="ai-memory/"><div class="t">클로드 기억력 높이는 방법</div><div class="d">CLAUDE.md 메모 파일 하나로 새 대화에서도 기억</div></a>
 <a class="card" href="ai-draw/"><div class="t">클로드 그림 실력 향상시키는 법</div><div class="d">허깅페이스 무료 그림 모델을 클로드에 연결</div></a>
 <a class="card" href="ai-eyes/"><div class="t">AI에게 눈을 달아 주는 법</div><div class="d">영상 링크만 주면 클로드가 영상을 보고 답해요</div></a>
+</section>
+<section id="terms" class="pane">
+<div class="term" id="rsi"><div class="t">RSI <span class="en">Recursive Self-Improvement</span></div><div class="ko">재귀적 자기 개선</div>
+<p>AI가 스스로를 고쳐 더 나은 다음 버전을 만들고, 그 버전이 또 다음 버전을 만드는 것. 한 번 돌 때마다 고치는 실력도 늘어서 점점 빨라질 수 있다는 생각입니다.</p>
+<p class="ex">예: "제가 저를 고치고, 고친 제가 또 저를 고치고…"</p></div>
+<div class="term" id="model-collapse"><div class="t">모델 붕괴 <span class="en">Model Collapse</span></div>
+<p>AI가 사람이 쓴 글 대신 AI가 만든 글로만 계속 배우면, 드문 내용부터 사라지며 점점 엉뚱해지는 현상. RSI와 반대로 "AI끼리만 배우면 망가진다"는 쪽의 근거입니다.</p>
+<p class="ex">출처: Shumailov 외, Nature 631권 (2024)</p></div>
+</section>
+<script>
+(function(){var ts=document.querySelectorAll('.tabs a'),ps=document.querySelectorAll('.pane');
+function show(){var h=(location.hash||'#how').slice(1),k=document.getElementById(h);
+ var p=k&&(k.classList.contains('pane')?k:k.closest('.pane'));var id=p?p.id:'how';
+ ps.forEach(function(x){x.hidden=x.id!==id});ts.forEach(function(a){a.classList.toggle('on',a.dataset.t===id)});}
+window.addEventListener('hashchange',show);show();})();
+</script>
 <div class="src">@tokenwar_ai · 팔로우하고 AI를 재밌게 배워 보세요</div></main></body></html>
