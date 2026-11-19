@@ -1,0 +1,24 @@
+{
+ "approved": true,
+ "approved_at": "2026-11-19T19:54:21+09:00",
+ "id": "2026-11-19-video-toebo",
+ "date": "2026-11-19",
+ "type": "video",
+ "format": "buzz",
+ "prebuilt": true,
+ "title": "AI 안 쓰면 퇴보, AI 쓰면 퇴화",
+ "topic": "AI 과제·AI 채점 자기 선호 편향 · 2027 수능 위급재난문자",
+ "caption": "AI 안 쓰면 퇴보, 쓰면 퇴화 😵\n\n\"AI로 작성한 과제는 전부 잡아냅니다.\" 겁먹고 혼자 밤새 썼더니 C.\n알고 보니 채점도 AI가 했습니다.\n\n실제로 AI 채점자는 사람 눈엔 비슷한 수준의 글이어도, 자기가 쓴 글에 점수를 더 주는 경향이 있다는 연구가 있어요.\n\n그리고 11월 19일 수능에선 휴대폰을 내지 않은 수험생을 가려내려고 시험 시작 전 전국에 위급재난문자를 보냈죠. 1차 발송 뒤 22명이 적발됐습니다.\n\n여러분은 과제할 때 AI 쓰나요, 안 쓰나요?\n\n※ 콩트입니다. 학교·교수·학생·성적 화면은 모두 지어낸 것입니다.\n※ 출처: Panickssery 외 'LLM Evaluators Recognize and Favor Their Own Generations'(NeurIPS 2024), 수능 위급재난문자 보도(서울신문·파이낸셜뉴스·국민일보, 2026년 11월)",
+ "hashtags": [
+  "#AI과제",
+  "#대학생",
+  "#수능",
+  "#클로드",
+  "#토큰전쟁"
+ ],
+ "publish_at": "2026-11-19T19:54:21+09:00",
+ "rights": "original",
+ "credit": "직접 제작 (3D 캐릭터·목소리 일레븐랩스 Starter·화면 그림·효과음 직접)",
+ "note": "3D 대화 릴스 퇴보 vs 퇴화 편. 영상은 experiments/office/render.py 완성본(prebuilt, scripts/toebo.json), 다시 렌더링하지 않음.",
+ "rights_note": "근거: Panickssery·Bowman·Feng NeurIPS 2024, 수능 위급재난문자 보도(서울신문·파이낸셜뉴스·한국경제·국민일보 2026-11-17~19 확인)"
+}
