@@ -355,6 +355,12 @@ def build(script):
                 peak = max(env) or 1
                 lines[i].update(dur=round(len(b3) / 16000, 3), env=[round(e / peak, 3) for e in env], src=str(f3), ofs=0.0,
                                 subs=split_subs(l.get("sub") or "", env, len(b3) / 16000))
+            if l.get("sub_at"):   # 자막 조각 경계를 손으로 (받아쓰기 단어 시각을 보고 정함, 퇴보 vs 퇴화 편 '하... 같은 거 자막 안 맞아')
+                parts_ = [p.strip() for p in (l.get("sub") or "").split("|") if p.strip()]
+                prev_, out_ = 0.0, []
+                for p_, c_ in zip(parts_, list(l["sub_at"]) + [1e9]):
+                    out_.append({"text": p_, "t0": prev_, "t1": c_}); prev_ = c_
+                lines[i]["subs"] = out_
         t0 += len(a) / 16000
     dur = t0 + script.get("tail", 1.0)
     # 목소리 크기 맞추기 (운영자 2026-11-19 '소리 안 나고, 데시벨 맞춰'): 대본 "level": true면

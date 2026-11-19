@@ -84,7 +84,7 @@
   {
    "who": "man",
    "say": "[stunned disbelief] C...? [voice cracking] 내가... C라고?",
-   "sub": "C...?|내가... C라고?",
+   "sub": "내가... C라고?",
    "emo": "blank",
    "break": 5.4
   },
@@ -99,13 +99,19 @@
    "who": "claude",
    "say": "[awkward, hesitant, nervous little laugh] 그게... 채점도... 교수님이 저한테 맡기셨거든요.",
    "sub": "그게... 채점도...|교수님이 저한테 맡기셨거든요.",
-   "emo": "awkward"
+   "emo": "awkward",
+   "sub_at": [
+    1.36
+   ]
   },
   {
    "who": "claude",
    "say": "[guilty, small voice, trailing off sheepishly] 제가 쓴 글이라... 제 눈엔 다 좋아 보여서요...",
    "sub": "제가 쓴 글이라...|제 눈엔 다 좋아 보여서요...",
-   "emo": "embarrassed"
+   "emo": "embarrassed",
+   "sub_at": [
+    0.74
+   ]
   },
   {
    "who": "man",
@@ -115,7 +121,10 @@
    "retake": {
     "say": "[incredulous laugh, then resigned sigh] 하... 기말은... [clearly] 클로드, 너만 믿는다.",
     "seed": 12
-   }
+   },
+   "sub_at": [
+    0.5
+   ]
   },
   {
    "who": "man",
@@ -144,7 +153,10 @@
    "say": "[tired, bitter] AI 안 쓰면... C. 쓰면... 에프. [deep sigh] 하... [annoyed, irritated, frustrated] 뭐 어쩌라는 거야!",
    "sub": "AI 안 쓰면 C. 쓰면 F.|하... 뭐 어쩌라는 거야!",
    "emo": "meh",
-   "break": 5.0
+   "break": 5.0,
+   "sub_at": [
+    3.45
+   ]
   }
  ],
  "tail": 3.4,
