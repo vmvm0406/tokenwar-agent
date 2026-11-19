@@ -1,0 +1,23 @@
+{
+ "approved": true,
+ "approved_at": "2026-11-19T22:31:07+09:00",
+ "id": "2026-11-19-video-ubi",
+ "date": "2026-11-19",
+ "type": "video",
+ "format": "buzz",
+ "prebuilt": true,
+ "title": "클로드, \"돈 벌어와.\"",
+ "topic": "기본소득(UBI)·AI가 만든 부 · 일의 의미",
+ "caption": "2035년, AI가 번 돈으로 모두에게 기본소득을 준다면? 🤔\n\n일하지 않아도 매달 돈이 들어오는 세상. 돈 걱정이 사라지면, 우리는 뭘 하며 살게 될까요?\n\n지금 실제로는\n🇰🇷 국내: 농어촌 기본소득 시범사업이 1인당 월 15만 원(지역화폐)을 지급하고 있고, 정부는 2027년 기본소득 시범사업을 준비 중이에요. AI가 만들어 낸 부를 기본소득과 연결하자는 이야기도 나왔습니다.\n🇺🇸 해외: 미국에서 1,000명에게 3년 동안 매달 1,000달러를 준 실험(OpenResearch)에선, 받은 사람들이 일주일에 평균 1시간 남짓 덜 일했어요.\n\nAI가 번 돈으로 모두에게 기본소득, 찬성인가요 반대인가요?\n\n※ 출처: 아시아경제·SBS Biz·주간경향(2026), NBER Working Paper 32719(OpenResearch, 2024)",
+ "hashtags": [
+  "#기본소득",
+  "#AI일자리",
+  "#클로드",
+  "#토큰전쟁"
+ ],
+ "publish_at": "2026-11-19T22:31:07+09:00",
+ "rights": "original",
+ "credit": "직접 제작 (3D 캐릭터·목소리 일레븐랩스 Starter·화면 그림·효과음 직접)",
+ "note": "3D 대화 릴스 기본소득 편. 영상은 experiments/office/render.py 완성본(prebuilt, scripts/ubi.json), 다시 렌더링하지 않음.",
+ "rights_note": "근거: 아시아경제·SBS Biz·주간경향(2026) 기본소득 시범사업 보도, NBER Working Paper 32719(OpenResearch 2024) (2026-11-19 확인)"
+}
