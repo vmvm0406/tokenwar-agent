@@ -1,0 +1,71 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>모델 붕괴 | 토큰전쟁 자료실</title><link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#000000;--fg:#FFFFFF;--ac:#00FF66;--mu:#8A948F}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg)}
+body{font-family:'Wanted Sans Variable','Wanted Sans',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  line-height:1.65;word-break:keep-all;overflow-wrap:break-word}
+main{max-width:680px;margin:0 auto;padding:40px 16px 64px}
+.brand{font-family:'Black Han Sans',sans-serif;color:var(--ac);font-size:20px;letter-spacing:.01em}
+h1{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:clamp(30px,8vw,44px);line-height:1.2;margin:18px 0 12px}
+h1 .hl{color:var(--ac)}
+.intro{color:#CFD6D2;font-size:18px;margin:0 0 28px}
+.rule{height:4px;background:var(--ac);margin:28px 0}
+.step{border-top:2px solid #2A3530;padding:22px 0}
+.step .k{font-family:'Black Han Sans',sans-serif;color:var(--ac);font-size:32px;line-height:1}
+.step .lb{color:var(--mu);font-weight:700;font-size:15px;margin-left:10px}
+h2{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:24px;line-height:1.3;margin:10px 0 6px}
+h3{font-family:'Black Han Sans',sans-serif;font-weight:400;font-size:22px;margin:0 0 10px}
+p{margin:6px 0;color:#CFD6D2}
+.pr{position:relative;margin:12px 0 4px;border:2px solid var(--ac);background:#0E1310}
+.pr pre{margin:0;padding:16px 16px 52px;white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere;
+  font-family:'JetBrains Mono',ui-monospace,Consolas,monospace;font-size:15px;line-height:1.6;color:var(--fg)}
+.pr button{position:absolute;right:0;bottom:0;border:0;background:var(--ac);color:var(--bg);
+  font-family:inherit;font-weight:700;font-size:15px;line-height:1;padding:12px 16px;cursor:pointer}
+ul{padding-left:20px;color:#CFD6D2}
+.src{color:var(--mu);font-size:14px;border-top:2px solid #2A3530;padding-top:16px;margin-top:32px}
+.src a{color:var(--mu)}
+.kv{list-style:none;padding:0;margin:6px 0}
+.kv li{margin:4px 0}
+.kv b{color:var(--fg);margin-right:6px}
+.notice{border-left:4px solid var(--ac);padding:4px 0 4px 14px;margin:0 0 28px}
+.notice ul{margin:6px 0}
+.notice a{color:var(--ac)}
+.grp{margin:18px 0 0}
+.grp h4{margin:0 0 2px;font-size:17px;font-weight:700;color:var(--ac)}
+.grp .gs{font-size:13px;color:var(--mu);margin:2px 0 0}
+.grp .gs a{color:var(--mu)}
+.foot{margin-top:28px;font-weight:700}
+.step.li{padding:14px 0}
+.step.li .lb{color:var(--fg);font-size:18px}
+.step.li .ex{display:block;width:100%;max-width:360px;margin:10px 0 0}
+.step.li .pr pre{padding:12px 96px 12px 16px;font-size:17px}
+.foot a{color:var(--ac)}
+.step.li .en{font-family:'JetBrains Mono',ui-monospace,Consolas,monospace;color:var(--ac);font-size:16px;margin-left:10px}
+.usage{margin:6px 0 0}
+.usage li{margin:6px 0}
+.step.li .rv{color:var(--mu);font-size:15px;margin:8px 0 2px}
+.step.li .rv b{font-family:'Black Han Sans',sans-serif;font-weight:400;color:var(--ac);font-size:26px;margin-left:6px}
+.step.li .rq{border-top:2px solid var(--ac);padding-top:8px;color:var(--fg);font-weight:700}
+.step.li.sm{padding:10px 0}
+.step.li.sm .k{font-size:22px}
+.step.li.sm .rv{display:inline;margin-left:10px}
+.step.li.sm .rv b{font-size:20px}
+.step.li .gs{font-size:13px;color:var(--mu)}
+.step.li .gs a{color:var(--mu)}
+
+.card{display:block;border:2px solid #2A3530;padding:18px;margin:14px 0;text-decoration:none;color:var(--fg)}
+.card:hover{border-color:var(--ac)}
+.card .t{font-family:'Black Han Sans',sans-serif;font-size:24px;color:var(--fg)}
+.card .d{color:#CFD6D2;font-size:15px;margin-top:4px}
+.shot{display:block;width:100%;height:auto;border:2px solid #2A3530;margin:12px 0 4px}
+</style></head><body><main><div class="brand"><a href="../" style="color:inherit;text-decoration:none">토큰전쟁 자료실</a></div>
+<h1><span class="hl">모델 붕괴</span></h1>
+<p class="intro">Model Collapse. AI가 사람이 쓴 글 대신 AI가 만든 글로만 계속 배우면, 점점 엉뚱해지는 현상이에요.</p>
+<div class="step"><span class="k">1</span><span class="lb">어떻게 망가질까</span><h2>드문 내용부터 사라져요</h2><p>AI가 만든 글은 흔한 내용 위주라서, 그걸로 다시 배우면 드물고 특이한 내용이 점점 빠져요. 몇 세대가 지나면 처음과 전혀 다른 말을 하기도 해요.</p></div>
+<div class="step"><span class="k">2</span><span class="lb">실험 예</span><h2>중세 건축 글이 산토끼 목록으로</h2><p>연구진이 AI 글로 AI를 아홉 세대 거듭 학습시켰더니, 중세 건축에 대한 글이 엉뚱한 산토끼 종류 목록으로 바뀌었어요.</p></div>
+<div class="step"><span class="k">3</span><span class="lb">그래서</span><h2>사람이 쓴 글이 계속 필요해요</h2><p>AI가 만든 글을 학습에 쓰려면 잘 골라내야 한다는 게 연구진의 결론이에요. <a href="../rsi/" style="color:var(--ac)">RSI</a>와 반대쪽 근거로 자주 나와요.</p></div>
+<div class="src">출처: Shumailov 외, "AI models collapse when trained on recursively generated data", Nature 631권 (2024)<br>@tokenwar_ai · 팔로우하고 AI를 재밌게 배워 보세요</div>
+</main></body></html>
