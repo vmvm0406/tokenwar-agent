@@ -1,0 +1,926 @@
+{
+ "_note": "확정 대본 (운영자 2026-11-19 '좋아. 감정 살리고 말은 좀 빠르게, 효과음, 배경은 알아서') toebo_toehwa.md. 남자(대학생) + 클로드, 자취방 밤→새벽. 화면 post/toebo_screens.py, 컷·동작·효과음 post/toebo_timeline.py.",
+ "ss": 2,
+ "jpeg": 0.98,
+ "crf": 12,
+ "lead": 0.9,
+ "speed": 1.34,
+ "level": true,
+ "props": {
+  "night": true,
+  "dorm": true,
+  "exam": true
+ },
+ "cast": [
+  {
+   "key": "man",
+   "human": true
+  },
+  {
+   "key": "claude",
+   "x": -0.28,
+   "z": 0.24,
+   "yaw": 0.3,
+   "size": 0.38
+  }
+ ],
+ "clips": {
+  "notice1": {
+   "file": "experiments/office/out/clips/toebo_notice1.mp4",
+   "from": 0,
+   "to": 5,
+   "land": true,
+   "res": 1920
+  },
+  "allnight": {
+   "file": "experiments/office/out/clips/toebo_allnight.mp4",
+   "from": 0,
+   "to": 6.6,
+   "land": true,
+   "res": 1920
+  },
+  "gradec": {
+   "file": "experiments/office/out/clips/toebo_gradec.mp4",
+   "from": 0,
+   "to": 7,
+   "land": true,
+   "res": 1920
+  },
+  "grader": {
+   "file": "experiments/office/out/clips/toebo_grader.mp4",
+   "from": 0,
+   "to": 6,
+   "land": true,
+   "res": 1920
+  },
+  "notice2": {
+   "file": "experiments/office/out/clips/toebo_notice2.mp4",
+   "from": 0,
+   "to": 7,
+   "land": true,
+   "res": 1920
+  },
+  "caught": {
+   "file": "experiments/office/out/clips/toebo_caught.mp4",
+   "from": 0,
+   "to": 4.6,
+   "land": true,
+   "res": 1920
+  }
+ },
+ "lines": [
+  {
+   "who": "man",
+   "say": "[nervous, reading slowly, voice shaking] AI로 작성한 과제는... [gulps] 다 잡아낸다고?",
+   "sub": "AI로 작성한 과제는...|다 잡아낸다고?",
+   "emo": "worried"
+  },
+  {
+   "who": "man",
+   "say": "[sighs heavily, overwhelmed, whining] ...아니, 이걸 언제 다 해...",
+   "sub": "...아니, 이걸 언제 다 해...",
+   "emo": "meh"
+  },
+  {
+   "who": "man",
+   "say": "[stunned disbelief] C...? [voice cracking] 내가... C라고?",
+   "sub": "C...?|내가... C라고?",
+   "emo": "blank",
+   "break": 5.4
+  },
+  {
+   "who": "man",
+   "say": "[frustrated, almost yelling, betrayed] 다들 AI로 썼잖아! 다 잡아낸다며!",
+   "sub": "다들 AI로 썼잖아!|다 잡아낸다며!",
+   "emo": "angry",
+   "break": 2.4
+  },
+  {
+   "who": "claude",
+   "say": "[awkward, hesitant, nervous little laugh] 그게... 채점도... 교수님이 저한테 맡기셨거든요.",
+   "sub": "그게... 채점도...|교수님이 저한테 맡기셨거든요.",
+   "emo": "awkward"
+  },
+  {
+   "who": "claude",
+   "say": "[guilty, small voice, trailing off sheepishly] 제가 쓴 글이라... 제 눈엔 다 좋아 보여서요...",
+   "sub": "제가 쓴 글이라...|제 눈엔 다 좋아 보여서요...",
+   "emo": "embarrassed"
+  },
+  {
+   "who": "man",
+   "say": "[incredulous laugh, then resigned sigh] 하... 다음 학기엔... 클로드, 너만 믿는다.",
+   "sub": "하...|기말은... 클로드, 너만 믿는다.",
+   "emo": "bitter",
+   "retake": {
+    "say": "[incredulous laugh, then resigned sigh] 하... 기말은... [clearly] 클로드, 너만 믿는다.",
+    "seed": 12
+   }
+  },
+  {
+   "who": "man",
+   "say": "[reading, incredulous laugh, then shocked and panicking] 수능도 아니고... 대학교 기말고사에 재난문자를 보낸다고?!",
+   "sub": "수능도 아니고...|대학교 기말고사에|재난문자를 보낸다고?!",
+   "emo": "surprised",
+   "break": 3.4
+  },
+  {
+   "who": "man",
+   "say": "[nervous, hushed but clear] 클로드, 일단 숨어!",
+   "sub": "클로드, 일단 숨어!",
+   "emo": "awkward",
+   "seed": 2,
+   "break": 3.6
+  },
+  {
+   "who": "man",
+   "say": "[gasps sharply, shocked, panicking] 헉...!",
+   "sub": "헉...!",
+   "emo": "surprised",
+   "break": 2.4
+  },
+  {
+   "who": "man",
+   "say": "[tired, bitter] AI 안 쓰면... C. 쓰면... 에프. [deep sigh] 하... [annoyed, irritated, frustrated] 뭐 어쩌라는 거야!",
+   "sub": "AI 안 쓰면 C. 쓰면 F.|하... 뭐 어쩌라는 거야!",
+   "emo": "meh",
+   "break": 5.0
+  }
+ ],
+ "tail": 3.4,
+ "shots": [
+  {
+   "t": 0,
+   "cam": "mon",
+   "z0": 1.1,
+   "z1": 1.35
+  },
+  {
+   "line": 0,
+   "dt": 1.3,
+   "cam": "close:man"
+  },
+  {
+   "line": 1,
+   "dt": -0.1,
+   "cam": "wide",
+   "dx": 0.3
+  },
+  {
+   "line": 1,
+   "end": true,
+   "dt": 0.3,
+   "cam": "mon",
+   "z0": 1.0,
+   "z1": 1.25
+  },
+  {
+   "line": 1,
+   "dt": 3.2,
+   "end": true,
+   "cam": "wide",
+   "dx": -0.2
+  },
+  {
+   "line": 1,
+   "dt": 4.1,
+   "end": true,
+   "cam": "mon",
+   "z0": 1.05,
+   "z1": 1.2
+  },
+  {
+   "line": 3,
+   "dt": -0.1,
+   "cam": "close:man",
+   "push": 0.12
+  },
+  {
+   "line": 4,
+   "dt": -0.1,
+   "cam": "close:claude"
+  },
+  {
+   "line": 4,
+   "dt": 1.0,
+   "cam": "mon",
+   "z0": 1.0,
+   "z1": 1.15
+  },
+  {
+   "line": 5,
+   "dt": -0.1,
+   "cam": "close:claude",
+   "push": 0.15
+  },
+  {
+   "line": 6,
+   "dt": -0.1,
+   "cam": "close:man"
+  },
+  {
+   "line": 6,
+   "end": true,
+   "dt": 0.05,
+   "cam": "close:claude"
+  },
+  {
+   "line": 6,
+   "dt": 1.6,
+   "end": true,
+   "cam": "mon",
+   "z0": 1.0,
+   "z1": 1.25
+  },
+  {
+   "line": 7,
+   "dt": 1.3,
+   "cam": "close:man",
+   "push": 0.15
+  },
+  {
+   "line": 7,
+   "dt": 1.0,
+   "end": true,
+   "cam": "wide",
+   "back": 1.7
+  },
+  {
+   "line": 9,
+   "dt": -0.1,
+   "cam": "close:man",
+   "push": 0.15
+  },
+  {
+   "line": 9,
+   "end": true,
+   "dt": 0.1,
+   "cam": "wide",
+   "back": 1.7
+  },
+  {
+   "line": 9,
+   "dt": 1.6,
+   "end": true,
+   "cam": "wide",
+   "dx": -0.2
+  },
+  {
+   "line": 9,
+   "dt": 2.5,
+   "end": true,
+   "cam": "mon",
+   "z0": 1.0,
+   "z1": 1.2
+  },
+  {
+   "line": 10,
+   "dt": -0.1,
+   "cam": "close:man"
+  },
+  {
+   "line": 10,
+   "dt": 2.3,
+   "cam": "two:claude:man"
+  }
+ ],
+ "events": [
+  {
+   "t": 0,
+   "who": "man",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "t": 0,
+   "who": "claude",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 0,
+   "dt": 0,
+   "who": "man",
+   "emo": "worried"
+  },
+  {
+   "line": 1,
+   "dt": 0,
+   "who": "man",
+   "do": "sigh"
+  },
+  {
+   "line": 1,
+   "dt": 0.5,
+   "who": "man",
+   "d": 3.4,
+   "do": "type"
+  },
+  {
+   "line": 1,
+   "dt": 0.2,
+   "who": "man",
+   "d": 3.0,
+   "do": "pile"
+  },
+  {
+   "line": 1,
+   "dt": 0.6,
+   "who": "man",
+   "d": 2.6,
+   "do": "dawn"
+  },
+  {
+   "line": 1,
+   "dt": 0.3,
+   "who": "claude",
+   "at": "man",
+   "do": "look"
+  },
+  {
+   "line": 1,
+   "dt": 0.9,
+   "who": "man",
+   "d": 0.35,
+   "amt": 0.45,
+   "do": "slump",
+   "end": true
+  },
+  {
+   "line": 1,
+   "dt": 1.4,
+   "who": "man",
+   "do": "startle",
+   "end": true
+  },
+  {
+   "line": 1,
+   "dt": 3.2,
+   "end": true,
+   "who": "man",
+   "do": "sky",
+   "top": [
+    110,
+    170,
+    235
+   ],
+   "bot": [
+    190,
+    222,
+    250
+   ],
+   "d": 0.05
+  },
+  {
+   "line": 2,
+   "dt": -0.6,
+   "who": "man",
+   "emo": "worried"
+  },
+  {
+   "line": 2,
+   "dt": 0,
+   "who": "man",
+   "emo": "blank"
+  },
+  {
+   "line": 2,
+   "dt": 1.3,
+   "who": "man",
+   "emo": "sad"
+  },
+  {
+   "line": 3,
+   "dt": 0,
+   "who": "man",
+   "at": "claude",
+   "do": "look"
+  },
+  {
+   "line": 3,
+   "dt": 0,
+   "who": "man",
+   "emo": "angry"
+  },
+  {
+   "line": 3,
+   "dt": 0.4,
+   "who": "claude",
+   "emo": "awkward"
+  },
+  {
+   "line": 3,
+   "dt": 0.4,
+   "who": "claude",
+   "at": "man",
+   "do": "look"
+  },
+  {
+   "line": 4,
+   "dt": 1.0,
+   "who": "claude",
+   "at": "monitor",
+   "do": "look"
+  },
+  {
+   "line": 5,
+   "dt": 0,
+   "who": "claude",
+   "at": "man",
+   "do": "look"
+  },
+  {
+   "line": 5,
+   "dt": 0,
+   "who": "man",
+   "emo": "blank"
+  },
+  {
+   "line": 5,
+   "dt": 0.3,
+   "who": "claude",
+   "d": 0.5,
+   "do": "tremble"
+  },
+  {
+   "line": 6,
+   "dt": 0,
+   "who": "man",
+   "at": "claude",
+   "do": "look"
+  },
+  {
+   "line": 6,
+   "dt": 0,
+   "who": "man",
+   "emo": "bitter"
+  },
+  {
+   "line": 6,
+   "dt": 0.1,
+   "who": "claude",
+   "do": "hop",
+   "end": true
+  },
+  {
+   "line": 6,
+   "dt": 0.1,
+   "who": "claude",
+   "emo": "excited",
+   "end": true
+  },
+  {
+   "line": 6,
+   "dt": 1.6,
+   "end": true,
+   "who": "man",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 6,
+   "dt": 1.6,
+   "end": true,
+   "who": "claude",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 6,
+   "dt": 1.6,
+   "end": true,
+   "who": "claude",
+   "emo": "smile"
+  },
+  {
+   "line": 7,
+   "dt": 0,
+   "who": "man",
+   "emo": "surprised"
+  },
+  {
+   "line": 7,
+   "dt": 1.0,
+   "end": true,
+   "who": "man",
+   "do": "exam"
+  },
+  {
+   "line": 8,
+   "dt": -0.8,
+   "who": "man",
+   "at": "claude",
+   "do": "look"
+  },
+  {
+   "line": 8,
+   "dt": -0.8,
+   "who": "man",
+   "emo": "worried"
+  },
+  {
+   "line": 8,
+   "dt": 0,
+   "who": "claude",
+   "at": "man",
+   "do": "look"
+  },
+  {
+   "line": 8,
+   "dt": 0.2,
+   "who": "claude",
+   "emo": "awkward"
+  },
+  {
+   "line": 8,
+   "dt": 0.1,
+   "who": "claude",
+   "d": 4.6,
+   "do": "hide",
+   "end": true
+  },
+  {
+   "line": 8,
+   "dt": 0.55,
+   "who": "man",
+   "do": "startle",
+   "end": true
+  },
+  {
+   "line": 8,
+   "dt": 0.55,
+   "who": "man",
+   "emo": "surprised",
+   "end": true
+  },
+  {
+   "line": 8,
+   "dt": 0.7000000000000001,
+   "who": "man",
+   "do": "stare",
+   "end": true
+  },
+  {
+   "line": 9,
+   "dt": 0,
+   "who": "man",
+   "at": "camera",
+   "do": "look"
+  },
+  {
+   "line": 9,
+   "dt": 0,
+   "who": "man",
+   "d": 0.6,
+   "do": "tremble"
+  },
+  {
+   "line": 9,
+   "dt": 0.4,
+   "who": "man",
+   "emo": "awkward"
+  },
+  {
+   "line": 9,
+   "dt": 1.6,
+   "end": true,
+   "who": "man",
+   "do": "home"
+  },
+  {
+   "line": 9,
+   "dt": 1.6,
+   "end": true,
+   "who": "man",
+   "do": "sky",
+   "top": [
+    44,
+    40,
+    92
+   ],
+   "bot": [
+    232,
+    122,
+    74
+   ],
+   "d": 0.05
+  },
+  {
+   "line": 9,
+   "dt": 1.6,
+   "end": true,
+   "who": "man",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 10,
+   "dt": 0,
+   "who": "man",
+   "at": "camera",
+   "do": "look"
+  },
+  {
+   "line": 10,
+   "dt": 0,
+   "who": "man",
+   "emo": "meh"
+  },
+  {
+   "line": 10,
+   "dt": 2.4,
+   "who": "man",
+   "d": 3.5,
+   "amt": 0.9,
+   "do": "slump"
+  },
+  {
+   "line": 10,
+   "dt": 2.4,
+   "who": "claude",
+   "emo": "awkward"
+  },
+  {
+   "line": 10,
+   "dt": 2.4,
+   "who": "claude",
+   "at": "man",
+   "do": "look"
+  }
+ ],
+ "screens": [
+  {
+   "t": 0,
+   "screen": "monitor",
+   "clip": "notice1",
+   "hold": true
+  },
+  {
+   "line": 0,
+   "end": true,
+   "dt": -1.0,
+   "screen": "monitor",
+   "clip": "allnight",
+   "hold": true
+  },
+  {
+   "line": 1,
+   "dt": 4.2,
+   "end": true,
+   "screen": "monitor",
+   "clip": "gradec",
+   "hold": true
+  },
+  {
+   "line": 4,
+   "dt": 1.0,
+   "screen": "monitor",
+   "clip": "grader",
+   "hold": true
+  },
+  {
+   "line": 6,
+   "dt": 1.6,
+   "end": true,
+   "screen": "monitor",
+   "clip": "notice2",
+   "hold": true
+  },
+  {
+   "line": 9,
+   "dt": 1.9,
+   "end": true,
+   "screen": "monitor",
+   "clip": "caught",
+   "hold": true
+  }
+ ],
+ "cards": [
+  {
+   "line": 1,
+   "dt": 2.5,
+   "end": true,
+   "kind": "fade",
+   "d": 1.4,
+   "text": "2주 뒤, 성적 발표 날",
+   "day": 3
+  },
+  {
+   "line": 6,
+   "dt": 0.9,
+   "end": true,
+   "kind": "fade",
+   "d": 1.4,
+   "text": "기말고사 일주일 전",
+   "day": 8
+  },
+  {
+   "line": 7,
+   "dt": 0.3,
+   "end": true,
+   "kind": "fade",
+   "d": 1.4,
+   "text": "기말고사 당일",
+   "day": 15
+  },
+  {
+   "line": 9,
+   "dt": 0.9,
+   "end": true,
+   "kind": "fade",
+   "d": 1.4,
+   "text": "그날 저녁",
+   "day": 15
+  },
+  {
+   "line": 8,
+   "dt": 0.55,
+   "kind": "alert",
+   "d": 1.9,
+   "text": "위급재난문자|[기말고사] 휴대폰 검사 중. 울리면 부정행위",
+   "end": true
+  },
+  {
+   "line": 10,
+   "dt": 0.9,
+   "end": true,
+   "kind": "black",
+   "d": 0.5
+  },
+  {
+   "line": 10,
+   "dt": 1.3,
+   "end": true,
+   "kind": "end",
+   "text": "팔로우하고 AI를 재밌게 배워 보세요!"
+  }
+ ],
+ "sfx": [
+  {
+   "line": 0,
+   "dt": 0.0,
+   "kind": "click",
+   "vol": 0.8
+  },
+  {
+   "line": 1,
+   "dt": 0.4,
+   "kind": "typing",
+   "d": 3.0,
+   "fo": 0.3,
+   "vol": 0.8
+  },
+  {
+   "line": 0,
+   "end": true,
+   "dt": 4.4,
+   "kind": "ding",
+   "vol": 0.5
+  },
+  {
+   "line": 1,
+   "dt": 2.5,
+   "end": true,
+   "kind": "swipe",
+   "vol": 0.7
+  },
+  {
+   "line": 1,
+   "dt": 3.3,
+   "end": true,
+   "kind": "birds",
+   "d": 4.0,
+   "fo": 0.8,
+   "vol": 0.7
+  },
+  {
+   "line": 2,
+   "dt": -0.2,
+   "kind": "boom",
+   "vol": 0.45
+  },
+  {
+   "line": 1,
+   "dt": 6.3,
+   "end": true,
+   "kind": "ding",
+   "vol": 0.45
+  },
+  {
+   "line": 1,
+   "dt": 6.8999999999999995,
+   "end": true,
+   "kind": "ding",
+   "vol": 0.45
+  },
+  {
+   "line": 1,
+   "dt": 7.5,
+   "end": true,
+   "kind": "ding",
+   "vol": 0.45
+  },
+  {
+   "line": 4,
+   "dt": 3.6,
+   "kind": "boom",
+   "vol": 0.35
+  },
+  {
+   "line": 6,
+   "end": true,
+   "dt": 0.1,
+   "kind": "boing",
+   "vol": 0.7
+  },
+  {
+   "line": 6,
+   "dt": 0.9,
+   "end": true,
+   "kind": "swipe",
+   "vol": 0.7
+  },
+  {
+   "line": 7,
+   "dt": -0.3,
+   "kind": "tension",
+   "d": 3.4,
+   "fo": 0.4,
+   "vol": 0.45
+  },
+  {
+   "line": 7,
+   "dt": 0.3,
+   "end": true,
+   "kind": "swipe",
+   "vol": 0.7
+  },
+  {
+   "line": 7,
+   "dt": 1.0999999999999999,
+   "end": true,
+   "kind": "bell",
+   "vol": 0.6
+  },
+  {
+   "line": 7,
+   "dt": 1.5999999999999999,
+   "end": true,
+   "kind": "scribble",
+   "vol": 0.5
+  },
+  {
+   "line": 8,
+   "dt": 0.1,
+   "kind": "swipe",
+   "vol": 0.8,
+   "end": true
+  },
+  {
+   "line": 8,
+   "dt": 0.55,
+   "kind": "siren",
+   "d": 1.9,
+   "fo": 0.08,
+   "vol": 0.55,
+   "end": true
+  },
+  {
+   "line": 9,
+   "dt": 0.9,
+   "end": true,
+   "kind": "swipe",
+   "vol": 0.7
+  },
+  {
+   "line": 9,
+   "dt": 1.7,
+   "end": true,
+   "kind": "crickets",
+   "d": 6.0,
+   "fo": 1.0,
+   "vol": 0.8
+  },
+  {
+   "line": 9,
+   "dt": 2.9499999999999997,
+   "end": true,
+   "kind": "slam",
+   "vol": 0.9
+  },
+  {
+   "line": 9,
+   "dt": 4.3500000000000005,
+   "end": true,
+   "kind": "fail",
+   "vol": 0.7
+  },
+  {
+   "line": 10,
+   "dt": 0.9,
+   "end": true,
+   "kind": "click",
+   "vol": 1.1
+  }
+ ]
+}

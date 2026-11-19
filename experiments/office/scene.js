@@ -351,7 +351,7 @@ async function loadAI(key, height) {
 
 // ---------- 조립 ----------
 let renderer, composer, bokeh, scene, camera, cast = {}, S, POS = {}, deskY = 0.74, out, g2;
-const SCR = {}, PHONE = { g: null, pos: new THREE.Vector3(), mode: 'none' }, POP = { g: null }, REMOTE = {}, CREDIT_SEEN = {}, RAIN = {};
+const SCR = {}, PHONE = { g: null, pos: new THREE.Vector3(), mode: 'none' }, POP = { g: null }, REMOTE = {}, CREDIT_SEEN = {}, RAIN = {}, DORM = {}, CLASS = { mode: null }, LIGHTS = {};
 // 젠슨 폰 위치: face(얼굴 앞, 화면이 젠슨 쪽) / show(at 쪽으로 내밂, 화면이 그쪽) / down(책상에 엎어 둠)
 function phonePose(mode, at) {
   const hu = Object.values(cast).find((c) => c.human);
@@ -376,7 +376,7 @@ function updatePhone(t) {
 }
 window.twInit = async (script) => {
   S = script;
-  await document.fonts.load('700 50px Wanted', '가A');
+  await document.fonts.load('700 50px Wanted', '가A'); await document.fonts.load("64px 'Black Han Sans'", '주뒤성적발표날기말고사당일그저녁일전휴대폰제출!0123456789');
   renderer = new THREE.WebGLRenderer({ antialias: false, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
   // 화질 (리트냥이 2026-11-18 '화질 좋게'): 대본 "ss"(기본 1) 배 크기로 그린 뒤 1080x1920으로 줄임 → 가장자리 매끈
   const SS = S.ss || 1;
@@ -392,10 +392,11 @@ window.twInit = async (script) => {
   const rim = new THREE.DirectionalLight(0x9fc8ff, 1.2); rim.position.set(2.4, 2.6, -3); scene.add(rim);
   const monLight = new THREE.PointLight(0x66ffaa, 0.15, 2); monLight.position.set(0.7, 1.2, -0.05); scene.add(monLight);
   const hemi = new THREE.HemisphereLight(0xffe8d0, 0x3a2418, 0.45); scene.add(hemi);
+  Object.assign(LIGHTS, { key, rim, hemi });
   if (S.props && S.props.night) {   // 비 오는 밤 (운영자 2026-11-19): 푸르고 어둡게 + 책상 스탠드 불빛
     key.color.set(0x8ea6e8); key.intensity = 1.15; rim.intensity = 0.7; hemi.intensity = 0.2; hemi.color.set(0x9fb0d8);
     scene.environmentIntensity = 0.28; scene.background = new THREE.Color(0x0d0f16);
-    const lamp = new THREE.PointLight(0xffc27a, 1.1, 2.6); lamp.position.set(-0.75, 1.35, 0.15); scene.add(lamp);
+    const lamp = new THREE.PointLight(0xffc27a, 1.1, 2.6); lamp.position.set(-0.75, 1.35, 0.15); scene.add(lamp); LIGHTS.lamp = lamp;
   }
 
   // 사람: 키 1.55(큰 머리 비율), 앉힘
@@ -419,13 +420,27 @@ window.twInit = async (script) => {
     box(scene, 0.6, 0.7, 0.06, 0x3b3f48, 0, 0.8, -0.95);
     POS[hum.key] = { x: 0, face: hum.bones.head.getWorldPosition(new THREE.Vector3()).add(new THREE.Vector3(0, 0.16, 0.12)) };
   }
-  buildOffice(scene, deskY);
+  const n0 = scene.children.length; buildOffice(scene, deskY); OFFICE.items = scene.children.slice(n0 + 2);   // 바닥·뒷벽 빼고 (시험장 바꾸기용)
   if (S.props && S.props.rain) {   // 창밖 빗줄기 (캔버스에 매 프레임 그림)
     const cv = document.createElement('canvas'); cv.width = 520; cv.height = 300;
     const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
     const m = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 1.5), new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false }));
     m.position.set(-0.2, 2.0, -2.06); scene.add(m);
     RAIN.cv = cv; RAIN.g = cv.getContext('2d'); RAIN.tex = tex;
+  }
+  if (S.props && S.props.dorm) {   // 자취방 밤 (퇴보 vs 퇴화 편 2026-11-19): 창밖 밤하늘 → 'dawn' 이벤트 동안 새벽빛, 'pile' 이벤트로 책이 쌓임
+    const cv = document.createElement('canvas'); cv.width = 520; cv.height = 300;
+    const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 1.5), new THREE.MeshBasicMaterial({ map: tex, depthWrite: false }));
+    m.position.set(-0.2, 2.0, -2.07); scene.add(m); DORM.mesh = m;
+    DORM.cv = cv; DORM.g = cv.getContext('2d'); DORM.tex = tex; DORM.books = [];
+    const cols = [0x2f6b4f, 0x8a3b3b, 0x34558a, 0xc9a34a, 0x5b4a8a, 0x3f7f7a, 0x9a5a2e, 0x444b57, 0x7a2f5a, 0x2e5f8a];
+    let y = deskY;
+    for (let k = 0; k < 10; k++) {   // 모니터 오른쪽에 쌓이는 책 (처음엔 숨김)
+      const h = 0.035 + (k % 3) * 0.01, b = new THREE.Mesh(new THREE.BoxGeometry(0.26 - (k % 4) * 0.02, h, 0.19), mat(cols[k], 0.7));
+      b.position.set(0.82 + ((k * 37) % 5 - 2) * 0.006, y + h / 2, 0.25); b.rotation.y = ((k * 53) % 7 - 3) * 0.04; b.castShadow = true; b.visible = false;
+      scene.add(b); DORM.books.push(b); y += h;
+    }
   }
   // AI: 책상 위 (높이 0.34)
   for (const p of S.cast.filter((p) => !p.human)) {
@@ -434,6 +449,32 @@ window.twInit = async (script) => {
     c.baseYaw = p.yaw || 0; c.baseX = p.x; c.size = p.size || 0.34;
     scene.add(c.root); cast[p.key] = c;
     POS[p.key] = { x: p.x, size: p.size || 0.34, face: new THREE.Vector3(p.x, deskY + (p.size || 0.34) * 0.55, (p.z ?? 0.2) + 0.1) };
+  }
+  if (S.props && S.props.exam) {   // 시험장 (퇴보 vs 퇴화 편 2026-11-19): 'exam' 이벤트부터 'home' 이벤트까지 교실 + 다른 학생들
+    const G2 = new THREE.Group(); G2.visible = false; scene.add(G2); CLASS.g = G2; CLASS.studs = [];
+    const wall = new THREE.Mesh(new THREE.PlaneGeometry(12, 6), mat(0xcfd6c4, 0.9)); wall.position.set(0, 3, -2.13); G2.add(wall);
+    for (const wx of [-1.6, 1.4]) { const w = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 1.1), new THREE.MeshStandardMaterial({ color: 0xdfefff, emissive: 0xcfe6ff, emissiveIntensity: 0.9 })); w.position.set(wx, 2.0, -2.12); G2.add(w); }
+    const clk = new THREE.Mesh(new THREE.CircleGeometry(0.16, 20), mat(0xf4f4f0, 0.6)); clk.position.set(1.4, 2.75, -2.12); G2.add(clk);
+    { const cv = document.createElement('canvas'); cv.width = 1024; cv.height = 400; const g = cv.getContext('2d');   // 칠판: 기말고사 (시험장인 게 바로 보이게)
+      g.fillStyle = '#23402f'; g.fillRect(0, 0, 1024, 400); g.strokeStyle = '#8a6a44'; g.lineWidth = 24; g.strokeRect(0, 0, 1024, 400);
+      g.fillStyle = '#f2f2ea'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.font = "150px 'Black Han Sans'"; g.fillText('기말고사', 512, 160);
+      g.font = "64px 'Black Han Sans'"; g.fillStyle = '#ffe680'; g.fillText('휴대폰 제출!', 512, 300);
+      const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
+      const bd = new THREE.Mesh(new THREE.PlaneGeometry(2.0, 0.78), new THREE.MeshBasicMaterial({ map: tex })); bd.position.set(0, 2.05, -2.1); G2.add(bd); }
+    box(G2, 1.15, 0.07, 0.8, 0xb88a5a, 0, deskY - 0.035, 0.05, 0.6);                                    // 주인공 책상
+    box(G2, 1.05, deskY - 0.1, 0.04, 0x8f6a44, 0, (deskY - 0.07) / 2, 0.44);                             // 앞 가림판
+    box(G2, 0.3, 0.004, 0.4, 0xffffff, 0.2, deskY + 0.003, -0.05, 0.9).rotation.y = 0.15;               // 시험지
+        const spots = [[-1.25, -0.62], [1.25, -0.62], [-0.68, -1.75], [0.68, -1.75], [-1.9, -1.75], [1.9, -1.75]];
+    for (const [i, [x, z]] of spots.entries()) {
+      const c = await loadHuman(`stu${i + 1}`, `stu${i + 1}`, [1.52, 1.6, 1.5, 1.57, 1.53, 1.58][i]); sitPose(c);   // 학생마다 다른 얼굴·머리·옷 (build_humans.py stu1~6)
+      c.root.scale.x *= [0.96, 1.08, 0.97, 1.0, 0.95, 1.1][i];   // 체형도 조금씩
+      c.base = {}; for (const n in c.bones) c.base[n] = c.bones[n].quaternion.clone();
+      c.root.position.set(x, 0, z); c.root.updateMatrixWorld(true);
+      c.root.position.y += 0.46 - c.bones.hips.getWorldPosition(new THREE.Vector3()).y;
+      G2.add(c.root); box(G2, 1.0, 0.07, 0.62, 0xb88a5a, x, deskY - 0.035, z + 0.62, 0.6); box(G2, 0.92, deskY - 0.1, 0.04, 0x8f6a44, x, (deskY - 0.07) / 2, z + 0.92);
+      box(G2, 0.28, 0.004, 0.38, 0xffffff, x + 0.1, deskY + 0.003, z + 0.55, 0.9);
+      CLASS.studs.push({ c, x, z, seed: i });
+    }
   }
   // 화면 속 릴스·소품
   if (S.clips) await loadClips(S.clips);
@@ -565,6 +606,11 @@ function animAI(c, t) {
     rx -= 0.28 * k; if (r > 0.3 && r < 0.9) jx += 0.004 * Math.sin(t * 60);
   }
   for (const e of evs(who, 'tremble')) if (t > e.t && t < e.t + (e.d || 1)) jx += 0.0022 * Math.sin(t * 55);   // 운영자: 부들거림 작게
+  for (const e of evs(who, 'hide')) {   // 책상 아래로 숨기 (퇴보 vs 퇴화 편): 0.35초 동안 쏙 내려가 d초 숨었다가 out 시각에 쏙 올라옴
+    const r = t - e.t, d = e.d || 2; if (r < 0 || r > d + 0.5) continue;
+    const k = r < 0.35 ? ease(r / 0.35) : r < d ? 1 : 1 - ease((r - d) / 0.2);
+    y -= c.size * 1.25 * k; y += 0.06 * bump(t, e.t + d + 0.15, 0.3);
+  }
   let grow = 1;   // 점점 커짐 (신입 자리 편 2026-11-19: 스스로 업그레이드), amt 최종 배수-1, d 걸리는 시간, 갈수록 빨라짐
   for (const e of evs(who, 'grow')) { const k = clamp((t - e.t) / (e.d || 4)); grow *= 1 + (e.amt || 0.4) * k * k; }
   let chew = 0;
@@ -791,8 +837,27 @@ function cards(t) {
       g2.globalAlpha = clamp(u) * (c.alpha || 0.5);
       g2.save(); g2.beginPath(); g2.ellipse(c.x + c.w / 2, c.y + c.h / 2, c.w / 2, c.h / 2, 0, 0, Math.PI * 2); g2.clip();
       g2.drawImage(im, cr[0] * iw, cr[1] * ih, cr[2] * iw, cr[3] * ih, c.x, c.y, c.w, c.h); g2.restore();
+    } else if (c.kind === 'fade') {   // 장면 전환: 어두워졌다 밝아짐 (퇴보 vs 퇴화 편 '장면 전환이 헷갈려')
+      const r = (t - c.t) / (c.d || 0.8), dark = clamp(1 - Math.abs(2 * r - 1) * (c.text ? 1.6 : 1.15) + (c.text ? 0.6 : 0));
+      g2.globalAlpha = 1; g2.fillStyle = `rgba(0,0,0,${dark})`; g2.fillRect(0, 0, W, H);
+      if (c.text) {   // 시간 안내 (운영자 2026-11-19 '다음 장면이 언제인지 몰라서'): 검은 화면 가운데 달력 + 글자
+        const a = clamp((dark - 0.7) / 0.3); g2.globalAlpha = a; g2.textAlign = 'center'; g2.textBaseline = 'middle';
+        const cx = W / 2, cy = H / 2 - 120, flip = clamp((r - 0.3) / 0.25);
+        g2.fillStyle = '#f4f4f0'; g2.fillRect(cx - 90, cy - 80, 180, 170); g2.fillStyle = '#d92b3a'; g2.fillRect(cx - 90, cy - 80, 180, 46);
+        g2.fillStyle = '#333'; g2.font = "700 74px Wanted"; g2.fillText(String(c.day || ''), cx, cy + 30);
+        if (flip < 1) { g2.save(); g2.translate(cx, cy - 34); g2.scale(1, 1 - flip); g2.fillStyle = '#e8e8e2'; g2.fillRect(-90, 0, 180, 124); g2.restore(); }   // 달력 한 장 넘김
+        g2.fillStyle = '#ffffff'; g2.font = "64px 'Black Han Sans'"; g2.fillText(c.text, cx, cy + 190);
+      }
     } else if (c.kind === 'black') {   // 탁 꺼짐 (신입 자리 편 2026-11-19): 바로 검은 화면
       g2.globalAlpha = 1; g2.fillStyle = '#000'; g2.fillRect(0, 0, W, H);
+    } else if (c.kind === 'alert') {   // 재난문자 (퇴보 vs 퇴화 편): 빨간 테두리 깜빡임 + 위쪽 알림 창, text
+      const r = t - c.t, on = Math.sin(r * Math.PI * 6) > 0;
+      g2.globalAlpha = 1; g2.lineWidth = 36; g2.strokeStyle = on ? 'rgba(255,40,40,0.85)' : 'rgba(255,40,40,0.25)'; g2.strokeRect(18, 18, W - 36, H - 36);
+      const gr = g2.createLinearGradient(0, H * 0.55, 0, H); gr.addColorStop(0, 'rgba(255,0,0,0)'); gr.addColorStop(1, `rgba(255,30,30,${on ? 0.35 : 0.12})`); g2.fillStyle = gr; g2.fillRect(0, H * 0.55, W, H * 0.45);
+      const yy = 330 - 60 * (1 - ease(r / 0.2)), [t1, t2] = (c.text || '위급재난문자|기말고사 휴대폰 검사 중').split('|');
+      g2.fillStyle = 'rgba(28,28,30,0.96)'; g2.beginPath(); g2.roundRect(90, yy, W - 180, 170, 28); g2.fill();
+      g2.textAlign = 'left'; g2.textBaseline = 'middle'; g2.font = '700 38px Wanted'; g2.fillStyle = '#ff4a4a'; g2.fillText(t1, 130, yy + 55);
+      g2.font = '700 42px Wanted'; g2.fillStyle = '#fff'; g2.fillText(t2, 130, yy + 115);
     } else if (c.kind === 'gather') {   // 문서 그림이 캐릭터에게 날아와 모임 (신입 자리 편 2026-11-19): who, stop(초, 이때부터 새 문서 없음)
       const r = t - c.t, v = POS[c.who].face.clone(); v.project(camera);
       const tx = (v.x + 1) / 2 * W, ty = (1 - v.y) / 2 * H, stop = c.stop ?? 99, LB = ['회의록', '보고서', '메모', '인수인계', '업무 일지', '질문', '답변', '교육 자료'];
@@ -877,8 +942,32 @@ function cards(t) {
   }
 }
 
+function sceneMode(t) {   // 시험장 바꾸기 (퇴보 vs 퇴화 편)
+  if (!CLASS.g) return;
+  let ex = false; for (const e of S.events.filter((e) => e.do === 'exam' || e.do === 'home').sort((a, b) => a.t - b.t)) if (t >= e.t) ex = e.do === 'exam';
+  if (CLASS.mode !== ex) {
+    CLASS.mode = ex; CLASS.g.visible = ex;
+    for (const o of OFFICE.items || []) o.visible = !ex;
+    if (DORM.mesh) DORM.mesh.visible = !ex;
+    if (ex && DORM.books) DORM.books.forEach((b) => { b.visible = false; });
+    if (SCR.monitor) SCR.monitor.mesh.visible = !ex;
+    if (ex) { LIGHTS.key.color.set(0xfff2e0); LIGHTS.key.intensity = 2.2; LIGHTS.hemi.intensity = 0.75; LIGHTS.hemi.color.set(0xffffff); scene.environmentIntensity = 0.6; scene.background = new THREE.Color(0xcfd6c4); if (LIGHTS.lamp) LIGHTS.lamp.intensity = 0; }
+    else { LIGHTS.key.color.set(0x8ea6e8); LIGHTS.key.intensity = 1.15; LIGHTS.hemi.intensity = 0.2; LIGHTS.hemi.color.set(0x9fb0d8); scene.environmentIntensity = 0.28; scene.background = new THREE.Color(0x0d0f16); if (LIGHTS.lamp) LIGHTS.lamp.intensity = 1.1; }
+  }
+  if (!ex) return;
+  const look = S.events.find((e) => e.do === 'stare'), man = POS[Object.values(cast).find((c) => c.human).key].face;
+  for (const s of CLASS.studs) {   // 다른 학생: 숨쉬기·시험지 내려다보기 → stare 때 주인공 쪽으로 홱
+    const B = s.c.bones; for (const n in B) B[n].quaternion.copy(s.c.base[n]); s.c.root.updateMatrixWorld(true);
+    rotW(B.spine, X, 0.03 * Math.sin(2 * Math.PI * 0.3 * t + s.seed));
+    const k = look ? ease((t - look.t - s.seed * 0.06) / 0.25) : 0;
+    rotW(B.head, X, 0.28 * (1 - k));
+    rotW(B.head, Y, k * Math.atan2(man.x - s.x, Math.max(0.3, man.z - s.z + 0.6)) * 0.9);
+    setFace(s.c, k > 0.5 ? "surprised" : "neutral", 0, blinkAt("s" + s.seed, t));
+  }
+}
 window.twFrame = (t) => {
   CUR_T = t;
+  sceneMode(t);
   if (PHONE.g) updatePhone(t);
   for (const k in cast) (cast[k].human ? animHuman : animAI)(cast[k], t);
   if (RAIN.g) {   // 빗줄기: 위치는 시각으로 정해짐 (프레임 순서와 무관)
@@ -891,6 +980,21 @@ window.twFrame = (t) => {
     g.fillStyle = 'rgba(200,220,255,0.35)';
     for (let k = 0; k < 40; k++) { const x0 = (k * 131.7) % w, y0 = (k * 71.3 + t * 18 * (1 + k % 3)) % h; g.beginPath(); g.arc(x0, y0, 2.2, 0, 7); g.fill(); }
     RAIN.tex.needsUpdate = true;
+  }
+  if (DORM.g) {   // 자취방 창밖: 밤하늘 → dawn 이벤트 동안 새벽 / 책 쌓기 pile
+    const g = DORM.g, w = DORM.cv.width, h = DORM.cv.height, dw = S.events.find((e) => e.do === 'dawn');
+    const u = dw ? ease((t - dw.t) / (dw.d || 3)) : 0;
+    let top = [lerp(8, 70, u), lerp(12, 90, u), lerp(32, 150, u)], bot = [lerp(20, 255, u), lerp(26, 170, u), lerp(52, 120, u)];
+    for (const e of S.events.filter((e) => e.do === 'sky' && t >= e.t).sort((a, b) => a.t - b.t)) {   // sky 이벤트: 낮·저녁 하늘로 바뀜 (퇴보 vs 퇴화 편 시간 흐름)
+      const k = ease((t - e.t) / (e.d || 0.3)); top = top.map((v, i) => lerp(v, e.top[i], k)); bot = bot.map((v, i) => lerp(v, e.bot[i], k));
+    }
+    const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, `rgb(${top.map(Math.round)})`); gr.addColorStop(1, `rgb(${bot.map(Math.round)})`);
+    g.fillStyle = gr; g.fillRect(0, 0, w, h);
+    g.fillStyle = `rgba(255,255,255,${0.8 * (1 - u)})`; for (let k = 0; k < 40; k++) g.fillRect((k * 131.7) % w, (k * 71.3) % (h * 0.7), 2, 2);
+    g.fillStyle = '#0c0d12'; for (let k = 0; k < 9; k++) { const bw = 40 + (k * 23) % 30, bh = 50 + (k * 47) % 90; g.fillRect(k * 60, h - bh, bw, bh); }   // 건물 실루엣
+    DORM.tex.needsUpdate = true;
+    const pl = S.events.find((e) => e.do === 'pile'), n = pl ? Math.floor(clamp((t - pl.t) / (pl.d || 2)) * DORM.books.length + (t >= pl.t ? 1 : 0)) : 0;
+    DORM.books.forEach((b, k) => { b.visible = k < n && !CLASS.mode; });
   }
   if (REMOTE.btn) {   // 리모컨 빨간 버튼: 눌린 동안 들어가고 빛남
     const on = S.events.some((e) => e.do === 'press' && t >= e.t + 0.3 && t < e.t + 0.62);

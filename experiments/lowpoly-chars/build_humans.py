@@ -53,6 +53,35 @@ HUMANS = {
         hair_extra=[((0, 0.30, 0.15), (0.37, 0.10, 0.12))],  # 앞머리: 이마에 붙게 (운영자 2026-11-18 "앞머리 왜 튀어나왔어")
         brow="#241C18", face=dict(brows=True), blocky=True, glasses="#2A2A2E", glasses_style="round",   # 각진 블록 몸 + 얇은 원형테 (운영자 2026-11-18)
         collar=False),
+    # 시험장 학생들 (퇴보 vs 퇴화 편, 운영자 2026-11-19 "얼굴과 몸은 다 다른 사람으로"): 피부·머리 모양·머리색·옷·안경·눈 크기를 섞음
+    "stu1": dict(   # 긴 생머리 여학생, 안경 없음
+        skin="#F1C7A5", hair="#1E1714", top="#E8A0A8", top_rough=0.7, tee=None, pants="#2E3440", shoes="#E9E4DA", sleeves="top",
+        hair_main=((0, 0.13, -0.06), (0.46, 0.44, 0.45)),
+        hair_extra=[((0, -0.18, -0.2), (0.45, 0.42, 0.28)), ((0.34, -0.22, -0.02), (0.13, 0.36, 0.2)), ((-0.34, -0.22, -0.02), (0.13, 0.36, 0.2)), ((0, 0.30, 0.16), (0.36, 0.1, 0.1))],
+        brow="#2A1E1A", face=dict(brows=True, eye_s=0.085, mouth_w=0.05), blocky=True, collar=False),
+    "stu2": dict(   # 짧은 스포츠머리, 진한 피부, 후드티
+        skin="#B98262", hair="#141210", top="#3D4A5C", top_rough=0.8, tee=None, pants="#1F2228", shoes="#F0F0F0", sleeves="top",
+        hair_main=((0, 0.16, -0.06), (0.43, 0.38, 0.42)), hair_extra=[],
+        brow="#120F0E", face=dict(brows=True, eye_s=0.068, mouth_w=0.07), blocky=True, collar=False),
+    "stu3": dict(   # 단발 갈색머리 여학생, 검은 뿔테
+        skin="#EBC09C", hair="#5A3A26", top="#F2E6C8", top_rough=0.75, tee=None, pants="#5B6B8A", shoes="#3B2A20", sleeves="top",
+        hair_main=((0, 0.12, -0.05), (0.47, 0.45, 0.46)),
+        hair_extra=[((0.33, -0.08, 0.0), (0.14, 0.22, 0.24)), ((-0.33, -0.08, 0.0), (0.14, 0.22, 0.24)), ((0, -0.05, -0.25), (0.42, 0.25, 0.22)), ((0, 0.32, 0.17), (0.38, 0.09, 0.1))],
+        brow="#3E281B", face=dict(brows=True, eye_s=0.08), blocky=True, glasses="#121214", collar=False),
+    "stu4": dict(   # 노란 염색 머리, 초록 맨투맨
+        skin="#E8B48E", hair="#D9B45A", top="#4F8A5E", top_rough=0.75, tee=None, pants="#2B2F38", shoes="#202020", sleeves="top",
+        hair_main=((0, 0.14, -0.04), (0.46, 0.43, 0.44)), hair_extra=[((0.08, 0.34, 0.12), (0.34, 0.12, 0.16))],
+        brow="#8A6A30", face=dict(brows=True, eye_s=0.07, mouth_w=0.065), blocky=True, collar=False),
+    "stu5": dict(   # 포니테일 여학생, 회색 후드
+        skin="#F3CDB0", hair="#3A2A22", top="#9AA0A8", top_rough=0.8, tee=None, pants="#1E2430", shoes="#F2F2F2", sleeves="top",
+        hair_main=((0, 0.13, -0.07), (0.45, 0.43, 0.44)),
+        hair_extra=[((0, 0.12, -0.46), (0.14, 0.14, 0.14)), ((0, -0.12, -0.5), (0.1, 0.26, 0.1)), ((0, 0.31, 0.15), (0.36, 0.09, 0.1))],
+        brow="#2E2019", face=dict(brows=True, eye_s=0.082, mouth_w=0.05), blocky=True, collar=False),
+    "stu6": dict(   # 곱슬 파마 머리, 큰 체크 셔츠 느낌(주황), 둥근 안경
+        skin="#D9A37C", hair="#2A1D16", top="#D9773F", top_rough=0.7, tee=None, pants="#4A3F35", shoes="#5B3B29", sleeves="top",
+        hair_main=((0, 0.15, -0.05), (0.5, 0.48, 0.48)),
+        hair_extra=[((0.25, 0.32, 0.1), (0.2, 0.17, 0.2)), ((-0.25, 0.32, 0.1), (0.2, 0.17, 0.2)), ((0, 0.42, -0.05), (0.26, 0.17, 0.26))],
+        brow="#1F1712", face=dict(brows=True, eye_s=0.066, mouth_w=0.075), blocky=True, glasses="#6A4A2A", glasses_style="round", collar=False),
 }
 FACE = dict(cx=0.0, cy=0.0, eye_dx=0.15, eye_s=0.075, mouth_dy=-0.17, mouth_w=0.06, blush=(0.26, -0.10, 0.06))
 

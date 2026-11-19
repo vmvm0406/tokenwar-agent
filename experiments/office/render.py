@@ -163,7 +163,8 @@ def clip_frames(cid, c):
     """선택 필드 (리트냥이, 2026-11-18): "land": true → 가로 영상(뉴스·영화)을 16:9로 (모니터 꽉 채움, "res" 가로 픽셀, 기본 1280),
     "image": 경로 → 정지 그림 한 장 (수사 보드 등, from/to 없음)."""
     d = HERE / "out" / "clipframes" / cid
-    key = json.dumps(c, sort_keys=True)
+    src = ROOT / (c.get("image") or c.get("file") or "")
+    key = json.dumps(c, sort_keys=True) + (f" {src.stat().st_mtime_ns}" if src.is_file() else "")   # 원본 파일을 다시 만들면 다시 뽑음 (퇴보 vs 퇴화 편: 화면만 바꿨는데 옛 프레임이 쓰임)
     if d.exists() and (d / "key.txt").exists() and (d / "key.txt").read_text(encoding="utf-8") != key:
         shutil.rmtree(d)          # 구간·해상도를 바꾸면 다시 뽑음
     if not d.exists() or not any(d.glob("*.jpg")):
@@ -277,6 +278,8 @@ def split_subs(sub, env, dur):
 def build(script):
     """대사 음성·시각·입 모양(소리 크기) 계산 → JS에 넘길 타임라인.
     intro(선택): 대사 전에 릴스 소리 구간. lines의 "break": n초 → 거기서 대화 묶음을 나누고 n초 쉼(자막 카드 자리)."""
+    global SPEED
+    SPEED = script.get("speed", 1.22)   # 대본마다 말 빠르기 (퇴보 vs 퇴화 편 2026-11-19 '말은 좀 빠르게')
     intro = script.get("intro")
     lead = (intro["to"] - intro["from"] + intro.get("pad", 0.3)) if intro else script.get("lead", LEAD)   # "lead": 첫 대사 전 여유(초, 훅 제목 자리)
     groups, cur = [], []
@@ -504,6 +507,14 @@ def encode(tl, frames_dir, mp4):
         "pad": "aevalsrc='0.05*(sin(2*PI*110*t)+0.7*sin(2*PI*130.8*t)+0.6*sin(2*PI*164.8*t)+0.25*sin(2*PI*220*t))*(0.75+0.25*sin(2*PI*0.2*t))':d=40:s=44100,lowpass=f=900,afade=t=in:d=1.5",   # 쓸쓸한 단조 패드
         "warm": "aevalsrc='0.045*(sin(2*PI*130.8*t)+0.8*sin(2*PI*164.8*t)+0.7*sin(2*PI*196*t)+0.4*sin(2*PI*261.6*t))*(0.8+0.2*sin(2*PI*0.3*t))':d=40:s=44100,lowpass=f=1200,afade=t=in:d=1.2",   # 따뜻한 장조 화음
         "whum": "aevalsrc='0.4*sin(2*PI*62*t)*min(1\\,t/0.25)*exp(-t*1.4)+0.12*sin(2*PI*124*t)*exp(-t*2)':d=2.2:s=44100",   # 낮은 '웅' (깨달음)
+        # 퇴보 vs 퇴화 편 (2026-11-19): 재난문자 경보(두 음 번갈아, 수능 위급재난문자 비슷하게), 책상 쾅, 꿀꺽, 타자
+        "siren": "aevalsrc='0.32*(sin(2*PI*853*t)+sin(2*PI*960*t))*gte(sin(2*PI*2.2*t)\\,0)+0.22*sin(2*PI*1400*t)*lt(sin(2*PI*2.2*t)\\,0)':d=10.5:s=44100",
+        "slam": "aevalsrc='0.6*sin(2*PI*70*t)*exp(-t*14)+0.3*sin(2*PI*140*t)*exp(-t*20)':d=0.5:s=44100",
+        "gulp": "aevalsrc='0.35*sin(2*PI*(420*t-500*t*t))*exp(-t*9)':d=0.3:s=44100",
+        "bell": "aevalsrc='0.28*sin(2*PI*659*t)*exp(-t*2.5)*lt(t\\,0.55)+0.28*sin(2*PI*523*t)*exp(-(t-0.55)*2.5)*gte(t\\,0.55)':d=1.8:s=44100",   # 딩동 (시험장)
+        "birds": "aevalsrc='0.12*sin(2*PI*(3200+900*sin(2*PI*16*t))*t)*gt(mod(t\\,0.8)\\,0.62)+0.08*sin(2*PI*(4100+600*sin(2*PI*21*t))*t)*gt(mod(t+0.35\\,1.3)\\,1.15)':d=6:s=44100,afade=t=in:d=0.3",   # 아침 새소리
+        "crickets": "aevalsrc='0.05*sin(2*PI*4300*t)*gt(sin(2*PI*30*t)\\,0)*gt(mod(t\\,0.9)\\,0.55)+0.03*sin(2*PI*3900*t)*gt(sin(2*PI*26*t)\\,0)*gt(mod(t+0.4\\,1.1)\\,0.7)':d=8:s=44100,afade=t=in:d=0.4",   # 저녁 귀뚜라미
+        "typing": "anoisesrc=d=3:c=white:a=0.9:r=44100,highpass=f=2000,volume='0.5*gt(mod(t*11.3\\,1)\\,0.82)':eval=frame,lowpass=f=6000",
         "rise": "aevalsrc='0.07*sin(2*PI*(220*t+45*t*t))*(0.6+0.4*sin(2*PI*(3*t+1.2*t*t)))+0.04*sin(2*PI*(330*t+70*t*t))':d=12:s=44100,afade=t=in:d=0.6",   # 점점 높아지고 빨라지는 떨림 (가속)
     }
     for i, x in enumerate(tl.get("sfx", [])):
