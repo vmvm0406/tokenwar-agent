@@ -109,13 +109,13 @@
   },
   {
    "who": "claude",
-   "say": "[gently, thoughtfully, to the viewer] 일이 필요 없는 세상... 여러분은 어떤 삶을 살고 싶으신가요?",
+   "say": "[quickly, warmly, to the viewer] 일이 필요 없는 세상, 여러분은 어떤 삶을 살고 싶으신가요?",
    "sub": "일이 필요 없는 세상.|여러분은 어떤 삶을 살고 싶으신가요?",
    "emo": "smile",
    "break": 3.6
   }
  ],
- "tail": 2.4,
+ "tail": 0.5,
  "shots": [
   {
    "t": 0,
