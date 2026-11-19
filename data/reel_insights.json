@@ -574,7 +574,7 @@
     "folder": "2026-11-19-video-ubi",
     "title": "클로드, \"돈 벌어와.\"",
     "duration": 23.9,
-    "views": 77,
+    "views": 82,
     "reach": 49,
     "saved": 0,
     "shares": 0,
@@ -583,7 +583,7 @@
     "comments": 2,
     "ig_reels_avg_watch_time": 6232,
     "ig_reels_video_view_total_time": 311621,
-    "reels_skip_rate": 48.5
+    "reels_skip_rate": 47.1
    },
    "18074607485775380": {
     "timestamp": "2026-11-19T11:31:22+0000",
@@ -724,5 +724,5 @@
   "total_interactions",
   "views"
  ],
- "updated": "2026-11-19T23:41+09:00"
+ "updated": "2026-11-19T23:42+09:00"
 }
