@@ -1,0 +1,665 @@
+{
+ "_note": "확정 대본 (운영자 2026-11-19 '그렇게 하자') ubi.md. 2035년 설정, 남자 + 클로드. 화면 post/ubi_screens.py, 컷·동작·소리 post/ubi_timeline.py.",
+ "ss": 2,
+ "jpeg": 0.98,
+ "crf": 12,
+ "lead": 0.45,
+ "speed": 1.36,
+ "level": true,
+ "props": {
+  "dorm": true,
+  "box": true
+ },
+ "cast": [
+  {
+   "key": "man",
+   "human": true
+  },
+  {
+   "key": "claude",
+   "x": -0.28,
+   "z": 0.24,
+   "yaw": 0.3,
+   "size": 0.38
+  }
+ ],
+ "clips": {
+  "resign": {
+   "file": "experiments/office/out/clips/ubi_resign.mp4",
+   "from": 0,
+   "to": 6,
+   "land": true,
+   "res": 1920
+  },
+  "news": {
+   "file": "experiments/office/out/clips/ubi_news.mp4",
+   "from": 0,
+   "to": 6,
+   "land": true,
+   "res": 1920
+  },
+  "deposit": {
+   "file": "experiments/office/out/clips/ubi_deposit.mp4",
+   "from": 0,
+   "to": 5,
+   "land": true,
+   "res": 1920
+  },
+  "game": {
+   "file": "experiments/office/out/clips/ubi_game.mp4",
+   "from": 0,
+   "to": 8,
+   "land": true,
+   "res": 1920
+  },
+  "pause": {
+   "file": "experiments/office/out/clips/ubi_pause.mp4",
+   "from": 0,
+   "to": 6,
+   "land": true,
+   "res": 1920
+  },
+  "work": {
+   "file": "experiments/office/out/clips/ubi_work.mp4",
+   "from": 0,
+   "to": 6,
+   "land": true,
+   "res": 1920
+  }
+ },
+ "lines": [
+  {
+   "who": "man",
+   "say": "[jumping up, shocked and thrilled] 일 안 해도 돈이 들어온다고?!",
+   "sub": "일 안 해도 돈이 들어온다고?!",
+   "emo": "surprised"
+  },
+  {
+   "who": "claude",
+   "say": "[cheerfully, innocently, fast] 네! 제가 사용자님 일을 맡게 됐거든요!",
+   "sub": "네! 제가 사용자님 일을|맡게 됐거든요!",
+   "emo": "excited"
+  },
+  {
+   "who": "man",
+   "say": "[laughing, then suddenly freezing] 하하... 내 일을?",
+   "sub": "하하... 내 일을?",
+   "emo": "blank"
+  },
+  {
+   "who": "man",
+   "say": "[bored, long sigh] 아... 게임도 질리고... [empty, quietly, clearly] 클로드, 나 이젠... 뭐 하고 살지?",
+   "sub": "아... 게임도 질리고...|클로드, 나 이젠... 뭐 하고 살지?",
+   "emo": "blank",
+   "break": 3.6,
+   "sub_at": [
+    1.65
+   ],
+   "seed": 5
+  },
+  {
+   "who": "claude",
+   "say": "[thinking for a moment, then gently and a little sad] 음... 그건 제가 정해 드릴 순 없네요.",
+   "sub": "음...|그건 제가 정해 드릴 순 없네요.",
+   "emo": "down",
+   "break": 0.8,
+   "sub_at": [
+    1.05
+   ]
+  },
+  {
+   "who": "claude",
+   "say": "[gently, thoughtfully, to the viewer] 일이 필요 없는 세상... 여러분은 어떤 삶을 살고 싶으신가요?",
+   "sub": "일이 필요 없는 세상.|여러분은 어떤 삶을 살고 싶으신가요?",
+   "emo": "smile",
+   "break": 3.6
+  }
+ ],
+ "tail": 2.4,
+ "shots": [
+  {
+   "t": 0,
+   "cam": "mon",
+   "z0": 1.02,
+   "z1": 1.18
+  },
+  {
+   "line": 0,
+   "dt": 0.25,
+   "cam": "close:man",
+   "push": 0.08
+  },
+  {
+   "line": 1,
+   "dt": -0.1,
+   "cam": "close:claude"
+  },
+  {
+   "line": 1,
+   "dt": 0.7,
+   "cam": "mon",
+   "z0": 1.0,
+   "z1": 1.2
+  },
+  {
+   "line": 2,
+   "dt": -0.1,
+   "cam": "close:man"
+  },
+  {
+   "line": 2,
+   "dt": 0.55,
+   "cam": "close:man",
+   "push": 0.2
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 0.25,
+   "cam": "mon",
+   "z0": 1.05,
+   "z1": 1.15
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 1.0,
+   "cam": "wide",
+   "dx": 0.1
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 1.7,
+   "cam": "close:man"
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 2.2,
+   "cam": "mon",
+   "z0": 1.05,
+   "z1": 1.15
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 2.9,
+   "cam": "wide",
+   "dx": 0.1
+  },
+  {
+   "line": 3,
+   "dt": -0.2,
+   "cam": "close:man"
+  },
+  {
+   "line": 4,
+   "dt": -0.1,
+   "cam": "close:claude",
+   "push": 0.06
+  },
+  {
+   "line": 4,
+   "end": true,
+   "dt": 0.1,
+   "cam": "mon",
+   "z0": 1.0,
+   "z1": 1.2
+  },
+  {
+   "line": 4,
+   "end": true,
+   "dt": 1.5,
+   "cam": "two:claude:man"
+  }
+ ],
+ "events": [
+  {
+   "t": 0,
+   "who": "man",
+   "do": "sky",
+   "top": [
+    110,
+    170,
+    235
+   ],
+   "bot": [
+    190,
+    222,
+    250
+   ],
+   "d": 0.05
+  },
+  {
+   "t": 0,
+   "who": "man",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "t": 0,
+   "who": "claude",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 0,
+   "dt": 0.0,
+   "who": "man",
+   "do": "startle"
+  },
+  {
+   "line": 0,
+   "dt": 0.3,
+   "who": "man",
+   "at": "claude",
+   "do": "look"
+  },
+  {
+   "line": 0,
+   "dt": 0.6,
+   "who": "man",
+   "emo": "happy"
+  },
+  {
+   "line": 1,
+   "dt": 0,
+   "who": "claude",
+   "at": "man",
+   "do": "look"
+  },
+  {
+   "line": 1,
+   "dt": 0,
+   "who": "claude",
+   "do": "hop"
+  },
+  {
+   "line": 2,
+   "dt": 0,
+   "who": "man",
+   "emo": "happy"
+  },
+  {
+   "line": 2,
+   "dt": 0.55,
+   "who": "man",
+   "emo": "blank"
+  },
+  {
+   "line": 2,
+   "dt": 0.55,
+   "who": "man",
+   "d": 0.4,
+   "do": "tremble"
+  },
+  {
+   "line": 2,
+   "dt": 0.6,
+   "who": "claude",
+   "emo": "smile"
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 0.25,
+   "who": "man",
+   "do": "unbox"
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 0.25,
+   "who": "man",
+   "emo": "happy"
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 1.0,
+   "who": "man",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 1.0,
+   "who": "man",
+   "emo": "half"
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 1.0,
+   "who": "man",
+   "do": "type",
+   "d": 0.9
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 1.0,
+   "who": "man",
+   "do": "sky",
+   "top": [
+    8,
+    12,
+    32
+   ],
+   "bot": [
+    20,
+    26,
+    52
+   ],
+   "d": 0.15
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 1.7,
+   "who": "man",
+   "do": "slump",
+   "d": 0.7,
+   "amt": 0.8
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 1.7,
+   "who": "man",
+   "emo": "sleepy"
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 1.7,
+   "who": "man",
+   "do": "sky",
+   "top": [
+    110,
+    170,
+    235
+   ],
+   "bot": [
+    190,
+    222,
+    250
+   ],
+   "d": 0.05
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 2.9,
+   "who": "man",
+   "do": "type",
+   "d": 0.9
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 2.9,
+   "who": "man",
+   "do": "sky",
+   "top": [
+    44,
+    40,
+    92
+   ],
+   "bot": [
+    232,
+    122,
+    74
+   ],
+   "d": 0.2
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 1.0,
+   "who": "claude",
+   "do": "look",
+   "at": "man"
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 1.0,
+   "who": "claude",
+   "emo": "worried"
+  },
+  {
+   "line": 3,
+   "dt": -0.3,
+   "who": "man",
+   "at": "claude",
+   "do": "look"
+  },
+  {
+   "line": 3,
+   "dt": 0,
+   "who": "man",
+   "emo": "blank"
+  },
+  {
+   "line": 3,
+   "dt": 0.3,
+   "who": "claude",
+   "at": "man",
+   "do": "look"
+  },
+  {
+   "line": 4,
+   "dt": 0,
+   "who": "claude",
+   "d": 1.0,
+   "do": "tilt"
+  },
+  {
+   "line": 4,
+   "dt": 0.5,
+   "who": "man",
+   "emo": "sad"
+  },
+  {
+   "line": 4,
+   "dt": 0.1,
+   "who": "claude",
+   "at": "monitor",
+   "do": "look",
+   "end": true
+  },
+  {
+   "line": 4,
+   "dt": 0.2,
+   "who": "claude",
+   "d": 7.0,
+   "do": "work",
+   "end": true
+  },
+  {
+   "line": 5,
+   "dt": 0,
+   "who": "claude",
+   "at": "camera",
+   "do": "look"
+  },
+  {
+   "line": 4,
+   "dt": 0.2,
+   "who": "claude",
+   "emo": "neutral",
+   "end": true
+  },
+  {
+   "line": 4,
+   "dt": 0.2,
+   "who": "man",
+   "at": "camera",
+   "do": "look",
+   "end": true
+  },
+  {
+   "line": 4,
+   "dt": 0.2,
+   "who": "man",
+   "emo": "blank",
+   "end": true
+  }
+ ],
+ "screens": [
+  {
+   "t": 0,
+   "screen": "monitor",
+   "clip": "news",
+   "hold": true
+  },
+  {
+   "line": 1,
+   "dt": 0.7,
+   "screen": "monitor",
+   "clip": "resign",
+   "hold": true
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 0.25,
+   "screen": "monitor",
+   "clip": "deposit",
+   "hold": true
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 1.0,
+   "screen": "monitor",
+   "clip": "game",
+   "hold": true
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 2.2,
+   "screen": "monitor",
+   "clip": "deposit",
+   "hold": true
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 2.9,
+   "screen": "monitor",
+   "clip": "game",
+   "hold": true
+  },
+  {
+   "line": 3,
+   "dt": -0.3,
+   "screen": "monitor",
+   "clip": "pause",
+   "hold": true
+  },
+  {
+   "line": 4,
+   "end": true,
+   "dt": 0.1,
+   "screen": "monitor",
+   "clip": "work",
+   "hold": true
+  }
+ ],
+ "cards": [
+  {
+   "line": 4,
+   "end": true,
+   "dt": 3.0,
+   "kind": "end",
+   "text": "일이 필요 없는 세상.\n여러분은 어떤 삶을 살고 싶으신가요?|팔로우하고 AI를 재밌게 배워 보세요!"
+  }
+ ],
+ "sfx": [
+  {
+   "t": 0.05,
+   "kind": "boom",
+   "vol": 0.35
+  },
+  {
+   "line": 1,
+   "dt": 0.7,
+   "kind": "click",
+   "vol": 0.7
+  },
+  {
+   "line": 2,
+   "dt": 0.55,
+   "kind": "boom",
+   "vol": 0.45
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 0.37,
+   "kind": "ding",
+   "vol": 0.55
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 1.0,
+   "kind": "typing",
+   "d": 0.8,
+   "fo": 0.1,
+   "vol": 0.6
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 1.7,
+   "kind": "swipe",
+   "vol": 0.6
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 2.32,
+   "kind": "ding",
+   "vol": 0.55
+  },
+  {
+   "line": 2,
+   "end": true,
+   "dt": 2.9,
+   "kind": "typing",
+   "d": 0.8,
+   "fo": 0.1,
+   "vol": 0.6
+  },
+  {
+   "line": 3,
+   "dt": -0.4,
+   "kind": "pad",
+   "d": 16.0,
+   "fo": 1.5,
+   "vol": 0.55
+  },
+  {
+   "line": 4,
+   "end": true,
+   "dt": 0.2,
+   "kind": "typing",
+   "d": 2.8,
+   "fo": 0.4,
+   "vol": 0.4
+  },
+  {
+   "line": 4,
+   "end": true,
+   "dt": 3.0,
+   "kind": "click",
+   "vol": 1.1
+  }
+ ]
+}

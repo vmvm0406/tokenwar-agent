@@ -442,6 +442,18 @@ window.twInit = async (script) => {
       scene.add(b); DORM.books.push(b); y += h;
     }
   }
+  if (S.props && S.props.box) {   // 퇴사 상자 (기본소득 편 2026-11-19): 책상 오른쪽 앞, 화분·액자·서류가 꽂힌 종이 상자. 'unbox' 이벤트 뒤 사라짐
+    const bx = new THREE.Group(); const cm = mat(0xc49a63, 0.85);
+    const W_ = 0.42, D_ = 0.3, H_ = 0.22;
+    for (const [w, h, d, x, y, z] of [[W_, 0.015, D_, 0, 0.0075, 0], [W_, H_, 0.012, 0, H_ / 2, D_ / 2], [W_, H_, 0.012, 0, H_ / 2, -D_ / 2], [0.012, H_, D_, W_ / 2, H_ / 2, 0], [0.012, H_, D_, -W_ / 2, H_ / 2, 0]]) {
+      const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), cm); m.position.set(x, y, z); m.castShadow = true; bx.add(m); }
+    const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.035, 0.08, 8), mat(0xd8d2c4)); pot.position.set(-0.1, H_ + 0.02, -0.04); bx.add(pot);
+    const leaf = new THREE.Mesh(new THREE.IcosahedronGeometry(0.075, 0), mat(0x3f8a4a)); leaf.position.set(-0.1, H_ + 0.12, -0.04); bx.add(leaf);
+    const fr = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.18, 0.012), mat(0x2b2b30)); fr.position.set(0.08, H_ + 0.05, -0.06); fr.rotation.x = -0.15; bx.add(fr);
+    const pp = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.14, 0.008), mat(0xf4f4ee)); pp.position.set(0.06, H_ + 0.02, 0.07); pp.rotation.x = 0.25; bx.add(pp);
+    const lb = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.06, 0.002), mat(0xfaf4e0)); lb.position.set(0, H_ * 0.55, D_ / 2 + 0.007); bx.add(lb);
+    bx.position.set(0.36, deskY, 0.2); bx.rotation.y = -0.25; scene.add(bx); DORM.box = bx;
+  }
   // AI: 책상 위 (높이 0.34)
   for (const p of S.cast.filter((p) => !p.human)) {
     const c = await loadAI(p.key, p.size || 0.34);
@@ -995,6 +1007,7 @@ window.twFrame = (t) => {
     DORM.tex.needsUpdate = true;
     const pl = S.events.find((e) => e.do === 'pile'), n = pl ? Math.floor(clamp((t - pl.t) / (pl.d || 2)) * DORM.books.length + (t >= pl.t ? 1 : 0)) : 0;
     DORM.books.forEach((b, k) => { b.visible = k < n && !CLASS.mode; });
+    if (DORM.box) { const ub = S.events.find((e) => e.do === 'unbox'); DORM.box.visible = !(ub && t >= ub.t); }
   }
   if (REMOTE.btn) {   // 리모컨 빨간 버튼: 눌린 동안 들어가고 빛남
     const on = S.events.some((e) => e.do === 'press' && t >= e.t + 0.3 && t < e.t + 0.62);
