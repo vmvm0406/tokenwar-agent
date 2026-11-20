@@ -409,7 +409,7 @@ def build(script):
     clips = {cid: clip_frames(cid, c) for cid, c in script.get("clips", {}).items()}
     return {"cast": script["cast"], "lines": lines, "events": timed("events"), "shots": shots, "dur": round(dur, 3), "fps": FPS,
             "parts": parts, "intro": intro, "lead": lead, "clips": clips, "clipsrc": script.get("clips", {}),
-            "screens": sorted(timed("screens"), key=lambda s: s["t"]), "ss": script.get("ss", 1), "jpeg": script.get("jpeg", 0.92), "crf": script.get("crf", 18), "cards": cards, "audio": timed("audio"), "props": script.get("props", {}), "sfx": timed("sfx")}
+            "screens": sorted(timed("screens"), key=lambda s: s["t"]), "ss": script.get("ss", 1), "jpeg": script.get("jpeg", 0.92), "crf": script.get("crf", 18), "cards": cards, "audio": timed("audio"), "props": script.get("props", {}), "sfx": timed("sfx"), "sub": script.get("sub")}
 
 
 def check_pron(tl, script):

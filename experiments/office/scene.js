@@ -838,6 +838,13 @@ function caption(t) {
   text = text.replace(/…/g, '...');   // '…'는 글자 가운데 높이에 찍혀서 마침표 셋으로 (운영자 2026-11-18)
   const rows = wrap(text, 780), lh = 66, pad = 26;
   const w = Math.max(...rows.map((r) => g2.measureText(r).width)) + pad * 2, h = rows.length * lh + pad * 1.4;
+  if (!(S.sub && S.sub.style === 'top')) {   // 기본: 아래쪽 흰 글씨 + 검은 테두리, 상자 없음 (운영자 2026-11-20 '바뀐대로가 좋아'). 예전 위쪽 검은 상자는 "sub": {"style": "top"}
+    const SB = S.sub || {};
+    g2.font = `700 ${SB.size || 62}px Wanted`; g2.textAlign = 'center'; g2.textBaseline = 'middle'; g2.lineJoin = 'round';
+    const rr = text.split(/(?<=[?!.])\s+/).flatMap((x) => wrap(x, 940)), lh2 = (SB.size || 62) * 1.3, y0 = (SB.y || 1240) - (rr.length - 1) * lh2;   // 마지막 줄이 y에 오게 (위로 쌓임)
+    rr.forEach((r, i) => { const yy = y0 + i * lh2; g2.lineWidth = 12; g2.strokeStyle = '#000'; g2.strokeText(r, W / 2, yy); g2.fillStyle = '#fff'; g2.fillText(r, W / 2, yy); });
+    return;
+  }
   const x = (W - w) / 2, y = 360;
   g2.fillStyle = 'rgba(0,0,0,0.62)'; g2.beginPath(); g2.roundRect(x, y, w, h, 14); g2.fill();
   g2.fillStyle = '#fff'; g2.textAlign = 'center'; g2.textBaseline = 'middle';
