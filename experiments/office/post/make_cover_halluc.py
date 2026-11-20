@@ -1,4 +1,4 @@
-"""할루시네이션 편 썸네일 (2026-11-20): 발끈한 클로드(scripts/halluc_cover.json = 자막 뺀 판, 4.3초 still) + 제목 따옴표 없이 '클로드, 거짓말 좀 하지 마.'(운영자 2026-11-20 "\"\" 붙이지 마")' (운영자 2026-11-20, 첫 판 '버그요?'는 지움). 실행: py -3.12 experiments/office/post/make_cover_halluc.py th_base_halluc.jpg halluc_cover.jpg
+"""할루시네이션 편 썸네일 (2026-11-20): 발끈한 클로드(scripts/halluc_cover.json = 자막 뺀 판, 4.3초 still) + 제목 따옴표 없이 '클로드, 거짓말 좀 하지마'(붙여 쓰고 마침표 없이)(운영자 2026-11-20 "\"\" 붙이지 마")' (운영자 2026-11-20, 첫 판 '버그요?'는 지움). 실행: py -3.12 experiments/office/post/make_cover_halluc.py th_base_halluc.jpg halluc_cover.jpg
 """
 import asyncio
 import base64
@@ -10,7 +10,7 @@ html = f"""<html><head><link href="https://fonts.googleapis.com/css2?family=Blac
 <style>body{{margin:0;width:1080px;height:1920px;background:url(data:image/jpeg;base64,{b64}) no-repeat;background-size:cover}}
 h1{{position:absolute;top:310px;left:0;right:0;margin:0;text-align:center;font-family:'Black Han Sans';font-weight:400;font-size:150px;line-height:1.1;color:#fff}}
 h1 span{{display:block;-webkit-text-stroke:16px #000;paint-order:stroke fill}} .g{{color:#00FF66}}</style></head>
-<body><h1><span style="font-size:150px">클로드,</span><span style="font-size:124px"><b class="g" style="font-weight:400">거짓말 좀 하지 마.</b></span></h1></body></html>"""
+<body><h1><span style="font-size:150px">클로드,</span><span style="font-size:124px"><b class="g" style="font-weight:400">거짓말 좀 하지마</b></span></h1></body></html>"""
 async def main():
     from playwright.async_api import async_playwright
     async with async_playwright() as p:
