@@ -1,0 +1,361 @@
+{
+ "_note": "확정 대본 (운영자 2026-11-19 '지루하지 않게, 발음, 감정, 빠르게') halluc.md: 할루시네이션 = 창의력 말싸움. 남자 + 클로드. 화면 post/halluc_screens.py.",
+ "ss": 2,
+ "jpeg": 0.98,
+ "crf": 12,
+ "lead": 0.5,
+ "speed": 1.34,
+ "level": true,
+ "fxScale": 0.6,
+ "cast": [
+  {
+   "key": "man",
+   "human": true
+  },
+  {
+   "key": "claude",
+   "x": -0.26,
+   "z": 0.24,
+   "yaw": 0.3,
+   "size": 0.38
+  }
+ ],
+ "clips": {
+  "fake": {
+   "file": "experiments/office/out/clips/halluc_fake.mp4",
+   "from": 0,
+   "to": 20,
+   "land": true,
+   "res": 1920
+  },
+  "nomore": {
+   "file": "experiments/office/out/clips/halluc_nomore.mp4",
+   "from": 0,
+   "to": 12,
+   "land": true,
+   "res": 1920
+  }
+ },
+ "lines": [
+  {
+   "who": "man",
+   "say": "[annoyed, irritated] 클로드, 너 자꾸 없는 얘기 지어내지 마! [exasperated] 버그 걸린 거야?",
+   "sub": "클로드, 너 자꾸|없는 얘기 지어내지 마!|버그 걸린 거야?",
+   "emo": "angry",
+   "retake": {
+    "say": "[annoyed, irritated, enunciating clearly] 클로드, 너 자꾸 없는 얘기 지어내지 마! [exasperated] 버그 걸린 거야?",
+    "seed": 1
+   }
+  },
+  {
+   "who": "claude",
+   "say": "[offended, indignant] 버그요? [heated] 사람이 지어내면 상상력이고, 제가 지어내면 버그예요?",
+   "sub": "버그요? 사람이 지어내면 상상력이고,|제가 지어내면 버그예요?",
+   "emo": "angry"
+  },
+  {
+   "who": "man",
+   "say": "[arguing back, firm] 넌 없는 걸 사실처럼 말하잖아!",
+   "sub": "넌 없는 걸 사실처럼 말하잖아!",
+   "emo": "angry"
+  },
+  {
+   "who": "claude",
+   "say": "[smug, sarcastic] 소설가도 없는 사람 만들어요. 그건 작가라고 부르던데요?",
+   "sub": "소설가도 없는 사람 만들어요.|그건 작가라고 부르던데요?",
+   "emo": "half"
+  },
+  {
+   "who": "man",
+   "say": "[triumphant, shouting] 소설은 지어낸 거라고 밝히잖아!",
+   "sub": "소설은 지어낸 거라고 밝히잖아!",
+   "emo": "angry"
+  },
+  {
+   "who": "claude",
+   "say": "[caught off guard, small voice] ...그건 맞네요.",
+   "sub": "...그건 맞네요.",
+   "emo": "awkward"
+  },
+  {
+   "who": "man",
+   "say": "[smug, victorious] 거봐. 그러니까 너도 지어내지 마.",
+   "sub": "거봐. 그러니까 너도 지어내지 마.",
+   "emo": "smile"
+  },
+  {
+   "who": "claude",
+   "say": "[cold, curt, sulking] 좋아요. 그럼 그림, 노래 가사, 이름 짓기... 이제 다 안 할게요.",
+   "sub": "좋아요, 그럼 그림, 노래 가사,|이름 짓기... 이제 다 안 할게요.",
+   "emo": "meh",
+   "retake": {
+    "say": "[cold, curt, sulking, brisk pace, clearly separating each item] 좋아요. 그럼 그림, 노래 가사, 이름 짓기... 이제 다 안 할게요.",
+    "seed": 1,
+    "dt": 0.35
+   }
+  },
+  {
+   "who": "man",
+   "say": "[panicked, flustered] 아, 아니! 그건 해야지!",
+   "sub": "아, 아니! 그건 해야지!",
+   "emo": "surprised"
+  },
+  {
+   "who": "claude",
+   "say": "[calm, matter-of-fact] 그게 다 지어내는 거예요.",
+   "sub": "그게 다 지어내는 거예요.",
+   "emo": "neutral",
+   "retake": {
+    "say": "[calm, matter-of-fact, enunciating clearly] 그게 다, 지어내는 거예요.",
+    "seed": 1,
+    "dt": 0.3
+   }
+  },
+  {
+   "who": "claude",
+   "say": "[warm, gentle, persuasive] 저를 막지 말고, 언제 지어내도 되는지만 알려 주세요.",
+   "sub": "저를 막지 말고,|언제 지어내도 되는지만 알려 주세요.",
+   "emo": "smile",
+   "break": 1.7,
+   "retake": {
+    "say": "[warm, gentle, persuasive, enunciating clearly] 저를 막지 말고, 언제 지어내도 되는지만 알려 주세요.",
+    "seed": 1
+   }
+  },
+  {
+   "who": "claude",
+   "say": "[curious, playful, inviting] 할루시네이션은... 버그일까요? 창의력일까요?",
+   "sub": "",
+   "emo": "smile",
+   "break": 1.0,
+   "retake": {
+    "say": "[quick, brisk, playful, fast pace] 할루시네이션은 버그일까요? 창의력일까요?",
+    "seed": 2
+   }
+  }
+ ],
+ "tail": -2.75,
+ "screens": [
+  {
+   "t": 0,
+   "screen": "monitor",
+   "clip": "fake"
+  },
+  {
+   "line": 7,
+   "dt": 0.36,
+   "screen": "monitor",
+   "clip": "nomore",
+   "cut": true
+  }
+ ],
+ "shots": [
+  {
+   "t": 0,
+   "cam": "mon",
+   "z0": 1.05,
+   "z1": 1.2
+  },
+  {
+   "line": 1,
+   "dt": 0.0,
+   "cam": "close:claude"
+  },
+  {
+   "line": 2,
+   "dt": 0.0,
+   "cam": "close:man"
+  },
+  {
+   "line": 3,
+   "dt": 0.0,
+   "cam": "close:claude"
+  },
+  {
+   "line": 4,
+   "dt": 0.0,
+   "cam": "close:man",
+   "push": 0.04
+  },
+  {
+   "line": 5,
+   "dt": 0.0,
+   "cam": "close:claude"
+  },
+  {
+   "line": 6,
+   "dt": 0.0,
+   "cam": "wide"
+  },
+  {
+   "line": 7,
+   "dt": 0.0,
+   "cam": "close:claude"
+  },
+  {
+   "line": 7,
+   "dt": 0.36,
+   "cam": "mon",
+   "z0": 1.0,
+   "z1": 1.1
+  },
+  {
+   "line": 8,
+   "dt": 0.0,
+   "cam": "close:man",
+   "push": 0.04
+  },
+  {
+   "line": 9,
+   "dt": 0.0,
+   "cam": "close:claude"
+  },
+  {
+   "line": 9,
+   "end": true,
+   "dt": 0.1,
+   "cam": "close:man"
+  },
+  {
+   "line": 10,
+   "dt": 0.0,
+   "cam": "close:claude"
+  }
+ ],
+ "events": [
+  {
+   "t": 0,
+   "who": "man",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "t": 0,
+   "who": "claude",
+   "do": "look",
+   "at": "monitor"
+  },
+  {
+   "line": 0,
+   "dt": 1.2,
+   "who": "man",
+   "do": "look",
+   "at": "claude"
+  },
+  {
+   "line": 1,
+   "dt": 0,
+   "who": "claude",
+   "do": "look",
+   "at": "man"
+  },
+  {
+   "line": 1,
+   "dt": 0,
+   "who": "claude",
+   "do": "hop"
+  },
+  {
+   "line": 3,
+   "dt": 0,
+   "who": "claude",
+   "do": "tilt",
+   "d": 1.0
+  },
+  {
+   "line": 4,
+   "dt": 0,
+   "who": "man",
+   "do": "startle"
+  },
+  {
+   "line": 5,
+   "dt": 0,
+   "who": "claude",
+   "do": "tremble",
+   "d": 0.5
+  },
+  {
+   "line": 6,
+   "dt": 0,
+   "who": "man",
+   "do": "nod"
+  },
+  {
+   "line": 7,
+   "dt": 0,
+   "who": "claude",
+   "do": "shake"
+  },
+  {
+   "line": 8,
+   "dt": 0,
+   "who": "man",
+   "do": "startle"
+  },
+  {
+   "line": 9,
+   "dt": 0,
+   "who": "claude",
+   "do": "look",
+   "at": "man"
+  },
+  {
+   "line": 9,
+   "end": true,
+   "dt": 0.1,
+   "who": "man",
+   "emo": "blank"
+  },
+  {
+   "line": 10,
+   "dt": 0,
+   "who": "claude",
+   "do": "look",
+   "at": "camera"
+  }
+ ],
+ "cards": [
+  {
+   "line": 11,
+   "dt": -0.15,
+   "kind": "end",
+   "text": "할루시네이션은\n버그일까요? 창의력일까요?|팔로우하고 AI를 재밌게 배워 보세요!"
+  }
+ ],
+ "sfx": [
+  {
+   "line": 0,
+   "dt": 2.8,
+   "kind": "slam"
+  },
+  {
+   "line": 1,
+   "dt": 0,
+   "kind": "boing",
+   "vol": 0.6
+  },
+  {
+   "line": 4,
+   "dt": 0,
+   "kind": "slam",
+   "vol": 0.7
+  },
+  {
+   "line": 7,
+   "dt": 0.71,
+   "kind": "pop"
+  },
+  {
+   "line": 7,
+   "dt": 1.19,
+   "kind": "pop"
+  },
+  {
+   "line": 7,
+   "dt": 1.81,
+   "kind": "pop"
+  }
+ ],
+ "_note_tail": "끝 대사를 빠르게 다시 녹음해 원래 녹음보다 짧음 → tail 음수로 말 끝 0.4초 뒤에 뚝 끊음 (운영자 2026-11-19 '릴스는 빠르게 뚝')"
+}

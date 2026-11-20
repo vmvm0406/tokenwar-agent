@@ -339,13 +339,13 @@ def build(script):
             rt = l.get("retake")
             if rt:
                 f2, _ = tts_single({"who": l["who"], "say": rt["say"], "model": "eleven_v3", "seed": rt.get("seed")})
-                b2 = decode(f2); r0, r1 = trim_silence(b2); new_d = r1 - r0; old_d = len(seg) / 16000
+                b2 = decode(f2); r0 = max(0.0, trim_silence(b2, th=0.05)[0] - 0.04); r1 = min(len(b2) / 16000, trim_silence(b2, th=0.05)[1] + 0.12); new_d = r1 - r0; old_d = len(seg) / 16000   # 앞뒤 숨소리 잘라 냄 (할루시네이션 편 '다음에 흭 소리')
                 avail = (segs[k + 1][0] - (s0 + q0) - 0.15) if k + 1 < len(g) else old_d + 0.6   # 다음 대사 전까지 쓸 수 있는 길이
                 k_ = 1.0 if new_d <= avail else min(1.25, new_d / avail)
-                f3 = Path(str(f2).replace(".mp3", f"_fit{k_:.3f}.mp3"))
+                f3 = Path(str(f2).replace(".mp3", f"_fit{k_:.3f}_t3.mp3"))
                 if not f3.exists():
                     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", f"{r0:.3f}", "-to", f"{r1:.3f}", "-i", str(f2),
-                                    "-af", f"atempo={k_:.4f}", "-b:a", "192k", str(f3)], check=True)
+                                    "-af", f"atempo={k_:.4f},afade=t=in:d=0.04,afade=t=out:st={max(0.0, new_d / k_ - 0.12):.3f}:d=0.12", "-b:a", "192k", str(f3)], check=True)
                 b3 = decode(f3)
                 sh = rt.get("dt", 0.0)   # 다시 녹음한 줄을 조금 뒤로 (앞 대사 끝과 겹칠 때, 신입 자리 편)
                 mutes.append([round(s0 + q0 + max(0.0, sh) - 0.02, 3), round(s0 + q0 + sh + max(old_d, len(b3) / 16000) + 0.05, 3)])

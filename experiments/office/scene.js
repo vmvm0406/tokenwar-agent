@@ -60,6 +60,7 @@ const EMO_FX = {
   excited: { eye: { s: 1.12 }, fx: ['sparkle'] }, think: { eye: { dy: 0.35, s: 0.92 } },
   down: { eye: { sy: 0.6, dy: -0.2 } }, teary: { fx: ['tear'] }, cry: { fx: ['cry'] },
   bitter: { fx: ['tear'] }, blank: { eye: { s: 0.55 } }, worried: { eye: { s: 1.05 } },
+  angry: { eye: { sy: 0.6, dy: -0.12 }, brow: -1.2, fx: ['vein'] },   // 화난 표정 (할루시네이션 편 2026-11-19 '화난 표정도 그려줘'): 가늘게 뜬 눈 + 빨간 핏대 표시
 };
 let CUR_T = 0;
 function faceFx(c) {   // 눈물·반짝이 (처음 한 번 만들어 둠): 장면에 두고 매 프레임 눈의 세계 위치에 맞춰 놓음
@@ -74,31 +75,37 @@ function faceFx(c) {   // 눈물·반짝이 (처음 한 번 만들어 둠): 장�
     const sp = new THREE.Mesh(new THREE.ShapeGeometry(st), sparkM); sp.visible = false; scene.add(sp);
     c.fx.tears.push({ m: tear, e }); c.fx.sparks.push({ m: sp, e });
   }
+  {   // 핏대 표시(만화식 빨간 네 조각): 이마 옆
+    const vm = new THREE.MeshBasicMaterial({ color: 0xff2a2a, toneMapped: false, side: THREE.DoubleSide, depthTest: false }), vg = new THREE.Group();
+    for (let k = 0; k < 4; k++) { const r = new THREE.Mesh(new THREE.RingGeometry(0.62, 0.95, 10, 1, 0.12, Math.PI / 2 - 0.24), vm); r.rotation.z = k * Math.PI / 2 + Math.PI; r.position.set((k === 0 || k === 3 ? 1 : -1) * 1.0, (k < 2 ? 1 : -1) * 1.0, 0); r.renderOrder = 999; vg.add(r); }
+    vg.visible = false; scene.add(vg); c.fx.vein = vg;
+  }
   return c.fx;
 }
 const _bb = new THREE.Box3(), _c = new THREE.Vector3(), _s = new THREE.Vector3();
 function eyeShape(c, ef) {   // 눈 모양: 화면 위아래 기준으로 납작하게(sy)·크게(s)·위아래로(dy, 눈 높이 배수)
   c.root.updateMatrixWorld(true);
-  for (const p of ['eye_open', 'eye_wide']) for (const o of c.parts[p] || []) {
+  if (!c.hl) { c.hl = []; c.root.traverse((o) => { if (o.name && o.name.startsWith(c.key + '_eyehl_')) c.hl.push(o); }); }   // 눈 하이라이트도 같이 (화난 눈이 둥글게 보임, 할루시네이션 편)
+  for (const p of ['eye_open', 'eye_wide', 'hl', 'brow_angry']) for (const o of (p === 'hl' ? c.hl : c.parts[p]) || []) {
     if (!o.userData.base) {
       const q = o.getWorldQuaternion(new THREE.Quaternion());
       const ax = [new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 1)].map((v) => Math.abs(v.applyQuaternion(q).y));
       _bb.setFromObject(o);
       o.userData.base = { s: o.scale.clone(), p: o.position.clone(), up: ax.indexOf(Math.max(...ax)), h: _bb.max.y - _bb.min.y };
     }
-    const b = o.userData.base, k = ef.s || 1, sy = ef.sy || 1;
+    const br = p === 'brow_angry', b = o.userData.base, k = br ? 1 : ef.s || 1, sy = br ? 1 : ef.sy || 1, dy = br ? ef.brow || 0 : ef.dy;
     o.scale.copy(b.s).multiplyScalar(k); o.scale.setComponent(b.up, o.scale.getComponent(b.up) * sy);
     o.position.copy(b.p);
-    if (ef.dy) { o.parent.updateMatrixWorld(true); const w = o.parent.localToWorld(b.p.clone()); w.y += ef.dy * b.h; o.position.copy(o.parent.worldToLocal(w)); }
+    if (dy) { o.parent.updateMatrixWorld(true); const w = o.parent.localToWorld(b.p.clone()); w.y += dy * b.h; o.position.copy(o.parent.worldToLocal(w)); }
   }
 }
 // emo + 말하는 중(open 0..1) + 눈 깜빡임 → 부품 켜고 끄기
 function setFace(c, emo, open, blinking) {
   const on = new Set((EMO_OVERRIDE[c.key] || {})[emo] || EMO[emo] || EMO.neutral);
-  if (open > 0.35) { const grin = on.has('mouth_grin'); MOUTHS.forEach((m) => on.delete(m)); on.add(grin ? 'mouth_grin' : 'mouth_open'); }   // 말할 때 입: 웃는 표정이면 웃는 입 그대로
+  if (open > 0.35) { const grin = on.has('mouth_grin'); MOUTHS.forEach((m) => on.delete(m)); on.add(grin ? 'mouth_grin' : emo === 'angry' && c.parts.mouth_o ? 'mouth_o' : 'mouth_open'); }   // 화내며 말할 때는 소리치는 입   // 말할 때 입: 웃는 표정이면 웃는 입 그대로
   if (blinking && on.has('eye_open')) { on.delete('eye_open'); on.add('eye_closed'); }
   for (const p in c.parts) c.parts[p].forEach((o) => { o.visible = on.has(p); });
-  eyeShape(c, (EMO_FX[emo] || {}).eye || {});
+  eyeShape(c, Object.assign({ brow: (EMO_FX[emo] || {}).brow }, (EMO_FX[emo] || {}).eye || {}));
   for (const o of c.parts.sweat || []) {   // 땀방울 크기 (대본 "fxScale", 운영자 2026-11-19 '물이나 땀 더 작게')
     if (!o.userData.base) o.userData.base = { s: o.scale.clone() };
     o.scale.copy(o.userData.base.s).multiplyScalar(S.fxScale || 1);
@@ -113,6 +120,14 @@ function setFace(c, emo, open, blinking) {
     d.m.position.set(_c.x + (i ? 1 : -1) * h * 0.15, _c.y - h * 0.75 - u * h * 2.6, _c.z + h * 0.5);
     d.m.scale.set(r * 0.8 * w, r * (1.2 + u * 0.4) * w, r * 0.6);
   });
+  if (F.vein) {   // 핏대: 두 눈 중 바깥쪽 위, 두근두근
+    const show = fx.includes('vein') && F.tears.length > 0; F.vein.visible = show;
+    if (show) { const es = F.tears.map((d) => { _bb.setFromObject(d.e); return { c: _bb.getCenter(new THREE.Vector3()), s: _bb.getSize(new THREE.Vector3()) }; });
+      const mid = es.reduce((m, e) => m.add(e.c), new THREE.Vector3()).multiplyScalar(1 / es.length), e0 = es[0], h = Math.max(e0.s.y, 0.006);
+      const side = es.length > 1 ? Math.sign(e0.c.x - mid.x) || 1 : 1, beat = 1 + 0.18 * Math.max(0, Math.sin(t * 9));
+      const tc = camera.position.clone().sub(e0.c).normalize().multiplyScalar(h * 1.2); F.vein.position.set(e0.c.x + side * h * (c.human ? 1.1 : 1.5) + tc.x, e0.c.y + h * (c.human ? 2.3 : 1.9) + tc.y, e0.c.z + tc.z); F.vein.scale.setScalar(h * (c.human ? 0.6 : 1.0) * beat * (S.fxScale ? 0.8 + 0.2 * S.fxScale : 1));
+      F.vein.lookAt(camera.position); }
+  }
   F.sparks.forEach((d, i) => {   // 눈 오른쪽 위에 반짝
     const show = fx.includes('sparkle'); d.m.visible = show; if (!show) return;
     _bb.setFromObject(d.e); _bb.getCenter(_c); _bb.getSize(_s);
@@ -952,9 +967,10 @@ function cards(t) {
       g2.globalAlpha = 1; g2.fillStyle = `rgba(0,0,0,${clamp(u * 1.2)})`; g2.fillRect(0, 0, W, H);
       g2.globalAlpha = clamp(u);
       const [head, ...rest] = c.text.split('|');
-      let fs = 64; g2.font = `700 ${fs}px Wanted`; while (fs > 48 && g2.measureText(head).width > 900) { fs -= 2; g2.font = `700 ${fs}px Wanted`; }   // 한 줄에 들어가게 글씨 줄임 (GTA 6 편)
+      const hl = head.split('\n');   // 줄바꿈 \n으로 직접 나누기 (할루시네이션 편 2026-11-19: 질문 두 줄로 크게)
+      let fs = 64; g2.font = `700 ${fs}px Wanted`; while (fs > 48 && Math.max(...hl.map((x) => g2.measureText(x).width)) > 900) { fs -= 2; g2.font = `700 ${fs}px Wanted`; }   // 한 줄에 들어가게 글씨 줄임 (GTA 6 편)
       g2.fillStyle = '#00FF66';
-      const hr = wrap(head, 920); hr.forEach((r, i) => g2.fillText(r, W / 2, 820 + i * 84));
+      const hr = hl.flatMap((x) => wrap(x, 920)); hr.forEach((r, i) => g2.fillText(r, W / 2, 820 + i * 84));
       g2.font = '700 46px Wanted'; g2.fillStyle = '#ffffff';
       rest.forEach((r, i) => g2.fillText(r, W / 2, 820 + hr.length * 84 + 40 + i * 64));
     }
