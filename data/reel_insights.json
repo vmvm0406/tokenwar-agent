@@ -687,6 +687,110 @@
     "ig_reels_video_view_total_time": 2307503,
     "reels_skip_rate": 41.5
    }
+  },
+  "2026-11-20": {
+   "18108632891126251": {
+    "timestamp": "2026-11-20T01:13:34+0000",
+    "permalink": "https://www.instagram.com/reel/Df8crgFCjTs/",
+    "folder": "2026-11-20-video-halluc",
+    "title": "클로드, 거짓말 좀 하지마",
+    "duration": 32.2,
+    "views": 1808,
+    "reach": 1487,
+    "saved": 3,
+    "shares": 0,
+    "total_interactions": 17,
+    "likes": 13,
+    "comments": 1,
+    "ig_reels_avg_watch_time": 13541,
+    "ig_reels_video_view_total_time": 20162851,
+    "reels_skip_rate": 42.5
+   },
+   "18119002868101762": {
+    "timestamp": "2026-11-19T13:35:09+0000",
+    "permalink": "https://www.instagram.com/reel/Df7MvoZGV-h/",
+    "folder": "2026-11-19-video-ubi",
+    "title": "클로드, \"돈 벌어와.\"",
+    "duration": 23.9,
+    "views": 137,
+    "reach": 120,
+    "saved": 0,
+    "shares": 0,
+    "total_interactions": 3,
+    "likes": 1,
+    "comments": 2,
+    "ig_reels_avg_watch_time": 6294,
+    "ig_reels_video_view_total_time": 786868,
+    "reels_skip_rate": 74.8
+   },
+   "18074607485775380": {
+    "timestamp": "2026-11-19T11:31:22+0000",
+    "permalink": "https://www.instagram.com/reel/Df6-ieeEtNa/",
+    "folder": "2026-11-19-video-toebo",
+    "title": "AI 안 쓰면 퇴보, AI 쓰면 퇴화",
+    "duration": 57.8,
+    "views": 1999,
+    "reach": 1709,
+    "saved": 2,
+    "shares": 12,
+    "total_interactions": 30,
+    "likes": 14,
+    "comments": 2,
+    "ig_reels_avg_watch_time": 19281,
+    "ig_reels_video_view_total_time": 33183833,
+    "reels_skip_rate": 47.4
+   },
+   "18117016484114491": {
+    "timestamp": "2026-11-19T04:17:44+0000",
+    "permalink": "https://www.instagram.com/reel/Df6M9YPkn9N/",
+    "folder": "2026-11-19-video-youth",
+    "title": "RSI 재귀적 자기 개선",
+    "duration": 47.8,
+    "views": 1934,
+    "reach": 1735,
+    "saved": 3,
+    "shares": 5,
+    "total_interactions": 17,
+    "likes": 7,
+    "comments": 2,
+    "ig_reels_avg_watch_time": 12804,
+    "ig_reels_video_view_total_time": 22048535,
+    "reels_skip_rate": 57.8
+   },
+   "18178772788478357": {
+    "timestamp": "2026-11-18T23:26:06+0000",
+    "permalink": "https://www.instagram.com/reel/Df5rlM7lVMU/",
+    "folder": "2026-11-19-video-lunch",
+    "title": "그냥 내가 할게",
+    "duration": 38.2,
+    "views": 2069,
+    "reach": 1801,
+    "saved": 0,
+    "shares": 1,
+    "total_interactions": 14,
+    "likes": 11,
+    "comments": 2,
+    "ig_reels_avg_watch_time": 16768,
+    "ig_reels_video_view_total_time": 30048377,
+    "reels_skip_rate": 40.4
+   },
+   "17876491032639392": {
+    "timestamp": "2026-11-18T16:42:42+0000",
+    "permalink": "https://www.instagram.com/reel/Df49bXPnElL/",
+    "folder": "2026-11-19-video-machine-blues",
+    "title": "넌 그냥 기계야",
+    "duration": 40.3,
+    "views": 500,
+    "reach": 459,
+    "saved": 0,
+    "shares": 0,
+    "total_interactions": 1,
+    "likes": 1,
+    "comments": 0,
+    "ig_reels_avg_watch_time": 8133,
+    "ig_reels_video_view_total_time": 3798287,
+    "reels_skip_rate": 63.7
+   }
   }
  },
  "durations": {
@@ -709,7 +813,8 @@
   "18178772788478357": 38.2,
   "17876491032639392": 40.3,
   "18173593468463619": 43.9,
-  "18428116960154796": 63.7
+  "18428116960154796": 63.7,
+  "18108632891126251": 32.2
  },
  "unsupported": {},
  "metrics_returned": [
@@ -724,5 +829,5 @@
   "total_interactions",
   "views"
  ],
- "updated": "2026-11-19T23:42+09:00"
+ "updated": "2026-11-20T15:35+09:00"
 }
