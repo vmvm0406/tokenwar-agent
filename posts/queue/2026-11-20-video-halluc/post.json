@@ -1,12 +1,12 @@
 {
  "approved": true,
- "approved_at": "2026-11-20T09:44:43+09:00",
+ "approved_at": "2026-11-20T09:52:31+09:00",
  "id": "2026-11-20-video-halluc",
  "date": "2026-11-20",
  "type": "video",
  "format": "buzz",
  "prebuilt": true,
- "title": "클로드, \"버그요?\"",
+ "title": "클로드, \"거짓말 좀 하지 마.\"",
  "topic": "할루시네이션(환각) · AI 창의력",
  "caption": "AI가 없는 얘기를 지어내는 것, 버그일까요? 🤖\n이런 걸 '할루시네이션(환각)'이라고 해요.\n\n없는 맛집을 그럴듯하게 추천하는 것도,\n처음 보는 그림과 노래 가사를 만들어 내는 것도\nAI가 그럴듯한 다음 말을 만들어 내는 같은 방식에서 나와요.\n그래서 지어내는 힘을 다 막으면 창작도 같이 약해진다는 이야기가 AI 업계에서 자주 나와요.\n\n사실이 필요할 땐 \"모르면 모른다고 해, 출처도 같이 줘\",\n아이디어가 필요할 땐 \"마음껏 지어내 봐\"라고 말해 주는 게 요령이에요.\n\n할루시네이션, 버그일까요 창의력일까요?",
  "hashtags": [
@@ -15,9 +15,9 @@
   "#AI활용법",
   "#토큰전쟁"
  ],
- "publish_at": "2026-11-20T09:44:43+09:00",
+ "publish_at": "2026-11-20T09:52:31+09:00",
  "rights": "original",
  "credit": "직접 제작 (3D 캐릭터·목소리 일레븐랩스 Starter·화면 그림·효과음 직접)",
- "note": "3D 대화 릴스 할루시네이션 편. 영상은 experiments/office/render.py 완성본(prebuilt, scripts/halluc.json), 다시 렌더링하지 않음. 표지 post/make_cover_halluc.py.",
+ "note": "3D 대화 릴스 할루시네이션 편. 영상은 experiments/office/render.py 완성본(prebuilt, scripts/halluc.json), 다시 렌더링하지 않음. 표지 post/make_cover_halluc.py. 첫 게시 Df8Z3AumUP4(표지 '버그요?')는 운영자가 지우고 표지 바꿔 다시 올림 (2026-11-20).",
  "rights_note": "화면 속 '토큰 국밥'은 지어낸 가게, 실존 상호 아님 (2026-11-20 확인)"
 }
