@@ -16,7 +16,7 @@ ctx.imageSmoothingEnabled = false;
 const IMG = {};
 const NAMES = {sp1: 'Sponge_JE1_BE1', sp2: 'Sponge_JE2_BE2', sp3: 'Sponge_JE3_BE3', wet: 'Wet_Sponge_JE2_BE2', water: 'Water_JE16',
   grass: 'Grass_Block_JE7_BE6', obs: 'Obsidian_JE3_BE2', furnace: 'Furnace_JE4', nether: 'Netherrack_JE4_BE2',
-  pris: 'Prismarine_JE2_BE2', sand: 'Sand_JE5_BE3', tnt: 'TNT_JE3_BE2', eg: 'Elder_Guardian_JE2_BE2', cobble: 'Cobblestone_JE5_BE3', lava: 'Lava_JE19', pick: 'Diamond_Pickaxe_JE3_BE3'};
+  pris: 'Prismarine_JE2_BE2', sand: 'Sand_JE5_BE3', tnt: 'TNT_JE3_BE2', eg: 'Elder_Guardian_JE2_BE2', cobble: 'Cobblestone_JE5_BE3', lava: 'Lava_JE19', pick: 'Diamond_Pickaxe_JE3_BE3', gun: 'Gunpowder_JE2_BE2', sstone: 'Sandstone_JE6_BE3', plate: 'Stone_Pressure_Plate_JE5_BE2', bedrock: 'Bedrock_JE2_BE2'};
 window.ready = Promise.all([
   ...Object.entries(NAMES).map(([k, n]) => new Promise(r => { const i = new Image(); i.onload = r; i.src = `assets/blocks/${n}.png`; IMG[k] = i; })),
   document.fonts.load('80px G14'), document.fonts.load('66px G11B')]);
@@ -164,6 +164,20 @@ const VOLC = [
   '....bbbBBbbbBBbbbb....', '...bbbbBbbbbbBbbbbb...', '..bbbbBbbbbbbbBbbbbb..', '.bbbbbbbbbbbbbbbbbbbb.', 'bbbbbbbbbbbbbbbbbbbbbb'];
 const SHARD = ['.....k......', '....kpk.....', '....kpwk....', '...kppwk....', '...kpppwk...', '..kpppppwk..', '..kppppppwk.', '.kpppppppwk.', '.kppppppppwk', 'kkkkkkkkkkkk'];
 const SCALPEL = ['..........s.', '.........ss.', '........sSs.', '.......sSs..', '......sSs...', '.....hh.....', '....hh......', '...hh.......', '..hh........', '.hh.........'];
+const PAINT = [   // 노란 물감 통 (우리 그림): 손잡이 + 넘치는 물감
+  '....kkkkkk....', '...k......k...', '..k........k..', '.kkkkkkkkkkkk.', 'kyyyyyyyyyyyyk', 'kyYyyyyyyyYyyk', 'kgyyGGGGGGyGgk',
+  'kgyGGGGGGGyGgk', 'kgyGGGGGGGGGgk', 'kggGGGGGGGGGgk', 'kgGGGGGGGGGGgk', 'kgGGGGGGGGGGgk', 'kggggggggggggk', '.kkkkkkkkkkkk.'];
+const FIST = [   // 주먹 (우리 그림)
+  '..kkkkkkk.', '.kssksskk.', 'kssssssssk', 'kSssssssSk', 'kSSssssSSk', 'kssssssssk', '.kssssssk.', '..kkkkkk..'];
+const DYNA = [   // 다이너마이트 묶음 (우리 그림)
+  '.....f.....', '......f....', '.....y.....', '.rrr.rrr.rr', '.rRr.rRr.rR', '.rRr.rRr.rR', 'wwwwwwwwwww', '.rRr.rRr.rR',
+  '.rRr.rRr.rR', '.rRr.rRr.rR', 'wwwwwwwwwww', '.rRr.rRr.rR', '.rrr.rrr.rr'];
+const THERMO = ['.kkk.', '.kwk.', '.kwk.', '.kwk.', '.krk.', '.krk.', '.krk.', 'kkrkk', 'krrrk', 'krrrk', '.kkk.'];
+function splat(cx, cy, q, seed) {   // 노란 물감 튐
+  const r = rnd(seed);
+  for (let k = 0; k < 26; k++) { const a = r() * Math.PI * 2, v = 120 + r() * 300, e = 1 - Math.exp(-q * 6);
+    ctx.fillStyle = r() > 0.5 ? '#ffd23a' : '#d9a514'; const s3 = 16 + r() * 22; ctx.fillRect(snap(cx + Math.cos(a) * v * e), snap(cy + Math.sin(a) * v * e * 0.7), s3, s3); }
+}
 // ---------- 장면 ----------
 const SC = {
   hook(t, d) {
@@ -471,6 +485,95 @@ const SC = {
     sprite(SCALPEL, {s: '#c9ced6', S: '#8b929c', h: '#5c6470'}, 800, 560, 34, a);
     text('3나노미터', 300, 900, 72, '#d9d0ff', 'G14', 'center', 10);
     if (a > 0) { ctx.globalAlpha = a; text('강철 메스', 790, 900, 72, '#c9ced6', 'G14', 'center', 10); text('>', W / 2, 640, 140, '#ffe45c', 'G14', 'center', 14); ctx.globalAlpha = 1; }
+  },
+  // ---------- TNT 편 (운영자 2026-11-23) ----------
+  thook(t, d) {
+    bg();
+    const c = subAt(2, d * 0.55), y = 560 + Math.sin(t * 3) * 8;
+    if (t < c) cube(IMG.tnt, 0, 0, 0, 520, W / 2, y);
+    else {
+      const p = back((t - c) / 0.35);
+      sprite(PAINT, {k: '#1b1b1b', g: '#9aa0a8', G: '#6b7078', y: '#ffd23a', Y: '#d9a514'}, W / 2, y + 300, 34 * p);
+      splat(W / 2, y + 300, t - c, 3);
+    }
+  },
+  t2009(t, d) {
+    bg();
+    const S = 160, ox = W / 2, oy = 600, hit = subAt(1, d * 0.4) + 0.3, boom = hit + 1.6;
+    grassFloor(5, S, ox, oy);
+    if (t < boom) {
+      const lit = t > hit && Math.floor(t * 8) % 2 === 0;
+      cube(IMG.tnt, 0, 0, 1, S, ox, oy, lit ? 0.6 : 1);
+      const hx = t < hit ? lerp(W / 2 - 330, W / 2 - 120, ease((t - (hit - 0.5)) / 0.5)) : W / 2 - 150;
+      sprite(FIST, {s: '#e8b48a', S: '#b9835e', k: '#2a1d14'}, hx, oy + 60, 16);
+      if (t > hit) text(`${Math.max(0, 2 - (t - hit) * 2 / 1.6).toFixed(1)}초`, W / 2, 940, 120, '#ff5a4a', 'G14', 'center', 14);
+    } else {
+      if (t < boom + 0.25) { ctx.fillStyle = `rgba(255,255,255,${0.9 * (1 - (t - boom) / 0.25)})`; ctx.fillRect(0, -300, W, H + 600); }
+      smoke(ox, oy + 120, t - boom, 9);
+      text('2초', W / 2, 940, 120, '#ff5a4a', 'G14', 'center', 14);
+    }
+  },
+  t2010(t, d) {
+    bg();
+    const c = subAt(2, d * 0.5);
+    if (t < c) {
+      const lit = Math.floor(t * 6) % 2 === 0;
+      cube(IMG.tnt, 0, 0, 0, 380, W / 2, 380);
+      if (lit) { ctx.globalAlpha = 0.55; ctx.globalCompositeOperation = 'lighter'; cube(IMG.tnt, 0, 0, 0, 380, W / 2, 380); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1; }
+      text('4초', W / 2, 900, 150, '#ffe45c', 'G14', 'center', 16);
+    } else {
+      const q = t - c, cs = 120, x0 = 140, y0 = 380;
+      box(x0 - 24, y0 - 24, 3 * cs + 48, 3 * cs + 48, '#c6c6c6', '#000', 6);
+      const pat = ['gsg', 'sgs', 'gsg'];
+      let k = 0;
+      for (let r = 0; r < 3; r++) for (let c2 = 0; c2 < 3; c2++) {
+        const x = x0 + c2 * cs, y = y0 + r * cs;
+        ctx.fillStyle = '#8b8b8b'; ctx.fillRect(x + 6, y + 6, cs - 12, cs - 12);
+        if (q > k * 0.12) {
+          if (pat[r][c2] === 'g') ctx.drawImage(IMG.gun, x + 14, y + 14, cs - 28, cs - 28);
+          else cube(IMG.sand, 0, 0, 0, cs * 0.62, x + cs / 2, y + 18);
+        }
+        k++;
+      }
+      sprite(['..x..', '...x.', 'xxxxx', '...x.', '..x..'], {x: '#fff'}, 640, y0 + 1.5 * cs, 16);
+      if (q > 1.2) { const p = back((q - 1.2) / 0.35); cube(IMG.tnt, 0, 0, 0, 230 * p, 860, y0 + 70); }
+      text('화약 5 + 모래 4', W / 2, 940, 92, '#fff', 'G14', 'center', 12);
+    }
+  },
+  t2012(t, d) {
+    bg();
+    const S = 140, ox = W / 2, oy = 560;
+    const reveal = clamp((t - 0.8) / 0.8);
+    for (let s2 = -2; s2 <= 2; s2++) for (let i = -1; i <= 1; i++) { const j = s2 - i; if (Math.abs(j) > 1) continue; cube(IMG.tnt, i, j, 0, S, ox, oy); }
+    for (let s2 = -4; s2 <= 4; s2++) for (let i = -2; i <= 2; i++) { const j = s2 - i; if (Math.abs(j) > 2) continue; cube(IMG.sstone, i, j, 1, S, ox, oy, 1 - 0.75 * reveal); }
+    cube(IMG.plate, 0, 0, 2, S, ox, oy);
+    if (reveal > 0) { ctx.globalAlpha = reveal; text('함정 TNT 9개', W / 2, 950, 100, '#ff5a4a', 'G14', 'center', 12); ctx.globalAlpha = 1; }
+  },
+  tdyna(t, d) {
+    bg();
+    cube(IMG.tnt, 0, 0, 0, 300, 300, 430);
+    const p = back((t - 0.4) / 0.4);
+    if (p > 0) { sprite(DYNA, {r: '#d33a2c', R: '#8f2219', w: '#e9e4d8', f: '#5a4a3a', y: '#ffcf4a'}, 790, 590, 20 * p); }
+    text('TNT', 300, 920, 80, '#ff5a4a', 'G14', 'center', 10);
+    if (p > 0) text('다이너마이트', 790, 920, 72, '#ffcf4a', 'G14', 'center', 10);
+  },
+  treal(t, d) {
+    bg('#1d1a10', '#121008', 0.03);
+    sprite(PAINT, {k: '#1b1b1b', g: '#9aa0a8', G: '#6b7078', y: '#ffd23a', Y: '#d9a514'}, W / 2, 520, 26);
+    text('1863', W / 2, 300 + 520, 130, '#ffd23a', 'G14', 'center', 14);
+    const p = clamp((t - d * 0.45) / 0.6);
+    if (p > 0) { ctx.globalAlpha = p; text(`→ 1891  (${Math.round(lerp(0, 28, p))}년)`, W / 2, 960, 84, '#fff', 'G14', 'center', 12); ctx.globalAlpha = 1; }
+  },
+  tmelt(t, d) {
+    bg('#1d1a10', '#121008', 0.03);
+    const p = clamp(t / (subAt(1, d * 0.5) + 0.4));   // '80도' 말할 때 80도 도착
+    sprite(THERMO, {k: '#1b1b1b', w: '#e9e9e9', r: '#e0303a'}, 250, 540, 36);
+    text(`${Math.round(lerp(20, 80, p))}도`, 250, 900, 100, '#ff5a4a', 'G14', 'center', 12);
+    const h = Math.round(lerp(10, 3, p)), wpx = Math.round(lerp(10, 22, p));
+    for (let r = 0; r < h; r++) for (let c = 0; c < wpx; c++) {
+      ctx.fillStyle = (r + c) % 3 === 0 ? '#f7e27a' : ((r * 7 + c) % 5 === 0 ? '#c9a62a' : '#ebd055');
+      ctx.fillRect(snap(680 - wpx * 12 + c * 24), snap(760 - h * 24 + r * 24), 24, 24);
+    }
   },
   cover(t, d) {   // 표지: 블록 이름 하나 + 블록 크게 (운영자 2026-11-22 "스펀지. 이렇게 간단하게")
     bg();
