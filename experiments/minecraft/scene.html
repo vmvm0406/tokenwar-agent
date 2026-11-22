@@ -16,7 +16,7 @@ ctx.imageSmoothingEnabled = false;
 const IMG = {};
 const NAMES = {sp1: 'Sponge_JE1_BE1', sp2: 'Sponge_JE2_BE2', sp3: 'Sponge_JE3_BE3', wet: 'Wet_Sponge_JE2_BE2', water: 'Water_JE16',
   grass: 'Grass_Block_JE7_BE6', obs: 'Obsidian_JE3_BE2', furnace: 'Furnace_JE4', nether: 'Netherrack_JE4_BE2',
-  pris: 'Prismarine_JE2_BE2', sand: 'Sand_JE5_BE3', tnt: 'TNT_JE3_BE2', eg: 'Elder_Guardian_JE2_BE2'};
+  pris: 'Prismarine_JE2_BE2', sand: 'Sand_JE5_BE3', tnt: 'TNT_JE3_BE2', eg: 'Elder_Guardian_JE2_BE2', cobble: 'Cobblestone_JE5_BE3', lava: 'Lava_JE19', pick: 'Diamond_Pickaxe_JE3_BE3'};
 window.ready = Promise.all([
   ...Object.entries(NAMES).map(([k, n]) => new Promise(r => { const i = new Image(); i.onload = r; i.src = `assets/blocks/${n}.png`; IMG[k] = i; })),
   document.fonts.load('80px G14'), document.fonts.load('66px G11B')]);
@@ -64,9 +64,10 @@ function box(x, y, w, h, fill, edge = '#000', e = 6) {
 }
 
 // ---------- 연도 띠 (우리 표시) ----------
-const YEARS = ['2009', '2010', '2014', '2018', '지금'];
+let YEARS = ['2009', '2010', '2014', '2018', '지금'];
 function yearBar(spec, t, d) {
   if (!spec) return;
+  YEARS = (EP && EP.years) || ['2009', '2010', '2014', '2018', '지금'];
   let cur = YEARS.indexOf(spec), from = cur, prog = 1;
   if (spec.includes('>')) { const [a, b] = spec.split('>'); from = YEARS.indexOf(a); cur = YEARS.indexOf(b); prog = ease((t - 0.3) / (d * 0.6)); }
   const x0 = 150, x1 = 930, y = 330, n = YEARS.length, pos = i => lerp(x0, x1, i / (n - 1));
@@ -134,6 +135,35 @@ function steam(cx, cy, p, seed = 5) {
   for (let k = 0; k < 18; k++) { const a = clamp(1 - p); const x = cx + (r() - 0.5) * 200 * (0.4 + p), y = cy - p * (180 + r() * 160); ctx.fillStyle = `rgba(235,235,235,${a})`; const s = 18 + r() * 24; ctx.fillRect(snap(x), snap(y), s, s); }
 }
 
+function crack(cx, cy, p, seed, sc = 1) {   // 유리처럼 금 (흰 선)
+  const r = rnd(seed); ctx.strokeStyle = '#f4f0ff'; ctx.lineWidth = 8 * sc; ctx.lineCap = 'square';
+  for (let k = 0; k < 7; k++) {
+    let x = cx, y = cy, ang = (k / 7) * Math.PI * 2 + r(); ctx.beginPath(); ctx.moveTo(x, y);
+    const steps = Math.floor(4 * p) + 1;
+    for (let s2 = 0; s2 < steps; s2++) { ang += (r() - 0.5) * 0.9; x += Math.cos(ang) * 60 * sc; y += Math.sin(ang) * 60 * sc; ctx.lineTo(snap(x), snap(y)); }
+    ctx.stroke();
+  }
+}
+function shards(cx, cy, q, seed) {   // 깨진 조각이 흩어짐
+  const r = rnd(seed);
+  for (let k = 0; k < 40; k++) {
+    const a = r() * Math.PI * 2, v = 300 + r() * 600, x = cx + Math.cos(a) * v * q, y = cy + Math.sin(a) * v * q + 500 * q * q, s3 = 18 + r() * 30;
+    ctx.fillStyle = r() > 0.7 ? '#8a7aa8' : (r() > 0.5 ? '#3a2c55' : '#14101a'); ctx.fillRect(snap(x), snap(y), s3, s3);
+  }
+}
+function smoke(cx, cy, q, seed) {
+  const r = rnd(seed);
+  for (let k = 0; k < 36; k++) {
+    const a = r() * Math.PI * 2, v = 120 + r() * 380, e = 1 - Math.exp(-q * 4);
+    const x = cx + Math.cos(a) * v * e, y = cy + Math.sin(a) * v * e * 0.6 - q * 80, g = 200 + r() * 40;
+    ctx.fillStyle = `rgba(${g},${g},${g},${clamp(1 - q / 1.6)})`; const s3 = 30 + r() * 40; ctx.fillRect(snap(x), snap(y), s3, s3);
+  }
+}
+const VOLC = [
+  '.........yrry.........', '........ryrryr........', '.......bbrrrrbb.......', '......bbBrrrBbbb......', '.....bbbBBrBBbbbb.....',
+  '....bbbBBbbbBBbbbb....', '...bbbbBbbbbbBbbbbb...', '..bbbbBbbbbbbbBbbbbb..', '.bbbbbbbbbbbbbbbbbbbb.', 'bbbbbbbbbbbbbbbbbbbbbb'];
+const SHARD = ['.....k......', '....kpk.....', '....kpwk....', '...kppwk....', '...kpppwk...', '..kpppppwk..', '..kppppppwk.', '.kpppppppwk.', '.kppppppppwk', 'kkkkkkkkkkkk'];
+const SCALPEL = ['..........s.', '.........ss.', '........sSs.', '.......sSs..', '......sSs...', '.....hh.....', '....hh......', '...hh.......', '..hh........', '.hh.........'];
 // ---------- 장면 ----------
 const SC = {
   hook(t, d) {
@@ -332,26 +362,131 @@ const SC = {
     bg('#07070a', '#0d0d12', 0.02);
     const p = clamp(t / 0.3), s = lerp(1.5, 1, ease(p));
     const sh = t > 0.3 && t < 0.55 ? Math.sin(t * 100) * 12 : 0;
-    cube(IMG.obs, 0, 0, 0, 440 * s, W / 2 + sh, 560 - (s - 1) * 300, ease(p));
+    cube(IMG[(EP && EP.nextBlock) || 'obs'], 0, 0, 0, 440 * s, W / 2 + sh, 560 - (s - 1) * 300, ease(p));
     if (t > 0.3) { const q = clamp((t - 0.3) / 0.6); ctx.fillStyle = `rgba(120,100,160,${0.6 * (1 - q)})`; for (let k = -6; k <= 6; k++) ctx.fillRect(snap(W / 2 + k * 60 * (1 + q)), snap(1000 - q * 60 - Math.abs(k) * 6), 18, 18); }
   },
   absorbtons(t, d) { const h = subAt(1, d * 0.5); if (t < h) SC.absorb(t, h); else SC.tons(t - h + h * 0.46, h); },
   nether(t, d) { SC.dry(d + t, 2 * d); },
   realanimal(t, d) { const h = subAt(2, d * 0.6); if (t < h) SC.realsponge(t + h * 0.3, h * 1.3); else SC.animal(t - h + (d - h) * 0.5, (d - h) * 1.0); },
+  // ---------- 흑요석 편 (운영자 2026-11-23) ----------
+  ohook(t, d) {
+    bg();
+    const c = subAt(2, d * 0.6), y = 560 + Math.sin(t * 3) * 8;
+    if (t < c + 0.5) cube(IMG.obs, 0, 0, 0, 520, W / 2, y);
+    text('가장 단단한 블록', W / 2, 400, 90, '#d9d0ff', 'G14', 'center', 12);
+    if (t >= c && t < c + 0.5) crack(W / 2, y + 300, clamp((t - c) / 0.4), 11);
+    if (t >= c + 0.5) shards(W / 2, y + 300, (t - c - 0.5), 7);
+  },
+  ocobble(t, d) {
+    bg();
+    const S = 160, ox = W / 2, oy = 600;
+    grassFloor(5, S, ox, oy);
+    const c = subAt(1, d * 0.5) + 0.4;
+    if (t < c) {
+      cube(IMG.obs, 0, 0, 1, S, ox, oy);
+      if (t > c - 0.8) crack(ox, oy - 40, clamp((t - c + 0.8) / 0.8), 5, 0.5);
+    } else {
+      const q = t - c, hop = Math.abs(Math.sin(q * 6)) * 70 * Math.exp(-q * 2);
+      cube(IMG.cobble, 0, 0, 1, S * 0.75, ox, oy + 30 - hop);
+    }
+  },
+  olava(t, d) {
+    bg();
+    const S = 130, ox = W / 2, oy = 620, n = 5;
+    grassFloor(n, S, ox, oy);
+    const hit = d * 0.55, flow = Math.floor(clamp(t / hit) * 3.99);
+    const items = [[1, 0, t < hit + 0.2 ? 'lava' : 'obs']];
+    for (let k = 0; k < flow; k++) items.push([-2 + k, 0, 'water']);
+    items.sort((a, b) => (a[0] + a[1]) - (b[0] + b[1]));
+    for (const [i, j, k] of items) cube(IMG[k], i, j, 1, S, ox, oy, k === 'water' ? 0.9 : 1);
+    if (t > hit) steam(ox + 120, oy - 40, clamp((t - hit) / 1.2), 4);
+  },
+  otnt(t, d) {
+    bg();
+    const S = 220, ox = W / 2, oy = 470, boom = subAt(1, d * 0.45);
+    const sh = t > boom && t < boom + 0.4 ? Math.sin(t * 120) * 14 : 0;
+    const order = [[0, -1], [-1, 0], [0, 0], [1, 0], [0, 1]];
+    for (const [i, j] of order) {
+      if (i === 0 && j === 0) { cube(IMG.obs, 0, 0, 0, S, ox + sh, oy); continue; }
+      if (t >= boom) continue;
+      const blink = t > boom - 1.2 && Math.floor(t * 8) % 2 === 0;
+      cube(IMG.tnt, i * 1.3, j * 1.3, 0, S * 0.8, ox, oy + 30, blink ? 0.55 : 1);
+    }
+    if (t >= boom && t < boom + 0.25) { ctx.fillStyle = `rgba(255,255,255,${0.9 * (1 - (t - boom) / 0.25)})`; ctx.fillRect(0, -300, W, H + 600); }
+    if (t >= boom) smoke(ox, oy + 230, t - boom, 21);
+    const tp = back((t - 0.2) / 0.4);
+    if (tp > 0) { ctx.save(); ctx.translate(W / 2, 860); ctx.scale(tp, tp); text('폭발 저항 1200', 0, 0, 96, '#ffb35c', 'G14', 'center', 12); ctx.restore(); }
+  },
+  oportal(t, d) {
+    bg();
+    const S = 140, ox = W / 2 + 60, oy = 780, k = S / 268;
+    const P = (a, b, c) => [ox + (a - b) * 134 * k, oy + (a + b) * 66.5 * k - (c - 1) * 165 * k];
+    const frame = [];
+    for (let z = 0; z <= 4; z++) for (let i = -2; i <= 1; i++) if (z === 0 || z === 4 || i === -2 || i === 1) frame.push([i, z]);
+    frame.sort((a, b) => a[1] - b[1] || a[0] - b[0]);
+    const built = Math.floor(clamp(t / (d * 0.35)) * frame.length);
+    const fsort = frame.slice(0, built).sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+    const on = subAt(1, d * 0.5) + 0.4;
+    for (const [i, z] of fsort) { if (i === 1 && z > 0 && z < 4) continue; cube(IMG.obs, i, 0, z, S, ox, oy); }
+    const q = clamp((t - on) / 0.5);
+    if (q > 0) {
+      const pts = [P(-1, 0.5, 1), P(1, 0.5, 1), P(1, 0.5, 4), P(-1, 0.5, 4)];
+      ctx.save(); ctx.beginPath(); pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.closePath(); ctx.clip();
+      ctx.fillStyle = `rgba(110,30,200,${0.85 * q})`; ctx.fillRect(0, -300, W, H + 600);
+      const r = rnd(Math.floor(t * 8) + 1);
+      for (let m = 0; m < 90; m++) { ctx.fillStyle = `rgba(${170 + r() * 80},${80 + r() * 60},255,${q * (0.4 + r() * 0.5)})`; ctx.fillRect(snap(ox - 260 + r() * 520), snap(oy - 520 + r() * 620), 20, 20); }
+      ctx.restore();
+    }
+    for (const [i, z] of fsort) if (i === 1 && z > 0 && z < 4) cube(IMG.obs, i, 0, z, S, ox, oy);
+    text('10월', 230, 470, 110, '#c58cff', 'G14', 'center', 12);
+  },
+  omine(t, d) {
+    bg();
+    const a1 = subAt(2, d * 0.35) - 0.6, a2 = subAt(3, d * 0.6), a3 = subAt(4, d * 0.8);
+    let v = 15;
+    if (t >= a1) v = lerp(15, 3, ease((t - a1 - 0.6) / 0.8));
+    if (t >= a2) v = lerp(3, 9.4, ease((t - a2) / 0.9));
+    if (t >= a3) { v = 9.4; window.YEAR_OV = '현재'; }
+    cube(IMG.obs, 0, 0, 0, 260, W / 2 + 130, 380);
+    const sw = Math.sin(t * 9) * 0.5;
+    ctx.save(); ctx.translate(W / 2 - 150, 520); ctx.rotate(-0.4 + sw * 0.5); ctx.drawImage(IMG.pick, -140, -140, 280, 280); ctx.restore();
+    text(`${v.toFixed(1)}초`, W / 2, 880, 170, t >= a3 ? '#ffe45c' : '#7fe0d0', 'G14', 'center', 16);
+  },
+  ovolcano(t, d) {
+    bg('#1a0e0c', '#120808', 0.03);
+    sprite(VOLC, {b: '#4a3328', B: '#2e1f18', r: '#ff6a1a', y: '#ffc24a'}, W / 2, 600, 26);
+    const r = rnd(5);
+    for (let m = 0; m < 46; m++) {
+      const ph = (t * 0.35 + r()) % 1, x = W / 2 + (r() - 0.5) * 100 + (r() - 0.5) * ph * 560, y = 470 + ph * 330;
+      const cool = ph > 0.75;
+      ctx.fillStyle = cool ? '#16121c' : (ph > 0.4 ? '#ff6a1a' : '#ffc24a'); ctx.fillRect(snap(x), snap(y), 18, 18);
+      if (cool) { ctx.fillStyle = '#8a7aa8'; ctx.fillRect(snap(x), snap(y), 6, 6); }
+    }
+    text('천연 유리', W / 2, 920, 110, '#d9d0ff', 'G14', 'center', 14);
+  },
+  oblade(t, d) {
+    bg();
+    const m = subAt(1, d * 0.5), a = clamp((t - m) / 0.4);
+    sprite(SHARD, {k: '#14101a', p: '#3a2c55', w: '#bfb4e0'}, 290, 560, 34);
+    sprite(SCALPEL, {s: '#c9ced6', S: '#8b929c', h: '#5c6470'}, 800, 560, 34, a);
+    text('3나노미터', 300, 900, 72, '#d9d0ff', 'G14', 'center', 10);
+    if (a > 0) { ctx.globalAlpha = a; text('강철 메스', 790, 900, 72, '#c9ced6', 'G14', 'center', 10); text('>', W / 2, 640, 140, '#ffe45c', 'G14', 'center', 14); ctx.globalAlpha = 1; }
+  },
   cover(t, d) {   // 표지: 블록 이름 하나 + 블록 크게 (운영자 2026-11-22 "스펀지. 이렇게 간단하게")
     bg();
-    cube(IMG[(EP && EP.coverBlock) || 'sp3'], 0, 0, 0, 600, W / 2, 620);
-    text((EP && EP.title) || '', W / 2, 520, 230, '#ffe45c', 'G14', 'center', 22);
+    // 제목+블록 묶음을 화면 가운데로 (운영자 2026-11-23 '썸네일 가운데로')
+    cube(IMG[(EP && EP.coverBlock) || 'sp3'], 0, 0, 0, 600, W / 2, 785);
+    text((EP && EP.title) || '', W / 2, 685, 230, '#ffe45c', 'G14', 'center', 22);
   },
   follow(t, d) {
     bg('#07070a', '#0d0d12', 0.02);
-    cube(IMG.obs, 0, 0, 0, 440, W / 2, 560, 0.85);
+    cube(IMG[(EP && EP.nextBlock) || 'obs'], 0, 0, 0, 440, W / 2, 560, 0.85);
     const a = clamp(t / 0.5);
     ctx.globalAlpha = a; text('팔로우', W / 2, 1040, 64, '#d9d0ff', 'G14', 'center', 10); ctx.globalAlpha = 1;
   },
 };
 
-const STAGE_DY = 90;
+const STAGE_DY = 90, BAR_BOTTOM = 440;
 window.CUR = null;
 const subAt = (k, dflt) => (CUR && CUR.subs && CUR.subs[k]) ? CUR.subs[k][1] : dflt;   // k번째 자막이 나오는 때에 장면 바꾸기
 function bigX(cx, cy, a) { ctx.globalAlpha = a; for (const [c, w] of [['#000', 34], ['#ff3b30', 20]]) { ctx.strokeStyle = c; ctx.lineWidth = w; ctx.lineCap = 'butt'; ctx.beginPath(); ctx.moveTo(cx - 70, cy - 70); ctx.lineTo(cx + 70, cy + 70); ctx.moveTo(cx + 70, cy - 70); ctx.lineTo(cx - 70, cy + 70); ctx.stroke(); } ctx.globalAlpha = 1; }
@@ -360,10 +495,16 @@ window.renderAt = (idx, t, d, sub, year) => {
   const sc = EP ? EP.scenes[idx] : null;
   const name = sc ? sc.scene : idx; window.CUR = sc;
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.imageSmoothingEnabled = false;
-  ctx.save(); if (name !== 'cover' && name !== 'hook') ctx.translate(0, STAGE_DY);   // 그림을 연도 띠 아래로 (운영자 2026-11-22 '시간대랑 겹쳐')
+  window.YEAR_OV = undefined;
+  ctx.save();
+  if (name !== 'cover' && sc && sc.year) {   // 연도 띠가 있는 장면만: 그림을 내리고, 띠 아래만 그리게 막음 (운영자 2026-11-23 '항상 연표랑 그림 안 겹치게')
+    bg();
+    ctx.beginPath(); ctx.rect(0, BAR_BOTTOM, W, H - BAR_BOTTOM); ctx.clip();
+    ctx.translate(0, STAGE_DY);
+  }   // 그림을 연도 띠 아래로 (운영자 2026-11-22 '시간대랑 겹쳐')
   SC[name](t, d);
   ctx.restore();
-  yearBar(year !== undefined ? year : (sc && sc.year), t, d);
+  yearBar(year !== undefined ? year : (window.YEAR_OV !== undefined ? window.YEAR_OV : (sc && sc.year)), t, d);
   subtitle(sub);
 };
 window.renderTimeline = (T) => {

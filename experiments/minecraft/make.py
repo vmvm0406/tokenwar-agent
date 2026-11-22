@@ -64,6 +64,13 @@ def sfx(kind):
         x = t(0.5); n = rng.normal(0, 1, len(x)); n = np.convolve(n, np.ones(20) / 20, "same"); s = n * np.sin(np.pi * x / 0.5) * 1.2
     elif kind == "splash":
         x = t(0.35); n = rng.normal(0, 1, len(x)); n = np.convolve(n, np.ones(4) / 4, "same"); s = n * np.exp(-x * 12) * 0.4
+    elif kind == "boom":
+        x = t(1.2); n = rng.normal(0, 1, len(x)); n = np.convolve(n, np.ones(30) / 30, "same") * 6
+        s = (n + np.sin(2 * np.pi * 45 * x) * 0.8) * np.exp(-x * 3.5) * 0.7
+    elif kind == "crack":
+        x = t(0.3); s = rng.normal(0, 1, len(x)) * (np.exp(-x * 30) + 0.5 * np.exp(-np.abs(x - 0.08) * 60)) * 0.5
+    elif kind == "portal":
+        x = t(1.4); f = 180 + 60 * np.sin(2 * np.pi * 3 * x); s = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.minimum(1, x * 3) * np.exp(-x * 1.5) * 0.3
     else:
         raise ValueError(kind)
     return s.astype(np.float32)
@@ -88,10 +95,30 @@ CUES = {
     "sieve": [("r0.2", "whoosh"), ("r0.55", "whoosh"), ("r0.92", "pop")],
     "next": [(0.3, "thud")],
     "follow": [],
+    "ohook": [("s2", "crack"), ("s2+0.5", "slap")],
+    "ocobble": [("s1+0.0", "crack"), ("s1+0.4", "pop")],
+    "olava": [("r0.2", "splash"), ("r0.55", "fizz")],
+    "otnt": [(0.2, "pop"), ("s1", "boom")],
+    "oportal": [("r0.1", "pop"), ("r0.2", "pop"), ("s1+0.4", "portal")],
+    "omine": [("s2", "whoosh"), ("s3", "pop"), ("s4", "pop")],
+    "ovolcano": [(0.1, "fizz")],
+    "oblade": [(0.1, "pop"), ("s1", "pop")],
     "absorbtons": [(0.3, "slurp"), ("r0.3", "slurp"), ("r0.55", "thud")],
     "nether": [("r0.45", "fizz")],
     "realanimal": [("r0.15", "whoosh"), ("r0.3", "pop"), ("r0.75", "pop"), ("r0.8", "pop")],
 }
+
+
+def cue_time(at, s):
+    """효과음 시각: 숫자 = 장면 시작부터 초, 'r0.5' = 장면 길이 비율, 's2+0.5' = 2번째 자막 시작 + 초."""
+    if not isinstance(at, str):
+        return at
+    if at.startswith("r"):
+        return s["d"] * float(at[1:])
+    k, _, plus = at[1:].partition("+")
+    subs = s.get("subs") or []
+    base = subs[int(k)][1] if int(k) < len(subs) else s["d"] * 0.5
+    return base + float(plus or 0)
 
 
 def build_audio(ep, voice):
@@ -136,13 +163,45 @@ def build_audio(ep, voice):
     fx = np.zeros_like(mix)
     for s in scenes:
         for at, kind in CUES.get(s["scene"], []):
-            sec = s["d"] * float(at[1:]) if isinstance(at, str) else at
+            sec = cue_time(at, s)
             i = int((s["t0"] + sec) * SR); x = sfx(kind); fx[i: i + len(x)] += x[: len(fx) - i]
     mix = mix + fx * 0.55
     return scenes, mix[: int(SR * total)], total
 
 
 
+
+
+def squeeze_gaps(a, keep, th_db=-38.0):
+    """keep초보다 긴 무음을 keep초로 줄인 소리와, 옛 시각 → 새 시각 함수."""
+    w = int(SR * 0.01); n = len(a) // w
+    db = 20 * np.log10(np.sqrt((a[: n * w].reshape(n, w) ** 2).mean(1)) + 1e-9)
+    quiet = db < th_db
+    cuts, k = [], 0
+    while k < n:
+        if quiet[k]:
+            j = k
+            while j < n and quiet[j]:
+                j += 1
+            if (j - k) * 0.01 > keep:
+                mid = (k + j) / 2 * 0.01
+                cuts.append((mid - ((j - k) * 0.01 - keep) / 2, mid + ((j - k) * 0.01 - keep) / 2))
+            k = j
+        else:
+            k += 1
+    out, last = [], 0
+    for c0, c1 in cuts:
+        out.append(a[int(last * SR): int(c0 * SR)]); last = c1
+    out.append(a[int(last * SR):])
+    def remap(t):
+        sh = 0.0
+        for c0, c1 in cuts:
+            if t >= c1:
+                sh += c1 - c0
+            elif t > c0:
+                sh += t - c0
+        return t - sh
+    return np.concatenate(out), remap
 
 
 def onetake_audio(ep, voice):
@@ -199,6 +258,9 @@ def onetake_audio(ep, voice):
         f = ft
         times = [(a / tempo, b / tempo) for a, b in times]
     audio = decode(f)
+    if ep.get("max_gap"):   # 긴 쉼 줄이기: 이보다 긴 조용한 구간은 이 길이로 (운영자 2026-11-22 "30~40초")
+        audio, remap = squeeze_gaps(audio, float(ep["max_gap"]))
+        times = [(remap(a), remap(b)) for a, b in times]
     for si, l in clips:
         c = decode(HERE / l[2][5:])
         gap = np.zeros(int(SR * 0.45), np.float32)
@@ -231,7 +293,7 @@ def build_onetake(ep, voice):
     fx = np.zeros_like(mix)
     for s in scenes:
         for at, kind in CUES.get(s["scene"], []):
-            sec = s["d"] * float(at[1:]) if isinstance(at, str) else at
+            sec = cue_time(at, s)
             j = int((s["t0"] + sec) * SR); x = sfx(kind); fx[j: j + len(x)] += x[: len(fx) - j]
     return scenes, (mix + fx * 0.55)[: int(SR * total)], total
 
@@ -244,7 +306,7 @@ def serve():
     return s
 
 
-def render_video(scenes, total, fps, wav, out):
+def render_video(scenes, total, fps, wav, out, meta=None):
     from playwright.sync_api import sync_playwright
     srv = serve()
     n = int(round(total * fps))
@@ -256,7 +318,7 @@ def render_video(scenes, total, fps, wav, out):
         pg = b.new_page(viewport={"width": 1080, "height": 1920})
         pg.goto(f"http://127.0.0.1:{srv.server_port}/scene.html")
         pg.evaluate("window.ready")
-        pg.evaluate("ep => { window.EP = ep; }", {"scenes": scenes})
+        pg.evaluate("ep => { window.EP = ep; }", dict(meta or {}, scenes=scenes))   # years·nextBlock 등도 넘김
         for k in range(n):
             url = pg.evaluate("T => { renderTimeline(T); return document.getElementById('c').toDataURL('image/png'); }", k / fps)
             ff.stdin.write(base64.b64decode(url.split(",", 1)[1]))
@@ -284,7 +346,7 @@ def main():
     out.with_suffix(".timeline.json").write_text(json.dumps(scenes, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"길이 {total:.1f}초, 장면 {len(scenes)}개", file=sys.stderr)
     if not a.audio_only:
-        render_video(scenes, total, a.fps, wav, out)
+        render_video(scenes, total, a.fps, wav, out, {k: v for k, v in ep.items() if k != "scenes"})
         print(out)
 
 

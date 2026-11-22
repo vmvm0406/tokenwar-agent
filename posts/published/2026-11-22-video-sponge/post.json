@@ -16,7 +16,7 @@
  ],
  "rights": "original",
  "credit": "직접 제작 (블록·몹 이미지 minecraft.wiki 렌더, 픽셀 그림·효과음 직접, 목소리 일레븐랩스 Starter)",
- "note": "마인크래프트 블록 파고들기 1편 (채널 전환 2026-11-22). 영상은 experiments/minecraft/make.py 완성본(prebuilt, episodes/sponge.json), 표지 cover.py. 사실 출처: minecraft.wiki Sponge 문서, 영어 위키백과 Sponge.",
+ "note": "마인크래프트 블록 파고들기 1편 (채널 전환 2026-11-22). 영상은 experiments/minecraft/make.py 완성본(prebuilt, episodes/sponge.json), 표지 cover.py. 사실 출처: minecraft.wiki Sponge 문서, 영어 위키백과 Sponge. 표지는 제목+블록을 가운데로 옮긴 판으로 앱에서 교체 (운영자 2026-11-23).",
  "rights_note": "Minecraft 콘텐츠는 Mojang 사용 지침(영상 허용) 안에서, 로고·게임 소리·음악 안 씀. 공식 계정처럼 보이지 않게.",
  "approved_at": "2026-11-22T23:59:33+09:00",
  "publish_at": "2026-11-22T23:59:33+09:00"
