@@ -38,12 +38,15 @@ function cube(img, i, j, z, S, ox, oy, a = 1, sc = 1) {
   ctx.globalAlpha = 1;
 }
 function bg(c1 = '#101318', c2 = '#181c24', grid = 0.05) {
+  ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);   // 배경·격자는 그림 이동·축소와 상관없이 화면에 고정 (운영자 2026-11-23 '격자가 안 맞잖아')
   const g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, c1); g.addColorStop(1, c2);
   ctx.fillStyle = g; ctx.fillRect(0, -300, W, H + 600);
   ctx.fillStyle = `rgba(255,255,255,${grid})`;
   for (let x = 0; x < W; x += 60) ctx.fillRect(x, -300, 3, H + 600);
   for (let y = -300; y < H + 300; y += 60) ctx.fillRect(0, y, W, 3);
+  ctx.restore();
 }
+function flash(color) { ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = color; ctx.fillRect(0, 0, W, H); ctx.restore(); }   // 화면 전체 번쩍 (그림 축소와 상관없이)
 function text(s, x, y, size = 84, color = '#fff', font = 'G14', align = 'center', stroke = 12) {
   ctx.font = `${size}px ${font}`; ctx.textAlign = align; ctx.textBaseline = 'alphabetic';
   if (stroke) { ctx.lineWidth = stroke; ctx.strokeStyle = '#000'; ctx.lineJoin = 'miter'; ctx.strokeText(s, x, y); }
@@ -427,7 +430,7 @@ const SC = {
       const blink = t > boom - 1.2 && Math.floor(t * 8) % 2 === 0;
       cube(IMG.tnt, i * 1.3, j * 1.3, 0, S * 0.8, ox, oy + 30, blink ? 0.55 : 1);
     }
-    if (t >= boom && t < boom + 0.25) { ctx.fillStyle = `rgba(255,255,255,${0.9 * (1 - (t - boom) / 0.25)})`; ctx.fillRect(0, -300, W, H + 600); }
+    if (t >= boom && t < boom + 0.25) { flash(`rgba(255,255,255,${0.9 * (1 - (t - boom) / 0.25)})`); }
     if (t >= boom) smoke(ox, oy + 230, t - boom, 21);
     const tp = back((t - 0.2) / 0.4);
     if (tp > 0) { ctx.save(); ctx.translate(W / 2, 860); ctx.scale(tp, tp); text('폭발 저항 1200', 0, 0, 96, '#ffb35c', 'G14', 'center', 12); ctx.restore(); }
@@ -508,7 +511,7 @@ const SC = {
       if (t > hit - 0.15 && t < hit + 0.35) { sprite(BURST, {y: '#ffe45c', o: '#ff9a2a'}, ox - 40, oy - 20, 14 * back((t - hit + 0.15) / 0.2)); text('퍽', ox - 200, oy - 60, 110, '#fff', 'G14', 'center', 14); }
       if (t > hit) text(`${Math.max(0, 2 - (t - hit) * 2 / 1.6).toFixed(1)}초`, W / 2, 940, 120, '#ff5a4a', 'G14', 'center', 14);
     } else {
-      if (t < boom + 0.25) { ctx.fillStyle = `rgba(255,255,255,${0.9 * (1 - (t - boom) / 0.25)})`; ctx.fillRect(0, -300, W, H + 600); }
+      if (t < boom + 0.25) { flash(`rgba(255,255,255,${0.9 * (1 - (t - boom) / 0.25)})`); }
       smoke(ox, oy + 120, t - boom, 9);
       text('2초', W / 2, 940, 120, '#ff5a4a', 'G14', 'center', 14);
     }
@@ -561,7 +564,7 @@ const SC = {
     bg('#1d1a10', '#121008', 0.03);
     sprite(PAINT, {k: '#1b1b1b', g: '#9aa0a8', G: '#6b7078', y: '#ffd23a', Y: '#d9a514'}, W / 2, 520, 26);
     text('1863', W / 2, 300 + 520, 130, '#ffd23a', 'G14', 'center', 14);
-    const p = clamp((t - d * 0.45) / 0.6);
+    const p = clamp((t - subAt(1, d * 0.45)) / 0.6);   // 워낙 안 터져서 말할 때
     if (p > 0) { ctx.globalAlpha = p; text(`→ 1891  (${Math.round(lerp(0, 28, p))}년)`, W / 2, 960, 84, '#fff', 'G14', 'center', 12); ctx.globalAlpha = 1; }
   },
   tmelt(t, d) {   // 충격을 줘도 잘 안 터지는 둔한 폭약 (운영자 2026-11-23 '80도 녹여 부어' 문장 뺌)
