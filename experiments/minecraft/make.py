@@ -263,7 +263,12 @@ def onetake_audio(ep, voice):
         times = [(remap(a), remap(b)) for a, b in times]
     for si, l in clips:
         c = decode(HERE / l[2][5:])
-        gap = np.zeros(int(SR * 0.45), np.float32)
+        # 이어 붙인 티가 덜 나게: 소리 크기를 본문 말소리의 60%에 맞추고 쉼은 짧게 (운영자 2026-11-23 '끊기는 느낌')
+        rms = lambda x: float(np.sqrt(np.mean(x[np.abs(x) > 0.02] ** 2))) if np.any(np.abs(x) > 0.02) else 1.0
+        c = c * (0.6 * rms(audio) / rms(c))
+        # 완전 무음(디지털 0)은 뚝 끊긴 느낌 → 본문 끝을 살짝 줄이고, 쉼은 아주 작은 잡음(방 소리)으로 채움
+        fo = int(SR * 0.08); audio = audio.copy(); audio[-fo:] *= np.linspace(1, 0.15, fo, dtype=np.float32)
+        gap = (np.random.default_rng(1).normal(0, 1, int(SR * 0.3)) * 10 ** (-58 / 20)).astype(np.float32)
         t0 = (len(audio) + len(gap)) / SR
         audio = np.concatenate([audio, gap, c])
         lines.append((si, l)); times.append((t0, t0 + len(c) / SR))

@@ -427,17 +427,17 @@ const SC = {
     const built = Math.floor(clamp(t / (d * 0.35)) * frame.length);
     const fsort = frame.slice(0, built).sort((a, b) => a[0] - b[0] || a[1] - b[1]);
     const on = subAt(1, d * 0.5) + 0.4;
-    for (const [i, z] of fsort) { if (i === 1 && z > 0 && z < 4) continue; cube(IMG.obs, i, 0, z, S, ox, oy); }
+    // 포털 면은 틀의 맨 뒤(b=0)에 먼저 그리고, 틀 블록을 전부 그 위에 그림 → 보라색이 틀 밖으로 안 삐져나옴 (운영자 2026-11-23)
     const q = clamp((t - on) / 0.5);
     if (q > 0) {
-      const pts = [P(-1, 0.5, 1), P(1, 0.5, 1), P(1, 0.5, 4), P(-1, 0.5, 4)];
+      const pts = [P(-1, 0.02, 1), P(1, 0.02, 1), P(1, 0.02, 4), P(-1, 0.02, 4)];
       ctx.save(); ctx.beginPath(); pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.closePath(); ctx.clip();
       ctx.fillStyle = `rgba(110,30,200,${0.85 * q})`; ctx.fillRect(0, -300, W, H + 600);
       const r = rnd(Math.floor(t * 8) + 1);
       for (let m = 0; m < 90; m++) { ctx.fillStyle = `rgba(${170 + r() * 80},${80 + r() * 60},255,${q * (0.4 + r() * 0.5)})`; ctx.fillRect(snap(ox - 260 + r() * 520), snap(oy - 520 + r() * 620), 20, 20); }
       ctx.restore();
     }
-    for (const [i, z] of fsort) if (i === 1 && z > 0 && z < 4) cube(IMG.obs, i, 0, z, S, ox, oy);
+    for (const [i, z] of fsort) cube(IMG.obs, i, 0, z, S, ox, oy);
     text('10월', 230, 470, 110, '#c58cff', 'G14', 'center', 12);
   },
   omine(t, d) {
@@ -476,7 +476,7 @@ const SC = {
     bg();
     // 제목+블록 묶음을 화면 가운데로 (운영자 2026-11-23 '썸네일 가운데로')
     cube(IMG[(EP && EP.coverBlock) || 'sp3'], 0, 0, 0, 600, W / 2, 785);
-    text((EP && EP.title) || '', W / 2, 685, 230, '#ffe45c', 'G14', 'center', 22);
+    text((EP && EP.title) || '', W / 2, 685, 230, (EP && EP.coverColor) || '#ffe45c', 'G14', 'center', 22);   // 제목 색 = 블록 색 (운영자 2026-11-23 흑요석은 보라)
   },
   follow(t, d) {
     bg('#07070a', '#0d0d12', 0.02);

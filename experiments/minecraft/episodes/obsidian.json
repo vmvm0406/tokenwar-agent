@@ -6,6 +6,7 @@
   "max_gap": 0.3,
   "years": ["2009", "2010", "2011", "현재"],
   "coverBlock": "obs",
+  "coverColor": "#c58cff",
   "nextBlock": "tnt",
   "scenes": [
     {"scene": "ohook", "lines": [
