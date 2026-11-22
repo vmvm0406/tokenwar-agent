@@ -167,7 +167,8 @@ const SCALPEL = ['..........s.', '.........ss.', '........sSs.', '.......sSs..',
 const PAINT = [   // 노란 물감 통 (우리 그림): 손잡이 + 넘치는 물감
   '....kkkkkk....', '...k......k...', '..k........k..', '.kkkkkkkkkkkk.', 'kyyyyyyyyyyyyk', 'kyYyyyyyyyYyyk', 'kgyyGGGGGGyGgk',
   'kgyGGGGGGGyGgk', 'kgyGGGGGGGGGgk', 'kggGGGGGGGGGgk', 'kgGGGGGGGGGGgk', 'kgGGGGGGGGGGgk', 'kggggggggggggk', '.kkkkkkkkkkkk.'];
-const FIST = [   // 주먹 (우리 그림)
+const BURST = ['...y...y...', 'y..yo.oy..y', '.yooooooy..', '..ooyyyo...', 'yyoyyyyyoyy', '..ooyyyoo..', '.yoooooooy.', 'y..yo.oy..y', '...y...y...'];   // 때리는 충격 (우리 그림, 손 대신 운영자 2026-11-23)
+const FIST = [   // 주먹 (안 씀)
   '..kkkkkkk.', '.kssksskk.', 'kssssssssk', 'kSssssssSk', 'kSSssssSSk', 'kssssssssk', '.kssssssk.', '..kkkkkk..'];
 const DYNA = [   // 다이너마이트 묶음 (우리 그림)
   '.....f.....', '......f....', '.....y.....', '.rrr.rrr.rr', '.rRr.rRr.rR', '.rRr.rRr.rR', 'wwwwwwwwwww', '.rRr.rRr.rR',
@@ -504,8 +505,7 @@ const SC = {
     if (t < boom) {
       const lit = t > hit && Math.floor(t * 8) % 2 === 0;
       cube(IMG.tnt, 0, 0, 1, S, ox, oy, lit ? 0.6 : 1);
-      const hx = t < hit ? lerp(W / 2 - 330, W / 2 - 120, ease((t - (hit - 0.5)) / 0.5)) : W / 2 - 150;
-      sprite(FIST, {s: '#e8b48a', S: '#b9835e', k: '#2a1d14'}, hx, oy + 60, 16);
+      if (t > hit - 0.15 && t < hit + 0.35) { sprite(BURST, {y: '#ffe45c', o: '#ff9a2a'}, ox - 40, oy - 20, 14 * back((t - hit + 0.15) / 0.2)); text('퍽', ox - 200, oy - 60, 110, '#fff', 'G14', 'center', 14); }
       if (t > hit) text(`${Math.max(0, 2 - (t - hit) * 2 / 1.6).toFixed(1)}초`, W / 2, 940, 120, '#ff5a4a', 'G14', 'center', 14);
     } else {
       if (t < boom + 0.25) { ctx.fillStyle = `rgba(255,255,255,${0.9 * (1 - (t - boom) / 0.25)})`; ctx.fillRect(0, -300, W, H + 600); }
@@ -547,7 +547,7 @@ const SC = {
     for (let s2 = -2; s2 <= 2; s2++) for (let i = -1; i <= 1; i++) { const j = s2 - i; if (Math.abs(j) > 1) continue; cube(IMG.tnt, i, j, 0, S, ox, oy); }
     for (let s2 = -4; s2 <= 4; s2++) for (let i = -2; i <= 2; i++) { const j = s2 - i; if (Math.abs(j) > 2) continue; cube(IMG.sstone, i, j, 1, S, ox, oy, 1 - 0.75 * reveal); }
     cube(IMG.plate, 0, 0, 2, S, ox, oy);
-    if (reveal > 0) { ctx.globalAlpha = reveal; text('함정 TNT 9개', W / 2, 950, 100, '#ff5a4a', 'G14', 'center', 12); ctx.globalAlpha = 1; }
+    if (reveal > 0) { ctx.globalAlpha = reveal; text('TNT 9개', W / 2, 950, 100, '#ff5a4a', 'G14', 'center', 12); ctx.globalAlpha = 1; }
   },
   tdyna(t, d) {
     bg();
@@ -564,16 +564,16 @@ const SC = {
     const p = clamp((t - d * 0.45) / 0.6);
     if (p > 0) { ctx.globalAlpha = p; text(`→ 1891  (${Math.round(lerp(0, 28, p))}년)`, W / 2, 960, 84, '#fff', 'G14', 'center', 12); ctx.globalAlpha = 1; }
   },
-  tmelt(t, d) {
+  tmelt(t, d) {   // 충격을 줘도 잘 안 터지는 둔한 폭약 (운영자 2026-11-23 '80도 녹여 부어' 문장 뺌)
     bg('#1d1a10', '#121008', 0.03);
-    const p = clamp(t / (subAt(1, d * 0.5) + 0.4));   // '80도' 말할 때 80도 도착
-    sprite(THERMO, {k: '#1b1b1b', w: '#e9e9e9', r: '#e0303a'}, 250, 540, 36);
-    text(`${Math.round(lerp(20, 80, p))}도`, 250, 900, 100, '#ff5a4a', 'G14', 'center', 12);
-    const h = Math.round(lerp(10, 3, p)), wpx = Math.round(lerp(10, 22, p));
-    for (let r = 0; r < h; r++) for (let c = 0; c < wpx; c++) {
+    for (let r = 0; r < 8; r++) for (let c = 0; c < 10; c++) {
       ctx.fillStyle = (r + c) % 3 === 0 ? '#f7e27a' : ((r * 7 + c) % 5 === 0 ? '#c9a62a' : '#ebd055');
-      ctx.fillRect(snap(680 - wpx * 12 + c * 24), snap(760 - h * 24 + r * 24), 24, 24);
+      ctx.fillRect(snap(W / 2 - 120 + c * 24), snap(520 + r * 24), 24, 24);
     }
+    const ph = (t * 1.6) % 1;
+    if (ph < 0.35) sprite(BURST, {y: '#ffe45c', o: '#ff9a2a'}, W / 2 + 150, 520, 12 * back(ph / 0.15));
+    text('쾅?', W / 2 + 230, 460, 90, '#fff', 'G14', 'center', 12);
+    text('둔감한 폭약', W / 2, 900, 100, '#ffd23a', 'G14', 'center', 12);
   },
   cover(t, d) {   // 표지: 블록 이름 하나 + 블록 크게 (운영자 2026-11-22 "스펀지. 이렇게 간단하게")
     bg();
@@ -589,7 +589,7 @@ const SC = {
   },
 };
 
-const STAGE_DY = 90, BAR_BOTTOM = 440;
+const STAGE_DY = 190, STAGE_SC = 0.9, BAR_BOTTOM = 440;
 window.CUR = null;
 const subAt = (k, dflt) => (CUR && CUR.subs && CUR.subs[k]) ? CUR.subs[k][1] : dflt;   // k번째 자막이 나오는 때에 장면 바꾸기
 function bigX(cx, cy, a) { ctx.globalAlpha = a; for (const [c, w] of [['#000', 34], ['#ff3b30', 20]]) { ctx.strokeStyle = c; ctx.lineWidth = w; ctx.lineCap = 'butt'; ctx.beginPath(); ctx.moveTo(cx - 70, cy - 70); ctx.lineTo(cx + 70, cy + 70); ctx.moveTo(cx + 70, cy - 70); ctx.lineTo(cx - 70, cy + 70); ctx.stroke(); } ctx.globalAlpha = 1; }
@@ -600,11 +600,10 @@ window.renderAt = (idx, t, d, sub, year) => {
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.imageSmoothingEnabled = false;
   window.YEAR_OV = undefined;
   ctx.save();
-  if (name !== 'cover' && sc && sc.year) {   // 연도 띠가 있는 장면만: 그림을 내리고, 띠 아래만 그리게 막음 (운영자 2026-11-23 '항상 연표랑 그림 안 겹치게')
-    bg();
-    ctx.beginPath(); ctx.rect(0, BAR_BOTTOM, W, H - BAR_BOTTOM); ctx.clip();
-    ctx.translate(0, STAGE_DY);
-  }   // 그림을 연도 띠 아래로 (운영자 2026-11-22 '시간대랑 겹쳐')
+  if (name !== 'cover') {   // 그림을 화면 가운데 쪽으로: 아래로 내리고 살짝 줄임 (운영자 2026-11-23 '그림 좀 내리자, 앞으로도 중앙에')
+    if (sc && sc.year) { bg(); ctx.beginPath(); ctx.rect(0, BAR_BOTTOM, W, H - BAR_BOTTOM); ctx.clip(); }   // 연도 띠와 절대 안 겹치게
+    ctx.translate(W * (1 - STAGE_SC) / 2, STAGE_DY); ctx.scale(STAGE_SC, STAGE_SC);
+  }
   SC[name](t, d);
   ctx.restore();
   yearBar(year !== undefined ? year : (window.YEAR_OV !== undefined ? window.YEAR_OV : (sc && sc.year)), t, d);

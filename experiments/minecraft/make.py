@@ -101,7 +101,7 @@ CUES = {
     "t2012": [(0.8, "whoosh")],
     "tdyna": [(0.4, "pop")],
     "treal": [(0.1, "pop"), ("r0.45", "whoosh")],
-    "tmelt": [("r0.4", "fizz")],
+    "tmelt": [(0.0, "slap"), (0.625, "slap"), (1.25, "slap"), (1.875, "slap")],
     "ohook": [("s2", "crack"), ("s2+0.5", "slap")],
     "ocobble": [("s1+0.0", "crack"), ("s1+0.4", "pop")],
     "olava": [("r0.2", "splash"), ("r0.55", "fizz")],
@@ -331,6 +331,10 @@ def render_video(scenes, total, fps, wav, out, meta=None):
         pg.goto(f"http://127.0.0.1:{srv.server_port}/scene.html")
         pg.evaluate("window.ready")
         pg.evaluate("ep => { window.EP = ep; }", dict(meta or {}, scenes=scenes))   # years·nextBlock 등도 넘김
+        subs = [x[0] for sc in scenes for x in sc.get("subs", [])]
+        for txt, ws in zip(subs, pg.evaluate("s => subWidths(s)", subs)):   # 자막이 세 줄로 넘치지 않게 미리 경고
+            if max(ws) > 940:
+                print(f"  ! 자막 한 줄이 너무 김({max(ws)}px > 940): {txt}  → 대본에서 | 로 나누거나 줄을 쪼갤 것", file=sys.stderr)
         for k in range(n):
             url = pg.evaluate("T => { renderTimeline(T); return document.getElementById('c').toDataURL('image/png'); }", k / fps)
             ff.stdin.write(base64.b64decode(url.split(",", 1)[1]))
