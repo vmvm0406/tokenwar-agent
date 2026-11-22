@@ -37,7 +37,8 @@ function cube(img, i, j, z, S, ox, oy, a = 1, sc = 1) {
   ctx.drawImage(img, x - 150 * k * sc, y - 1 * k * sc + (1 - sc) * 150 * k, s, s);
   ctx.globalAlpha = 1;
 }
-function bg(c1 = '#101318', c2 = '#181c24', grid = 0.05) {
+function bg() {   // 모든 장면 배경 색 하나로 통일 (운영자 2026-11-23 '색 통일')
+  const c1 = '#101318', c2 = '#181c24', grid = 0.05;
   ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);   // 배경·격자는 그림 이동·축소와 상관없이 화면에 고정 (운영자 2026-11-23 '격자가 안 맞잖아')
   const g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, c1); g.addColorStop(1, c2);
   ctx.fillStyle = g; ctx.fillRect(0, -300, W, H + 600);
