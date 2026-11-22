@@ -1,0 +1,23 @@
+{
+ "approved": true,
+ "id": "2026-11-22-video-sponge",
+ "date": "2026-11-22",
+ "type": "video",
+ "format": "explain",
+ "prebuilt": true,
+ "title": "스펀지",
+ "topic": "마인크래프트 블록 · 스펀지",
+ "caption": "마인크래프트 스펀지, 원래는 급하게 만든 임시 블록이었어요 🧽\n\n2009년 서버에 물을 끝없이 붓는 사람들 때문에 생겼다가\n2010년 물 시스템이 바뀌면서 아무 기능 없는 노란 상자가 됐고,\n2014년에 물을 빨아들이는 블록으로 다시 돌아왔어요.\n\n한 번에 최대 118칸, 실제 물로 치면 118톤이에요.\n그리고 스펀지의 원래 이름인 '해면'은 뇌도 심장도 없는 동물이에요.\n\n다음 편은 흑요석 ⛏️",
+ "hashtags": [
+  "#마인크래프트",
+  "#마크",
+  "#스펀지",
+  "#마인크래프트블록"
+ ],
+ "rights": "original",
+ "credit": "직접 제작 (블록·몹 이미지 minecraft.wiki 렌더, 픽셀 그림·효과음 직접, 목소리 일레븐랩스 Starter)",
+ "note": "마인크래프트 블록 파고들기 1편 (채널 전환 2026-11-22). 영상은 experiments/minecraft/make.py 완성본(prebuilt, episodes/sponge.json), 표지 cover.py. 사실 출처: minecraft.wiki Sponge 문서, 영어 위키백과 Sponge.",
+ "rights_note": "Minecraft 콘텐츠는 Mojang 사용 지침(영상 허용) 안에서, 로고·게임 소리·음악 안 씀. 공식 계정처럼 보이지 않게.",
+ "approved_at": "2026-11-22T23:59:33+09:00",
+ "publish_at": "2026-11-22T23:59:33+09:00"
+}
