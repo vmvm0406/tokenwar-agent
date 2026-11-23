@@ -47,7 +47,7 @@ function bg() {   // 모든 장면 배경 색 하나로 통일 (운영자 2026-1
   for (let y = -300; y < H + 300; y += 60) ctx.fillRect(0, y, W, 3);
   ctx.restore();
 }
-function flash(color) { ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = color; ctx.fillRect(0, 0, W, H); ctx.restore(); }   // 화면 전체 번쩍 (그림 축소와 상관없이)
+function flash(color) { window.FLASHC = color; }   // 화면 전체 번쩍: 장면을 다 그린 뒤 잘림 없이 화면 전체에 (연도 장면의 잘라 내기 밖에서, 운영자 2026-11-23 '그림 안 잘리게')   // 화면 전체 번쩍 (그림 축소와 상관없이)
 function text(s, x, y, size = 84, color = '#fff', font = 'G14', align = 'center', stroke = 12) {
   ctx.font = `${size}px ${font}`; ctx.textAlign = align; ctx.textBaseline = 'alphabetic';
   if (stroke) { ctx.lineWidth = stroke; ctx.strokeStyle = '#000'; ctx.lineJoin = 'miter'; ctx.strokeText(s, x, y); }
@@ -926,14 +926,14 @@ const SC = {
     bg();
     const s1 = subAt(1, d * 0.45), sw = Math.floor(t * 7) % 2;
     const fl = (x, pal) => { ctx.save(); if (sw) { ctx.translate(x * 2, 0); ctx.scale(-1, 1); } sprite(FLAME, pal, x, 560, 30); ctx.restore(); };
-    fl(300, {o: '#e8611a', y: '#ffb02e', w: '#fff1a8'});
-    fl(780, {o: '#1f6fe0', y: '#5fb8ff', w: '#e6f6ff'});
+    fl(330, {o: '#e8611a', y: '#ffb02e', w: '#fff1a8'});
+    fl(750, {o: '#1f6fe0', y: '#5fb8ff', w: '#e6f6ff'});
     if (t >= s1) {
       const r = rnd(61);
-      for (let m = 0; m < 10; m++) { const ph = (t * 0.8 + r()) % 1, side = r() > 0.5 ? 1 : -1, x = 780 + side * lerp(300, 40, ph), y = 780 - ph * 120 + r() * 40; ctx.fillStyle = '#cfe9ff'; ctx.fillRect(snap(x), snap(y), 18, 18); }
-      text('O₂', 980, 800, 54, '#cfe9ff', 'G14', 'center', 9);
-      text('덜 탐', 300, 860, 66, '#ffb02e', 'G14', 'center', 10);
-      text('다 탐', 780, 860, 66, '#5fb8ff', 'G14', 'center', 10);
+      for (let m = 0; m < 10; m++) { const ph = (t * 0.8 + r()) % 1, x = 750 + (r() - 0.5) * 160, y = lerp(770, 640, ph); ctx.globalAlpha = 1 - ph; ctx.fillStyle = '#cfe9ff'; ctx.fillRect(snap(x), snap(y), 18, 18); ctx.globalAlpha = 1; }   // 산소 알갱이: 화면 밖으로 안 나가게 불꽃 아래에서 위로 (운영자 2026-11-23 '그림 안 잘리게')
+      text('O₂', 890, 720, 54, '#cfe9ff', 'G14', 'center', 9);
+      text('덜 탐', 330, 860, 66, '#ffb02e', 'G14', 'center', 10);
+      text('다 탐', 750, 860, 66, '#5fb8ff', 'G14', 'center', 10);
       text('완전 연소', W / 2, 970, 90, '#5fb8ff', 'G14', 'center', 12);
     }
   },
@@ -968,8 +968,10 @@ window.renderAt = (idx, t, d, sub, year) => {
     if (sc && sc.year) { bg(); ctx.beginPath(); ctx.rect(0, BAR_BOTTOM, W, H - BAR_BOTTOM); ctx.clip(); }   // 연도 띠와 절대 안 겹치게
     ctx.translate(W * (1 - STAGE_SC) / 2, STAGE_DY); ctx.scale(STAGE_SC, STAGE_SC);
   }
+  window.FLASHC = null;
   SC[name](t, d);
   ctx.restore();
+  if (window.FLASHC) { ctx.fillStyle = window.FLASHC; ctx.fillRect(0, 0, W, H); window.FLASHC = null; }
   yearBar(year !== undefined ? year : (window.YEAR_OV !== undefined ? window.YEAR_OV : (sc && sc.year)), t, d);
   subtitle(sub);
 };

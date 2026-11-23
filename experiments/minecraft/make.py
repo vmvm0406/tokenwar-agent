@@ -369,6 +369,27 @@ def render_video(scenes, total, fps, wav, out, meta=None):
     srv.shutdown()
 
 
+def edge_check(mp4, scenes=(), fps=4):
+    """그림이 화면 양옆 끝에 닿아 잘렸는지 검사 (운영자 2026-11-23 '그림 안 잘리게 가운데로'). 닿은 시각을 경고로 출력."""
+    w, h = 270, 480
+    raw = subprocess.run(["ffmpeg", "-v", "error", "-i", str(mp4), "-vf", f"fps={fps},scale={w}:{h}:flags=neighbor", "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], capture_output=True).stdout
+    fr = np.frombuffer(raw, np.uint8).reshape(-1, h, w, 3)
+    y0, y1 = int(h * 440 / 1920), int(h * 1150 / 1920)
+    hits = []
+    for i, f in enumerate(fr):
+        strip = np.concatenate([f[y0:y1, :6], f[y0:y1, -6:]], 1)
+        tt = i / fps
+        yr = any(sc.get("year") and sc["t0"] <= tt < sc["t0"] + sc["d"] for sc in scenes)
+        top = f[y0 + 1: y0 + 4]   # 연도 장면: 띠 바로 아래(440px)에서 그림이 잘려 일자로 끊긴 것
+        if (f.max(2) > 90).mean() > 0.6:   # 화면 전체 번쩍임은 잘림 아님
+            continue
+        if (strip.max(2) > 90).mean() > 0.01 or (yr and (top.max(2) > 90).mean() > 0.05):
+            hits.append(round(i / fps, 1))
+    if hits:
+        print(f"  ⚠ 그림이 화면 옆 끝이나 연도 띠 아래에서 잘림: {hits[:20]}초", file=sys.stderr)
+    return hits
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("episode"); ap.add_argument("out"); ap.add_argument("--fps", type=int, default=30)
@@ -387,6 +408,7 @@ def main():
     print(f"길이 {total:.1f}초, 장면 {len(scenes)}개", file=sys.stderr)
     if not a.audio_only:
         render_video(scenes, total, a.fps, wav, out, {k: v for k, v in ep.items() if k != "scenes"})
+        edge_check(out, scenes)
         print(out)
 
 
