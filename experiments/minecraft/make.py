@@ -45,7 +45,21 @@ def voice_line(say, prev, nxt, model, voice):
 
 
 # ---------- 효과음 (직접 합성) ----------
+_MC = {}
+
+
 def sfx(kind):
+    # 'mc:이름@크기' = 마인크래프트 게임 소리 (minecraft.wiki에서 받은 assets/sounds/<이름>.ogg, 커밋 안 함). 운영자 2026-11-23 '마크 소리 써도 됨'
+    if kind.startswith("mc:"):
+        name, _, opt = kind[3:].partition("@")   # 'mc:이름@0.6~1.2' = 크기 0.6, 1.2초에서 잘라 끝을 줄임
+        vol, _, cut = opt.partition("~")
+        if name not in _MC:
+            a = decode(HERE / "assets" / "sounds" / f"{name}.ogg")
+            _MC[name] = a / max(1e-6, float(np.abs(a).max()))
+        a = _MC[name] * float(vol or 0.6)
+        if cut:
+            a = a[: int(SR * float(cut))].copy(); fo = min(len(a), int(SR * 0.2)); a[-fo:] *= np.linspace(1, 0, fo)
+        return a.astype(np.float32)
     t = lambda d: np.arange(int(SR * d)) / SR
     rng = np.random.default_rng(len(kind))
     if kind == "pop":
@@ -132,21 +146,35 @@ CUES = {
     "s2018": [(0.1, "splash"), ("r0.4", "drip"), ("r0.7", "drip")],
     "s2020": [(0.2, "fizz"), ("s1", "slap")],
     "sreal": [(0.1, "whoosh"), ("s1", "pop")],
-    "khook": [("r0.22", "thud"), ("r0.35", "slurp"), ("s1", "pop")],
-    "kname": [("s1", "thud")],
-    "k2020": [(0.1, "pop"), ("s1+0.45", "pop"), ("s1+0.9", "pop"), ("s1+1.0", "slap")],
-    "k2022": [(0.6, "thud"), ("s2", "whoosh")],
-    "kspread": [(0.6, "thud"), (1.0, "whoosh"), (1.6, "slurp")],
-    "ktool": [(0.3, "pop"), (0.6, "slap"), ("r0.5", "pop")],
-    "kreal": [(0.1, "whoosh"), ("s2", "pop")],
+    # 스컬크 편: 마크 게임 소리 (운영자 2026-11-23 '효과음 잘 찾아보고', '마크 소리 써도 됨'). 함수 = 장면 정보로 시각 계산 (scene.html과 같은 식)
+    "khook": [(lambda s: _sub(s, 0) + s["d"] * 0.3 - 0.4, "mc:Zombie_death@0.7"),
+              (lambda s: _sub(s, 0) + s["d"] * 0.3 + 0.2, "mc:Sculk_spread1@0.7"),
+              (lambda s: _sub(s, 0) + s["d"] * 0.3 + 0.55, "mc:Sculk_spread2@0.6"),
+              (lambda s: _sub(s, 0) + s["d"] * 0.3 + 0.9, "mc:Sculk_spread3@0.6"),
+              ("s1", "mc:Sculk_charge1@0.5")],
+    "kname": [(0.1, "mc:Warden_heartbeat1@0.45"), ("s1-0.05", "mc:Warden_emerge@0.7~1.8")],
+    "k2020": [(0.1, "mc:Click@0.5"), ("s1", "mc:Page_turn1@0.7"), ("s1+0.45", "mc:Page_turn2@0.7"), ("s1+1.0", "mc:Anvil_land@0.35~0.6")],
+    "k2022": [(0.3, "mc:Sculk_charge2@0.6"), (0.6, "mc:Warden_angry1@0.55~1.3")]
+             + [(lambda s, m=m: _sub(s, 2) + m * (s["d"] - _sub(s, 2)) * 0.16, f"mc:Sculk_shrieker_shriek{m + 1}@0.45~0.9") for m in range(4)]
+             + [(lambda s: _sub(s, 2) + 3 * (s["d"] - _sub(s, 2)) * 0.16 + 0.05, "mc:Warden_emerge@0.7~1.6")],
+    "kspread": [(0.6, "mc:Zombie_death@0.7"), (1.0, "mc:Sculk_charge1@0.5"), (1.6, "mc:Sculk_spread1@0.7"), (2.0, "mc:Sculk_spread2@0.6"), (2.4, "mc:Sculk_spread3@0.6")],
+    "ktool": [(0.35, "mc:Stone_dig1@0.6"), (0.6, "slap"), (lambda s: s["d"] * 0.5, "mc:Hoe_till1@0.8"), (lambda s: s["d"] * 0.5 + 0.25, "mc:Sculk_Break1@0.6~0.7")],
+    "kreal": [(0.1, "mc:Grass_dig1@0.5"), ("s2", "pop")],
     "absorbtons": [(0.3, "slurp"), ("r0.3", "slurp"), ("r0.55", "thud")],
     "nether": [("r0.45", "fizz")],
     "realanimal": [("r0.15", "whoosh"), ("r0.3", "pop"), ("r0.75", "pop"), ("r0.8", "pop")],
 }
 
 
+def _sub(s, k):
+    subs = s.get("subs") or []
+    return subs[k][1] if k < len(subs) else s["d"] * 0.5
+
+
 def cue_time(at, s):
     """효과음 시각: 숫자 = 장면 시작부터 초, 'r0.5' = 장면 길이 비율, 's2+0.5' = 2번째 자막 시작 + 초."""
+    if callable(at):
+        return at(s)
     if not isinstance(at, str):
         return at
     if at.startswith("r"):
