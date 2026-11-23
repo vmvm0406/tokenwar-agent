@@ -160,6 +160,13 @@ CUES = {
     "kspread": [(0.6, "mc:Zombie_death@0.7"), (1.0, "mc:Sculk_charge1@0.5"), (1.6, "mc:Sculk_spread1@0.7"), (2.0, "mc:Sculk_spread2@0.6"), (2.4, "mc:Sculk_spread3@0.6")],
     "ktool": [(0.35, "mc:Stone_dig1@0.6"), (0.6, "slap"), (lambda s: s["d"] * 0.5, "mc:Hoe_till1@0.8"), (lambda s: s["d"] * 0.5 + 0.25, "mc:Sculk_Break1@0.6~0.7")],
     "kreal": [(0.1, "mc:Grass_dig1@0.5"), ("s2", "pop")],
+    # 피스톤 편 (게임 소리)
+    "phook": [(0.35, "mc:Piston_extend_JE3@0.7"), ("s1", "mc:Anvil_land@0.35~0.6")],
+    "p2011": [(0.1, "mc:Click@0.4"), ("s1+0.3", "whoosh"), ("s1+0.6", "mc:Piston_extend_JE3@0.6"), ("s2", "mc:Page_turn1@0.5")],
+    "pbug": [(0.4, "mc:Piston_extend_JE3@0.6"), ("s1", "mc:Random_break@0.6"), ("s2+0.2", "slap")],
+    "plimit": [(0.4, "mc:Piston_extend_JE3@0.7"), ("s1", "mc:Piston_extend_JE3@0.5"), ("s1+0.1", "slap")],
+    "pimmov": [(0.4, "slap"), (0.75, "slap"), (1.1, "slap")],
+    "preal": [(0.1, "mc:Piston_contract_JE3@0.4"), ("s3", "whoosh")],
     # 보강된 심층암 편 (게임 소리)
     "rhook": [(lambda s, m=m: 0.1 + m * 0.36, f"mc:Stone_dig{m % 3 + 1}@0.35") for m in range(13)] + [("s2", "mc:Anvil_land@0.35~0.6")],
     "rcity": [(0.15 + m * 0.2, f"mc:Stone_dig{m % 3 + 1}@0.4") for m in range(6)] + [("s1", "mc:Warden_emerge@0.6~1.4")],

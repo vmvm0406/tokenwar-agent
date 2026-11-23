@@ -16,7 +16,7 @@ ctx.imageSmoothingEnabled = false;
 const IMG = {};
 const NAMES = {sp1: 'Sponge_JE1_BE1', sp2: 'Sponge_JE2_BE2', sp3: 'Sponge_JE3_BE3', wet: 'Wet_Sponge_JE2_BE2', water: 'Water_JE16',
   grass: 'Grass_Block_JE7_BE6', obs: 'Obsidian_JE3_BE2', furnace: 'Furnace_JE4', nether: 'Netherrack_JE4_BE2',
-  pris: 'Prismarine_JE2_BE2', sand: 'Sand_JE5_BE3', tnt: 'TNT_JE3_BE2', eg: 'Elder_Guardian_JE2_BE2', cobble: 'Cobblestone_JE5_BE3', lava: 'Lava_JE19', pick: 'Diamond_Pickaxe_JE3_BE3', gun: 'Gunpowder_JE2_BE2', sstone: 'Sandstone_JE6_BE3', plate: 'Stone_Pressure_Plate_JE5_BE2', bedrock: 'Bedrock_JE2_BE2', farmland: 'Farmland_JE4_BE6', seeds: 'Wheat_Seeds_JE1_BE1', dirt: 'Dirt_JE2_BE2', stone: 'Stone_JE5_BE3', steve: 'Steve_classic_JE6', nrc: 'Nether_Reactor_Core_BE1', nrc2: 'Nether_Reactor_Core_BE2', nrci: 'Initialized_Nether_Reactor_Core_BE1', nrcf: 'Finished_Nether_Reactor_Core_BE1', gold: 'Block_of_Gold_JE6_BE3', glow: 'Glowstone_Dust_JE2_BE2', quartz: 'Nether_Quartz_JE2_BE2', iron: 'Iron_Ingot_JE3_BE2', dia: 'Diamond_JE3_BE3', soulsand: 'Soul_Sand_JE2_BE2', pig: 'Zombified_Piglin_JE2', skull: 'Wither_Skeleton_Skull_(S)_JE2', wither: 'Wither_JE2_BE2', sfire: 'Soul_Fire_BE', fire: 'Fire_JE7', sculk: 'Sculk_JE1_BE1', bubble: 'Bubble_Column_JE1_BE1', sstex: 'Soul_Sand_(texture)_JE2_BE2', zombie: 'Zombie_JE5_BE2', warden: 'Warden_JE1_BE1', catalyst: 'Sculk_Catalyst_JE1', shrieker: 'Sculk_Shrieker_JE1_BE2', hoe: 'Diamond_Hoe_JE3_BE3', rdeep: 'Reinforced_Deepslate_JE1_BE1', deepslate: 'Deepslate_JE2', xp: 'Experience_Orb_Value_3-6', vault: 'Vault_JE6_BE5', npick: 'Netherite_Pickaxe_JE3_BE2', dragon: 'Ender_Dragon_JE1_BE1', piston: 'Piston_(U)_JE4'};
+  pris: 'Prismarine_JE2_BE2', sand: 'Sand_JE5_BE3', tnt: 'TNT_JE3_BE2', eg: 'Elder_Guardian_JE2_BE2', cobble: 'Cobblestone_JE5_BE3', lava: 'Lava_JE19', pick: 'Diamond_Pickaxe_JE3_BE3', gun: 'Gunpowder_JE2_BE2', sstone: 'Sandstone_JE6_BE3', plate: 'Stone_Pressure_Plate_JE5_BE2', bedrock: 'Bedrock_JE2_BE2', farmland: 'Farmland_JE4_BE6', seeds: 'Wheat_Seeds_JE1_BE1', dirt: 'Dirt_JE2_BE2', stone: 'Stone_JE5_BE3', steve: 'Steve_classic_JE6', nrc: 'Nether_Reactor_Core_BE1', nrc2: 'Nether_Reactor_Core_BE2', nrci: 'Initialized_Nether_Reactor_Core_BE1', nrcf: 'Finished_Nether_Reactor_Core_BE1', gold: 'Block_of_Gold_JE6_BE3', glow: 'Glowstone_Dust_JE2_BE2', quartz: 'Nether_Quartz_JE2_BE2', iron: 'Iron_Ingot_JE3_BE2', dia: 'Diamond_JE3_BE3', soulsand: 'Soul_Sand_JE2_BE2', pig: 'Zombified_Piglin_JE2', skull: 'Wither_Skeleton_Skull_(S)_JE2', wither: 'Wither_JE2_BE2', sfire: 'Soul_Fire_BE', fire: 'Fire_JE7', sculk: 'Sculk_JE1_BE1', bubble: 'Bubble_Column_JE1_BE1', sstex: 'Soul_Sand_(texture)_JE2_BE2', zombie: 'Zombie_JE5_BE2', warden: 'Warden_JE1_BE1', catalyst: 'Sculk_Catalyst_JE1', shrieker: 'Sculk_Shrieker_JE1_BE2', hoe: 'Diamond_Hoe_JE3_BE3', rdeep: 'Reinforced_Deepslate_JE1_BE1', deepslate: 'Deepslate_JE2', xp: 'Experience_Orb_Value_3-6', vault: 'Vault_JE6_BE5', npick: 'Netherite_Pickaxe_JE3_BE2', dragon: 'Ender_Dragon_JE1_BE1', piston: 'Piston_(U)_JE4', torch: 'Redstone_Torch_JE5', sign: 'Oak_Sign_(12)_JE5'};
 window.ready = Promise.all([
   ...Object.entries(NAMES).map(([k, n]) => new Promise(r => { const i = new Image(); i.onload = r; i.src = `assets/blocks/${n}.png`; IMG[k] = i; })),
   document.fonts.load('80px G14'), document.fonts.load('66px G11B')]);
@@ -1067,6 +1067,111 @@ const SC = {
     // 제목+블록 묶음을 화면 가운데로 (운영자 2026-11-23 '썸네일 가운데로')
     cube(IMG[(EP && EP.coverBlock) || 'sp3'], 0, 0, 0, 600, W / 2, 785);
     text((EP && EP.title) || '', W / 2, 685, (EP && EP.coverSize) || 230, (EP && EP.coverColor) || '#ffe45c', 'G14', 'center', 22);   // 제목 색 = 블록 색 (운영자 2026-11-23 흑요석은 보라)
+  },
+  // ---------- 피스톤 편 (운영자 2026-11-23) ----------
+  phook(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.6), S = 220, k = S / 268, ox = W / 2, oy = 480;
+    const z = 1 + 0.75 * back((t - 0.35) / 0.25) * (t < 0.35 ? 0 : 1);
+    cube(IMG.piston, 0, 0, 0, S, ox, oy);
+    const top = oy + 66.5 * k, armTop = top - (z - 1) * 165 * k;   // 피스톤 팔 (우리 그림)
+    if (z > 1.01) { ctx.fillStyle = '#000'; ctx.fillRect(ox - 20, armTop, 40, top - armTop); ctx.fillStyle = '#b59b62'; ctx.fillRect(ox - 13, armTop, 26, top - armTop); }
+    cube(IMG.grass, 0, 0, z, S, ox, oy);
+    if (t >= s1) {
+      const p = back((t - s1) / 0.3);
+      ctx.save(); ctx.translate(W / 2 + 270, 330); ctx.rotate(-0.2); ctx.scale(p, p);
+      box(-120, -60, 240, 110, '#ffe45c', '#000', 8); text('모드', 0, 32, 84, '#1b1b1b', 'G14', 'center', 0); ctx.restore();
+    } else if (t > 1.0) sprite(QM, {y: '#ffe45c'}, W / 2 + 260, 360, 18);
+    text(t < s1 ? '모장 제작 아님?' : '플레이어가 만든 모드', W / 2, LY, 84, '#d8c38a', 'G14', 'center', 12);
+  },
+  p2011(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.37), s2 = subAt(2, d * 0.68);
+    if (t < s2) {
+      const sh = t < s1 ? 0 : ease((t - s1) / 0.4), cw = lerp(560, 380, sh), cx = lerp(W / 2, 260, sh), cy = 500;   // 포럼 글 (우리 그림)
+      box(cx - cw / 2, cy, cw, 300, '#e9e4d6', '#000', 8);
+      ctx.fillStyle = '#4a6fa5'; ctx.fillRect(cx - cw / 2, cy, cw, 64); text('포럼', cx - cw / 2 + 24, cy + 48, 44, '#fff', 'G11B', 'left', 0);
+      ctx.drawImage(IMG.piston, cx - 80, cy + 80, 160, 160);
+      text('피스톤 모드', cx, cy + 286, 44, '#1b1b1b', 'G11B', 'center', 0);
+      if (t >= s1) {
+        const p = ease((t - s1 - 0.3) / 0.4);
+        if (p > 0) { arrow(lerp(470, 560, p), 650); text('젭', 560, 560, 64, '#ffe45c', 'G14', 'center', 10); }
+        const q = back((t - s1 - 0.6) / 0.35);
+        if (q > 0) cube(IMG.piston, 0, 0, 0, 200, 830, 520, 1, Math.max(0.01, q));
+      }
+      text(t < s1 ? '포럼에 올라온 모드' : '정식 추가', W / 2, LY, 84, '#d8c38a', 'G14', 'center', 12);
+      return;
+    }
+    const u = t - s2;   // 크레딧 (우리 그림)
+    box(W / 2 - 380, 470, 760, 330, '#0b0d12', '#000', 8);
+    const lines = ['Game Design', 'Programming', 'Art', 'Additional Programming', 'Hippoplatimus', 'Music', 'Sound'];
+    ctx.save(); ctx.beginPath(); ctx.rect(W / 2 - 380, 470, 760, 330); ctx.clip();
+    lines.forEach((l, i) => {
+      const y = 880 + i * 70 - Math.min(u * 420, 520);
+      const hi = l === 'Hippoplatimus' || l === 'Additional Programming';
+      text(l, W / 2, y, hi ? 50 : 40, hi ? '#ffe45c' : '#7d8590', 'G11B', 'center', 0);
+    });
+    ctx.restore();
+    text('크레딧에 이름', W / 2, LY, 84, '#d8c38a', 'G14', 'center', 12);
+  },
+  pbug(t, d) {
+    bg();
+    const s1 = subAt(2, d * 0.6), crash = subAt(1, d * 0.35);
+    cube(IMG.piston, 0, 0, 0, 200, 380, 500);
+    ctx.drawImage(IMG.torch, 620, 470, 220, 220);
+    if (t > 0.4) { const p = ease((t - 0.4) / 0.4); arrow(lerp(500, 560, p), 600); }
+    if (t > crash) {   // 게임 멈춤
+      ctx.fillStyle = 'rgba(0,0,0,0.88)'; ctx.fillRect(60, 440, 960, 380);
+      if (t < s1) text('응답 없음', W / 2, 670, 80, '#ff6b5c', 'G14', 'center', 10);
+      else {
+        cube(IMG.grass, 0, 0, 0, 170, W / 2, 500);
+        bigX(W / 2, 640, clamp((t - s1 - 0.2) / 0.2));
+      }
+    }
+    text(t < s1 ? '횃불 밀기 → 게임 꺼짐' : '맵 입장 불가', W / 2, LY, 84, '#ff6b5c', 'G14', 'center', 12);
+  },
+  plimit(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.6), S = 96, ox = W / 2 + 20, oy = 540;
+    const shift = ease((t - 0.4) / 0.4);
+    const n = t < s1 ? 12 : 13, jit = t >= s1 ? Math.sin(t * 70) * 3 : 0;
+    cube(IMG.piston, -7, 0, 0, S, ox + jit, oy);
+    for (let i = 0; i < n; i++) {
+      const a = -6 + i + (t < s1 ? shift : 1);
+      cube(i === 12 ? IMG.obs : (i % 2 ? IMG.cobble : IMG.stone), a, 0, 0, S, ox, oy, 1, 0.86);
+    }
+    const cnt = t < s1 ? Math.min(12, Math.floor(clamp(t / 0.9) * 12)) : 13;
+    text(String(cnt), W / 2 + 300, 500, 110, cnt > 12 ? '#ff3b30' : '#ffe45c', 'G14', 'center', 12);
+    if (t >= s1) bigX(W / 2 + 330, 760, clamp((t - s1 - 0.1) / 0.2));
+    text(t < s1 ? '최대 12개' : '모장이 정한 숫자', W / 2, LY, 84, '#d8c38a', 'G14', 'center', 12);
+  },
+  pimmov(t, d) {
+    bg();
+    [['obs', 240], ['bedrock', 540], ['rdeep', 840]].forEach(([b, x], i) => {
+      const p = back((t - 0.1 - i * 0.35) / 0.3);
+      if (p > 0) cube(IMG[b], 0, 0, 0, 180, x, 520, 1, Math.max(0.01, p));
+      bigX(x, 640, clamp((t - 0.4 - i * 0.35) / 0.2));
+    });
+    text('밀기 불가', W / 2, LY, 84, '#ff6b5c', 'G14', 'center', 12);
+  },
+  preal(t, d) {
+    bg();
+    const s1 = subAt(2, d * 0.45), s2 = subAt(3, d * 0.7);
+    box(W / 2 - 320, 330, 640, 470, '#3b4048', '#000', 8);   // 엔진 단면 (우리 그림)
+    const speed = t < s2 ? 1.2 : 6;
+    let ph = t < s2 ? t * speed : s2 * 1.2 + (t - s2) * speed;
+    [-225, -75, 75, 225].forEach((dx, i) => {
+      const x = W / 2 + dx, a = (ph + (i % 2) * 0.5 + (i > 1 ? 0.25 : 0)) * Math.PI * 2;
+      ctx.fillStyle = '#1b1e24'; ctx.fillRect(x - 60, 350, 120, 330);
+      const py = 400 + (1 - Math.cos(a)) * 70, cx2 = x + Math.sin(a) * 34, cy2 = 730 + Math.cos(a) * 34;
+      ctx.strokeStyle = '#000'; ctx.lineWidth = 22; ctx.beginPath(); ctx.moveTo(x, py + 60); ctx.lineTo(cx2, cy2); ctx.stroke();
+      ctx.strokeStyle = '#9aa0a6'; ctx.lineWidth = 12; ctx.beginPath(); ctx.moveTo(x, py + 60); ctx.lineTo(cx2, cy2); ctx.stroke();
+      box(x - 54, py, 108, 70, '#c9ced6', '#000', 6);
+      if (t >= s2) { ctx.fillStyle = 'rgba(201,206,214,0.25)'; ctx.fillRect(x - 54, 400, 108, 210); }
+    });
+    ctx.strokeStyle = '#000'; ctx.lineWidth = 14; ctx.beginPath(); ctx.moveTo(W / 2 - 300, 730); ctx.lineTo(W / 2 + 300, 730); ctx.stroke();
+    const lab = t < s1 ? '자동차 엔진' : (t < s2 ? '1분에 3,000회전' : '1초에 50번');
+    text(lab, W / 2, LY, 84, t < s2 ? '#d8c38a' : '#ffe45c', 'G14', 'center', 12);
   },
   // ---------- 보강된 심층암 편 (운영자 2026-11-23) ----------
   rhook(t, d) {
