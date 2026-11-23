@@ -733,7 +733,8 @@ const SC = {
       if (c === 0) img = corner ? IMG.gold : IMG.cobble;
       if (c === 1) img = corner ? IMG.cobble : (mid ? (t >= s1 ? IMG.nrci : IMG.nrc) : null);
       if (c === 2) img = corner ? null : IMG.cobble;
-      if (img) order.push([a, b, c, img]);
+      const xr = (c === 2 || (a === 1 && b === 1 && c === 1)) ? lerp(1, 0.3, clamp((t - s1 + 0.4) / 0.4)) : 1;   // 켠 코어가 제자리에서 보이게 위층·앞 모서리를 비침 (운영자 2026-11-23 '빨간 게 앞으로 나와 어색')
+      if (img) order.push([a, b, c, img, xr]);
     }
     const shown = Math.floor(clamp(t / Math.max(0.5, s1 * 0.9)) * order.length + 0.001);
     list.push(...order.slice(0, shown));
@@ -742,12 +743,11 @@ const SC = {
       for (let a = -4; a <= 4; a++) for (let b = -4; b <= 4; b++) {
         if (Math.abs(a) !== 4 && Math.abs(b) !== 4) continue;
         const front = a === 4 || b === 4, hh = front ? Math.min(h, 1) : h;
-        for (let c = 0; c < hh; c++) list.push([a, b, c, IMG.nether]);
+        for (let c = 0; c < hh; c++) list.push([a, b, c, IMG.nether, 1]);
       }
     }
     list.sort((p, q) => (p[0] + p[1]) - (q[0] + q[1]) || p[2] - q[2]);
-    for (const [a, b, c, img] of list) cube(img, a, b, c, S, ox, oy);
-    if (t >= s1) { const g = 0.5 + 0.5 * Math.sin(t * 12); ctx.save(); ctx.shadowColor = '#ff3020'; ctx.shadowBlur = 40 * g; cube(IMG.nrci, 0, 0, 1, S, ox, oy); ctx.restore(); }   // 가운데 코어가 가려지지 않게 맨 위에 다시
+    for (const [a, b, c, img, al] of list) cube(img, a, b, c, S, ox, oy, al);
     if (t >= s1 && t < s1 + 0.3) flash(`rgba(255,60,40,${0.3 * (1 - (t - s1) / 0.3)})`);
     if (t < s1) text('조약돌 + 금 블록', W / 2, 970, 80, '#ffd23a', 'G14', 'center', 12);
     else if (t >= s2 + 0.4) text('네더랙 탑', W / 2, 970, 90, '#ff6a4a', 'G14', 'center', 12);
