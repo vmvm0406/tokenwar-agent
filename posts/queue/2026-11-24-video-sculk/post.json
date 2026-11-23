@@ -1,0 +1,23 @@
+{
+ "approved": true,
+ "approved_at": "2026-11-23T20:40:00+09:00",
+ "id": "2026-11-24-video-sculk",
+ "date": "2026-11-24",
+ "type": "video",
+ "format": "explain",
+ "prebuilt": true,
+ "title": "스컬크",
+ "topic": "마인크래프트 블록 · 스컬크",
+ "caption": "마크에서 몹이 죽으면 번지는 블록, 스컬크 🟦\n\n이름은 '몰래 숨다'라는 뜻의 영어 skulk에서 왔고, 워든이 사는 깊은 어둠에 깔려 있어요.\n2020년에 처음 공개된 뒤 한 번 미뤄져서 2022년에야 게임에 들어왔죠.\n\n처음 만들 땐 스컬크를 밟기만 해도 워든이 바로 왔는데,\n현재는 스컬크 비명체가 네 번 울려야 워든이 나와요.\n스컬크 촉매 근처에서 몹이 죽으면 그 몹의 경험치만큼 스컬크가 번지고,\n캘 때 가장 빠른 도구는 곡괭이가 아니라 괭이예요.\n\n현실에도 비슷한 게 있어요. 미국 오리건주의 한 버섯 균사는 나무뿌리를 먹으며 축구장 1,200개 넓이까지 퍼졌대요.\n\n다음 편은 댓글로 많이 물어보신 보강된 심층암 ⬛",
+ "hashtags": [
+  "#마인크래프트",
+  "#마크",
+  "#스컬크",
+  "#마인크래프트블록"
+ ],
+ "publish_at": "2026-11-24T00:00:00+09:00",
+ "rights": "original",
+ "credit": "직접 제작 (블록·아이템·몹 이미지 minecraft.wiki 렌더, 픽셀 그림 직접, 효과음 마인크래프트 게임 소리, 목소리 일레븐랩스 Starter)",
+ "note": "마인크래프트 블록 파고들기 7편. 영상 experiments/minecraft/make.py 완성본(prebuilt, episodes/sculk.json), 표지 cover.py(청록 제목). 사실 출처: minecraft.wiki Sculk·Sculk Catalyst·Sculk Shrieker 문서, 현실: Humongous Fungus(Armillaria ostoyae, 맬히어 국유림).",
+ "rights_note": "Minecraft 콘텐츠는 Mojang 사용 지침(영상 허용) 안에서, 로고·게임 음악 안 씀. 효과음은 게임 소리(운영자 2026-11-23 허용)."
+}
