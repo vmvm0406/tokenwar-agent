@@ -1,0 +1,23 @@
+{
+ "approved": true,
+ "approved_at": "2026-11-23T17:10:00+09:00",
+ "id": "2026-11-23-video-soul-sand",
+ "date": "2026-11-23",
+ "type": "video",
+ "format": "explain",
+ "prebuilt": true,
+ "title": "소울 샌드",
+ "topic": "마인크래프트 블록 · 소울 샌드",
+ "caption": "소울 샌드를 자세히 보면 얼굴이 보여요 👻\n\n영혼이 갇힌 모래라서 소울 샌드.\n위를 걸으면 속도가 40% 넘게 줄어서 100m에 23초 걸리던 게 40초나 걸려요.\n\n2010년 네더와 함께 나왔고, 게임 파일 속 이름은 헬샌드(지옥 모래).\n2012년부턴 소울 샌드 4개를 T자로 쌓고 위더 스켈레톤 해골 3개를 올리면 보스 위더가 나왔고,\n2018년엔 물속에서 거품 기둥을, 2020년엔 일반 불보다 피해가 두 배인 파란 영혼 불을 만들게 됐어요.\n\n현실에서도 파란 불이 보통 더 뜨거워요. 산소와 잘 섞여 다 타면 파랗게 타거든요.\n\n다음 편은 스컬크 🟦",
+ "hashtags": [
+  "#마인크래프트",
+  "#마크",
+  "#소울샌드",
+  "#마인크래프트블록"
+ ],
+ "publish_at": "2026-11-23T11:38:58+09:00",
+ "rights": "original",
+ "credit": "직접 제작 (블록·아이템·몹 이미지 minecraft.wiki 렌더, 픽셀 그림·효과음 직접, 목소리 일레븐랩스 Starter)",
+ "note": "마인크래프트 블록 파고들기 6편. 영상 experiments/minecraft/make.py 완성본(prebuilt, episodes/soulsand.json), 표지 cover.py(모래색 제목, 크기 190). 사실 출처: minecraft.wiki Soul Sand·Soul Fire 문서.",
+ "rights_note": "Minecraft 콘텐츠는 Mojang 사용 지침(영상 허용) 안에서, 로고·게임 음악 안 씀."
+}
