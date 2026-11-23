@@ -16,7 +16,7 @@ ctx.imageSmoothingEnabled = false;
 const IMG = {};
 const NAMES = {sp1: 'Sponge_JE1_BE1', sp2: 'Sponge_JE2_BE2', sp3: 'Sponge_JE3_BE3', wet: 'Wet_Sponge_JE2_BE2', water: 'Water_JE16',
   grass: 'Grass_Block_JE7_BE6', obs: 'Obsidian_JE3_BE2', furnace: 'Furnace_JE4', nether: 'Netherrack_JE4_BE2',
-  pris: 'Prismarine_JE2_BE2', sand: 'Sand_JE5_BE3', tnt: 'TNT_JE3_BE2', eg: 'Elder_Guardian_JE2_BE2', cobble: 'Cobblestone_JE5_BE3', lava: 'Lava_JE19', pick: 'Diamond_Pickaxe_JE3_BE3', gun: 'Gunpowder_JE2_BE2', sstone: 'Sandstone_JE6_BE3', plate: 'Stone_Pressure_Plate_JE5_BE2', bedrock: 'Bedrock_JE2_BE2', farmland: 'Farmland_JE4_BE6', seeds: 'Wheat_Seeds_JE1_BE1', dirt: 'Dirt_JE2_BE2', stone: 'Stone_JE5_BE3', steve: 'Steve_classic_JE6', nrc: 'Nether_Reactor_Core_BE1', nrc2: 'Nether_Reactor_Core_BE2', nrci: 'Initialized_Nether_Reactor_Core_BE1', nrcf: 'Finished_Nether_Reactor_Core_BE1', gold: 'Block_of_Gold_JE6_BE3', glow: 'Glowstone_Dust_JE2_BE2', quartz: 'Nether_Quartz_JE2_BE2', iron: 'Iron_Ingot_JE3_BE2', dia: 'Diamond_JE3_BE3', soulsand: 'Soul_Sand_JE2_BE2', pig: 'Zombified_Piglin_JE2'};
+  pris: 'Prismarine_JE2_BE2', sand: 'Sand_JE5_BE3', tnt: 'TNT_JE3_BE2', eg: 'Elder_Guardian_JE2_BE2', cobble: 'Cobblestone_JE5_BE3', lava: 'Lava_JE19', pick: 'Diamond_Pickaxe_JE3_BE3', gun: 'Gunpowder_JE2_BE2', sstone: 'Sandstone_JE6_BE3', plate: 'Stone_Pressure_Plate_JE5_BE2', bedrock: 'Bedrock_JE2_BE2', farmland: 'Farmland_JE4_BE6', seeds: 'Wheat_Seeds_JE1_BE1', dirt: 'Dirt_JE2_BE2', stone: 'Stone_JE5_BE3', steve: 'Steve_classic_JE6', nrc: 'Nether_Reactor_Core_BE1', nrc2: 'Nether_Reactor_Core_BE2', nrci: 'Initialized_Nether_Reactor_Core_BE1', nrcf: 'Finished_Nether_Reactor_Core_BE1', gold: 'Block_of_Gold_JE6_BE3', glow: 'Glowstone_Dust_JE2_BE2', quartz: 'Nether_Quartz_JE2_BE2', iron: 'Iron_Ingot_JE3_BE2', dia: 'Diamond_JE3_BE3', soulsand: 'Soul_Sand_JE2_BE2', pig: 'Zombified_Piglin_JE2', skull: 'Wither_Skeleton_Skull_(S)_JE2', wither: 'Wither_JE2_BE2', sfire: 'Soul_Fire_BE', fire: 'Fire_JE7', sculk: 'Sculk_JE1_BE1', bubble: 'Bubble_Column_JE1_BE1'};
 window.ready = Promise.all([
   ...Object.entries(NAMES).map(([k, n]) => new Promise(r => { const i = new Image(); i.onload = r; i.src = `assets/blocks/${n}.png`; IMG[k] = i; })),
   document.fonts.load('80px G14'), document.fonts.load('66px G11B')]);
@@ -204,6 +204,9 @@ function cmdBar(s) {   // 명령어 창 (가운데 기준)
   box(-400, -60, 800, 100, '#1b1b1b', '#000', 6);
   text(s, -370, 6, 50, '#e0e0e0', 'G14', 'left', 0);
 }
+const FLAME = [   // 현실 불꽃 (우리 그림, 물건 없이 불꽃만)
+  '....o.....', '...oo.....', '...ooo..o.', '..oyoo.oo.', '..oyyoooo.', '.ooyyyoooo', '.oyyyyyoo.',
+  'ooyywyyyoo', 'oyywwwyyyo', 'oyywwwwyyo', 'oyyywwyyyo', '.oyyyyyyo.', '..oyyyyo..', '...oooo...'];
 // ---------- 장면 ----------
 const SC = {
   hook(t, d) {
@@ -402,7 +405,9 @@ const SC = {
     bg('#07070a', '#0d0d12', 0.02);
     const p = clamp(t / 0.3), s = lerp(1.5, 1, ease(p));
     const sh = t > 0.3 && t < 0.55 ? Math.sin(t * 100) * 12 : 0;
+    ctx.save(); ctx.shadowColor = 'rgba(200,230,255,0.45)'; ctx.shadowBlur = 50;   // 어두운 블록(스컬크 등)도 배경과 구분되게
     cube(IMG[(EP && EP.nextBlock) || 'obs'], 0, 0, 0, 440 * s, W / 2 + sh, 560 - (s - 1) * 300, ease(p));
+    ctx.restore();
     if (t > 0.3) { const q = clamp((t - 0.3) / 0.6); ctx.fillStyle = `rgba(120,100,160,${0.6 * (1 - q)})`; for (let k = -6; k <= 6; k++) ctx.fillRect(snap(W / 2 + k * 60 * (1 + q)), snap(1000 - q * 60 - Math.abs(k) * 6), 18, 18); }
   },
   absorbtons(t, d) { const h = subAt(1, d * 0.5); if (t < h) SC.absorb(t, h); else SC.tons(t - h + h * 0.46, h); },
@@ -830,6 +835,108 @@ const SC = {
     if (t > s1 + 0.4) bigX(W / 2 + 330, 765, clamp((t - s1 - 0.4) / 0.15));
     text('명령어 X', W / 2, 970, 90, '#ff5a4a', 'G14', 'center', 12);
   },
+  // ---------- 소울 샌드 편 (운영자 2026-11-23) ----------
+  shook(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.5), S = lerp(420, 520, ease(t / (d * 0.8)));
+    cube(IMG.soulsand, 0, 0, 0, S, W / 2, 380 + (520 - S) * 0.4);
+    const q = back((t - s1) / 0.35);
+    if (q > 0) { ctx.save(); ctx.translate(W / 2, 300); ctx.scale(q, q); text('소울 = 영혼 · 샌드 = 모래', 0, 0, 66, '#c9a27a', 'G14', 'center', 10); ctx.restore(); }
+  },
+  sslow(t, d) {
+    bg();
+    const T1 = d * 0.42, T2 = T1 * 40 / 23;
+    text('100m 걷기', W / 2, 330, 80, '#fff', 'G14', 'center', 10);
+    const lanes = [[300, IMG.grass, 23, T1, '#7fd36a'], [780, IMG.soulsand, 40, T2, '#c9a27a']];
+    for (const [x, img, sec, TT, col] of lanes) {
+      const S = 220, k = S / 268, oy = 520, p = clamp(t / TT);
+      cube(img, 0, 0, 0, S, x, oy);
+      const st = IMG.steve, h = 200, w = h * st.width / st.height, bob = p < 1 ? Math.abs(Math.sin(t * (sec < 30 ? 14 : 8))) * 10 : 0;
+      ctx.drawImage(st, x - w / 2, oy + 57 * k - h - bob + (img === IMG.soulsand ? 10 : 0), w, h);
+      box(x - 180, 760, 360, 40, '#2a2d34', '#000', 6);
+      ctx.fillStyle = col; ctx.fillRect(x - 180, 760, 360 * p, 40);
+      text(`${Math.round(sec * p)}초`, x, 910, p >= 1 ? 96 : 76, p >= 1 ? col : '#fff', 'G14', 'center', 10);
+    }
+  },
+  s2010(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.5), S = 160, ox = W / 2, oy = 380, n = 4;
+    const pat = (i, j) => ((i * 3 + j * 5) % 4 === 0 || (i + j) % 3 === 0) ? IMG.soulsand : IMG.nether;
+    for (let s2 = 0; s2 <= 2 * (n - 1); s2++) for (let i = 0; i < n; i++) { const j = s2 - i; if (j < 0 || j >= n) continue; cube(pat(i, j), i - 1.5, j - 1.5, 0, S, ox, oy); }
+    if (t < s1) { text('네더', W / 2, 970, 96, '#ff6a4a', 'G14', 'center', 12); return; }
+    const p = back((t - s1) / 0.3);
+    ctx.save(); ctx.translate(W / 2, 790); ctx.scale(p, p);
+    box(-300, -70, 600, 130, '#e8e8e8', '#000', 6);
+    ctx.fillStyle = '#3a6ea8'; ctx.fillRect(-300, -70, 600, 26);
+    text('hellsand.png', 0, 36, 56, '#1b1b1b', 'G14', 'center', 0);
+    ctx.restore();
+    text('지옥 모래', W / 2, 970, 90, '#ff6a4a', 'G14', 'center', 12);
+  },
+  s2012(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.4), s2 = subAt(2, d * 0.75), S = 170, ox = W / 2, oy = 700, k = S / 268;
+    if (t >= s2) {
+      if (t < s2 + 0.25) flash(`rgba(255,255,255,${0.7 * (1 - (t - s2) / 0.25)})`);
+      const p = back((t - s2) / 0.4), h = 560 * p, w = h * IMG.wither.width / IMG.wither.height;
+      ctx.drawImage(IMG.wither, W / 2 - w / 2, 900 - h + Math.sin(t * 4) * 8, w, h);
+      text('보스 몹 위더', W / 2, 970, 90, '#d0d0d0', 'G14', 'center', 12);
+      return;
+    }
+    const blocks = [[0, 0], [-1, 1], [0, 1], [1, 1]];
+    const shown = Math.floor(clamp(t / Math.max(0.4, s1 * 0.8)) * 4 + 0.001);
+    // 정면(b=0 평면)에 T자: a = 좌우, c = 높이
+    for (let m = 0; m < shown; m++) { const [a, c] = blocks[m]; cube(IMG.soulsand, a, -a, c, S, ox, oy); }
+    for (let m = 0; m < 3; m++) if (t >= s1 + m * 0.2) { const a = m - 1; cube(IMG.skull, a, -a, 2, S, ox, oy); }
+    text(t < s1 ? 'T자 쌓기' : '위더 스켈레톤 해골 × 3', W / 2, 970, 76, '#c9a27a', 'G14', 'center', 12);
+  },
+  s2018(t, d) {
+    bg();
+    const S = 150, ox = W / 2, oy = 740, k = S / 268;
+    cube(IMG.soulsand, 0, 0, 0, S, ox, oy);
+    for (let c = 1; c <= 4; c++) cube(IMG.water, 0, 0, c, S, ox, oy, 0.55);
+    const r = rnd(53);
+    for (let m = 0; m < 14; m++) {
+      const x = ox - 70 + r() * 140, ph = (t * (0.7 + r() * 0.5) + r()) % 1, y = oy + 40 - ph * 420;
+      ctx.drawImage(IMG.bubble, snap(x - 30), snap(y - 30), 60, 60);
+    }
+    text('거품 기둥', W / 2, 970, 90, '#7fd3f0', 'G14', 'center', 12);
+  },
+  s2020(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.55), S = 220, k = S / 268;
+    const items = [[310, IMG.soulsand, IMG.sfire, 1], [770, IMG.nether, IMG.fire, 0.5]];
+    for (const [x, base, fire, hearts] of items) {
+      const oy = 560;
+      cube(base, 0, 0, 0, S, x, oy);
+      const fy = oy - 165 * k, sw = Math.floor(t * 8) % 2;
+      ctx.save(); if (sw) { ctx.translate(x * 2, 0); ctx.scale(-1, 1); }
+      ctx.drawImage(fire, x - 150 * k, fy - 28 * k, 300 * k, 328 * k);
+      ctx.restore();
+      if (t >= s1) {
+        const hx = x, hy = 830;
+        ctx.save(); ctx.beginPath(); ctx.rect(hx - 60, hy - 60, hearts >= 1 ? 120 : 60, 120); ctx.clip();
+        sprite(HEART, {r: '#ff3b30'}, hx, hy, 16); ctx.restore();
+        if (hearts < 1) { ctx.globalAlpha = 0.35; ctx.save(); ctx.beginPath(); ctx.rect(hx, hy - 60, 60, 120); ctx.clip(); sprite(HEART, {r: '#555'}, hx, hy, 16); ctx.restore(); ctx.globalAlpha = 1; }
+      }
+    }
+    if (t >= s1) text('피해 2배', W / 2, 970, 90, '#7fd3f0', 'G14', 'center', 12);
+    else text('영혼 불', W / 2, 970, 90, '#7fd3f0', 'G14', 'center', 12);
+  },
+  sreal(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.45), sw = Math.floor(t * 7) % 2;
+    const fl = (x, pal) => { ctx.save(); if (sw) { ctx.translate(x * 2, 0); ctx.scale(-1, 1); } sprite(FLAME, pal, x, 560, 30); ctx.restore(); };
+    fl(300, {o: '#e8611a', y: '#ffb02e', w: '#fff1a8'});
+    fl(780, {o: '#1f6fe0', y: '#5fb8ff', w: '#e6f6ff'});
+    if (t >= s1) {
+      const r = rnd(61);
+      for (let m = 0; m < 10; m++) { const ph = (t * 0.8 + r()) % 1, side = r() > 0.5 ? 1 : -1, x = 780 + side * lerp(300, 40, ph), y = 780 - ph * 120 + r() * 40; ctx.fillStyle = '#cfe9ff'; ctx.fillRect(snap(x), snap(y), 18, 18); }
+      text('O₂', 980, 800, 54, '#cfe9ff', 'G14', 'center', 9);
+      text('덜 탐', 300, 860, 66, '#ffb02e', 'G14', 'center', 10);
+      text('다 탐', 780, 860, 66, '#5fb8ff', 'G14', 'center', 10);
+      text('완전 연소', W / 2, 970, 90, '#5fb8ff', 'G14', 'center', 12);
+    }
+  },
   cover(t, d) {   // 표지: 블록 이름 하나 + 블록 크게 (운영자 2026-11-22 "스펀지. 이렇게 간단하게")
     bg();
     // 제목+블록 묶음을 화면 가운데로 (운영자 2026-11-23 '썸네일 가운데로')
@@ -838,7 +945,9 @@ const SC = {
   },
   follow(t, d) {
     bg('#07070a', '#0d0d12', 0.02);
+    ctx.save(); ctx.shadowColor = 'rgba(200,230,255,0.45)'; ctx.shadowBlur = 50;
     cube(IMG[(EP && EP.nextBlock) || 'obs'], 0, 0, 0, 440, W / 2, 560, 0.85);
+    ctx.restore();
     const a = clamp(t / 0.5);
     ctx.globalAlpha = a; text('팔로우', W / 2, 1040, 64, '#d9d0ff', 'G14', 'center', 10); ctx.globalAlpha = 1;
   },
