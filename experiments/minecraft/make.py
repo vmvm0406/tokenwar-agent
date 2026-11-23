@@ -346,6 +346,11 @@ def onetake_audio(ep, voice):
         times = [(remap(a), remap(b)) for a, b in times]
     for si, l in clips:
         c = decode(HERE / l[2][5:])
+        # 본문 끝 무음을 0.05초만 남기고 잘라 속삭임이 늦게 나오지 않게 (운영자 2026-11-23 '조오금 늦게 나온다')
+        w = int(SR * 0.01); n = len(audio) // w
+        loud = np.where(20 * np.log10(np.sqrt((audio[: n * w].reshape(n, w) ** 2).mean(1)) + 1e-9) > -38)[0]
+        if len(loud):
+            audio = audio[: min(len(audio), (loud[-1] + 1) * w + int(SR * 0.05))]
         # 이어 붙인 티가 덜 나게: 소리 크기를 본문 말소리의 60%에 맞추고 쉼은 짧게 (운영자 2026-11-23 '끊기는 느낌')
         rms = lambda x: float(np.sqrt(np.mean(x[np.abs(x) > 0.02] ** 2))) if np.any(np.abs(x) > 0.02) else 1.0
         c = c * (0.6 * rms(audio) / rms(c))
