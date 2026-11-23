@@ -1,0 +1,18 @@
+{
+ "approved": true,
+ "approved_at": "2026-11-23T16:52:32+09:00",
+ "id": "2026-11-23-video-nether-reactor",
+ "date": "2026-11-23",
+ "type": "video",
+ "format": "explain",
+ "prebuilt": true,
+ "title": "네더 반응기 코어",
+ "topic": "마인크래프트 블록 · 네더 반응기 코어",
+ "caption": "명령어로도 못 구하는 마크 블록, 네더 반응기 코어 🔷\n\n2012년 포켓 에디션(PE)에만 나왔던 블록이에요.\n철 6개와 다이아몬드 3개로 만들고, 조약돌과 금 블록으로 정해진 모양을 쌓은 뒤 가운데 코어를 켜면\n네더랙 1600개가 넘는 거대한 탑이 솟아올랐죠.\n탑 안에서는 45초 동안 발광석 가루와 네더 석영이 쏟아지고 좀비 피그맨도 나왔어요.\n\n2015년 진짜 네더가 생기면서 기능이 사라지고 조합법도 막혀서,\n현재는 크리에이티브에서도 명령어로도 구할 수 없어요.\n\n다음 편은 소울 샌드 👻",
+ "hashtags": ["#마인크래프트", "#마크", "#네더반응기코어", "#마인크래프트블록"],
+ "publish_at": "2026-11-23T17:00:00+09:00",
+ "rights": "original",
+ "credit": "직접 제작 (블록·아이템·몹 이미지 minecraft.wiki 렌더, 픽셀 그림·효과음 직접, 목소리 일레븐랩스 Starter)",
+ "note": "마인크래프트 블록 파고들기 5편. 영상 experiments/minecraft/make.py 완성본(prebuilt, episodes/nrc.json), 표지 cover.py(하늘색 제목, 크기 115). 사실 출처: minecraft.wiki Nether Reactor Core·Nether Reactor 문서.",
+ "rights_note": "Minecraft 콘텐츠는 Mojang 사용 지침(영상 허용) 안에서, 로고·게임 소리·음악 안 씀."
+}
