@@ -16,7 +16,7 @@ ctx.imageSmoothingEnabled = false;
 const IMG = {};
 const NAMES = {sp1: 'Sponge_JE1_BE1', sp2: 'Sponge_JE2_BE2', sp3: 'Sponge_JE3_BE3', wet: 'Wet_Sponge_JE2_BE2', water: 'Water_JE16',
   grass: 'Grass_Block_JE7_BE6', obs: 'Obsidian_JE3_BE2', furnace: 'Furnace_JE4', nether: 'Netherrack_JE4_BE2',
-  pris: 'Prismarine_JE2_BE2', sand: 'Sand_JE5_BE3', tnt: 'TNT_JE3_BE2', eg: 'Elder_Guardian_JE2_BE2', cobble: 'Cobblestone_JE5_BE3', lava: 'Lava_JE19', pick: 'Diamond_Pickaxe_JE3_BE3', gun: 'Gunpowder_JE2_BE2', sstone: 'Sandstone_JE6_BE3', plate: 'Stone_Pressure_Plate_JE5_BE2', bedrock: 'Bedrock_JE2_BE2', farmland: 'Farmland_JE4_BE6', seeds: 'Wheat_Seeds_JE1_BE1', dirt: 'Dirt_JE2_BE2', stone: 'Stone_JE5_BE3', steve: 'Steve_classic_JE6', nrc: 'Nether_Reactor_Core_BE1', nrc2: 'Nether_Reactor_Core_BE2', nrci: 'Initialized_Nether_Reactor_Core_BE1', nrcf: 'Finished_Nether_Reactor_Core_BE1', gold: 'Block_of_Gold_JE6_BE3', glow: 'Glowstone_Dust_JE2_BE2', quartz: 'Nether_Quartz_JE2_BE2', iron: 'Iron_Ingot_JE3_BE2', dia: 'Diamond_JE3_BE3', soulsand: 'Soul_Sand_JE2_BE2', pig: 'Zombified_Piglin_JE2', skull: 'Wither_Skeleton_Skull_(S)_JE2', wither: 'Wither_JE2_BE2', sfire: 'Soul_Fire_BE', fire: 'Fire_JE7', sculk: 'Sculk_JE1_BE1', bubble: 'Bubble_Column_JE1_BE1', sstex: 'Soul_Sand_(texture)_JE2_BE2', zombie: 'Zombie_JE5_BE2', warden: 'Warden_JE1_BE1', catalyst: 'Sculk_Catalyst_JE1', shrieker: 'Sculk_Shrieker_JE1_BE2', hoe: 'Diamond_Hoe_JE3_BE3', rdeep: 'Reinforced_Deepslate_JE1_BE1', deepslate: 'Deepslate_JE2', xp: 'Experience_Orb_Value_3-6'};
+  pris: 'Prismarine_JE2_BE2', sand: 'Sand_JE5_BE3', tnt: 'TNT_JE3_BE2', eg: 'Elder_Guardian_JE2_BE2', cobble: 'Cobblestone_JE5_BE3', lava: 'Lava_JE19', pick: 'Diamond_Pickaxe_JE3_BE3', gun: 'Gunpowder_JE2_BE2', sstone: 'Sandstone_JE6_BE3', plate: 'Stone_Pressure_Plate_JE5_BE2', bedrock: 'Bedrock_JE2_BE2', farmland: 'Farmland_JE4_BE6', seeds: 'Wheat_Seeds_JE1_BE1', dirt: 'Dirt_JE2_BE2', stone: 'Stone_JE5_BE3', steve: 'Steve_classic_JE6', nrc: 'Nether_Reactor_Core_BE1', nrc2: 'Nether_Reactor_Core_BE2', nrci: 'Initialized_Nether_Reactor_Core_BE1', nrcf: 'Finished_Nether_Reactor_Core_BE1', gold: 'Block_of_Gold_JE6_BE3', glow: 'Glowstone_Dust_JE2_BE2', quartz: 'Nether_Quartz_JE2_BE2', iron: 'Iron_Ingot_JE3_BE2', dia: 'Diamond_JE3_BE3', soulsand: 'Soul_Sand_JE2_BE2', pig: 'Zombified_Piglin_JE2', skull: 'Wither_Skeleton_Skull_(S)_JE2', wither: 'Wither_JE2_BE2', sfire: 'Soul_Fire_BE', fire: 'Fire_JE7', sculk: 'Sculk_JE1_BE1', bubble: 'Bubble_Column_JE1_BE1', sstex: 'Soul_Sand_(texture)_JE2_BE2', zombie: 'Zombie_JE5_BE2', warden: 'Warden_JE1_BE1', catalyst: 'Sculk_Catalyst_JE1', shrieker: 'Sculk_Shrieker_JE1_BE2', hoe: 'Diamond_Hoe_JE3_BE3', rdeep: 'Reinforced_Deepslate_JE1_BE1', deepslate: 'Deepslate_JE2', xp: 'Experience_Orb_Value_3-6', vault: 'Vault_JE6_BE5', npick: 'Netherite_Pickaxe_JE3_BE2', dragon: 'Ender_Dragon_JE1_BE1', piston: 'Piston_(U)_JE4'};
 window.ready = Promise.all([
   ...Object.entries(NAMES).map(([k, n]) => new Promise(r => { const i = new Image(); i.onload = r; i.src = `assets/blocks/${n}.png`; IMG[k] = i; })),
   document.fonts.load('80px G14'), document.fonts.load('66px G11B')]);
@@ -1067,6 +1067,144 @@ const SC = {
     // 제목+블록 묶음을 화면 가운데로 (운영자 2026-11-23 '썸네일 가운데로')
     cube(IMG[(EP && EP.coverBlock) || 'sp3'], 0, 0, 0, 600, W / 2, 785);
     text((EP && EP.title) || '', W / 2, 685, (EP && EP.coverSize) || 230, (EP && EP.coverColor) || '#ffe45c', 'G14', 'center', 22);   // 제목 색 = 블록 색 (운영자 2026-11-23 흑요석은 보라)
+  },
+  // ---------- 보강된 심층암 편 (운영자 2026-11-23) ----------
+  rhook(t, d) {
+    bg();
+    const s2 = subAt(2, d * 0.75), p = clamp(t / (d * 0.95));
+    cube(IMG.rdeep, 0, 0, 0, 240, W / 2, 250);
+    if (p > 0.08) { ctx.save(); ctx.globalAlpha = 0.55; crack(W / 2, 400, p, 11, 0.45); ctx.restore(); }
+    const sh = 170, sw = sh * IMG.steve.width / IMG.steve.height, bob = Math.abs(Math.sin(t * 12)) * 10;
+    ctx.drawImage(IMG.steve, 290 - sw / 2, 560 - bob, sw, sh);
+    ctx.save(); ctx.translate(790, 645); ctx.rotate(-0.2 + Math.abs(Math.sin(t * 12)) * 0.5); ctx.drawImage(IMG.npick, -85, -85, 170, 170); ctx.restore();
+    for (const x of [290, 790]) {   // 맨손·네더라이트 곡괭이 같은 속도
+      text(`${(82.5 * p).toFixed(1)}초`, x, 785, 44, '#fff', 'G14', 'center', 8);
+      box(x - 130, 802, 260, 22, '#3a3f4b', '#000', 6); ctx.fillStyle = '#e8d44d'; ctx.fillRect(x - 130, 802, 260 * p, 22);
+    }
+    if (t < s2) text('82.5초', W / 2, LY, 84, '#ffe45c', 'G14', 'center', 12);
+    else text('보강된 심층암', W / 2, LY, 84, '#9fb7c9', 'G14', 'center', 12);
+  },
+  rcity(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.45), S = 80, ox = W / 2, oy = 470;
+    const cells = [];
+    for (let a = -4; a <= 4; a++) for (let c = 0; c <= 6; c++) if (a === -4 || a === 4 || c === 0 || c === 6) cells.push([a, c]);
+    const order = cells.slice().sort((x, y) => x[1] - y[1] || x[0] - y[0]);   // 아래부터 쌓임
+    const draw = cells.slice().sort((x, y) => x[0] - y[0] || x[1] - y[1]);   // 겹침 순서
+    for (const [a, c] of draw) {
+      const q = (t - 0.15 - order.findIndex(o => o[0] === a && o[1] === c) * 0.04) / 0.25;
+      if (q > 0) cube(IMG.rdeep, a, 0, c, S, ox, oy + 130, 1, Math.min(1, back(q)));
+    }
+    if (t >= s1) { const p = back((t - s1) / 0.4), h = 230 * p, w = h * IMG.warden.width / IMG.warden.height; ctx.drawImage(IMG.warden, W / 2 - w / 2, 740 - h, w, h); }
+    text(t < s1 ? '고대 도시' : '블록 56개', W / 2, LY, 84, '#9fb7c9', 'G14', 'center', 12);
+  },
+  r2021(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.5);
+    if (t < s1) {
+      cube(IMG.rdeep, 0, 0, 0, 230, W / 2, 470, 0.18);
+      sprite(QM, {y: '#ffe45c'}, W / 2, 610 + Math.sin(t * 5) * 8, 26);
+      text('이름 없이 공개', W / 2, LY, 84, '#ffe45c', 'G14', 'center', 12);
+      return;
+    }
+    const p = back((t - s1) / 0.35);
+    cube(IMG.rdeep, 0, 0, 0, 230, W / 2, 470, 1, Math.max(0.01, p));
+    if (t > s1 + 0.3) { box(W / 2 - 250, 762, 500, 60, '#1d222b', '#000', 6); text('mysterious_frame', W / 2, 808, 44, '#cfd6e0', 'G11B', 'center', 0); }
+    text('첫 이름: 신비한 틀', W / 2, LY, 84, '#9fb7c9', 'G14', 'center', 12);
+  },
+  rhard(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.5);
+    if (t < s1) {   // 경도(단단함) 막대
+      const rows = [['rdeep', 55, '#9fb7c9'], ['obs', 50, '#8a6cc4'], ['stone', 1.5, '#9aa0a6']];
+      rows.forEach(([b, v, col], i) => {
+        const y = 500 + i * 120, g = ease((t - 0.15 - i * 0.15) / 0.5);
+        cube(IMG[b], 0, 0, 0, 90, 160, y - 50);
+        box(240, y - 22, 560 * v / 55 * g + 1, 44, col, '#000', 6);
+        if (g > 0.05) text(String(v), 240 + 560 * v / 55 * g + 24, y + 20, 56, '#fff', 'G14', 'left', 10);
+      });
+      if (t > 0.9) text('1등', 820, 455, 60, '#ffe45c', 'G14', 'center', 10);
+      text('경도 55 · 1등', W / 2, LY, 84, '#9fb7c9', 'G14', 'center', 12);
+      return;
+    }
+    const u = t - s1;
+    cube(IMG.rdeep, 0, 0, 0, 260, W / 2, 470);
+    if (u < 0.35) cube(IMG.tnt, 0, 0, 0, 120, 230, 560, 1, 1 + Math.sin(u * 60) * 0.05);
+    else if (u < 1.3) { ctx.save(); ctx.translate(250, 640); ctx.scale(0.45, 0.45); smoke(0, 0, (u - 0.35) * 1.5, 7); ctx.restore(); }
+    const b1 = Math.sin(clamp((u - 0.4) / 0.7) * Math.PI), wh = 230, ww = wh * IMG.wither.width / IMG.wither.height;
+    if (u > 0.3) { ctx.globalAlpha = clamp((u - 0.3) * 5); ctx.drawImage(IMG.wither, 860 - ww / 2 - 60 * b1, 470, ww, wh); ctx.globalAlpha = 1; }
+    const b2 = clamp((u - 1.0) / 0.9), dw = 300, dh = dw * IMG.dragon.height / IMG.dragon.width;   // 화면 끝에서 잘리지 않게 제자리에서 나타남
+    if (b2 > 0) { ctx.globalAlpha = clamp(b2 * 5); ctx.drawImage(IMG.dragon, 240 + 70 * Math.sin(b2 * Math.PI) - dw / 2, 600, dw, dh); ctx.globalAlpha = 1; }
+    text('폭발 저항 1,200', W / 2, LY, 84, '#9fb7c9', 'G14', 'center', 12);
+  },
+  rvault(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.3), s2 = subAt(2, d * 0.6);
+    if (t < s1) {
+      cube(IMG.vault, 0, 0, 0, 260, W / 2, 470, 1, Math.max(0.01, back(t / 0.35)));
+      text('시련의 회당 금고', W / 2, LY, 84, '#e8a64a', 'G14', 'center', 12);
+      return;
+    }
+    if (t < s2) {
+      const p = back((t - s1) / 0.3);
+      cube(IMG.vault, 0, 0, 0, 200, 330, 500, 1, Math.max(0.01, p)); cube(IMG.obs, 0, 0, 0, 200, 750, 500, 1, Math.max(0.01, p));
+      text('=', W / 2, 680, 120, '#fff', 'G14', 'center', 12);
+      text('50', 330, 820, 64, '#fff', 'G14', 'center', 10); text('50', 750, 820, 64, '#fff', 'G14', 'center', 10);
+      text('경도 50 = 흑요석', W / 2, LY, 84, '#e8a64a', 'G14', 'center', 12);
+      return;
+    }
+    const g = ease((t - s2) / 0.6);   // 폭발 저항 막대
+    cube(IMG.rdeep, 0, 0, 0, 100, 160, 500); cube(IMG.vault, 0, 0, 0, 100, 160, 670);
+    box(250, 535, 620 * g + 1, 44, '#9fb7c9', '#000', 6); text('1,200', 250 + 620 * g - 10, 520, 56, '#fff', 'G14', 'right', 10);
+    box(250, 705, 620 * 50 / 1200, 44, '#e8a64a', '#000', 6); text('50', 310, 742, 56, '#fff', 'G14', 'left', 10);
+    text('폭발 저항 24분의 1', W / 2, LY, 84, '#e8a64a', 'G14', 'center', 12);
+  },
+  rrank(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.35), s2 = subAt(2, d * 0.7);
+    if (t < s1) {
+      sprite(QM, {y: '#ffe45c'}, W / 2, 640, 34 * Math.max(0.01, back(t / 0.3)));
+      text('제일 단단한 블록?', W / 2, LY, 84, '#ffe45c', 'G14', 'center', 12);
+      return;
+    }
+    const p1 = back((t - s1) / 0.35);
+    cube(IMG.rdeep, 0, 0, 0, 220, 310, 480, 1, Math.max(0.01, p1));
+    text('부서지는 것 1등', 310, 455, 48, '#9fb7c9', 'G14', 'center', 8);
+    if (t >= s2) {
+      const p2 = back((t - s2) / 0.35);
+      cube(IMG.bedrock, 0, 0, 0, 220, 770, 480, 1, Math.max(0.01, p2));
+      text('아예 못 부숨', 770, 455, 48, '#ff6b5c', 'G14', 'center', 8);
+    }
+    text(t < s2 ? '보강된 심층암' : '베드락', W / 2, LY, 84, t < s2 ? '#9fb7c9' : '#cfcfcf', 'G14', 'center', 12);
+  },
+  rreal(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.4), s2 = subAt(2, d * 0.7), th = s1 + 0.6;
+    const GEM = ['..kkkkkk..', '.kwwccCCk.', 'kwwccccCCk', 'kkkkkkkkkk', '.kwccccCk.', '..kwccCk..', '...kwCk...', '....kk....'];
+    const PAL = {k: '#0b2a33', w: '#e8ffff', c: '#5ee6f0', C: '#2aa9c0'};
+    const gx = W / 2, gy = 560, px = 30;   // 다이아몬드 (우리 그림): 440~680
+    if (t < th) {
+      sprite(GEM, PAL, gx, gy, px);
+      if ((t * 3) % 1 < 0.5) { ctx.fillStyle = '#fff'; ctx.fillRect(snap(gx - 90), snap(gy - 80), 12, 12); }
+    } else {
+      const e = ease((t - th) / 0.5);
+      for (const sgn of [-1, 1]) {
+        ctx.save(); ctx.beginPath(); ctx.rect(sgn < 0 ? 0 : gx, 0, W / 2, H); ctx.clip();
+        ctx.translate(gx + sgn * 110 * e, gy + 60 * e); ctx.rotate(sgn * 0.35 * e); sprite(GEM, PAL, 0, 0, px); ctx.restore();
+      }
+      const r = rnd(9), q = clamp((t - th) / 0.8);
+      for (let k = 0; k < 24; k++) { const a = r() * Math.PI * 2, v = 120 + r() * 260; ctx.fillStyle = r() > 0.5 ? '#5ee6f0' : '#e8ffff'; ctx.fillRect(snap(gx + Math.cos(a) * v * q), snap(Math.min(820, gy + Math.sin(a) * v * q * 0.7 + 200 * q * q)), 14, 14); }
+      if (t - th < 0.08) flash('rgba(255,255,255,0.5)');
+    }
+    // 망치 (우리 그림): 내려쳐서 th에 맞음
+    const sw = t < th ? ease((t - (th - 0.45)) / 0.45) : 1, a = t < th - 0.45 ? 1.1 : 1.1 * (1 - sw);
+    const up = t > th ? clamp((t - th - 0.3) / 0.4) : 0;
+    ctx.save(); ctx.translate(gx + 330, 385); ctx.rotate(a + up * 0.9);
+    ctx.fillStyle = '#000'; ctx.fillRect(-340, -17, 346, 34); ctx.fillStyle = '#8b5a2b'; ctx.fillRect(-334, -11, 334, 22);
+    box(-370, -55, 80, 110, '#7d8590', '#000', 6); ctx.fillStyle = '#a7aeb8'; ctx.fillRect(-370, -55, 80, 18);
+    ctx.restore();
+    const lab = t < th ? '굳기 1등 다이아몬드' : (t < s2 ? '깨짐' : '단단함과 튼튼함은 별개');
+    text(lab, W / 2, LY, 84, '#5ee6f0', 'G14', 'center', 12);
   },
   follow(t, d) {
     bg('#07070a', '#0d0d12', 0.02);
