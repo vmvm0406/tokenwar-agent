@@ -16,7 +16,7 @@ ctx.imageSmoothingEnabled = false;
 const IMG = {};
 const NAMES = {sp1: 'Sponge_JE1_BE1', sp2: 'Sponge_JE2_BE2', sp3: 'Sponge_JE3_BE3', wet: 'Wet_Sponge_JE2_BE2', water: 'Water_JE16',
   grass: 'Grass_Block_JE7_BE6', obs: 'Obsidian_JE3_BE2', furnace: 'Furnace_JE4', nether: 'Netherrack_JE4_BE2',
-  pris: 'Prismarine_JE2_BE2', sand: 'Sand_JE5_BE3', tnt: 'TNT_JE3_BE2', eg: 'Elder_Guardian_JE2_BE2', cobble: 'Cobblestone_JE5_BE3', lava: 'Lava_JE19', pick: 'Diamond_Pickaxe_JE3_BE3', gun: 'Gunpowder_JE2_BE2', sstone: 'Sandstone_JE6_BE3', plate: 'Stone_Pressure_Plate_JE5_BE2', bedrock: 'Bedrock_JE2_BE2', farmland: 'Farmland_JE4_BE6', seeds: 'Wheat_Seeds_JE1_BE1', dirt: 'Dirt_JE2_BE2', stone: 'Stone_JE5_BE3', steve: 'Steve_classic_JE6', nrc: 'Nether_Reactor_Core_BE1', nrc2: 'Nether_Reactor_Core_BE2', nrci: 'Initialized_Nether_Reactor_Core_BE1', nrcf: 'Finished_Nether_Reactor_Core_BE1', gold: 'Block_of_Gold_JE6_BE3', glow: 'Glowstone_Dust_JE2_BE2', quartz: 'Nether_Quartz_JE2_BE2', iron: 'Iron_Ingot_JE3_BE2', dia: 'Diamond_JE3_BE3', soulsand: 'Soul_Sand_JE2_BE2', pig: 'Zombified_Piglin_JE2', skull: 'Wither_Skeleton_Skull_(S)_JE2', wither: 'Wither_JE2_BE2', sfire: 'Soul_Fire_BE', fire: 'Fire_JE7', sculk: 'Sculk_JE1_BE1', bubble: 'Bubble_Column_JE1_BE1'};
+  pris: 'Prismarine_JE2_BE2', sand: 'Sand_JE5_BE3', tnt: 'TNT_JE3_BE2', eg: 'Elder_Guardian_JE2_BE2', cobble: 'Cobblestone_JE5_BE3', lava: 'Lava_JE19', pick: 'Diamond_Pickaxe_JE3_BE3', gun: 'Gunpowder_JE2_BE2', sstone: 'Sandstone_JE6_BE3', plate: 'Stone_Pressure_Plate_JE5_BE2', bedrock: 'Bedrock_JE2_BE2', farmland: 'Farmland_JE4_BE6', seeds: 'Wheat_Seeds_JE1_BE1', dirt: 'Dirt_JE2_BE2', stone: 'Stone_JE5_BE3', steve: 'Steve_classic_JE6', nrc: 'Nether_Reactor_Core_BE1', nrc2: 'Nether_Reactor_Core_BE2', nrci: 'Initialized_Nether_Reactor_Core_BE1', nrcf: 'Finished_Nether_Reactor_Core_BE1', gold: 'Block_of_Gold_JE6_BE3', glow: 'Glowstone_Dust_JE2_BE2', quartz: 'Nether_Quartz_JE2_BE2', iron: 'Iron_Ingot_JE3_BE2', dia: 'Diamond_JE3_BE3', soulsand: 'Soul_Sand_JE2_BE2', pig: 'Zombified_Piglin_JE2', skull: 'Wither_Skeleton_Skull_(S)_JE2', wither: 'Wither_JE2_BE2', sfire: 'Soul_Fire_BE', fire: 'Fire_JE7', sculk: 'Sculk_JE1_BE1', bubble: 'Bubble_Column_JE1_BE1', sstex: 'Soul_Sand_(texture)_JE2_BE2'};
 window.ready = Promise.all([
   ...Object.entries(NAMES).map(([k, n]) => new Promise(r => { const i = new Image(); i.onload = r; i.src = `assets/blocks/${n}.png`; IMG[k] = i; })),
   document.fonts.load('80px G14'), document.fonts.load('66px G11B')]);
@@ -838,8 +838,15 @@ const SC = {
   // ---------- 소울 샌드 편 (운영자 2026-11-23) ----------
   shook(t, d) {
     bg();
-    const s1 = subAt(1, d * 0.5), S = lerp(420, 520, ease(t / (d * 0.8)));
-    cube(IMG.soulsand, 0, 0, 0, S, W / 2, 380 + (520 - S) * 0.4);
+    const s1 = subAt(1, d * 0.5);
+    if (t < s1) {   // '자세히 보면': 블록 한 면(위키 텍스처)을 크게, 천천히 다가감
+      const z = lerp(560, 680, ease(t / s1)), cy = 600;
+      box(W / 2 - z / 2, cy - z / 2, z, z, '#000', '#000', 8);
+      ctx.drawImage(IMG.sstex, W / 2 - z / 2, cy - z / 2, z, z);
+      return;
+    }
+    const S = 440;
+    cube(IMG.soulsand, 0, 0, 0, S, W / 2, 400);
     const q = back((t - s1) / 0.35);
     if (q > 0) { ctx.save(); ctx.translate(W / 2, 300); ctx.scale(q, q); text('소울 = 영혼 · 샌드 = 모래', 0, 0, 66, '#c9a27a', 'G14', 'center', 10); ctx.restore(); }
   },
@@ -874,7 +881,7 @@ const SC = {
   },
   s2012(t, d) {
     bg();
-    const s1 = subAt(1, d * 0.4), s2 = subAt(2, d * 0.75), S = 170, ox = W / 2, oy = 700, k = S / 268;
+    const s1 = subAt(1, d * 0.4), s2 = subAt(2, d * 0.75), S = 190, ox = W / 2, oy = 640, k = S / 268;
     if (t >= s2) {
       if (t < s2 + 0.25) flash(`rgba(255,255,255,${0.7 * (1 - (t - s2) / 0.25)})`);
       const p = back((t - s2) / 0.4), h = 560 * p, w = h * IMG.wither.width / IMG.wither.height;
@@ -882,21 +889,24 @@ const SC = {
       text('보스 몹 위더', W / 2, 970, 90, '#d0d0d0', 'G14', 'center', 12);
       return;
     }
+    // T자는 한 줄(a축)로 붙여 쌓음: 아래 가운데 1개 + 위 3개, 해골은 위 3개 위에 (운영자 2026-11-23 '다시 잘 보고': 대각선으로 놓아 블록이 안 붙어 보였음)
     const blocks = [[0, 0], [-1, 1], [0, 1], [1, 1]];
     const shown = Math.floor(clamp(t / Math.max(0.4, s1 * 0.8)) * 4 + 0.001);
-    // 정면(b=0 평면)에 T자: a = 좌우, c = 높이
-    for (let m = 0; m < shown; m++) { const [a, c] = blocks[m]; cube(IMG.soulsand, a, -a, c, S, ox, oy); }
-    for (let m = 0; m < 3; m++) if (t >= s1 + m * 0.2) { const a = m - 1; cube(IMG.skull, a, -a, 2, S, ox, oy); }
+    const list = [];
+    for (let m = 0; m < shown; m++) { const [a, c] = blocks[m]; list.push([a, c, IMG.soulsand]); }
+    for (let m = 0; m < 3; m++) if (t >= s1 + m * 0.2) list.push([m - 1, 2, IMG.skull]);
+    list.sort((p, q) => p[0] - q[0] || p[1] - q[1]);
+    for (const [a, c, img] of list) cube(img, a, 0, c, S, ox, oy);
     text(t < s1 ? 'T자 쌓기' : '위더 스켈레톤 해골 × 3', W / 2, 970, 76, '#c9a27a', 'G14', 'center', 12);
   },
   s2018(t, d) {
     bg();
-    const S = 150, ox = W / 2, oy = 740, k = S / 268;
+    const S = 200, ox = W / 2, oy = 720, k = S / 268;
     cube(IMG.soulsand, 0, 0, 0, S, ox, oy);
-    for (let c = 1; c <= 4; c++) cube(IMG.water, 0, 0, c, S, ox, oy, 0.55);
+    for (let c = 1; c <= 3; c++) cube(IMG.water, 0, 0, c, S, ox, oy, 0.55);
     const r = rnd(53);
-    for (let m = 0; m < 14; m++) {
-      const x = ox - 70 + r() * 140, ph = (t * (0.7 + r() * 0.5) + r()) % 1, y = oy + 40 - ph * 420;
+    for (let m = 0; m < 16; m++) {
+      const x = ox - 100 + r() * 200, ph = (t * (0.7 + r() * 0.5) + r()) % 1, y = oy + 40 - ph * 360;
       ctx.drawImage(IMG.bubble, snap(x - 30), snap(y - 30), 60, 60);
     }
     text('거품 기둥', W / 2, 970, 90, '#7fd3f0', 'G14', 'center', 12);
