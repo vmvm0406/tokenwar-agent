@@ -839,14 +839,10 @@ const SC = {
   shook(t, d) {
     bg();
     const s1 = subAt(1, d * 0.5);
-    if (t < s1) {   // '자세히 보면': 블록 한 면(위키 텍스처)을 크게, 천천히 다가감
-      const z = lerp(560, 680, ease(t / s1)), cy = 600;
-      box(W / 2 - z / 2, cy - z / 2, z, z, '#000', '#000', 8);
-      ctx.drawImage(IMG.sstex, W / 2 - z / 2, cy - z / 2, z, z);
-      return;
-    }
-    const S = 440;
-    cube(IMG.soulsand, 0, 0, 0, S, W / 2, 400);
+    // '자세히 보면': 블록 모양 그대로(평면이면 무슨 블록인지 모름, 운영자 2026-11-23) 크게 다가갔다가 제자리로
+    const S = t < s1 ? lerp(420, 640, ease(t / s1)) : lerp(640, 440, ease((t - s1) / 0.5));
+    cube(IMG.soulsand, 0, 0, 0, S, W / 2, 600 - 150 * S / 268);
+    if (t < s1) text('소울 샌드', W / 2, 180, 96, '#c9a27a', 'G14', 'center', 12);   // 무슨 블록인지 처음부터
     const q = back((t - s1) / 0.35);
     if (q > 0) { ctx.save(); ctx.translate(W / 2, 300); ctx.scale(q, q); text('소울 = 영혼 · 샌드 = 모래', 0, 0, 66, '#c9a27a', 'G14', 'center', 10); ctx.restore(); }
   },
