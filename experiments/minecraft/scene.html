@@ -863,12 +863,12 @@ const SC = {
   },
   s2010(t, d) {
     bg();
-    const s1 = subAt(1, d * 0.5), S = 160, ox = W / 2, oy = 380, n = 4;
+    const s1 = subAt(1, d * 0.5), S = 150, ox = W / 2, oy = 450, n = 4;   // 뒤 꼭짓점이 연도 띠 아래에서 잘리지 않게 (운영자 2026-11-23 캡처)
     const pat = (i, j) => ((i * 3 + j * 5) % 4 === 0 || (i + j) % 3 === 0) ? IMG.soulsand : IMG.nether;
     for (let s2 = 0; s2 <= 2 * (n - 1); s2++) for (let i = 0; i < n; i++) { const j = s2 - i; if (j < 0 || j >= n) continue; cube(pat(i, j), i - 1.5, j - 1.5, 0, S, ox, oy); }
     if (t < s1) { text('네더', W / 2, 970, 96, '#ff6a4a', 'G14', 'center', 12); return; }
     const p = back((t - s1) / 0.3);
-    ctx.save(); ctx.translate(W / 2, 790); ctx.scale(p, p);
+    ctx.save(); ctx.translate(W / 2, 800); ctx.scale(p, p);
     box(-300, -70, 600, 130, '#e8e8e8', '#000', 6);
     ctx.fillStyle = '#3a6ea8'; ctx.fillRect(-300, -70, 600, 26);
     text('hellsand.png', 0, 36, 56, '#1b1b1b', 'G14', 'center', 0);

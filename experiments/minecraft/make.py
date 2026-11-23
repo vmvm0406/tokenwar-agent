@@ -383,7 +383,7 @@ def edge_check(mp4, scenes=(), fps=4):
         top = f[y0 + 1: y0 + 4]   # 연도 장면: 띠 바로 아래(440px)에서 그림이 잘려 일자로 끊긴 것
         if (f.max(2) > 90).mean() > 0.6:   # 화면 전체 번쩍임은 잘림 아님
             continue
-        if (strip.max(2) > 90).mean() > 0.01 or (yr and (top.max(2) > 90).mean() > 0.05):
+        if (strip.max(2) > 60).mean() > 0.01 or (yr and (top.max(2) > 60).mean() > 0.02):   # 배경은 밝기 40 아래, 어두운 블록(소울 샌드)도 잡게 60
             hits.append(round(i / fps, 1))
     if hits:
         print(f"  ⚠ 그림이 화면 옆 끝이나 연도 띠 아래에서 잘림: {hits[:20]}초", file=sys.stderr)
