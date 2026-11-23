@@ -16,7 +16,7 @@ ctx.imageSmoothingEnabled = false;
 const IMG = {};
 const NAMES = {sp1: 'Sponge_JE1_BE1', sp2: 'Sponge_JE2_BE2', sp3: 'Sponge_JE3_BE3', wet: 'Wet_Sponge_JE2_BE2', water: 'Water_JE16',
   grass: 'Grass_Block_JE7_BE6', obs: 'Obsidian_JE3_BE2', furnace: 'Furnace_JE4', nether: 'Netherrack_JE4_BE2',
-  pris: 'Prismarine_JE2_BE2', sand: 'Sand_JE5_BE3', tnt: 'TNT_JE3_BE2', eg: 'Elder_Guardian_JE2_BE2', cobble: 'Cobblestone_JE5_BE3', lava: 'Lava_JE19', pick: 'Diamond_Pickaxe_JE3_BE3', gun: 'Gunpowder_JE2_BE2', sstone: 'Sandstone_JE6_BE3', plate: 'Stone_Pressure_Plate_JE5_BE2', bedrock: 'Bedrock_JE2_BE2', farmland: 'Farmland_JE4_BE6', seeds: 'Wheat_Seeds_JE1_BE1', dirt: 'Dirt_JE2_BE2', stone: 'Stone_JE5_BE3', steve: 'Steve_classic_JE6', nrc: 'Nether_Reactor_Core_BE1', nrc2: 'Nether_Reactor_Core_BE2'};
+  pris: 'Prismarine_JE2_BE2', sand: 'Sand_JE5_BE3', tnt: 'TNT_JE3_BE2', eg: 'Elder_Guardian_JE2_BE2', cobble: 'Cobblestone_JE5_BE3', lava: 'Lava_JE19', pick: 'Diamond_Pickaxe_JE3_BE3', gun: 'Gunpowder_JE2_BE2', sstone: 'Sandstone_JE6_BE3', plate: 'Stone_Pressure_Plate_JE5_BE2', bedrock: 'Bedrock_JE2_BE2', farmland: 'Farmland_JE4_BE6', seeds: 'Wheat_Seeds_JE1_BE1', dirt: 'Dirt_JE2_BE2', stone: 'Stone_JE5_BE3', steve: 'Steve_classic_JE6', nrc: 'Nether_Reactor_Core_BE1', nrc2: 'Nether_Reactor_Core_BE2', nrci: 'Initialized_Nether_Reactor_Core_BE1', nrcf: 'Finished_Nether_Reactor_Core_BE1', gold: 'Block_of_Gold_JE6_BE3', glow: 'Glowstone_Dust_JE2_BE2', quartz: 'Nether_Quartz_JE2_BE2', iron: 'Iron_Ingot_JE3_BE2', dia: 'Diamond_JE3_BE3', soulsand: 'Soul_Sand_JE2_BE2', pig: 'Zombified_Piglin_JE2'};
 window.ready = Promise.all([
   ...Object.entries(NAMES).map(([k, n]) => new Promise(r => { const i = new Image(); i.onload = r; i.src = `assets/blocks/${n}.png`; IMG[k] = i; })),
   document.fonts.load('80px G14'), document.fonts.load('66px G11B')]);
@@ -182,6 +182,27 @@ function splat(cx, cy, q, seed) {   // 노란 물감 튐
   const r = rnd(seed);
   for (let k = 0; k < 26; k++) { const a = r() * Math.PI * 2, v = 120 + r() * 300, e = 1 - Math.exp(-q * 6);
     ctx.fillStyle = r() > 0.5 ? '#ffd23a' : '#d9a514'; const s3 = 16 + r() * 22; ctx.fillRect(snap(cx + Math.cos(a) * v * e), snap(cy + Math.sin(a) * v * e * 0.7), s3, s3); }
+}
+function slot(x, y, cs) {   // 인벤토리 칸
+  ctx.fillStyle = '#373737'; ctx.fillRect(x + 4, y + 4, cs - 8, 6); ctx.fillRect(x + 4, y + 4, 6, cs - 8);
+  ctx.fillStyle = '#fff'; ctx.fillRect(x + 4, y + cs - 10, cs - 8, 6); ctx.fillRect(x + cs - 10, y + 4, 6, cs - 8);
+  ctx.fillStyle = '#8b8b8b'; ctx.fillRect(x + 10, y + 10, cs - 20, cs - 20);
+}
+function craftGrid(x0, y0, cs, at) {   // 3×3 조합 칸, at(r, c) → 이미지 또는 null
+  box(x0 - 16, y0 - 16, 3 * cs + 32, 3 * cs + 32, '#c6c6c6', '#000', 6);
+  for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) {
+    const x = x0 + c * cs, y = y0 + r * cs; slot(x, y, cs);
+    const im = at(r, c); if (im) ctx.drawImage(im, x + 18, y + 18, cs - 36, cs - 36);
+  }
+}
+function arrow(x, y) {   // 조합 화살표 (픽셀)
+  ctx.fillStyle = '#000'; ctx.fillRect(x - 6, y - 24, 102, 48); ctx.fillRect(x + 84, y - 48, 12, 96);
+  ctx.fillStyle = '#e8e8e8'; ctx.fillRect(x, y - 18, 90, 36);
+  for (let k = 0; k < 5; k++) ctx.fillRect(x + 84 + k * 12, y - 42 + k * 12, 12, 84 - k * 24);
+}
+function cmdBar(s) {   // 명령어 창 (가운데 기준)
+  box(-400, -60, 800, 100, '#1b1b1b', '#000', 6);
+  text(s, -370, 6, 50, '#e0e0e0', 'G14', 'left', 0);
 }
 // ---------- 장면 ----------
 const SC = {
@@ -675,11 +696,145 @@ const SC = {
     }
     if (t >= a3) { const p = back((t - a3) / 0.35); ctx.save(); ctx.translate(W / 2 - 200, 700); ctx.scale(p, p); text('약 100배', 0, 0, 110, '#ffe45c', 'G14', 'center', 14); ctx.restore(); }
   },
+  // ---------- 네더 반응기 코어 편 (운영자 2026-11-23) ----------
+  nhook(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.55), y = 470 + Math.sin(t * 3) * 8;
+    cube(IMG.nrc, 0, 0, 0, 400, W / 2, y);
+    const p = back((t - 0.3) / 0.3);
+    if (p > 0) { ctx.save(); ctx.translate(W / 2, 900); ctx.scale(p, p); cmdBar('/give nether_reactor'); ctx.restore(); }
+    if (t > 0.8) bigX(W / 2 + 330, 885, clamp((t - 0.8) / 0.15));
+    const q = back((t - s1) / 0.35);
+    if (q > 0) { ctx.save(); ctx.translate(W / 2, 380); ctx.scale(q, q); text('네더 반응기 코어', 0, 0, 96, '#7fd3f0', 'G14', 'center', 12); ctx.restore(); }
+  },
+  n2012(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.5);
+    if (t < s1) {
+      box(W / 2 - 200, 380, 400, 540, '#2a2d34', '#000', 10);
+      box(W / 2 - 170, 430, 340, 420, '#0f1a22', '#000', 4);
+      cube(IMG.nrc, 0, 0, 0, 260, W / 2, 500);
+      text('휴대폰판', W / 2, 970, 84, '#7fd3f0', 'G14', 'center', 12);
+      return;
+    }
+    const cs = 130, x0 = 120, y0 = 470, u = t - s1;
+    craftGrid(x0, y0, cs, (r, c) => { const k = r * 3 + c; if (u < 0.1 * k) return null; return c === 1 ? IMG.dia : IMG.iron; });
+    if (u > 0.9) { arrow(x0 + 3 * cs + 40, y0 + 1.5 * cs); cube(IMG.nrc, 0, 0, 0, 240, 830, y0 + 40); }
+    text('철 6 + 다이아몬드 3', W / 2, 970, 76, '#fff', 'G14', 'center', 12);
+  },
+  nbuild(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.35), s2 = subAt(2, d * 0.6), z = ease((t - s2) / 0.8);
+    const S = lerp(170, 72, z), ox = W / 2, oy = lerp(600, 700, z);
+    const list = [], order = [];
+    for (let c = 0; c <= 2; c++) for (let a = -1; a <= 1; a++) for (let b = -1; b <= 1; b++) {
+      const corner = a !== 0 && b !== 0, mid = a === 0 && b === 0;
+      let img = null;
+      if (c === 0) img = corner ? IMG.gold : IMG.cobble;
+      if (c === 1) img = corner ? IMG.cobble : (mid ? (t >= s1 ? IMG.nrci : IMG.nrc) : null);
+      if (c === 2) img = corner ? null : IMG.cobble;
+      if (img) order.push([a, b, c, img]);
+    }
+    const shown = Math.floor(clamp(t / Math.max(0.5, s1 * 0.9)) * order.length + 0.001);
+    list.push(...order.slice(0, shown));
+    if (t >= s2) {
+      const h = Math.ceil(clamp((t - s2) / 1.2) * 8);
+      for (let a = -4; a <= 4; a++) for (let b = -4; b <= 4; b++) {
+        if (Math.abs(a) !== 4 && Math.abs(b) !== 4) continue;
+        const front = a === 4 || b === 4, hh = front ? Math.min(h, 1) : h;
+        for (let c = 0; c < hh; c++) list.push([a, b, c, IMG.nether]);
+      }
+    }
+    list.sort((p, q) => (p[0] + p[1]) - (q[0] + q[1]) || p[2] - q[2]);
+    for (const [a, b, c, img] of list) cube(img, a, b, c, S, ox, oy);
+    if (t >= s1) { const g = 0.5 + 0.5 * Math.sin(t * 12); ctx.save(); ctx.shadowColor = '#ff3020'; ctx.shadowBlur = 40 * g; cube(IMG.nrci, 0, 0, 1, S, ox, oy); ctx.restore(); }   // 가운데 코어가 가려지지 않게 맨 위에 다시
+    if (t >= s1 && t < s1 + 0.3) flash(`rgba(255,60,40,${0.3 * (1 - (t - s1) / 0.3)})`);
+    if (t < s1) text('조약돌 + 금 블록', W / 2, 970, 80, '#ffd23a', 'G14', 'center', 12);
+    else if (t >= s2 + 0.4) text('네더랙 탑', W / 2, 970, 90, '#ff6a4a', 'G14', 'center', 12);
+  },
+  ncount(t, d) {
+    bg();
+    cube(IMG.nether, 0, 0, 0, 300, W / 2, 400 + Math.sin(t * 3) * 6);
+    const n = Math.round(lerp(0, 1600, ease(t / (d * 0.55))));
+    text(n.toLocaleString() + '개', W / 2, 860, 140, '#ff6a4a', 'G14', 'center', 14);
+    const p = back((t - d * 0.6) / 0.35);
+    if (p > 0) { ctx.save(); ctx.translate(W / 2, 970); ctx.scale(p, p); text('64개 × 25세트', 0, 0, 76, '#fff', 'G14', 'center', 12); ctx.restore(); }
+  },
+  nloot(t, d) {
+    bg();
+    const s1 = subAt(2, d * 0.65), sec = Math.max(0, 45 - Math.floor(t * 6));
+    text(`${sec}초`, W / 2, 400, 110, '#ffe45c', 'G14', 'center', 12);
+    const r = rnd(41);
+    for (let k = 0; k < 18; k++) {
+      const x = 130 + r() * 740, sp = 0.5 + r() * 0.5, ph = (t * sp + r()) % 1;
+      ctx.drawImage(k % 2 ? IMG.glow : IMG.quartz, snap(x), snap(450 + ph * 380), 96, 96);
+    }
+    if (t >= s1) {
+      const p = back((t - s1) / 0.35), h = 540 * p, w = h * IMG.pig.width / IMG.pig.height;
+      ctx.drawImage(IMG.pig, W / 2 - w / 2, 920 - h, w, h);
+      text('좀비 피그맨', W / 2, 970, 84, '#ff9aa8', 'G14', 'center', 12);
+    } else text('발광석 가루 · 네더 석영', W / 2, 970, 66, '#ffd27a', 'G14', 'center', 12);
+  },
+  n2015(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.4), s2 = subAt(2, d * 0.7);
+    if (t < s1) {
+      const S = 140, ox = W / 2 + 60, oy = 740, k = S / 268;
+      const P = (a, b, c) => [ox + (a - b) * 134 * k, oy + (a + b) * 66.5 * k - (c - 1) * 165 * k];
+      const q = clamp(t / 0.5), pts = [P(-1, 0.02, 1), P(1, 0.02, 1), P(1, 0.02, 4), P(-1, 0.02, 4)];
+      ctx.save(); ctx.beginPath(); pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.closePath(); ctx.clip();
+      ctx.fillStyle = `rgba(110,30,200,${0.85 * q})`; ctx.fillRect(0, -300, W, H + 600);
+      const r = rnd(Math.floor(t * 8) + 1);
+      for (let m = 0; m < 90; m++) { ctx.fillStyle = `rgba(${170 + r() * 80},${80 + r() * 60},255,${q * (0.4 + r() * 0.5)})`; ctx.fillRect(snap(ox - 340 + r() * 680), snap(oy - 680 + r() * 800), 24, 24); }
+      ctx.restore();
+      const frame = [];
+      for (let zz = 0; zz <= 4; zz++) for (let i = -2; i <= 1; i++) if (zz === 0 || zz === 4 || i === -2 || i === 1) frame.push([i, zz]);
+      frame.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+      for (const [i, zz] of frame) cube(IMG.obs, i, 0, zz, S, ox, oy);
+      text('진짜 네더', W / 2, 970, 90, '#c58cff', 'G14', 'center', 12);
+      return;
+    }
+    if (t < s2) {
+      const off = t >= s1 + 0.2;
+      cube(off ? IMG.nrcf : IMG.nrc, 0, 0, 0, 380, W / 2, 400);
+      if (off) bigX(W / 2, 620, clamp((t - s1 - 0.2) / 0.15));
+      text('기능 사라짐', W / 2, 970, 90, '#d0d0d0', 'G14', 'center', 12);
+      return;
+    }
+    const cs = 120, x0 = 140, y0 = 480;
+    craftGrid(x0, y0, cs, (r, c) => c === 1 ? IMG.dia : IMG.iron);
+    arrow(x0 + 3 * cs + 40, y0 + 1.5 * cs);
+    cube(IMG.nrc, 0, 0, 0, 220, 830, y0 + 50, 0.5);
+    if (t > s2 + 0.3) bigX(830, y0 + 180, clamp((t - s2 - 0.3) / 0.15));
+    text('조합 불가', W / 2, 970, 90, '#ff5a4a', 'G14', 'center', 12);
+  },
+  nnow(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.5);
+    if (t < s1) {
+      const cols = 6, rows = 3, cs = 130, x0 = (W - cols * cs) / 2, y0 = 470;
+      const icons = ['grass', 'cobble', 'gold', 'obs', 'tnt', 'sp1', 'bedrock', 'stone', null, 'sand', 'nether', 'pris', 'dirt', 'furnace', 'glow', 'quartz', 'iron', 'dia'];
+      box(x0 - 20, y0 - 20, cols * cs + 40, rows * cs + 40, '#c6c6c6', '#000', 6);
+      icons.forEach((k, i) => {
+        const x = x0 + (i % cols) * cs, y = y0 + Math.floor(i / cols) * cs;
+        slot(x, y, cs);
+        if (!k) { if (Math.floor(t * 3) % 2 === 0) { ctx.strokeStyle = '#ffe45c'; ctx.lineWidth = 8; ctx.strokeRect(x + 6, y + 6, cs - 12, cs - 12); } sprite(QM, {y: '#ffe45c'}, x + cs / 2, y + cs / 2, 12); return; }
+        const im = IMG[k];
+        if (im.width === im.height && im.width >= 300) cube(im, 0, 0, 0, 84, x + cs / 2, y + 14); else ctx.drawImage(im, x + 20, y + 20, cs - 40, cs - 40);
+      });
+      text('크리에이티브 목록', W / 2, 970, 80, '#fff', 'G14', 'center', 12);
+      return;
+    }
+    cube(IMG.nrc, 0, 0, 0, 280, W / 2, 380, 0.6);
+    ctx.save(); ctx.translate(W / 2, 780); cmdBar('/give nether_reactor'); ctx.restore();
+    if (t > s1 + 0.4) bigX(W / 2 + 330, 765, clamp((t - s1 - 0.4) / 0.15));
+    text('명령어 X', W / 2, 970, 90, '#ff5a4a', 'G14', 'center', 12);
+  },
   cover(t, d) {   // 표지: 블록 이름 하나 + 블록 크게 (운영자 2026-11-22 "스펀지. 이렇게 간단하게")
     bg();
     // 제목+블록 묶음을 화면 가운데로 (운영자 2026-11-23 '썸네일 가운데로')
     cube(IMG[(EP && EP.coverBlock) || 'sp3'], 0, 0, 0, 600, W / 2, 785);
-    text((EP && EP.title) || '', W / 2, 685, 230, (EP && EP.coverColor) || '#ffe45c', 'G14', 'center', 22);   // 제목 색 = 블록 색 (운영자 2026-11-23 흑요석은 보라)
+    text((EP && EP.title) || '', W / 2, 685, (EP && EP.coverSize) || 230, (EP && EP.coverColor) || '#ffe45c', 'G14', 'center', 22);   // 제목 색 = 블록 색 (운영자 2026-11-23 흑요석은 보라)
   },
   follow(t, d) {
     bg('#07070a', '#0d0d12', 0.02);
