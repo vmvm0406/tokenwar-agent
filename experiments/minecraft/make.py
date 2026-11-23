@@ -95,6 +95,14 @@ CUES = {
     "sieve": [("r0.2", "whoosh"), ("r0.55", "whoosh"), ("r0.92", "pop")],
     "next": [(0.3, "thud")],
     "follow": [],
+    "bhook": [("s2-0.4", "whoosh"), ("s2+0.3", "crack"), ("s2+0.9", "slap")],
+    "b2009": [("r0.1", "pop"), ("r0.3", "pop"), ("r0.5", "pop")],
+    "b2010": [(0.62, "fizz"), (1.87, "fizz")],
+    "b2011": [("r0.45", "pop"), ("r0.47", "crack"), ("r0.52", "slap")],
+    "b2021": [("s1", "whoosh"), ("s1+1.0", "thud")],
+    "bnow": [("r0.45", "pop")],
+    "breal": [("r0.55", "crack")],
+    "bdeep": [(0.1, "whoosh"), ("s1", "pop"), ("s2", "pop"), ("s3", "thud")],
     "thook": [("s2", "pop"), ("s2+0.05", "splash")],
     "t2009": [("s1+0.3", "slap"), ("s1+1.9", "boom")],
     "t2010": [(0.3, "drip"), ("s2", "pop"), ("s2+0.4", "pop"), ("s2+1.2", "pop")],
@@ -122,10 +130,12 @@ def cue_time(at, s):
         return at
     if at.startswith("r"):
         return s["d"] * float(at[1:])
-    k, _, plus = at[1:].partition("+")
+    import re as _re
+    m = _re.match(r"(\d+)([+-][\d.]+)?$", at[1:])
+    k, off = int(m.group(1)), float(m.group(2) or 0)
     subs = s.get("subs") or []
-    base = subs[int(k)][1] if int(k) < len(subs) else s["d"] * 0.5
-    return base + float(plus or 0)
+    base = subs[k][1] if k < len(subs) else s["d"] * 0.5
+    return base + off
 
 
 def build_audio(ep, voice):

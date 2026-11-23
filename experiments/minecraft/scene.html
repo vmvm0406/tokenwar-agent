@@ -16,7 +16,7 @@ ctx.imageSmoothingEnabled = false;
 const IMG = {};
 const NAMES = {sp1: 'Sponge_JE1_BE1', sp2: 'Sponge_JE2_BE2', sp3: 'Sponge_JE3_BE3', wet: 'Wet_Sponge_JE2_BE2', water: 'Water_JE16',
   grass: 'Grass_Block_JE7_BE6', obs: 'Obsidian_JE3_BE2', furnace: 'Furnace_JE4', nether: 'Netherrack_JE4_BE2',
-  pris: 'Prismarine_JE2_BE2', sand: 'Sand_JE5_BE3', tnt: 'TNT_JE3_BE2', eg: 'Elder_Guardian_JE2_BE2', cobble: 'Cobblestone_JE5_BE3', lava: 'Lava_JE19', pick: 'Diamond_Pickaxe_JE3_BE3', gun: 'Gunpowder_JE2_BE2', sstone: 'Sandstone_JE6_BE3', plate: 'Stone_Pressure_Plate_JE5_BE2', bedrock: 'Bedrock_JE2_BE2'};
+  pris: 'Prismarine_JE2_BE2', sand: 'Sand_JE5_BE3', tnt: 'TNT_JE3_BE2', eg: 'Elder_Guardian_JE2_BE2', cobble: 'Cobblestone_JE5_BE3', lava: 'Lava_JE19', pick: 'Diamond_Pickaxe_JE3_BE3', gun: 'Gunpowder_JE2_BE2', sstone: 'Sandstone_JE6_BE3', plate: 'Stone_Pressure_Plate_JE5_BE2', bedrock: 'Bedrock_JE2_BE2', farmland: 'Farmland_JE4_BE6', seeds: 'Wheat_Seeds_JE1_BE1', dirt: 'Dirt_JE2_BE2', stone: 'Stone_JE5_BE3', steve: 'Steve_classic_JE6', nrc: 'Nether_Reactor_Core_BE1', nrc2: 'Nether_Reactor_Core_BE2'};
 window.ready = Promise.all([
   ...Object.entries(NAMES).map(([k, n]) => new Promise(r => { const i = new Image(); i.onload = r; i.src = `assets/blocks/${n}.png`; IMG[k] = i; })),
   document.fonts.load('80px G14'), document.fonts.load('66px G11B')]);
@@ -578,6 +578,102 @@ const SC = {
     if (ph < 0.35) sprite(BURST, {y: '#ffe45c', o: '#ff9a2a'}, W / 2 + 150, 520, 12 * back(ph / 0.15));
     text('쾅?', W / 2 + 230, 460, 90, '#fff', 'G14', 'center', 12);
     text('둔감한 폭약', W / 2, 900, 100, '#ffd23a', 'G14', 'center', 12);
+  },
+  // ---------- 베드락 편 (운영자 2026-11-23) ----------
+  bhook(t, d) {
+    bg();
+    const c = subAt(2, d * 0.55), y = 560 + Math.sin(t * 3) * 8;
+    text('절대 안 부서지는 블록', W / 2, 400, 84, '#d0d0d0', 'G14', 'center', 12);
+    if (t < c + 0.9) cube(IMG.bedrock, 0, 0, 0, 520, W / 2, y);
+    if (t >= c - 0.4 && t < c + 0.4) { const q = clamp((t - c + 0.4) / 0.4); ctx.drawImage(IMG.seeds, W / 2 - 70, lerp(300, y + 220, ease(q)), 140, 140); }
+    if (t >= c + 0.3 && t < c + 0.9) crack(W / 2, y + 300, clamp((t - c - 0.3) / 0.4), 13);
+    if (t >= c + 0.9) shards(W / 2, y + 300, t - c - 0.9, 17);
+  },
+  b2009(t, d) {
+    bg();
+    const S = 110, ox = W / 2, oy = 560, n = 7;
+    grassFloor(n, S, ox, oy);
+    const ring = [];
+    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) if (i === 0 || j === 0 || i === n - 1 || j === n - 1) ring.push([i, j]);
+    ring.sort((a, b) => (a[0] + a[1]) - (b[0] + b[1]));
+    const shown = Math.floor(clamp(t / (d * 0.6)) * ring.length);
+    const drawn = ring.map((r, k) => [r, k]).filter(([r, k]) => k < shown).sort((a, b) => (a[0][0] + a[0][1]) - (b[0][0] + b[0][1]));
+    for (const [[i, j]] of drawn) cube(IMG.bedrock, i - (n - 1) / 2, j - (n - 1) / 2, 1, S, ox, oy);
+    text('맵 가장자리', W / 2, 960, 90, '#d0d0d0', 'G14', 'center', 12);
+  },
+  b2010(t, d) {
+    bg();
+    const S = 130, ox = W / 2, oy = 600, n = 5, lava = Math.floor(t * 1.6) % 2 === 1;
+    for (let s2 = 0; s2 <= 2 * (n - 1); s2++) for (let i = 0; i < n; i++) { const j = s2 - i; if (j < 0 || j >= n) continue; cube(lava ? IMG.lava : IMG.bedrock, i - 2, j - 2, 0, S, ox, oy); }
+    sprite(QM, {y: '#ffe45c'}, W / 2, 470 + Math.sin(t * 6) * 12, 18);
+    text(lava ? '용암 바다' : '베드락', W / 2, 960, 90, lava ? '#ff8a3a' : '#d0d0d0', 'G14', 'center', 12);
+  },
+  b2011(t, d) {
+    bg();
+    const S = 260, ox = W / 2, oy = 380, c = subAt(0, 0) + d * 0.45;
+    cube(IMG.farmland, 0, 0, 0, S, ox, oy + 200);
+    if (t < c + 0.6) cube(IMG.bedrock, 0, 0, 1, S, ox, oy + 200);
+    if (t > c - 0.6 && t < c + 0.3) { const q = clamp((t - c + 0.6) / 0.5); ctx.drawImage(IMG.seeds, lerp(120, W / 2 - 60, ease(q)), oy + 330, 120, 120); }
+    if (t >= c + 0.2 && t < c + 0.6) crack(ox, oy + 120, clamp((t - c - 0.2) / 0.3), 19, 0.6);
+    if (t >= c + 0.6) shards(ox, oy + 120, t - c - 0.6, 23);
+    text('버그', W / 2, 960, 100, '#ff5a4a', 'G14', 'center', 12);
+  },
+  b2021(t, d) {
+    bg();
+    const m = subAt(1, d * 0.5), p = ease((t - m) / 1.0);
+    const top = 470, y0 = 560, y64 = 900, rx = 250;
+    ctx.fillStyle = '#000'; ctx.fillRect(rx - 6, top - 6, 18, y64 - top + 80);
+    ctx.fillStyle = '#9aa0a8'; ctx.fillRect(rx, top, 6, y64 - top + 68);
+    text('Y', rx, top - 20, 70, '#ffe45c', 'G14', 'center', 10);
+    text('0', rx - 70, y0 + 20, 54, '#d0d0d0', 'G14', 'center', 9);
+    text('-64', rx - 80, y64 + 20, 54, '#ffe45c', 'G14', 'center', 9);
+    const by = lerp(y0, y64, p), S = 150, k = S / 268;
+    for (let yy = y0 - 60; yy < by - 40; yy += 70) cube(IMG.stone, 0, 0, 0, S, W / 2 + 80, yy - 110 * k, 1);
+    cube(IMG.bedrock, 0, 0, 0, S, W / 2 + 80, by - 150 * k);
+    if (p > 0.95) text('Y -64', W / 2 + 330, by + 30, 80, '#ffe45c', 'G14', 'center', 12);
+  },
+  bnow(t, d) {
+    bg();
+    cube(IMG.bedrock, 0, 0, 0, 300, 330, 430);
+    cube(IMG.obs, 0, 0, 0, 200, 790, 530);
+    text('360만', 330, 790, 100, '#d0d0d0', 'G14', 'center', 12);
+    text('1200', 790, 790, 80, '#c58cff', 'G14', 'center', 10);
+    const p = back((t - d * 0.45) / 0.4);
+    if (p > 0) { ctx.save(); ctx.translate(W / 2, 950); ctx.scale(p, p); text('3000배', 0, 0, 120, '#ffe45c', 'G14', 'center', 14); ctx.restore(); }
+  },
+  breal(t, d) {
+    bg();
+    const x0 = 240, w = 600, bands = [['#5aa040', '#3f7a2c', 40], ['#8a5a32', '#6b4426', 120], ['#7a7f87', '#5c6168', 260]];
+    let y = 430; const r = rnd(31);
+    for (const [c1, c2, h] of bands) { for (let yy = 0; yy < h; yy += 20) for (let xx = 0; xx < w; xx += 20) { ctx.fillStyle = r() > 0.7 ? c2 : c1; ctx.fillRect(x0 + xx, y + yy, 20, 20); } y += h; }
+    ctx.strokeStyle = '#000'; ctx.lineWidth = 8; ctx.strokeRect(x0, 430, w, 420);
+    text('흙', x0 + w + 80, 560, 64, '#c79a6a', 'G14', 'center', 10);
+    text('암반', x0 + w + 90, 740, 70, '#d0d0d0', 'G14', 'center', 10);
+    const p = clamp((t - d * 0.55) / 0.3);
+    if (p > 0) { crack(x0 + w / 2, 720, p, 29, 0.8); text('부서짐 O', W / 2, 960, 90, '#ffe45c', 'G14', 'center', 12); }
+  },
+  bdeep(t, d) {
+    bg();
+    const a1 = subAt(1, d * 0.3), a2 = subAt(2, d * 0.55), a3 = subAt(3, d * 0.8);
+    if (t >= a2 && t < a3) {   // 스티브 키 = 블록 2칸 = 약 2m
+      const st = IMG.steve, h = 400, w = h * st.width / st.height;
+      ctx.drawImage(st, W / 2 - 60 - w, 860 - h, w, h);
+      cube(IMG.dirt, 0, 0, 0, 200, W / 2 + 180, 860 - 200 * 297 / 268 - 165 * 200 / 268);
+      cube(IMG.dirt, 0, 0, 1, 200, W / 2 + 180, 860 - 200 * 297 / 268 - 165 * 200 / 268);
+      text('블록 1칸 = 1m', W / 2, 960, 90, '#fff', 'G14', 'center', 12);
+      return;
+    }
+    const realH = ease(t / Math.max(0.5, a1 - 0.2));
+    ctx.fillStyle = '#000'; ctx.fillRect(760 - 6, 440, 72, 460 * realH + 12);
+    ctx.fillStyle = '#6b4426'; ctx.fillRect(760, 446, 60, 460 * realH);
+    text('현실 12,262m', 790, 420, 64, '#ff8a3a', 'G14', 'center', 10);
+    if (t >= a1) {
+      const mh = 460 * 127 / 12262;
+      ctx.fillStyle = '#000'; ctx.fillRect(260 - 6, 440, 72, Math.max(mh, 6) + 12);
+      ctx.fillStyle = '#3a3f4b'; ctx.fillRect(260, 446, 60, Math.max(mh, 6));
+      text('마크 127m', 290, 420, 64, '#d0d0d0', 'G14', 'center', 10);
+    }
+    if (t >= a3) { const p = back((t - a3) / 0.35); ctx.save(); ctx.translate(W / 2 - 200, 700); ctx.scale(p, p); text('약 100배', 0, 0, 110, '#ffe45c', 'G14', 'center', 14); ctx.restore(); }
   },
   cover(t, d) {   // 표지: 블록 이름 하나 + 블록 크게 (운영자 2026-11-22 "스펀지. 이렇게 간단하게")
     bg();
