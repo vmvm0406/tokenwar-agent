@@ -167,6 +167,10 @@ CUES = {
     "plimit": [(0.4, "mc:Piston_extend_JE3@0.7"), ("s1", "mc:Piston_extend_JE3@0.5"), ("s1+0.1", "slap")],
     "pimmov": [(0.4, "slap"), (0.75, "slap"), (1.1, "slap")],
     "preal": [(0.1, "mc:Piston_contract_JE3@0.4"), ("s3", "whoosh")],
+    "pcompare": [(0.4, "mc:Piston_extend_JE3@0.7"), ("s2", "mc:Piston_extend_JE3@0.5"), ("s2+0.8", "mc:Piston_contract_JE3@0.4")],
+    "ppress": [(0.2, "mc:Piston_contract_JE3@0.4"), ("s1+0.1", "mc:Anvil_land@0.6~0.8"), ("s1+0.12", "thud"), ("s2", "pop")],
+    "rportal": [("s1", "mc:End_portal_activation@0.5~2.0"), ("s3", "mc:Nether_portal_ambient@0.35~1.5")],
+    "rsift": [(0.1, "pop"), (0.28, "pop"), (0.46, "pop"), (0.64, "mc:Bell_use1@0.4~1.2"), ("s1", "pop")],
     # 보강된 심층암 편 (게임 소리)
     "rhook": [(lambda s, m=m: 0.1 + m * 0.36, f"mc:Stone_dig{m % 3 + 1}@0.35") for m in range(13)] + [("s2", "mc:Anvil_land@0.35~0.6")],
     "rcity": [(0.15 + m * 0.2, f"mc:Stone_dig{m % 3 + 1}@0.4") for m in range(6)] + [("s1", "mc:Warden_emerge@0.6~1.4")],
