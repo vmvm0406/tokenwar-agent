@@ -1,0 +1,23 @@
+{
+ "approved": true,
+ "approved_at": "2026-11-23T09:03:47+09:00",
+ "id": "2026-11-23-video-tnt",
+ "date": "2026-11-23",
+ "type": "video",
+ "format": "explain",
+ "prebuilt": true,
+ "title": "TNT",
+ "topic": "마인크래프트 블록 · TNT",
+ "caption": "마인크래프트 TNT, 그런데 진짜 TNT는 원래 노란 물감이었어요 🧨\n\n마크 TNT는 2009년 처음 나왔을 땐 손으로 때려야 불이 붙었고 2초 만에 터졌어요.\n2010년에 터지는 시간이 4초로 늘고 하얗게 깜빡이게 됐고,\n화약 다섯 개와 모래 네 개로 만들 수 있게 된 것도 이때예요.\n2012년부터는 사막 피라미드 바닥 밑에 TNT 아홉 개로 만든 함정이 숨어 있죠.\n\n빨간 막대 모양은 사실 다이너마이트에 더 가깝고,\n진짜 TNT는 1863년 독일에서 처음 만들어졌지만 워낙 안 터져서\n30년 가까이 폭약인 줄도 몰랐대요.\n\n다음 편은 베드락 ⛏️",
+ "hashtags": [
+  "#마인크래프트",
+  "#마크",
+  "#TNT",
+  "#마인크래프트블록"
+ ],
+ "publish_at": "2026-11-23T09:03:47+09:00",
+ "rights": "original",
+ "credit": "직접 제작 (블록·아이템 이미지 minecraft.wiki 렌더, 픽셀 그림·효과음 직접, 목소리 일레븐랩스 Starter)",
+ "note": "마인크래프트 블록 파고들기 3편. 영상 experiments/minecraft/make.py 완성본(prebuilt, episodes/tnt.json), 표지 cover.py(빨강 제목). 사실 출처: minecraft.wiki TNT·버전 문서, 영어 위키백과 TNT.",
+ "rights_note": "Minecraft 콘텐츠는 Mojang 사용 지침(영상 허용) 안에서, 로고·게임 소리·음악 안 씀. 현실 TNT는 역사·성질만, 만드는 법 없음."
+}
