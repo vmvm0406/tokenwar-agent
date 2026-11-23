@@ -1,0 +1,28 @@
+{
+ "title": "멈춰 있는 맵",
+ "voice": "deok",
+ "onetake": true,
+ "stability": 1.0,
+ "tempo": 1.0,
+ "max_gap": 0.8,
+ "coverBlock": "grass",
+ "coverColor": "#e8e2cf",
+ "scenes": [
+  {"scene": "mlist", "lines": [
+   ["몇 년째 접속하지 않은|마인크래프트 맵엔,", "[calm] 몇 년째 접속하지 않은 마인크래프트 맵엔,"],
+   ["무슨 일이 일어나고 있을까요?", "무슨 일이 일어나고 있을까요?"]]},
+  {"scene": "mstill", "lines": [
+   ["사실 아무 일도 일어나지 않아요", "[pause] [softly] 사실 아무 일도 일어나지 않아요."],
+   ["여러분이 마지막으로 나간|그 순간 그대로 멈춰 있거든요", "[pause] 여러분이 마지막으로 나간 그 순간 그대로 멈춰 있거든요."]]},
+  {"scene": "mhouse", "lines": [
+   ["학교 끝나고 친구랑|대충 지은 흙집도,", "[pause] [softly] 학교 끝나고 친구랑 대충 지은 흙집도,"],
+   ["다 채우지 못한 상자도,", "[short pause] 다 채우지 못한 상자도,"]]},
+  {"scene": "mwolf", "lines": [
+   ["주인을 기다리며|앉아 있는 늑대도,", "[short pause] 주인을 기다리며 앉아 있는 늑대도,"],
+   ["아직 그 자리 그대로예요", "[short pause] 아직 그 자리 그대로예요."]]},
+  {"scene": "mask", "lines": [
+   ["여러분 맵에는,|무엇이 기다리고 있나요?", "[long pause] [softly] 여러분 맵에는, 무엇이 기다리고 있나요?"]]},
+  {"scene": "mend", "lines": [
+   ["다음 이야기에서 또 만나요", "[pause] [softly] 다음 이야기에서 또 만나요."]]}
+ ]
+}

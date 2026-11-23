@@ -293,7 +293,7 @@ def onetake_audio(ep, voice):
         if text:
             text += " "
         a = len(text); text += say; spans.append((a, len(text)))
-    body = {"text": text, "model_id": "eleven_v3", "language_code": "ko", "voice_settings": {"stability": 0.5}}
+    body = {"text": text, "model_id": "eleven_v3", "language_code": "ko", "voice_settings": {"stability": float(ep.get("stability", 0.5))}}   # 1.0 = 차분하게(추억 편)
     if ep.get("seed") is not None:
         body["seed"] = ep["seed"]
     h = hashlib.sha256(json.dumps([voice, body, "ts"], ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:24]
