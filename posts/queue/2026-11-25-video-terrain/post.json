@@ -18,6 +18,6 @@
   "#마인크래프트지형",
   "#마인크래프트블록"
  ],
- "publish_at": "2026-11-25T17:00:00+09:00",
+ "publish_at": "2026-11-25T10:30:00+09:00",
  "note": "마인크래프트 블록 파고들기 11편. 영상 make.py(episodes/terrain.json) 뒤 펄린 노이즈·아카데미상 장면(wreal)을 ffmpeg로 잘라냄(운영자 2026-11-24 '필요없을듯'), 끝 예고 문장은 따로 녹음한 clip(assets/voice/next_copper.wav). 사실 출처: minecraft.wiki World_generation·Noise_generator·Cave·Chunk, ko.minecraft.wiki 블록 목록(가장 긴 한국어 이름)."
 }
