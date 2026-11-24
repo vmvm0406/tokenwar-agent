@@ -16,7 +16,7 @@ ctx.imageSmoothingEnabled = false;
 const IMG = {};
 const NAMES = {sp1: 'Sponge_JE1_BE1', sp2: 'Sponge_JE2_BE2', sp3: 'Sponge_JE3_BE3', wet: 'Wet_Sponge_JE2_BE2', water: 'Water_JE16',
   grass: 'Grass_Block_JE7_BE6', obs: 'Obsidian_JE3_BE2', furnace: 'Furnace_JE4', nether: 'Netherrack_JE4_BE2',
-  pris: 'Prismarine_JE2_BE2', sand: 'Sand_JE5_BE3', tnt: 'TNT_JE3_BE2', eg: 'Elder_Guardian_JE2_BE2', cobble: 'Cobblestone_JE5_BE3', lava: 'Lava_JE19', pick: 'Diamond_Pickaxe_JE3_BE3', gun: 'Gunpowder_JE2_BE2', sstone: 'Sandstone_JE6_BE3', plate: 'Stone_Pressure_Plate_JE5_BE2', bedrock: 'Bedrock_JE2_BE2', farmland: 'Farmland_JE4_BE6', seeds: 'Wheat_Seeds_JE1_BE1', dirt: 'Dirt_JE2_BE2', stone: 'Stone_JE5_BE3', steve: 'Steve_classic_JE6', nrc: 'Nether_Reactor_Core_BE1', nrc2: 'Nether_Reactor_Core_BE2', nrci: 'Initialized_Nether_Reactor_Core_BE1', nrcf: 'Finished_Nether_Reactor_Core_BE1', gold: 'Block_of_Gold_JE6_BE3', glow: 'Glowstone_Dust_JE2_BE2', quartz: 'Nether_Quartz_JE2_BE2', iron: 'Iron_Ingot_JE3_BE2', dia: 'Diamond_JE3_BE3', soulsand: 'Soul_Sand_JE2_BE2', pig: 'Zombified_Piglin_JE2', skull: 'Wither_Skeleton_Skull_(S)_JE2', wither: 'Wither_JE2_BE2', sfire: 'Soul_Fire_BE', fire: 'Fire_JE7', sculk: 'Sculk_JE1_BE1', bubble: 'Bubble_Column_JE1_BE1', sstex: 'Soul_Sand_(texture)_JE2_BE2', zombie: 'Zombie_JE5_BE2', warden: 'Warden_JE1_BE1', catalyst: 'Sculk_Catalyst_JE1', shrieker: 'Sculk_Shrieker_JE1_BE2', hoe: 'Diamond_Hoe_JE3_BE3', rdeep: 'Reinforced_Deepslate_JE1_BE1', deepslate: 'Deepslate_JE2', xp: 'Experience_Orb_Value_3-6', vault: 'Vault_JE6_BE5', npick: 'Netherite_Pickaxe_JE3_BE2', dragon: 'Ender_Dragon_JE1_BE1', piston: 'Piston_(U)_JE4', torch: 'Redstone_Torch_JE5', sign: 'Oak_Sign_(12)_JE5', endstone: 'End_Stone_JE3_BE2'};
+  pris: 'Prismarine_JE2_BE2', sand: 'Sand_JE5_BE3', tnt: 'TNT_JE3_BE2', eg: 'Elder_Guardian_JE2_BE2', cobble: 'Cobblestone_JE5_BE3', lava: 'Lava_JE19', pick: 'Diamond_Pickaxe_JE3_BE3', gun: 'Gunpowder_JE2_BE2', sstone: 'Sandstone_JE6_BE3', plate: 'Stone_Pressure_Plate_JE5_BE2', bedrock: 'Bedrock_JE2_BE2', farmland: 'Farmland_JE4_BE6', seeds: 'Wheat_Seeds_JE1_BE1', dirt: 'Dirt_JE2_BE2', stone: 'Stone_JE5_BE3', steve: 'Steve_classic_JE6', nrc: 'Nether_Reactor_Core_BE1', nrc2: 'Nether_Reactor_Core_BE2', nrci: 'Initialized_Nether_Reactor_Core_BE1', nrcf: 'Finished_Nether_Reactor_Core_BE1', gold: 'Block_of_Gold_JE6_BE3', glow: 'Glowstone_Dust_JE2_BE2', quartz: 'Nether_Quartz_JE2_BE2', iron: 'Iron_Ingot_JE3_BE2', dia: 'Diamond_JE3_BE3', soulsand: 'Soul_Sand_JE2_BE2', pig: 'Zombified_Piglin_JE2', skull: 'Wither_Skeleton_Skull_(S)_JE2', wither: 'Wither_JE2_BE2', sfire: 'Soul_Fire_BE', fire: 'Fire_JE7', sculk: 'Sculk_JE1_BE1', bubble: 'Bubble_Column_JE1_BE1', sstex: 'Soul_Sand_(texture)_JE2_BE2', zombie: 'Zombie_JE5_BE2', warden: 'Warden_JE1_BE1', catalyst: 'Sculk_Catalyst_JE1', shrieker: 'Sculk_Shrieker_JE1_BE2', hoe: 'Diamond_Hoe_JE3_BE3', rdeep: 'Reinforced_Deepslate_JE1_BE1', deepslate: 'Deepslate_JE2', xp: 'Experience_Orb_Value_3-6', vault: 'Vault_JE6_BE5', npick: 'Netherite_Pickaxe_JE3_BE2', dragon: 'Ender_Dragon_JE1_BE1', piston: 'Piston_(U)_JE4', torch: 'Redstone_Torch_JE5', sign: 'Oak_Sign_(12)_JE5', endstone: 'End_Stone_JE3_BE2', honey: 'Honeycomb_JE2_BE2', cslab: 'Exposed_Cut_Copper_Slab_JE1_BE1'};
 window.ready = Promise.all([
   ...Object.entries(NAMES).map(([k, n]) => new Promise(r => { const i = new Image(); i.onload = r; i.src = `assets/blocks/${n}.png`; IMG[k] = i; })),
   document.fonts.load('80px G14'), document.fonts.load('66px G11B')]);
@@ -416,6 +416,7 @@ const SC = {
     const p = clamp(t / 0.3), s = lerp(1.5, 1, ease(p));
     const sh = t > 0.3 && t < 0.55 ? Math.sin(t * 100) * 12 : 0;
     ctx.save(); ctx.shadowColor = 'rgba(200,230,255,0.45)'; ctx.shadowBlur = 50;   // 어두운 블록(스컬크 등)도 배경과 구분되게
+    if (EP && EP.nextBlock === 'terrain') terrain(t, W / 2, 580, 76); else
     cube(IMG[(EP && EP.nextBlock) || 'obs'], 0, 0, 0, 440 * s, W / 2 + sh, 560 - (s - 1) * 300, ease(p));
     ctx.restore();
     if (t > 0.3) { const q = clamp((t - 0.3) / 0.6); ctx.fillStyle = `rgba(120,100,160,${0.6 * (1 - q)})`; for (let k = -6; k <= 6; k++) ctx.fillRect(snap(W / 2 + k * 60 * (1 + q)), snap(1000 - q * 60 - Math.abs(k) * 6), 18, 18); }
@@ -1065,8 +1066,10 @@ const SC = {
   cover(t, d) {   // 표지: 블록 이름 하나 + 블록 크게 (운영자 2026-11-22 "스펀지. 이렇게 간단하게")
     bg();
     // 제목+블록 묶음을 화면 가운데로 (운영자 2026-11-23 '썸네일 가운데로')
+    if (EP && EP.coverBlock === 'terrain') terrain(9, W / 2, 1010, 76, false); else
     cube(IMG[(EP && EP.coverBlock) || 'sp3'], 0, 0, 0, 600, W / 2, 785);
-    text((EP && EP.title) || '', W / 2, 685, (EP && EP.coverSize) || 230, (EP && EP.coverColor) || '#ffe45c', 'G14', 'center', 22);   // 제목 색 = 블록 색 (운영자 2026-11-23 흑요석은 보라)
+    const tl = ((EP && EP.title) || '').split('|'), tz = (EP && EP.coverSize) || 230;   // '|' = 두 줄 제목 (지형 원리 편)
+    tl.forEach((l, i) => text(l, W / 2, 685 - (tl.length - 1 - i) * tz * 1.05, tz, (EP && EP.coverColor) || '#ffe45c', 'G14', 'center', 22));   // 제목 색 = 블록 색 (운영자 2026-11-23 흑요석은 보라)
   },
   // ---------- 피스톤 편 (운영자 2026-11-23) ----------
   phook(t, d) {
@@ -1405,9 +1408,263 @@ const SC = {
     const lab = t < s1 ? '높이 42m 유압 프레스' : t < s2 ? '8만 톤' : '비행기 부품';
     text(lab, W / 2, LY, 84, '#d8c38a', 'G14', 'center', 12);
   },
+  // ---------- 표지판 편 (운영자 2026-11-24) ----------
+  ghook(t, d) {   // 훅: 바닥이 꺼지는 장면부터 (운영자 2026-11-24 '초반 한 장면 오래 → 훅 약함')
+    bg();
+    const s1 = subAt(1, d * 0.6);
+    if (t < s1) {
+      const ph = t < 0.9 ? 0 : t < 1.9 ? 1 : 2;
+      if (ph === 0) { signImg(W / 2, 580, 520 * back(t / 0.3) + 1); text('표지판', W / 2, LY, 84, '#d8b57a', 'G14', 'center', 12); return; }
+      if (ph === 1) {
+        woodBoard(W / 2, 580, 760, 320); const msg = '여기는 안전'; const n = Math.min(msg.length, Math.floor((t - 0.9) / 0.1));
+        text(msg.slice(0, n), W / 2, 610, 96, '#2a1d10', 'G14', 'center', 0);
+        text('글씨 쓰는 블록?', W / 2, LY, 84, '#d8b57a', 'G14', 'center', 12); return;
+      }
+      trapMini(clamp((t - 1.9) / Math.max(0.5, s1 - 1.9)), false);
+      text('글씨 쓰는 블록?', W / 2, LY, 84, '#d8b57a', 'G14', 'center', 12); return;
+    }
+    trapMini(1 + (t - s1), true);
+    const p = back((t - s1) / 0.3);
+    ctx.save(); ctx.translate(W / 2 + 280, 300); ctx.rotate(-0.2); ctx.scale(p, p);
+    box(-120, -60, 240, 110, '#ff6b5c', '#000', 8); text('함정', 0, 32, 84, '#1b1b1b', 'G14', 'center', 0); ctx.restore();
+    text('사실은 함정 재료', W / 2, LY, 84, '#ff6b5c', 'G14', 'center', 12);
+  },
+  g2010(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.5);
+    if (t < s1) {
+      signImg(W / 2, 580, 460 * back(clamp(t / 0.35)) + 1);
+      text('2010년 인프데브', W / 2, LY, 84, '#d8b57a', 'G14', 'center', 12);
+      return;
+    }
+    const u = t - s1, full = 'MINECRAFT SIGN T', n = Math.min(full.length, Math.floor(u / 0.08));
+    woodBoard(W / 2, 620, 860, 300);
+    const x0 = W / 2 - 390, y = 640;
+    for (let k = 0; k < n; k++) text(full[k], x0 + k * 50, y, 58, k >= 15 ? '#ff3b30' : '#2a1d10', 'G14', 'left', 0);
+    if (n > 15) { ctx.fillStyle = '#ff3b30'; ctx.fillRect(x0 + 15 * 50 - 8, y - 60, 6, 80); bigX(x0 + 15 * 50 + 30, y - 20, clamp((u - 1.4) / 0.2) * 0.6); }
+    text(String(Math.min(n, 15)), W / 2, 420, 100, n >= 15 ? '#ffe45c' : '#fff', 'G14', 'center', 12);
+    text('한 줄 15글자', W / 2, LY, 84, '#d8b57a', 'G14', 'center', 12);
+  },
+  gpass(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.45), gy = 760;
+    box(60, gy, 960, 40, '#5f9e3a', '#000', 6); box(60, gy + 46, 960, 50, '#7a5634', '#000', 6);   // 땅 (우리 그림)
+    signImg(W / 2, gy - 150, 300);
+    const walk = (img, t0) => { const h = 280, x = lerp(150, W - 150, clamp((t - t0) / 1.6)), w = h * img.width / img.height; ctx.drawImage(img, x - w / 2, gy - h, w, h); };
+    walk(IMG.steve, 0.2);
+    if (t >= s1) walk(IMG.zombie, s1);
+    text(t < s1 ? '단단한 블록 X' : '그대로 통과', W / 2, LY, 84, '#d8b57a', 'G14', 'center', 12);
+  },
+  ghold(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.5);
+    if (t < s1) {
+      const lava = t > s1 * 0.5, u = lava ? t - s1 * 0.5 : t, p = ease(u / 0.4);
+      cube(IMG[lava ? 'lava' : 'water'], 0, 0, 0, 280, lerp(180, 330, p), 400);
+      ctx.fillStyle = '#000'; ctx.fillRect(504, 380, 20, 360); ctx.fillStyle = '#ffe45c'; ctx.fillRect(508, 384, 12, 352);
+      signImg(700, 560, 360);
+      text(lava ? '용암도 못 부숨' : '물이 못 부숨', W / 2, LY, 84, '#d8b57a', 'G14', 'center', 12);
+      return;
+    }
+    const u = t - s1, fall = clamp(u / 0.35);
+    signImg(W / 2, 680, 300);
+    cube(IMG.sand, 0, 0, 0, 240, W / 2, lerp(150, 300, ease(fall)));
+    if (u > 0.4) text('OK', W / 2 + 250, 450, 90, '#7bd96a', 'G14', 'center', 12);
+    text('모래도 버팀', W / 2, LY, 84, '#d8b57a', 'G14', 'center', 12);
+  },
+  gtrap(t, d) {
+    bg();
+    const s1 = subAt(2, d * 0.25), s2 = subAt(3, d * 0.45), s3 = subAt(4, d * 0.62), s4 = subAt(5, d * 0.8);
+    trapScene(t, s1, s2, s3, s4);
+    const lab = t < s1 ? '레드스톤 없던 시절' : t < s2 ? '선인장 위 표지판 줄' : t < s3 ? '그 위에 모래 바닥' : t < s4 ? '선인장 파괴' : '표지판 연쇄 → 추락';
+    text(lab, W / 2, LY, 84, t >= s4 ? '#ff6b5c' : '#d8b57a', 'G14', 'center', 12);
+  },
+  gfake(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.5);
+    box(W / 2 - 230, 300, 460, 560, '#3a3f4b', '#000', 8);   // 엘리베이터 통 (우리 그림)
+    ctx.fillStyle = '#20242c'; ctx.fillRect(W / 2 - 6, 300, 12, 560);
+    const floor = Math.max(1, 35 - Math.floor(t / 0.28));
+    woodBoard(W / 2, 250, 300, 130);
+    text(String(floor), W / 2, 285, 92, '#2a1d10', 'G14', 'center', 0);
+    if (t >= s1) {
+      const p = clamp((t - s1) / 0.5);
+      ctx.fillStyle = `rgba(0,0,0,${0.85 * p})`; ctx.fillRect(W / 2 - 230, 300, 460, 560);
+      if (p > 0.5) { ctx.fillStyle = '#4d7bdc'; for (let k = 0; k < 8; k++) ctx.fillRect(snap(W / 2 - 200 + k * 52), snap(820 - (k % 3) * 18), 30, 30); text('?', W / 2, 640, 150, '#ffe45c', 'G14', 'center', 12); }
+    }
+    text(t < s1 ? '층수 표지판' : '가짜 엘리베이터', W / 2, LY, 84, t < s1 ? '#d8b57a' : '#ff6b5c', 'G14', 'center', 12);
+  },
+  g2023(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.5);
+    if (t < s1) {
+      const ph = (t * 1.6) % 2, sx = Math.cos(ph * Math.PI), front = sx >= 0;
+      ctx.save(); ctx.translate(W / 2, 600); ctx.scale(Math.max(0.04, Math.abs(sx)), 1);
+      woodBoard(0, 0, 640, 300);
+      text(front ? '앞면' : '뒷면', 0, 30, 96, '#2a1d10', 'G14', 'center', 0);
+      ctx.restore();
+      text('앞뒤 양면', W / 2, LY, 84, '#d8b57a', 'G14', 'center', 12);
+      return;
+    }
+    const u = t - s1, fly = ease(u / 0.5);
+    woodBoard(W / 2, 600, 640, 300);
+    text('HELLO', W / 2, 630, 96, '#2a1d10', 'G14', 'center', 0);
+    if (fly < 1) ctx.drawImage(IMG.honey, lerp(880, W / 2 - 80, fly), lerp(300, 520, fly), 160, 160);
+    else {
+      ctx.fillStyle = `rgba(255,200,60,${0.25 + 0.1 * Math.sin(u * 8)})`; ctx.fillRect(W / 2 - 320, 450, 640, 300);
+      if (u > 0.9) bigX(W / 2 + 260, 420, clamp((u - 0.9) / 0.2));
+    }
+    text('밀랍칠하면 수정 불가', W / 2, LY, 84, '#d8b57a', 'G14', 'center', 12);
+  },
+  gseal(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.4);
+    box(W / 2 - 330, 420, 660, 400, '#e9e0c8', '#000', 8);   // 편지 봉투 (우리 그림)
+    ctx.fillStyle = '#c9bd9c';
+    for (let k = 0; k < 11; k++) { ctx.fillRect(W / 2 - 330 + k * 30, 420 + k * 18, 30, 12); ctx.fillRect(W / 2 + 300 - k * 30, 420 + k * 18, 30, 12); }
+    if (t >= s1) {
+      const p = back((t - s1) / 0.35), r = 92 * Math.max(0.01, p);
+      sprite(['..rrrrr..', '.rrRRRrr.', 'rrRrrrRrr', 'rRrrrrrRr', 'rRrrrrrRr', 'rRrrrrrRr', 'rrRrrrRrr', '.rrRRRrr.', '..rrrrr..'], {r: '#b3242a', R: '#7a1418'}, W / 2, 620, r / 4.5);
+      if (t > s1 + 0.9) bigX(W / 2 + 300, 450, clamp((t - s1 - 0.9) / 0.2) * 0.9);
+    }
+    text(t < s1 ? '옛날 편지' : '밀랍 봉인 = 개봉 방지', W / 2, LY, 84, '#d8b57a', 'G14', 'center', 12);
+  },
+  // ---------- 지형 원리 편 (운영자 2026-11-24) ----------
+  whook(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.6), seed = '3257840388504953787', n = Math.min(seed.length, t / 0.05);
+    terrain(Math.max(0, t - 1.0) * 1.3, W / 2, 610, 58);
+    seedBox(seed, n, W / 2, 250);
+    if (t >= s1) { const p = back((t - s1) / 0.3); ctx.save(); ctx.translate(W / 2 + 330, 170); ctx.rotate(-0.15); ctx.scale(p, p); box(-100, -50, 200, 90, '#7bd96a', '#000', 8); text('시드', 0, 26, 70, '#0b0d12', 'G14', 'center', 0); ctx.restore(); }
+    text(t < s1 ? '숫자 하나' : '시드', W / 2, LY, 84, '#7bd96a', 'G14', 'center', 12);
+  },
+  wmap(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.5), fn = (i, j) => pnoise(i * 0.22, j * 0.22, 7);
+    if (t < s1) {
+      const n = 26, reveal = clamp(t / 1.0);
+      grayMap(W / 2 - 260, 330, 520, n, (i, j) => (i + j) / (2 * n) < reveal ? fn(i * 12 / n, j * 12 / n) : -0.6);
+      text('흑백 높이 지도', W / 2, LY, 84, '#7bd96a', 'G14', 'center', 12);
+      return;
+    }
+    const u = t - s1;
+    grayMap(80, 330, 200, 26, (i, j) => fn(i * 12 / 26, j * 12 / 26), 1 - clamp(u / 0.6) * 0.3);
+    text('밝음 = 높음', 180, 590, 40, '#fff', 'G11B', 'center', 8);
+    hcols(u, W / 2 + 140, 560, 52, 12, fn);
+    text('밝을수록 높게', W / 2, LY, 84, '#7bd96a', 'G14', 'center', 12);
+  },
+  wperlin(t, d) {
+    bg();
+    const sh = t * 0.8;
+    grayMap(W / 2 - 280, 300, 560, 32, (i, j) => pnoise(i * 0.18 + sh, j * 0.18, 7));
+    const p = back((t - 0.4) / 0.3);
+    if (p > 0) { ctx.save(); ctx.translate(W / 2, 600); ctx.rotate(-0.08); ctx.scale(p, p); box(-300, -60, 600, 110, '#7bd96a', '#000', 8); text('PERLIN NOISE', 0, 30, 70, '#0b0d12', 'G14', 'center', 0); ctx.restore(); }
+    text('펄린 노이즈', W / 2, LY, 84, '#7bd96a', 'G14', 'center', 12);
+  },
+  woct(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.5), cols = 60, bw = 15, x0 = W / 2 - cols * bw / 2, base = 840;
+    const k = t < s1 ? 1 + clamp((t - 0.2) / Math.max(0.5, s1 - 0.2)) * 3 : 4;   // 겹친 장 수 1→4
+    const H = c => { let s2 = 0, a = 1, f = 1, nn = 0; for (let o = 0; o < 4; o++) { const w = clamp(k - o); s2 += w * a * pnoise(c * 0.05 * f, 3.3, 11 + o); nn += a * (o === 0 ? 1 : 0); a *= 0.5; f *= 2; } return s2; };
+    for (let c = 0; c < cols; c++) {
+      const h = Math.round((H(c) + 0.6) * 260 / bw) * bw;
+      ctx.fillStyle = '#7a5634'; ctx.fillRect(x0 + c * bw, base - h + bw, bw, h - bw);
+      ctx.fillStyle = h > 330 ? '#9aa0a6' : '#5f9e3a'; ctx.fillRect(x0 + c * bw, base - h, bw, bw);
+    }
+    for (let o = 0; o < 4; o++) {   // 겹치는 얼룩 지도들 (작은 띠)
+      const a = clamp(k - o); if (a <= 0) continue;
+      const y = 300 + o * 62; ctx.globalAlpha = a;
+      for (let c = 0; c < 40; c++) { const v = Math.round((pnoise(c * 0.08 * Math.pow(2, o), 3.3, 11 + o) * 0.9 + 0.5) * 255); ctx.fillStyle = `rgb(${v},${v},${v})`; ctx.fillRect(W / 2 - 420 + c * 16, y, 16, 48); }
+      ctx.globalAlpha = 1; text(o === 0 ? '큰 얼룩' : '+ 작은', W / 2 + 230, y + 38, 44, '#cfc9a0', 'G11B', 'left', 8);
+    }
+    text(t < s1 ? '작은 얼룩 겹치기' : '옥타브', W / 2, LY, 84, '#7bd96a', 'G14', 'center', 12);
+  },
+  w3d(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.33), s2 = subAt(2, d * 0.66), C = 22, R = 13, cw = 40, x0 = W / 2 - C * cw / 2, y0 = 320;
+    const hgt = c => 6 + Math.round(pnoise(c * 0.18, 1.7, 5) * 7);
+    const dens = (c, r) => (r - (R - hgt(c))) / 3 + pnoise(c * 0.22, r * 0.22, 9) * 2.2 - 0.2;   // 칸마다 채울지 비울지
+    const scan = t < s1 ? -1 : t < s2 ? (t - s1) / Math.max(0.3, s2 - s1) * C : C;
+    for (let c = 0; c < C; c++) for (let r = 0; r < R; r++) {
+      const col = r >= R - hgt(c), solid = c < scan ? dens(c, r) > 0 : col;
+      const x = x0 + c * cw, y = y0 + r * cw;
+      ctx.fillStyle = 'rgba(255,255,255,0.05)'; ctx.fillRect(x, y, cw - 2, cw - 2);
+      if (solid) { const top = !(c < scan ? dens(c, r - 1) > 0 : r - 1 >= R - hgt(c)) || r === 0; ctx.fillStyle = top ? '#5f9e3a' : (r > R - 4 ? '#7d7d7d' : '#7a5634'); ctx.fillRect(x, y, cw - 2, cw - 2); }
+    }
+    if (t >= s1 && t < s2) { ctx.fillStyle = '#ffe45c'; ctx.fillRect(x0 + scan * cw - 3, y0 - 10, 6, R * cw + 20); }
+    const lab = t < s1 ? '기둥처럼 위로만' : t < s2 ? '한 칸마다 채움·비움' : '절벽 등 다양한 지형';
+    text(lab, W / 2, LY, 84, '#7bd96a', 'G14', 'center', 12);
+  },
+  wcave(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.35), s2 = subAt(2, d * 0.65);
+    if (t < s2) {
+      const C = 24, R = 12, cw = 36, x0 = W / 2 - C * cw / 2, y0 = 360, reveal = clamp((t - 0.3) / Math.max(0.5, s2 - 0.5)) * C;
+      for (let c = 0; c < C; c++) for (let r = 0; r < R; r++) {
+        const cave = Math.abs(pnoise(c * 0.16, r * 0.16, 21)) < 0.09 || Math.abs(pnoise(c * 0.11, r * 0.2, 33)) < 0.05;
+        const x = x0 + c * cw, y = y0 + r * cw;
+        if (r === 0) { ctx.fillStyle = '#5f9e3a'; ctx.fillRect(x, y, cw - 2, cw - 2); continue; }
+        ctx.fillStyle = c < reveal && cave && r > 1 ? '#05060a' : (r < 3 ? '#7a5634' : '#7d7d7d'); ctx.fillRect(x, y, cw - 2, cw - 2);
+      }
+      if (t < s1) { const q = clamp(t / 0.4) * 0.55; for (let c = 0; c < C; c++) for (let r = 1; r < R; r++) { const v = Math.round((pnoise(c * 0.16, r * 0.16, 21) * 0.9 + 0.5) * 255); ctx.fillStyle = `rgba(${v},${v},${v},${q})`; ctx.fillRect(x0 + c * cw, y0 + r * cw, cw - 2, cw - 2); } }
+      text(t < s1 ? '땅속 노이즈 지도' : '구불구불한 동굴', W / 2, LY, 84, '#7bd96a', 'G14', 'center', 12);
+      return;
+    }
+    const u = t - s2, m = ease(u / 0.6);
+    const tmp = (i, j) => pnoise(i * 0.2, j * 0.2, 41), hum = (i, j) => pnoise(i * 0.2, j * 0.2, 42);
+    const drawC = (x, fn, hot, cold) => { for (let i = 0; i < 12; i++) for (let j = 0; j < 12; j++) { const v = clamp(fn(i, j) + 0.5); ctx.fillStyle = v > 0.5 ? hot : cold; ctx.globalAlpha = 0.4 + Math.abs(v - 0.5); ctx.fillRect(x + i * 20, 330 + j * 20, 20, 20); } ctx.globalAlpha = 1; };
+    if (m < 1) {
+      drawC(lerp(90, W / 2 - 120, m), tmp, '#e0603a', '#3a7be0'); drawC(lerp(W - 330, W / 2 - 120, m), hum, '#2f9e4a', '#c9a35a');
+      text('온도', lerp(210, W / 2, m), 610, 46, '#fff', 'G11B', 'center', 8); text('습도', lerp(W - 210, W / 2, m), 660, 46, '#fff', 'G11B', 'center', 8);
+    } else {   // 온도·습도 → 바이옴 지도 (우리 그림)
+      const B = [['사막', '#e3cf7a'], ['정글', '#2f7d32'], ['평원', '#7bc34a'], ['설원', '#f2f4f7'], ['타이가', '#3f7f6a']];
+      const bi = (i, j) => { const a = tmp(i, j), b = hum(i, j); return a > 0.1 ? (b > 0 ? 1 : 0) : a < -0.1 ? (b > 0 ? 4 : 3) : 2; };
+      const q = clamp((u - 0.6) / 0.8), N = 15, cw = 28, x0 = W / 2 - N * cw / 2, y0 = 310;
+      for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) { if ((i + j) / (2 * N) > q) continue; ctx.fillStyle = B[bi(i * 1.3, j * 1.3)][1]; ctx.fillRect(x0 + i * cw, y0 + j * cw, cw, cw); }
+      ctx.strokeStyle = '#000'; ctx.lineWidth = 8; ctx.strokeRect(x0 - 4, y0 - 4, N * cw + 8, N * cw + 8);
+      B.forEach(([nm, c], k) => { const x = W / 2 - 420 + k * 172, y = 790; box(x, y - 34, 34, 34, c, '#000', 4); text(nm, x + 44, y - 4, 40, '#fff', 'G11B', 'left', 8); });
+    }
+    text('온도 + 습도 = 바이옴', W / 2, LY, 84, '#7bd96a', 'G14', 'center', 12);
+  },
+  wchunk(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.45), cs = 96, gx = W / 2 - 48, gy = 560;
+    const px = (t < s1 ? 0 : (t - s1) * 1.6);   // 플레이어가 오른쪽으로 걸음 (청크 단위)
+    for (let a = -6; a <= 8; a++) for (let b = -2; b <= 2; b++) {
+      const cx = gx + (a - px) * cs, cy = gy + b * cs;
+      if (cx < 60 || cx > W - 60 - cs) continue;
+      const dist = Math.max(Math.abs(a - px), Math.abs(b));
+      const born = dist <= 1.6 + Math.min(0.6, t);
+      if (!born) { ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 2; ctx.strokeRect(cx, cy, cs - 4, cs - 4); continue; }
+      const v = pnoise(a * 0.5, b * 0.5, 51); ctx.fillStyle = v > 0.2 ? '#9aa0a6' : v > -0.25 ? '#5f9e3a' : '#3a6ea8';
+      ctx.fillRect(cx, cy, cs - 4, cs - 4);
+      ctx.fillStyle = 'rgba(0,0,0,0.12)'; for (let q = 1; q < 4; q++) { ctx.fillRect(cx + q * 23, cy, 2, cs - 4); ctx.fillRect(cx, cy + q * 23, cs - 4, 2); }
+    }
+    const sh = 170, sw = sh * IMG.steve.width / IMG.steve.height; ctx.drawImage(IMG.steve, gx + cs / 2 - sw / 2, gy + cs / 2 - sh / 2 - 20, sw, sh);
+    if (t >= s1) { ctx.strokeStyle = '#ffe45c'; ctx.lineWidth = 6; ctx.strokeRect(gx + cs, gy, cs - 4, cs - 4); text('16×16', gx + cs * 1.5, gy - 16, 46, '#ffe45c', 'G14', 'center', 8); }
+    text(t < s1 ? '한꺼번에 생성 X' : '걸을 때마다 16칸씩', W / 2, LY, 84, '#7bd96a', 'G14', 'center', 12);
+  },
+  wreal(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.3), s2 = subAt(2, d * 0.66);
+    if (t < s2) {
+      const m = t < s1 ? 0 : ease((t - s1 - 0.6) / 0.8);
+      ctx.fillStyle = '#05060a'; ctx.fillRect(W / 2 - 260, 320, 520, 520);
+      ctx.strokeStyle = '#3ee0ff'; ctx.lineWidth = 4; ctx.globalAlpha = 1 - m;   // 딱딱한 격자 CG (우리 그림)
+      for (let k = 0; k <= 8; k++) { ctx.beginPath(); ctx.moveTo(W / 2 - 260 + k * 65, 320); ctx.lineTo(W / 2 - 260 + k * 65, 840); ctx.stroke(); ctx.beginPath(); ctx.moveTo(W / 2 - 260, 320 + k * 65); ctx.lineTo(W / 2 + 260, 320 + k * 65); ctx.stroke(); }
+      ctx.globalAlpha = 1;
+      if (m > 0) grayMap(W / 2 - 260, 320, 520, 26, (i, j) => pnoise(i * 0.2, j * 0.2, 7), m);
+      text(t < s1 ? 'Ken Perlin' : m < 0.5 ? '기계 같은 CG' : '자연스러운 얼룩', W / 2, LY, 84, '#7bd96a', 'G14', 'center', 12);
+      return;
+    }
+    const p = back((t - s2) / 0.4);
+    if (p > 0) { ctx.save(); ctx.translate(W / 2, 800); ctx.scale(p, p); trophy(0, 0, 30); ctx.restore(); }
+    text('아카데미 기술상', W / 2, LY, 84, '#f2c94c', 'G14', 'center', 12);
+  },
   follow(t, d) {
     bg('#07070a', '#0d0d12', 0.02);
     ctx.save(); ctx.shadowColor = 'rgba(200,230,255,0.45)'; ctx.shadowBlur = 50;
+    if (EP && EP.nextBlock === 'terrain') terrain(9, W / 2, 580, 76, false); else
     cube(IMG[(EP && EP.nextBlock) || 'obs'], 0, 0, 0, 440, W / 2, 560, 0.85);
     ctx.restore();
     const a = clamp(t / 0.5);
@@ -1419,6 +1676,100 @@ const LY = 920;   // 장면 아래 요약 글자 높이 (자막과 띄움, 운�
 const STAGE_DY = 190, STAGE_SC = 0.9, BAR_BOTTOM = 440;
 window.CUR = null;
 const subAt = (k, dflt) => (CUR && CUR.subs && CUR.subs[k]) ? CUR.subs[k][1] : dflt;   // k번째 자막이 나오는 때에 장면 바꾸기
+const TB = 120;
+function tblk(x, y, c1, c2, seed, a = 1) { ctx.globalAlpha = a; box(x, y, TB, TB, c1, '#000', 5); const r = rnd(seed); ctx.fillStyle = c2; for (let m = 0; m < 6; m++) ctx.fillRect(snap(x + 10 + r() * (TB - 30)), snap(y + 10 + r() * (TB - 30)), 14, 14); ctx.globalAlpha = 1; }
+function tcactus(x, y, a = 1) { ctx.globalAlpha = a; box(x + 22, y, TB - 44, TB, '#4f8a2b', '#000', 5); ctx.fillStyle = '#2f5e18'; for (let k = 0; k < 4; k++) { ctx.fillRect(x + 34, y + 14 + k * 28, 10, 10); ctx.fillRect(x + TB - 44, y + 6 + k * 28, 10, 10); } ctx.fillStyle = '#000'; for (let k = 0; k < 4; k++) { ctx.fillRect(x + 12, y + 20 + k * 28, 10, 6); ctx.fillRect(x + TB - 22, y + 6 + k * 28, 10, 6); } ctx.globalAlpha = 1; }
+function poof(x, y, q, col, seed) { const r = rnd(seed); ctx.fillStyle = col; for (let k = 0; k < 12; k++) ctx.fillRect(snap(x + (r() - 0.5) * 160 * (0.3 + q)), snap(y - q * 90 + (r() - 0.5) * 80), 14, 14); }
+// 표지판 함정 단면 (우리 그림): 왼쪽에 돌·선인장, 선인장 위 표지판부터 오른쪽으로 표지판 줄, 그 위 모래, 아래 구덩이
+// sA: 표지판 보임, sB: 모래 보임, sC: 방아쇠 모래 떨어져 선인장 파괴, sD: 표지판 연쇄 → 바닥 추락
+function trapScene(t, sA, sB, sC, sD) {
+  const B = TB, L = W / 2 - 2.5 * B, top = 330, gy = top + B, x0 = L + B, n = 4, R = x0 + n * B;
+  const trig = L - B;
+  tblk(L, gy + 2 * B, '#7d7d7d', '#5f5f5f', 41); tblk(trig, gy + 2 * B, '#7d7d7d', '#5f5f5f', 42);
+  for (let r2 = 0; r2 < 3; r2++) tblk(R, gy + r2 * B, '#7d7d7d', '#5f5f5f', 50 + r2);
+  ctx.fillStyle = '#05060a'; ctx.fillRect(x0, gy + B, n * B, 2 * B);
+  const cacGone = t >= sC + 0.05;
+  if (!cacGone) tcactus(L, gy + B); else if (t < sC + 0.6) poof(L + B / 2, gy + B * 1.5, (t - sC) / 0.6, '#4f8a2b', 3);
+  if (t >= sC - 0.45) { const f = clamp((t - sC + 0.45) / 0.45); tblk(trig, lerp(top - 2 * B, gy + B, f * f), '#dbcf9c', '#c4b67f', 9); }
+  const popAt = i => sD + 0.12 * i;   // 선인장 위(0번)부터 오른쪽으로 하나씩
+  const g = Math.pow(clamp((t - popAt(n) - 0.05) / 0.7), 2) * 2 * B;
+  for (let i = 0; i <= n - 1 + 1; i++) {
+    const x = L + i * B; if (i > n) continue;
+    if (i <= n - 0 && x < R) {
+      if (t >= sA && t < (cacGone && i === 0 ? sC + 0.05 : popAt(i))) signImg(x + B / 2, gy + B / 2, B * 0.95);
+      else if (t >= popAt(i) && t < popAt(i) + 0.4) poof(x + B / 2, gy + B / 2, (t - popAt(i)) / 0.4, '#8a6a3a', 10 + i);
+      if (t >= sB) tblk(x, top + g, '#dbcf9c', '#c4b67f', i + 3);
+    }
+  }
+  if (t >= sD && t < sD + 0.6) { ctx.strokeStyle = '#ffe45c'; ctx.lineWidth = 10; ctx.beginPath(); ctx.moveTo(L + B / 2, gy - 20); ctx.lineTo(lerp(L + B / 2, R - B / 2, clamp((t - sD) / 0.5)), gy - 20); ctx.stroke(); }
+  const sh = 220, sw = sh * IMG.steve.width / IMG.steve.height;
+  ctx.drawImage(IMG.steve, x0 + 1.5 * B - sw / 2, (t >= sB ? top : gy) - sh + g, sw, sh);
+  if (t >= popAt(n) && t < popAt(n) + 0.12) flash('rgba(255,255,255,0.22)');
+}
+function trapMini(p, fall) {   // 훅용: 바닥이 꺼지는 순간만
+  if (!fall) { trapScene(5, 0, 0, 9, 9); return; }
+  trapScene(10 + (p - 1), 0, 0, 9.4, 10);
+}
+function terrain(t, ox, oy, S, rise = true) {   // 작은 블록 지형: 바다 · 사막 · 평원 · 산 (우리 배치, 다음 편 예고)
+  ctx.save(); ctx.shadowBlur = 0; ctx.shadowColor = "transparent";
+  const n = 11, cols = [];
+  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+    const u = i - j, nz = Math.sin(i * 1.7 + j * 0.9) + Math.cos(i * 0.6 - j * 1.3);
+    let img, h;
+    if (u < -4) { img = IMG.water; h = 0; }
+    else if (u < -1) { img = IMG.sand; h = 1 + (nz > 1.2 ? 1 : 0); }
+    else if (u < 3) { img = IMG.grass; h = 1 + (nz > 0.6 ? 1 : 0); }
+    else { img = (u + nz) > 6.5 ? IMG.stone : IMG.grass; h = 2 + Math.round(Math.max(0, (u - 3) * 0.9 + nz)); }
+    cols.push([i, j, img, h]);
+  }
+  cols.sort((a, b) => (a[0] + a[1]) - (b[0] + b[1]));
+  for (const [i, j, img, h] of cols) {
+    const g = rise ? clamp((t - (i + j) * 0.04) / 0.35) : 1;
+    if (g <= 0) continue;
+    const top = Math.max(0, Math.round(h * g));
+    for (let z = 0; z <= top; z++) {
+      const im = z === top ? img : (img === IMG.water ? IMG.sand : img === IMG.sand ? IMG.sand : IMG.stone);
+      cube(z === 0 && img !== IMG.water ? IMG.dirt : im, i - (n - 1) / 2, j - (n - 1) / 2, z, S, ox, oy, img === IMG.water ? 0.9 : 1);
+    }
+  }
+  ctx.restore();
+}
+// ---------- 지형 원리 편 도구 (운영자 2026-11-24) ----------
+function hash2(i, j, sd) { let h = Math.imul(i, 374761393) ^ Math.imul(j, 668265263) ^ Math.imul(sd, 1442695041); h = Math.imul(h ^ (h >>> 13), 1274126177); h ^= h >>> 16; return (h >>> 0) / 4294967296; }
+function pnoise(x, y, sd = 1) {   // 2D 펄린(그라디언트) 노이즈, 약 -0.7~0.7
+  const i = Math.floor(x), j = Math.floor(y), fx = x - i, fy = y - j;
+  const g = (a, b, dx, dy) => { const r = hash2(a, b, sd) * 6.2832; return Math.cos(r) * dx + Math.sin(r) * dy; };
+  const u = fx * fx * fx * (fx * (fx * 6 - 15) + 10), v = fy * fy * fy * (fy * (fy * 6 - 15) + 10);
+  return lerp(lerp(g(i, j, fx, fy), g(i + 1, j, fx - 1, fy), u), lerp(g(i, j + 1, fx, fy - 1), g(i + 1, j + 1, fx - 1, fy - 1), u), v);
+}
+function fbm(x, y, oct = 1, sd = 1) { let a = 1, f = 1, s2 = 0, n = 0; for (let k = 0; k < oct; k++) { s2 += a * pnoise(x * f, y * f, sd + k); n += a; a *= 0.5; f *= 2; } return s2 / n; }
+function grayMap(x, y, w, cells, fn, a = 1) {   // 흑백 지도
+  const c = w / cells; ctx.globalAlpha = a;
+  for (let i = 0; i < cells; i++) for (let j = 0; j < cells; j++) { const v = clamp(fn(i, j) * 0.9 + 0.5); const g = Math.round(v * 255); ctx.fillStyle = `rgb(${g},${g},${g})`; ctx.fillRect(Math.floor(x + i * c), Math.floor(y + j * c), Math.ceil(c), Math.ceil(c)); }
+  ctx.globalAlpha = 1; ctx.strokeStyle = '#000'; ctx.lineWidth = 8; ctx.strokeRect(x - 4, y - 4, w + 8, w + 8);
+}
+function hcols(t, ox, oy, S, n, fn, t0 = 0) {   // 높이 지도 → 블록 기둥 (밝을수록 높게)
+  const cs = [];
+  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) cs.push([i, j, Math.max(0, Math.round((fn(i, j) * 0.9 + 0.5) * 7))]);
+  cs.sort((a, b) => (a[0] + a[1]) - (b[0] + b[1]));
+  for (const [i, j, h] of cs) {
+    const g = clamp((t - t0 - (i + j) * 0.03) / 0.4), top = Math.round(h * g);
+    for (let z = 0; z <= top; z++) cube(z === top ? (h >= 6 ? IMG.stone : h <= 1 ? IMG.water : IMG.grass) : IMG.dirt, i - (n - 1) / 2, j - (n - 1) / 2, z, S, ox, oy, h <= 1 && z === top ? 0.9 : 1);
+  }
+}
+function seedBox(str, n, x, y) {   // 시드 입력 칸 (우리 그림)
+  box(x - 400, y - 60, 800, 110, '#0b0d12', '#000', 8); ctx.strokeStyle = '#7bd96a'; ctx.lineWidth = 4; ctx.strokeRect(x - 400, y - 60, 800, 110);
+  text('시드', x - 370, y + 18, 50, '#7bd96a', 'G14', 'left', 0);
+  text(str.slice(0, n) + (n < str.length && Math.floor(n) % 2 === 0 ? '_' : ''), x - 240, y + 18, 50, '#fff', 'G14', 'left', 0);
+}
+function trophy(cx, by, s) {   // 금빛 트로피 (우리 픽셀 그림, 특정 상징 아님)
+  sprite(['...yy...', '..yYYy..', '..yYYy..', '...yy...', '..yyyy..', '.yyYYyy.', '..yYYy..', '..yYYy..', '..yYYy..', '...yy...', '..yyyy..', '.kkkkkk.', 'kkkkkkkk'], {y: '#f2c94c', Y: '#b8892a', k: '#2a2520'}, cx, by - 6.5 * s, s);
+}
+function signImg(cx, cy, h) { const w = h * 146 / 219; ctx.drawImage(IMG.sign, 77, 18, 146, 219, cx - w / 2, cy - h / 2, w, h); }   // 그림의 빈 테두리를 빼고 그림
+function woodBoard(cx, cy, w, h) {   // 표지판 판자 정면 (우리 그림)
+  box(cx - w / 2, cy - h / 2, w, h, '#b8945a', '#000', 8);
+  ctx.fillStyle = '#9c7a45'; for (let k = 1; k < 4; k++) ctx.fillRect(cx - w / 2, cy - h / 2 + k * h / 4, w, 6);
+}
 function drawPress(cx, by, s, r, part = false) {   // 유압 프레스 옆모습 (우리 그림): r = 램 내려감 0~1
   const B = (x, y, w, h, c) => box(cx + x * s, by + y * s, w * s, h * s, c, '#000', 6);
   B(-190, -40, 380, 40, '#4b5563');
@@ -1443,6 +1794,7 @@ window.renderAt = (idx, t, d, sub, year) => {
   if (name !== 'cover') {   // 그림을 화면 가운데 쪽으로: 아래로 내리고 살짝 줄임 (운영자 2026-11-23 '그림 좀 내리자, 앞으로도 중앙에')
     if (sc && sc.year) { bg(); ctx.beginPath(); ctx.rect(0, BAR_BOTTOM, W, H - BAR_BOTTOM); ctx.clip(); }   // 연도 띠와 절대 안 겹치게
     ctx.translate(W * (1 - STAGE_SC) / 2, STAGE_DY); ctx.scale(STAGE_SC, STAGE_SC);
+    if (EP && EP.punch && t < 0.3) { const z = 1 + 0.14 * (1 - ease(t / 0.3)); ctx.translate(W / 2, 600); ctx.scale(z, z); ctx.translate(-W / 2, -600); }   // 장면 전환: 살짝 당겨 들어오기 (운영자 2026-11-24 '장면 전환 지루하지 않게')
   }
   window.FLASHC = null;
   SC[name](t, d);
