@@ -1,0 +1,42 @@
+name: 계정 분석 (수동)
+
+# 운영자가 계정 분석을 부탁할 때만 손으로 돌린다 (2026-11-24). 자동 실행 없음.
+# agent/account_snapshot.py → data/account_snapshot.json, agent/reel_insights.py → data/reel_insights.*
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: account-snapshot
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q requests
+      - name: ffprobe (릴스 길이 재기)
+        run: which ffprobe || (sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg)
+      - name: 수집
+        env:
+          IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          IG_API_HOST: ${{ vars.IG_API_HOST }}
+        run: |
+          python agent/account_snapshot.py
+          python agent/reel_insights.py || echo "릴스 지표 실패"
+      - name: 저장
+        run: |
+          git config user.name "tokenwar-bot"
+          git config user.email "tokenwar-bot@users.noreply.github.com"
+          git add data/account_snapshot.json data/reel_insights.json data/reel_insights.md
+          if git diff --cached --quiet; then echo "바뀐 것 없음"; else
+            git commit -m "계정 분석 데이터 갱신" && bash scripts/push-retry.sh; fi
