@@ -177,6 +177,13 @@ CUES = {
     "wcave": [(0.3, "whoosh"), ("s1", "mc:Cave1@0.35~2.0"), ("s2", "whoosh"), ("s2+0.6", "mc:Grass_dig1@0.5")],
     "wchunk": [(0.2, "pop"), ("s1", "mc:Grass_dig1@0.4"), ("s1+0.6", "mc:Grass_dig1@0.4"), ("s1+1.2", "mc:Grass_dig1@0.4")],
     "wreal": [(0.2, "mc:Click@0.3"), ("s1+0.6", "whoosh"), ("s2", "mc:Bell_use1@0.5~1.5")],
+    # 구리 반 블록 편 (운영자 2026-11-25)
+    "xhook": [(0.1, "mc:Click@0.3"), (0.5, "mc:Click@0.3"), (0.9, "mc:Click@0.3"), ("s1", "pop"), ("s1+0.1", "mc:Bell_use1@0.3~1.0")],
+    "xname": [(0.05, "pop"), (0.3, "pop"), (0.55, "pop"), (0.8, "pop"), ("s1", "slap"), ("s1+0.5", "slap")],
+    "xrust": [(0.1, "mc:Page_turn1@0.5"), ("s1", "pop"), ("s1+0.45", "pop"), ("s1+0.9", "pop"), ("s1+1.35", "pop")],
+    "xwax": [(0.1, "whoosh"), (0.55, "slurp"), ("s1", "mc:Click@0.3")],
+    "xscrape": [(0.5, "mc:Stone_dig1@0.5"), (1.1, "mc:Stone_dig2@0.5"), ("s1+0.3", "crack"), ("s1+0.35", "boom")],
+    "xstatue": [(0.1, "whoosh"), ("s2", "mc:Page_turn2@0.4"), ("s3", "whoosh"), ("s3+0.4", "pop")],
     "phook": [(0.35, "mc:Piston_extend_JE3@0.7"), ("s1", "mc:Anvil_land@0.35~0.6")],
     "p2011": [(0.1, "mc:Click@0.4"), ("s1+0.3", "whoosh"), ("s1+0.6", "mc:Piston_extend_JE3@0.6"), ("s2", "mc:Page_turn1@0.5")],
     "pbug": [(0.4, "mc:Piston_extend_JE3@0.6"), ("s1", "mc:Random_break@0.6"), ("s2+0.2", "slap")],

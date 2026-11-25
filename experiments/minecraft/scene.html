@@ -14,7 +14,7 @@ const W = 1080, H = 1920;
 const cv = document.getElementById('c'), ctx = cv.getContext('2d');
 ctx.imageSmoothingEnabled = false;
 const IMG = {};
-const NAMES = {sp1: 'Sponge_JE1_BE1', sp2: 'Sponge_JE2_BE2', sp3: 'Sponge_JE3_BE3', wet: 'Wet_Sponge_JE2_BE2', water: 'Water_JE16',
+const NAMES = {gear: 'gear', sp1: 'Sponge_JE1_BE1', sp2: 'Sponge_JE2_BE2', sp3: 'Sponge_JE3_BE3', wet: 'Wet_Sponge_JE2_BE2', water: 'Water_JE16',
   grass: 'Grass_Block_JE7_BE6', obs: 'Obsidian_JE3_BE2', furnace: 'Furnace_JE4', nether: 'Netherrack_JE4_BE2',
   pris: 'Prismarine_JE2_BE2', sand: 'Sand_JE5_BE3', tnt: 'TNT_JE3_BE2', eg: 'Elder_Guardian_JE2_BE2', cobble: 'Cobblestone_JE5_BE3', lava: 'Lava_JE19', pick: 'Diamond_Pickaxe_JE3_BE3', gun: 'Gunpowder_JE2_BE2', sstone: 'Sandstone_JE6_BE3', plate: 'Stone_Pressure_Plate_JE5_BE2', bedrock: 'Bedrock_JE2_BE2', farmland: 'Farmland_JE4_BE6', seeds: 'Wheat_Seeds_JE1_BE1', dirt: 'Dirt_JE2_BE2', stone: 'Stone_JE5_BE3', steve: 'Steve_classic_JE6', nrc: 'Nether_Reactor_Core_BE1', nrc2: 'Nether_Reactor_Core_BE2', nrci: 'Initialized_Nether_Reactor_Core_BE1', nrcf: 'Finished_Nether_Reactor_Core_BE1', gold: 'Block_of_Gold_JE6_BE3', glow: 'Glowstone_Dust_JE2_BE2', quartz: 'Nether_Quartz_JE2_BE2', iron: 'Iron_Ingot_JE3_BE2', dia: 'Diamond_JE3_BE3', soulsand: 'Soul_Sand_JE2_BE2', pig: 'Zombified_Piglin_JE2', skull: 'Wither_Skeleton_Skull_(S)_JE2', wither: 'Wither_JE2_BE2', sfire: 'Soul_Fire_BE', fire: 'Fire_JE7', sculk: 'Sculk_JE1_BE1', bubble: 'Bubble_Column_JE1_BE1', sstex: 'Soul_Sand_(texture)_JE2_BE2', zombie: 'Zombie_JE5_BE2', warden: 'Warden_JE1_BE1', catalyst: 'Sculk_Catalyst_JE1', shrieker: 'Sculk_Shrieker_JE1_BE2', hoe: 'Diamond_Hoe_JE3_BE3', rdeep: 'Reinforced_Deepslate_JE1_BE1', deepslate: 'Deepslate_JE2', xp: 'Experience_Orb_Value_3-6', vault: 'Vault_JE6_BE5', npick: 'Netherite_Pickaxe_JE3_BE2', dragon: 'Ender_Dragon_JE1_BE1', piston: 'Piston_(U)_JE4', torch: 'Redstone_Torch_JE5', sign: 'Oak_Sign_(12)_JE5', endstone: 'End_Stone_JE3_BE2', honey: 'Honeycomb_JE2_BE2', cslab: 'Exposed_Cut_Copper_Slab_JE1_BE1'};
 window.ready = Promise.all([
@@ -416,7 +416,7 @@ const SC = {
     const p = clamp(t / 0.3), s = lerp(1.5, 1, ease(p));
     const sh = t > 0.3 && t < 0.55 ? Math.sin(t * 100) * 12 : 0;
     ctx.save(); ctx.shadowColor = 'rgba(200,230,255,0.45)'; ctx.shadowBlur = 50;   // 어두운 블록(스컬크 등)도 배경과 구분되게
-    if (EP && EP.nextBlock === 'terrain') terrain(t, W / 2, 580, 76); else
+    if (EP && EP.nextBlock === 'terrain') terrain(t, W / 2, 580, 76); else if (EP && EP.nextBlock === 'gear') { ctx.globalAlpha = ease(p); gearPix(W / 2 + sh, 640 - (s - 1) * 300, 300 * s, t * 1.5); ctx.globalAlpha = 1; } else
     cube(IMG[(EP && EP.nextBlock) || 'obs'], 0, 0, 0, 440 * s, W / 2 + sh, 560 - (s - 1) * 300, ease(p));
     ctx.restore();
     if (t > 0.3) { const q = clamp((t - 0.3) / 0.6); ctx.fillStyle = `rgba(120,100,160,${0.6 * (1 - q)})`; for (let k = -6; k <= 6; k++) ctx.fillRect(snap(W / 2 + k * 60 * (1 + q)), snap(1000 - q * 60 - Math.abs(k) * 6), 18, 18); }
@@ -1066,10 +1066,11 @@ const SC = {
   cover(t, d) {   // 표지: 블록 이름 하나 + 블록 크게 (운영자 2026-11-22 "스펀지. 이렇게 간단하게")
     bg();
     // 제목+블록 묶음을 화면 가운데로 (운영자 2026-11-23 '썸네일 가운데로')
-    if (EP && EP.coverBlock === 'terrain') terrain(9, W / 2, 1010, 76, false); else
+    const CDY = (EP && EP.coverDY) || 0;   // 여러 줄 제목이면 전체를 아래로 (구리 편 4줄)
+    if (EP && EP.coverBlock === 'terrain') terrain(9, W / 2, 1010, 76, false); else if (EP && EP.coverBlock === 'xslab') texSlab(1, W / 2, 760 + CDY, 520); else
     cube(IMG[(EP && EP.coverBlock) || 'sp3'], 0, 0, 0, 600, W / 2, 785);
     const tl = ((EP && EP.title) || '').split('|'), tz = (EP && EP.coverSize) || 230;   // '|' = 두 줄 제목 (지형 원리 편)
-    tl.forEach((l, i) => text(l, W / 2, 685 - (tl.length - 1 - i) * tz * 1.05, tz, (EP && EP.coverColor) || '#ffe45c', 'G14', 'center', 22));   // 제목 색 = 블록 색 (운영자 2026-11-23 흑요석은 보라)
+    tl.forEach((l, i) => text(l, W / 2, 685 + CDY - (tl.length - 1 - i) * tz * (tl.length > 2 ? 1.15 : 1.05), tz, (EP && EP.coverColor) || '#ffe45c', 'G14', 'center', 22));   // 제목 색 = 블록 색 (운영자 2026-11-23 흑요석은 보라)
   },
   // ---------- 피스톤 편 (운영자 2026-11-23) ----------
   phook(t, d) {
@@ -1661,10 +1662,107 @@ const SC = {
     if (p > 0) { ctx.save(); ctx.translate(W / 2, 800); ctx.scale(p, p); trophy(0, 0, 30); ctx.restore(); }
     text('아카데미 기술상', W / 2, LY, 84, '#f2c94c', 'G14', 'center', 12);
   },
+  // ---------- 구리 반 블록 편 (운영자 2026-11-25) ----------
+  xhook(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.5), day = Math.round(lerp(1, 120, clamp(t / Math.max(0.6, s1))));
+    const st = q => Math.min(3, Math.floor(clamp(t / Math.max(0.6, s1)) * 4 + q));
+    [[-1, 0, 0.3], [1, 0, 0.6], [0, -1, 0.1], [0, 1, 0.8]].forEach(([i, j, q]) => texSlab(st(q), W / 2 + (i - j) * 300, 450 + (i + j) * 160, 210));
+    texSlab(1, W / 2, 450, 360);
+    text(`${day}일`, W / 2, 250, 90, '#fff', 'G14', 'center', 12);
+    if (t >= s1) {
+      waxSparkle(W / 2, 520, t - s1);
+      const p = back((t - s1) / 0.3); ctx.save(); ctx.translate(W / 2 + 300, 330); ctx.rotate(-0.15); ctx.scale(p, p);
+      box(-120, -55, 240, 100, '#f2c94c', '#000', 8); text('그대로', 0, 28, 70, '#1b1b1b', 'G14', 'center', 0); ctx.restore();
+    }
+    text(t < s1 ? '가만히 둬도 녹스는 구리' : '이 반 블록만 그대로', W / 2, LY, 80, '#e8a07a', 'G14', 'center', 12);
+  },
+  xname(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.5), W4 = [['밀랍칠한', '#f2c94c'], ['약간 녹슨', '#9fb38a'], ['깎인 구리', '#e8a07a'], ['반 블록', '#cfd6e0']];
+    texSlab(1, W / 2, 230, 260);
+    W4.forEach(([w, c], k) => {
+      const a = clamp((t - k * 0.25) / 0.25); if (a <= 0) return;
+      const on = t >= s1 && k >= 2 && t >= s1 + (3 - k) * 0.5, y = 520 + Math.floor(k / 2) * 140;
+      const x = W / 2 + (k % 2 - 0.5) * 450;
+      ctx.globalAlpha = a; box(x - 205, y, 410, 110, on ? c : '#2a2f3a', '#000', 6);
+      text(w, x, y + 78, 70, on ? '#0b0d12' : '#fff', 'G11B', 'center', on ? 0 : 8); ctx.globalAlpha = 1;
+    });
+    text(t < s1 ? '이름 풀기' : '깎인 구리 + 반 블록', W / 2, LY, 80, '#e8a07a', 'G14', 'center', 12);
+  },
+  xrust(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.45), N = ['산화 X', '약간 녹슨', '녹슨', '산화된'];
+    if (t < s1) {
+      text('2021', W / 2, 380, 150, '#ffe45c', 'G14', 'center', 14); text('1.17 동굴과 절벽', W / 2, 470, 54, '#cfc9a0', 'G14', 'center', 9);
+      const st = Math.min(3, Math.floor(clamp((t - 0.6) / Math.max(0.8, s1 - 0.6)) * 4));
+      texSlab(Math.max(0, st), W / 2, 560, 300);
+      text('시간이 지나면 녹', W / 2, LY, 80, '#e8a07a', 'G14', 'center', 12);
+      return;
+    }
+    const u = t - s1;
+    N.forEach((n, k) => {
+      const a = clamp((u - k * 0.45) / 0.3); if (a <= 0) return;
+      const x = W / 2 + (k % 2 - 0.5) * 440, y = 270 + Math.floor(k / 2) * 290 + (1 - ease(a)) * 60;
+      ctx.globalAlpha = a; texSlab(k, x, y, 210);
+      text(`${k + 1}. ${n}`, x, y + 225, 58, k === 1 ? '#ffe45c' : '#fff', 'G11B', 'center', 8); ctx.globalAlpha = 1;
+    });
+    if (u > 0.7) { ctx.strokeStyle = '#ffe45c'; ctx.lineWidth = 8; ctx.strokeRect(W / 2 + 220 - 190, 245, 380, 270); }
+    text('4단계 녹', W / 2, LY, 80, '#e8a07a', 'G14', 'center', 12);
+  },
+  xwax(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.55), hit = 0.55;
+    texSlab(1, W / 2, 520, 340);
+    if (t < hit) { const q = ease(t / hit); ctx.drawImage(IMG.honey, lerp(W / 2 + 380, W / 2 - 70, q), lerp(260, 470, q), 140, 140); }
+    else waxSparkle(W / 2, 600, t - hit);
+    if (t >= s1) { const day = Math.round(lerp(1, 999, clamp((t - s1) / 1.2))); text(`${day}일`, W / 2, 330, 90, '#fff', 'G14', 'center', 12); }
+    text(t < s1 ? '벌집으로 밀랍칠' : '약간 녹슨 채로 고정', W / 2, LY, 80, '#f2c94c', 'G14', 'center', 12);
+  },
+  xscrape(t, d) {
+    bg();
+    const s1 = subAt(1, d * 0.5);
+    if (t < s1) {
+      const hits = [0.5, 1.1], st = 3 - hits.filter(h => t >= h).length;
+      texSlab(st, W / 2, 520, 320);
+      const swing = hits.map(h => clamp((t - h + 0.25) / 0.25)).find(v => v > 0 && v < 1);
+      axePix(W / 2 + 230, 450, swing !== undefined ? -0.9 + swing * 1.2 : -0.9);
+      hits.forEach(h => { if (t >= h && t < h + 0.5) poof(W / 2, 600, (t - h) / 0.5, '#e8e8e8', 7); });
+      text(['', '약간 녹슨', '녹슨', '산화된'][st] + ' 단계', W / 2, 330, 64, '#fff', 'G11B', 'center', 8);
+      text('도끼로 한 단계씩', W / 2, LY, 80, '#e8a07a', 'G14', 'center', 12);
+      return;
+    }
+    const u = t - s1, strike = 0.35, done = u >= strike;
+    texSlab(done ? 0 : 3, W / 2, 560, 320);
+    if (u >= strike - 0.12 && u < strike + 0.35) bolt(W / 2, 120, 620, 11 + Math.floor(u * 20));
+    if (u >= strike && u < strike + 0.12) flash('rgba(255,255,255,0.55)');
+    if (done && u < strike + 0.8) poof(W / 2, 640, (u - strike) / 0.8, '#ffe45c', 9);
+    text(done ? '녹이 한 번에' : '벼락', W / 2, LY, 80, '#e8a07a', 'G14', 'center', 12);
+  },
+  xstatue(t, d) {
+    bg();
+    const s1 = subAt(2, d * 0.45), s2 = subAt(3, d * 0.72);
+    if (t < s2) {
+      const m = t < s1 ? 0 : ease((t - s1) / 1.4), yr = Math.round(lerp(1886, 1906, m));
+      statue(W / 2, 500, 18, m);
+      text(String(yr), W / 2 + 360, 300, 100, '#fff', 'G14', 'center', 12);
+      text(t < s1 ? '자유의 여신상' : m < 1 ? '구리색 → 청록색' : '청록색', W / 2, LY, 80, m < 0.5 ? '#e8a07a' : '#6ec59f', 'G14', 'center', 12);
+      return;
+    }
+    const u = t - s2, x0 = W / 2 - 300, y0 = 470;
+    box(x0, y0, 600, 260, '#c8744f', '#000', 8);
+    ctx.fillStyle = '#5fb393'; ctx.fillRect(x0, y0, 600, 36);
+    text('녹 (청록)', x0 + 300, y0 + 330, 60, '#6ec59f', 'G11B', 'center', 8); text('구리', W / 2, y0 + 170, 70, '#3a1e12', 'G14', 'center', 0);
+    const r = rnd(5);
+    for (let k = 0; k < 10; k++) { const x = x0 + 30 + r() * 540, ph = (u * 1.2 + r()) % 1, y = lerp(y0 - 200, y0 - 14, ph); ctx.fillStyle = '#7fb3ff'; ctx.fillRect(snap(x), snap(y), 12, 22); }
+    const p = back((u - 0.4) / 0.3);
+    if (p > 0) { ctx.save(); ctx.translate(W / 2, 330); ctx.scale(p, p); box(-150, -50, 300, 90, '#6ec59f', '#000', 8); text('보호막', 0, 24, 64, '#0b0d12', 'G14', 'center', 0); ctx.restore(); }
+    text('녹이 안쪽 구리를 보호', W / 2, LY, 80, '#6ec59f', 'G14', 'center', 12);
+  },
   follow(t, d) {
     bg('#07070a', '#0d0d12', 0.02);
     ctx.save(); ctx.shadowColor = 'rgba(200,230,255,0.45)'; ctx.shadowBlur = 50;
-    if (EP && EP.nextBlock === 'terrain') terrain(9, W / 2, 580, 76, false); else
+    if (EP && EP.nextBlock === 'terrain') terrain(9, W / 2, 580, 76, false); else if (EP && EP.nextBlock === 'gear') { gearPix(W / 2, 640, 300, t * 1.5); } else
     cube(IMG[(EP && EP.nextBlock) || 'obs'], 0, 0, 0, 440, W / 2, 560, 0.85);
     ctx.restore();
     const a = clamp(t / 0.5);
@@ -1784,6 +1882,57 @@ function drawPress(cx, by, s, r, part = false) {   // 유압 프레스 옆모습
   else sprite(['....k....', '...kwk...', 'kkkkwkkkk', 'kwwwwwwwk', 'kkkkwkkkk', '...kwk...', '..kkwkk..'], {k: '#000', w: '#cfd6e0'}, cx, by - 120 * s, 26 * s);
 }
 function bigX(cx, cy, a) { ctx.globalAlpha = a; for (const [c, w] of [['#000', 34], ['#ff3b30', 20]]) { ctx.strokeStyle = c; ctx.lineWidth = w; ctx.lineCap = 'butt'; ctx.beginPath(); ctx.moveTo(cx - 70, cy - 70); ctx.lineTo(cx + 70, cy + 70); ctx.moveTo(cx + 70, cy - 70); ctx.lineTo(cx - 70, cy + 70); ctx.stroke(); } ctx.globalAlpha = 1; }
+// ---------- 구리 반 블록 편 도구 (운영자 2026-11-25). 텍스처 색은 minecraft.wiki 깎인 구리 16×16 텍스처에서 읽음 ----------
+const CU_RAW = [
+  ['#e3826c,#d67b5b,#a75a40,#b26247,#c87456,#9a5038', 'abaababcabbaabac/bdeaaedfbcdaeddf/aeaaeccfadaedcdc/aeaeccefaeedcdef/adedceacbedcceaf/bddcdaacaddceaac/bdcdeaefbdceaaec/cfffcfffcfcfffcf/aababbacabbaabbc/bedddeacbeaaedcc/adcdeaecbaaedccc/acdeaecfbaedccdf/bdeaacdfbeddcdac/beaaddefaddcdaaf/baaddeecbdcdeaef/fcccffcfccccffcc'],
+  ['#ce8d83,#ba8277,#7f7257,#988c69,#947661,#a87762,#736051,#7a9869', 'abaabbbcabaabdbc/bedbfecgbcedbeeg/ahbfececaebbecec/adffcefgaffecefg/afeecfdcabefefdg/bdeeebhcbffefbhc/bdhefdhgbecfbdfc/ccgccgggcgcgggcg/aababbacaaababbc/afefebbcaedbfecg/becefbecbdhfefcg/acefbecgahfefeeg/befbececadeecfec/dfbbffegbeccfbfg/hdbffefcbccfdhbc/gcccggcgggccggcc'],
+  ['#7ab799,#66a977,#6a7147,#748d57,#8d8770,#6c975c,#64a077,#497164', 'aaaababcabaaabac/bddeefghaeedeeeh/adeefgghaedfeefc/agfeggghadgfdegh/aggffdfcbgggdggh/bgggdedcaggegggc/bfggeeehbffeedgc/chhhchhhchchhhch/aababbacabaaabbc/begdeeecbfeggggc/adddgefcbeegefgc/afdgggdhbeffedgh/affggddhbffdddfc/bggfgedhafgfdedh/bgfdeeecbeggeeeh/hccchhchcccchhcc'],
+  ['#6ec59f,#59b292,#3d7864,#51a48b,#4c9484,#366451,#53a178,#5eab81', 'abaababcaabbabac/adddeeefadeeedef/addgheefaddeghhc/adghhedfadgddhdf/agghgddcbggddggf/bgegdddcaeddgeec/bdeeddefbeedeeec/cfffcfffcfcfffcf/aababbacaaaababc/ageegdecaeeegedc/adehgdecagegghdc/addhdddfbddghhdf/bgdggddfbdddgdgc/agdgegdfaedggeef/bedeeegcbeegeeef/fcccffcfccccffcc']];
+const CU_TEX = CU_RAW.map(([pal, rows]) => {
+  const c = document.createElement('canvas'); c.width = c.height = 16; const x = c.getContext('2d'), P = pal.split(',');
+  rows.split('/').forEach((row, r) => [...row].forEach((ch, k) => { x.fillStyle = P['abcdefgh'.indexOf(ch)]; x.fillRect(k, r, 1, 1); }));
+  return c;
+});
+function texSlab(st, cx, top, S) {   // 깎인 구리 반 블록 (아이소, 윗면 + 두 옆면, 높이 절반)
+  const tex = CU_TEX[st], a = S / 32, b = a * 0.5, Hs = S * 0.31;
+  const face = (m, sy, sh, dark) => { ctx.save(); ctx.transform(...m); ctx.imageSmoothingEnabled = false; ctx.drawImage(tex, 0, sy, 16, sh, 0, 0, 16, sh); if (dark) { ctx.fillStyle = `rgba(0,0,0,${dark})`; ctx.fillRect(0, 0, 16, sh); } ctx.restore(); };
+  const ol = () => { ctx.strokeStyle = '#000'; ctx.lineWidth = 6; ctx.lineJoin = 'round'; ctx.beginPath(); ctx.moveTo(cx, top); ctx.lineTo(cx + 16 * a, top + 16 * b); ctx.lineTo(cx + 16 * a, top + 16 * b + Hs); ctx.lineTo(cx, top + 32 * b + Hs); ctx.lineTo(cx - 16 * a, top + 16 * b + Hs); ctx.lineTo(cx - 16 * a, top + 16 * b); ctx.closePath(); ctx.stroke(); };
+  face([a, b, 0, Hs / 8, cx - 16 * a, top + 16 * b], 8, 8, 0.25);
+  face([a, -b, 0, Hs / 8, cx, top + 32 * b], 8, 8, 0.42);
+  face([a, b, -a, b, cx, top], 0, 16, 0);
+  ol();
+}
+function waxSparkle(cx, cy, u) {   // 밀랍칠 노란 반짝임
+  const r = rnd(13);
+  for (let k = 0; k < 14; k++) { const a = r() * 6.28, v = 60 + r() * 200, ph = (u * 0.8 + r()) % 1; ctx.globalAlpha = 1 - ph; ctx.fillStyle = r() > 0.5 ? '#ffd23a' : '#fff3a0'; ctx.fillRect(snap(cx + Math.cos(a) * v), snap(cy - 40 + Math.sin(a) * v * 0.6 - ph * 120), 14, 14); }
+  ctx.globalAlpha = 1;
+}
+function axePix(cx, cy, rot) {   // 도끼 (우리 픽셀 그림)
+  ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot);
+  sprite(['....kkkk....', '...kssssk...', '..kssSSssk..', '..ksSSSsk...', '..kssSsk....', '...kkkhk....', '......hk....', '......hk....', '......hk....', '......hk....', '......hk....', '......kk....'], {k: '#1b1b1b', s: '#d8d8d8', S: '#a8a8a8', h: '#8a6a3a'}, 0, 0, 30);
+  ctx.restore();
+}
+function bolt(x, y0, y1, seed) {   // 벼락 (우리 그림)
+  const r = rnd(seed); let x1 = x, y = y0; const pts = [[x1, y]];
+  while (y < y1) { y += 60; x1 = x + (r() - 0.5) * 140; pts.push([x1, Math.min(y, y1)]); }
+  for (const [c, w] of [['#000', 34], ['#cfe8ff', 22], ['#fff', 10]]) { ctx.strokeStyle = c; ctx.lineWidth = w; ctx.lineJoin = 'miter'; ctx.beginPath(); pts.forEach(([px, py], k) => k ? ctx.lineTo(px, py) : ctx.moveTo(px, py)); ctx.stroke(); }
+}
+const LIBERTY = [   // 자유의 여신상 실루엣 (우리 픽셀 그림)
+  '...............ff...', '..............ffff..', '...............ff...', '..............hhh...', '...............h....', '...............b....',
+  '...s.s.s.......b....', '....sssss......b....', '...sbbbbbs.....b....', '....bBbBb.....b.....', '.....bbb.....b......', '....bbbbbbbbbb......',
+  '...bbbbbbbbbb.......', '...bbBbbbbbb........', '..bbbbBbbbbb........', '..btbbbBbbbb........', '..ttbbbbBbbb........', '..ttbbbbbBbb........',
+  '..ttbbbbbbBbb.......', '...bbbbbbbbBb.......', '...bbbbbbbbbB.......', '...bbbbbbbbbb.......', '...bBbbbbbbbbb......', '...bbBbbbbbbbb......',
+  '...bbbBbbbbbbb......', '..bbbbbBbbbbbbb.....', '..bbbbbbbbbbbbb.....', '..bbbbbbbbbbbbb.....', '.pppppppppppppppp...', '.pPPPPPPPPPPPPPPp...',
+  '.pPPPPPPPPPPPPPPp...', '.pppppppppppppppp...'];
+function mixc(a, b, m) { const h = s2 => [1, 3, 5].map(i => parseInt(s2.slice(i, i + 2), 16)); const A = h(a), B = h(b); return '#' + A.map((v, i) => Math.round(lerp(v, B[i], m)).toString(16).padStart(2, '0')).join(''); }
+function statue(cx, cy, px, m) {
+  const body = mixc('#c8744f', '#5fb393', m), dark = mixc('#9a5038', '#3d7864', m), light = mixc('#e3926c', '#7fd0ad', m);
+  sprite(LIBERTY, {f: '#f2c94c', h: body, s: body, b: body, B: dark, t: light, p: '#8a8f98', P: '#6b7080'}, cx + 2 * px, cy, px);
+}
+function gearPix(cx, cy, R, rot) {   // 톱니바퀴: 위키 실제 아이템 그림(assets/blocks/gear.png, 16px)을 돌림
+  ctx.save(); ctx.imageSmoothingEnabled = false; ctx.translate(cx, cy); ctx.rotate(rot);
+  ctx.drawImage(IMG.gear, -R, -R, 2 * R, 2 * R); ctx.restore();
+}
 window.EP = null;   // make.py가 넣음: {scenes: [{scene, year, d, subs: [[text, t0, t1]]}]}
 window.renderAt = (idx, t, d, sub, year) => {
   const sc = EP ? EP.scenes[idx] : null;
