@@ -1677,18 +1677,17 @@ const SC = {
     }
     text(t < s1 ? '가만히 둬도 녹스는 구리' : '이 반 블록만 그대로', W / 2, LY, 80, '#e8a07a', 'G14', 'center', 12);
   },
-  xname(t, d) {
+  xname(t, d) {   // 이름 한 줄만 (운영자 2026-11-25 풀이 문장 뺌): 말하는 속도에 맞춰 단어 칸이 하나씩
     bg();
-    const s1 = subAt(1, d * 0.5), W4 = [['밀랍칠한', '#f2c94c'], ['약간 녹슨', '#9fb38a'], ['깎인 구리', '#e8a07a'], ['반 블록', '#cfd6e0']];
+    const W4 = [['밀랍칠한', '#f2c94c'], ['약간 녹슨', '#9fb38a'], ['깎인 구리', '#e8a07a'], ['반 블록', '#cfd6e0']];
     texSlab(1, W / 2, 230, 260);
     W4.forEach(([w, c], k) => {
-      const a = clamp((t - k * 0.25) / 0.25); if (a <= 0) return;
-      const on = t >= s1 && k >= 2 && t >= s1 + (3 - k) * 0.5, y = 520 + Math.floor(k / 2) * 140;
-      const x = W / 2 + (k % 2 - 0.5) * 450;
-      ctx.globalAlpha = a; box(x - 205, y, 410, 110, on ? c : '#2a2f3a', '#000', 6);
-      text(w, x, y + 78, 70, on ? '#0b0d12' : '#fff', 'G11B', 'center', on ? 0 : 8); ctx.globalAlpha = 1;
+      const a = clamp((t - 0.5 - k * 0.55) / 0.2); if (a <= 0) return;
+      const y = 520 + Math.floor(k / 2) * 140, x = W / 2 + (k % 2 - 0.5) * 450;
+      ctx.globalAlpha = a; box(x - 205, y, 410, 110, c, '#000', 6);
+      text(w, x, y + 78, 70, '#0b0d12', 'G11B', 'center', 0); ctx.globalAlpha = 1;
     });
-    text(t < s1 ? '이름 풀기' : '깎인 구리 + 반 블록', W / 2, LY, 80, '#e8a07a', 'G14', 'center', 12);
+    text('정식 이름', W / 2, LY, 80, '#e8a07a', 'G14', 'center', 12);
   },
   xrust(t, d) {
     bg();
@@ -1712,7 +1711,7 @@ const SC = {
   },
   xwax(t, d) {
     bg();
-    const s1 = subAt(1, d * 0.55), hit = 0.55;
+    const s1 = subAt(2, d * 0.55), hit = 0.55;
     texSlab(1, W / 2, 520, 340);
     if (t < hit) { const q = ease(t / hit); ctx.drawImage(IMG.honey, lerp(W / 2 + 380, W / 2 - 70, q), lerp(260, 470, q), 140, 140); }
     else waxSparkle(W / 2, 600, t - hit);
