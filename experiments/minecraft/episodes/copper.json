@@ -9,7 +9,7 @@
  "punch": true,
  "coverBlock": "xslab",
  "coverColor": "#e8a07a",
- "coverSize": 160,
+ "coverSize": 125,
  "nextBlock": "gear",
  "scenes": [
   {
@@ -118,5 +118,5 @@
    ]
   }
  ],
- "coverDY": 250
+ "coverDY": 290
 }
