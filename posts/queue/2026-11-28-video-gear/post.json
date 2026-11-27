@@ -1,5 +1,5 @@
 {
- "approved": false,
+ "approved": true,
  "date": "2026-11-28",
  "type": "video",
  "format": "explain",
@@ -18,5 +18,6 @@
   "#마인크래프트블록"
  ],
  "publish_at": "2026-11-28T10:30:00+09:00",
- "note": "마인크래프트 블록 파고들기 13편. make.py(episodes/gear.json, seed 11). 사실 출처: minecraft.wiki Gear(2010-01-26 노치 영상, Indev 0.31 20100128 추가, Alpha v1.0.1 제거·55번 레드스톤, How We Make Minecraft), 파스칼린 1642."
+ "note": "마인크래프트 블록 파고들기 13편. make.py(episodes/gear.json, seed 11). 사실 출처: minecraft.wiki Gear(2010-01-26 노치 영상, Indev 0.31 20100128 추가, Alpha v1.0.1 제거·55번 레드스톤, How We Make Minecraft), 파스칼린 1642.",
+ "approved_at": "2026-11-27T21:00:00+09:00"
 }
