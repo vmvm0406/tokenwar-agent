@@ -1,0 +1,22 @@
+{
+ "approved": false,
+ "date": "2026-11-28",
+ "type": "video",
+ "format": "explain",
+ "prebuilt": true,
+ "rights": "original",
+ "credit": "직접 제작 (게임 스크린샷·텍스처 minecraft.wiki, 파스칼의 계산기 사진 David Monniaux / Wikimedia Commons CC BY-SA 3.0, 효과음 마인크래프트 게임 소리, 목소리 일레븐랩스 Starter)",
+ "rights_note": "Minecraft 콘텐츠는 Mojang 사용 지침(영상 허용) 안에서, 로고·게임 음악 안 씀. 파스칼린 사진은 CC BY-SA 3.0, 화면과 캡션에 출처 표기.",
+ "id": "2026-11-28-video-gear",
+ "title": "톱니바퀴",
+ "topic": "마인크래프트 · 사라진 블록",
+ "caption": "2010년에 잠깐 있었다가 사라진 마인크래프트 블록, 톱니바퀴 ⚙️\n\n벽에 붙으면 빙글빙글 돌기만 하고 아무 기능이 없었어요.\n한 바퀴 도는 데 3.2초, 시계 방향과 반대 방향 두 종류가 있어서 옆끼리 맞물려 도는 것처럼 보였죠.\n알파 1.0.1에서 사라지면서, 이미 놓인 톱니바퀴는 블록 번호가 같은(55번) 레드스톤 가루로 바뀌었어요.\n\n현실에선 1642년 파스칼의 계산기도 톱니바퀴로 계산했어요.\n\n다음 편은 보라·검정 체크무늬, 글리치 블록 🟪⬛\n\n사진: Pascaline, David Monniaux (CC BY-SA 3.0, Wikimedia Commons)",
+ "hashtags": [
+  "#마인크래프트",
+  "#마크",
+  "#마인크래프트톱니바퀴",
+  "#마인크래프트블록"
+ ],
+ "publish_at": "2026-11-28T10:30:00+09:00",
+ "note": "마인크래프트 블록 파고들기 13편. make.py(episodes/gear.json, seed 11). 사실 출처: minecraft.wiki Gear(2010-01-26 노치 영상, Indev 0.31 20100128 추가, Alpha v1.0.1 제거·55번 레드스톤, How We Make Minecraft), 파스칼린 1642."
+}
