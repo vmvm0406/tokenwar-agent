@@ -178,6 +178,11 @@ CUES = {
     "wchunk": [(0.2, "pop"), ("s1", "mc:Grass_dig1@0.4"), ("s1+0.6", "mc:Grass_dig1@0.4"), ("s1+1.2", "mc:Grass_dig1@0.4")],
     "wreal": [(0.2, "mc:Click@0.3"), ("s1+0.6", "whoosh"), ("s2", "mc:Bell_use1@0.5~1.5")],
     # 구리 반 블록 편 (운영자 2026-11-25)
+    "qhook": [(0.1, "whoosh"), ("s2", "pop"), ("s2+0.05", "slap")],
+    "qnotch": [(0.1, "mc:Page_turn1@0.5"), ("s1", "mc:Page_turn2@0.5"), ("s1+0.3", "pop")],
+    "qinvis": [(0.1, "whoosh"), ("s1", "pop"), ("s2+0.4", "mc:Stone_dig1@0.5"), ("s2+0.55", "slap"), ("s3", "pop"), ("s3+0.35", "pop"), ("s3+0.7", "boom")],
+    "qgone": [(0.1, "mc:Click@0.3"), ("s1+0.3", "pop"), ("s2", "pop"), ("s2+0.35", "pop"), ("s3+0.2", "pop")],
+    "qreal": [(0.1, "whoosh"), ("s1", "mc:Page_turn1@0.5"), ("s2", "whoosh"), ("s3+0.4", "pop")],
     "xhook": [(0.1, "mc:Click@0.3"), (0.5, "mc:Click@0.3"), (0.9, "mc:Click@0.3"), ("s1", "pop"), ("s1+0.1", "mc:Bell_use1@0.3~1.0")],
     "xname": [(0.5, "pop"), (1.05, "pop"), (1.6, "pop"), (2.15, "pop")],
     "xrust": [(0.1, "mc:Page_turn1@0.5"), ("s1", "pop"), ("s1+0.45", "pop"), ("s1+0.9", "pop"), ("s1+1.35", "pop")],
